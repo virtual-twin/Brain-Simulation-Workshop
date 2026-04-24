@@ -1,0 +1,11 @@
+project:
+  type: default
+
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+    link-external-newwindow: true
+
+bibliography: bibliography.bib

@@ -1,0 +1,97 @@
+---
+title: "Towards translational and mechanistic whole-brain simulations with The Virtual Brain"
+subtitle: "Track 4 Workshop"
+author:
+  - "Leon Stefanovski^1^"
+  - "Marius Pille^1,2^"
+  - "Leon Martin^1,2^"
+affiliations:
+  - id: charite
+    name: "Charité University Medicine Berlin"
+  - id: bih
+    name: "Berlin Institute of Health at Charité University Medicine"
+date: 2026-05-12
+bibliography: ../bibliography.bib
+format:
+  pdf:
+    toc: true
+    number-sections: false
+  docx:
+    toc: true
+    number-sections: false
+---
+
+**Affiliations:** ^1^ Charité University Medicine Berlin; ^2^ Berlin Institute of Health at Charité University Medicine
+
+**Workshop Dates:** 12-13 May 2026
+
+## About
+
+In this workshop, participants will learn core concepts and methods for personalized whole-brain network modeling using The Virtual Brain (TVB). The workflow combines individualized model definition, simulation, and analysis with ontology-driven model specification and optimization tooling [@Martin2025; @Pille2025].
+
+The Virtual Brain Ontology (TVB-O) provides a knowledge framework for FAIR model specification and automated code generation, while connecting model metadata to biomedical ontologies [@Martin2025].
+
+TVB-Optim enables gradient-based fitting of large parameter spaces in whole-brain models and supports efficient scaling for computationally intensive optimization experiments [@Pille2025].
+
+Relevant examples of mechanistic and translational whole-brain modeling include connectome-constrained decision dynamics [@Schirner2023], connectome-driven cortical wave phenomena [@Koller2024], and ODE-based separation of task and rest fMRI signals [@Kashyap2025].
+
+Useful links:
+
+- The Virtual Brain: https://thevirtualbrain.org
+- TVB-O: https://virtual-twin.github.io/tvbo
+- TVB-Optim: https://virtual-twin.github.io/tvboptim
+
+## Format
+
+Hands-on session introducing the theoretical and programmatic framework for specifying, running, analyzing, and optimizing dynamical brain network models.
+
+## Agenda
+
+### Day 1
+
+1. Intro to The Virtual Brain and its applications
+
+- Basic ideas and history
+- Mathematical framework
+- Applications in basic research
+- Clinical applications
+
+1. Defining a FAIR brain network model
+
+- Mean field models (hands on)
+- Networks of coupled dynamics (hands on)
+
+1. Dynamical perspective: how to analyze a brain system
+
+- How to perform and interpret bifurcation analyses
+
+1. Parameter exploration and model optimization
+
+- Brain network models as computational hypotheses of the brain
+- Use-case A: mechanistic simulation of Alzheimer's disease and integration of biomedical data
+- Use-case B: homogeneous vs. heterogeneous parameter fitting of frequency gradients (or another map from TVBase)
+
+1. Stimulating the brain
+
+- Visual and TMS-evoked potentials (JR)
+
+### Day 2: Mini Hackathon
+
+We help participants answer and gain insight into their own research questions. Bring your own data if possible.
+
+## Target Audience
+
+Researchers interested in computational neuroscience, including data scientists, clinicians, engineers, and generally curious participants. Prior TVB experience is helpful but not mandatory.
+
+## Requirements
+
+- Basic Python programming skills are recommended.
+- Notebooks can be run online (EBRAINS account required).
+- Limited support for local setups is also provided.
+
+---
+
+| ![](../img/Charite.png){fig-alt="Charite logo" width=30%} | ![](../img/BIH.png){fig-alt="BIH logo" width=30%} | ![](../img/BSS.png){fig-alt="BSS logo" width=30%} |
+|:---:|:---:|:---:|
+
+## References
