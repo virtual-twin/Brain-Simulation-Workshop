@@ -1,0 +1,40 @@
+---
+title: "Bifurcation analysis — hands on"
+subtitle: "Session 3 · Dynamical perspective"
+jupyter: python3
+---
+
+## Goals
+
+- TODO: locate fixed points of a 2D mean-field model
+- TODO: compute and visualise a 1D bifurcation diagram
+- TODO: relate bifurcations to network-level phenomena
+
+## Setup
+
+```{python}
+# TODO: imports
+```
+
+## Fixed points and stability
+
+```{python}
+# TODO: nullclines, Jacobian, eigenvalues
+```
+
+## 1D bifurcation diagram
+
+```{python}
+# TODO: sweep one parameter, track equilibria and limit cycles
+```
+
+## 2D bifurcation diagram (optional)
+
+```{python}
+# TODO: codim-2 sweep
+```
+
+## Exercises
+
+- TODO: identify Hopf vs. saddle-node bifurcations
+- TODO: connect the bifurcation type to a behavioural regime

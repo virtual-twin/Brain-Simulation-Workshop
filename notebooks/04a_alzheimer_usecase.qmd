@@ -1,0 +1,40 @@
+---
+title: "Use-case A — Alzheimer's disease"
+subtitle: "Session 4a · Parameter exploration and model optimization"
+jupyter: python3
+---
+
+## Goals
+
+- TODO: integrate biomedical data (e.g. amyloid / tau PET) into a TVB model
+- TODO: run a mechanistic simulation of disease progression
+- TODO: compare healthy vs. patient-specific dynamics
+
+## Setup
+
+```{python}
+# TODO: imports
+```
+
+## Load patient data
+
+```{python}
+# TODO: connectome + per-region biomarker maps
+```
+
+## Map biomarkers onto model parameters
+
+```{python}
+# TODO: parameterise a region-specific local model
+```
+
+## Simulate and compare
+
+```{python}
+# TODO: run healthy + patient simulations, contrast outputs
+```
+
+## Exercises
+
+- TODO: which biomarker has the strongest effect on global dynamics?
+- TODO: how robust is the result to the chosen mapping?

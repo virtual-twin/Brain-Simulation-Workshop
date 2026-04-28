@@ -1,1 +1,14 @@
 /.quarto/
+
+# Quarto / RevealJS render artifacts for slides
+/slides.html
+/slides_files/
+
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Notebooks rendered from notebooks/*.qmd sources
+/notebooks/*.ipynb

@@ -1,0 +1,34 @@
+---
+title: "Mean field models — hands on"
+subtitle: "Session 2a · Defining a FAIR brain network model"
+jupyter: python3
+---
+
+## Goals
+
+- TODO: pick a mean-field model from TVB
+- TODO: inspect parameters and state variables
+- TODO: simulate a single node and visualise dynamics
+
+## Setup
+
+```{python}
+# TODO: imports
+```
+
+## Inspect the model
+
+```{python}
+# TODO: instantiate model, print parameter table
+```
+
+## Simulate a single node
+
+```{python}
+# TODO: short simulation, plot time series
+```
+
+## Exercises
+
+- TODO: vary one parameter and describe the qualitative change
+- TODO: compare two mean-field models on the same input
