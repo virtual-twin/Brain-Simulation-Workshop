@@ -19,6 +19,7 @@ format:
     link-external-newwindow: true
     code-line-numbers: true
     highlight-style: github
+    include-in-header: _slides-home-btn.html
 engine: jupyter
 jupyter: python3
 ---
@@ -82,12 +83,12 @@ jupyter: python3
 - TODO: ontology-driven model specification [@Martin2025]
 - TODO: metadata + automated code generation
 
-## Mean field models — hands on
+## 2.1 Mean field models
 
 - TODO: notebook link
 - TODO: pick a model, inspect parameters, simulate
 
-## Networks of coupled dynamics — hands on
+## 2.2 Coupled network dynamics
 
 - TODO: connectome loading
 - TODO: global coupling sweep
@@ -98,7 +99,7 @@ jupyter: python3
 
 - TODO: fixed points, limit cycles, bifurcations
 
-## Bifurcation analyses — hands on
+## 3.1 Bifurcation analysis
 
 - TODO: 1D / 2D bifurcation diagrams
 - TODO: interpretation in the brain-network context

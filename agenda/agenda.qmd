@@ -12,6 +12,9 @@ affiliations:
     name: "Berlin Institute of Health at Charité University Medicine"
 date: 2026-05-12
 format:
+  html:
+    toc: true
+    number-sections: false
   pdf:
     toc: true
     number-sections: false
@@ -57,8 +60,8 @@ Hands-on session introducing the theoretical and programmatic framework for spec
 
 1. Defining a FAIR brain network model
 
-- Mean field models (hands on)
-- Networks of coupled dynamics (hands on)
+- Mean field models
+- Coupled network dynamics
 
 1. Dynamical perspective: how to analyze a brain system
 
@@ -87,10 +90,5 @@ Researchers interested in computational neuroscience, including data scientists,
 - Basic Python programming skills are recommended.
 - Notebooks can be run online (EBRAINS account required).
 - Limited support for local setups is also provided.
-
----
-
-| ![](../img/Charite.png){fig-alt="Charite logo" width=30%} | ![](../img/BIH.png){fig-alt="BIH logo" width=30%} | ![](../img/BSS.png){fig-alt="BSS logo" width=30%} |
-|:---:|:---:|:---:|
 
 ## References

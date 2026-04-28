@@ -1,6 +1,6 @@
 ---
 title: "Use-case B — homogeneous vs. heterogeneous parameter fitting"
-subtitle: "Session 4b · Parameter exploration and model optimization"
+subtitle: "4.2 Parameter exploration and model optimization"
 jupyter: python3
 ---
 

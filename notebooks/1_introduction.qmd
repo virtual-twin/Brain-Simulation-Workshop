@@ -1,0 +1,62 @@
+---
+title: "1. Introduction to The Virtual Brain"
+subtitle: "What is TVB, and why does it matter?"
+---
+
+This session gives an overview of The Virtual Brain (TVB) — its history, mathematical
+foundations, and applications in basic and translational neuroscience. It sets the
+stage for all hands-on notebooks that follow.
+
+## Topics
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### Basic ideas and history
+TVB is an open-source, multi-scale brain simulation framework. Learn how it
+emerged from empirical connectivity science and why whole-brain network models
+offer a principled window into brain function and dysfunction.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Mathematical framework
+Brain network models are systems of coupled ODEs or SDEs on a structural
+connectome graph. This section introduces the key equations: local dynamics,
+coupling functions, long-range delays, and noise.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Applications in basic research
+Connectome-constrained decision dynamics [@Schirner2023], cortical wave
+phenomena [@Koller2024], and ODE-based separation of task and rest fMRI
+signals [@Kashyap2025].
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Clinical applications
+Mechanistic simulation of Alzheimer's disease, epilepsy surgery planning, and
+brain stimulation protocols — linking biophysical parameters to clinical
+biomarkers.
+:::
+
+:::
+
+## Key concepts
+
+| Concept | Description |
+|---------|-------------|
+| Neural mass model | Mean-field ODE describing the activity of a cortical region |
+| Structural connectivity | White-matter tractography-derived coupling weights and delays |
+| Coupling function | How the activity of connected regions influences each other |
+| Parcellation / atlas | Discrete spatial partition mapping brain regions to connectome nodes |
+| BOLD signal | Haemodynamic observable linked to simulated neural activity via a balloon model |
+
+## Useful resources
+
+- TVB website: <https://thevirtualbrain.org>
+- TVB-O documentation: <https://virtual-twin.github.io/tvbo>
+- TVB-Optim documentation: <https://virtual-twin.github.io/tvboptim>
+
+---
+
+*Part of [Day 1](day1.qmd)*

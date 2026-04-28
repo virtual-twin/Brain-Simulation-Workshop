@@ -1,0 +1,27 @@
+---
+title: "3. Dynamical perspective"
+subtitle: "Session 3.1 · Bifurcation analysis"
+toc: false
+---
+
+Neural mass models are dynamical systems. Before fitting them to data it is
+essential to understand their bifurcation structure: which parameter regions
+produce oscillations, fixed points, or multistability. This chapter gives you
+the tools to map that landscape.
+
+## Session
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-8}
+### [3 · Bifurcation analysis](03_bifurcation_analysis.qmd)
+Use numerical continuation and phase-plane analysis to identify bifurcation
+points in a neural mass model. Learn to interpret the results and choose
+biologically plausible operating points for whole-brain simulations.
+:::
+
+:::
+
+---
+
+*Part of [Day 1](day1.qmd)*

@@ -1,0 +1,5 @@
+format:
+  html:
+    other-formats: ipynb
+    number-sections: true
+  ipynb: default

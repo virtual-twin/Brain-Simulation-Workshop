@@ -1,6 +1,6 @@
 ---
-title: "Mean field models — hands on"
-subtitle: "Session 2a · Defining a FAIR brain network model"
+title: "2.1 Mean field models"
+subtitle: "Defining a FAIR brain network model"
 jupyter: python3
 ---
 

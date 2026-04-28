@@ -1,6 +1,6 @@
 ---
-title: "Networks of coupled dynamics — hands on"
-subtitle: "Session 2b · Defining a FAIR brain network model"
+title: "2.2 Coupled network dynamics"
+subtitle: "Defining a FAIR brain network model"
 jupyter: python3
 ---
 
