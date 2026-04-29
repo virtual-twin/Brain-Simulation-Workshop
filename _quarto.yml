@@ -1,11 +1,17 @@
 project:
   type: website
   output-dir: _site
-  render:
+
+execute:
+  freeze: auto
+
+render:
     - index.qmd
     - agenda/agenda.qmd
     - slides.qmd
     - notebooks/1_introduction.qmd
+    - notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
+    - notebooks/1_1_MathematicalFramework/DynamicalSystems_slides.qmd
     - notebooks/2_fair_model.qmd
     - notebooks/02a_mean_field_models.qmd
     - notebooks/02b_coupled_networks.qmd
@@ -18,7 +24,7 @@ project:
     - notebooks/05_stimulation.qmd
 
 website:
-  title: "TVB Workshop 2026"
+  title: "Brainsimulation Workshop"
   description: "Towards translational and mechanistic whole-brain simulations with The Virtual Brain"
   site-url: "https://virtual-twin.github.io/tvb-ontology-optim-workshop"
   repo-url: "https://github.com/virtual-twin/tvb-ontology-optim-workshop"
@@ -26,7 +32,7 @@ website:
   page-navigation: true
   back-to-top-navigation: true
   navbar:
-    logo: img/Charite.png
+    logo: img/logo.png
     background: light
     search: true
     left:
@@ -39,7 +45,11 @@ website:
       - text: Notebooks
         menu:
           - href: notebooks/1_introduction.qmd
-            text: "1. Introduction to TVB"
+            text: "1. Introduction to Brain Network Modelling"
+          - href: notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
+            text: "  1.1 Mathematical Framework"
+          - href: notebooks/1_1_MathematicalFramework/DynamicalSystems_slides.qmd
+            text: "    ↳ Slides"
           - text: "---"
           - href: notebooks/2_fair_model.qmd
             text: "2. Defining a FAIR model"
@@ -73,6 +83,10 @@ website:
       style: docked
       contents:
         - notebooks/1_introduction.qmd
+        - section: "1.1 Mathematical Framework"
+          contents:
+            - notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
+            - notebooks/1_1_MathematicalFramework/DynamicalSystems_slides.qmd
         - section: "2. Defining a FAIR model"
           href: notebooks/2_fair_model.qmd
           contents:

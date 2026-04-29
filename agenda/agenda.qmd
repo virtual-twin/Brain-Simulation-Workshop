@@ -51,31 +51,31 @@ Hands-on session introducing the theoretical and programmatic framework for spec
 
 ### Day 1
 
-1. Intro to The Virtual Brain and its applications
+1. [Intro to The Virtual Brain and its applications](../notebooks/1_introduction.qmd)
 
 - Basic ideas and history
 - Mathematical framework
 - Applications in basic research
 - Clinical applications
 
-1. Defining a FAIR brain network model
+1. [Defining a FAIR brain network model](../notebooks/2_fair_model.qmd)
 
-- Mean field models
-- Coupled network dynamics
+- [Mean field models](../notebooks/02a_mean_field_models.qmd)
+- [Coupled network dynamics](../notebooks/02b_coupled_networks.qmd)
 
-1. Dynamical perspective: how to analyze a brain system
+1. [Dynamical perspective: how to analyze a brain system](../notebooks/3_dynamics.qmd)
 
-- How to perform and interpret bifurcation analyses
+- [Bifurcation analysis](../notebooks/03_bifurcation_analysis.qmd)
 
-1. Parameter exploration and model optimization
+1. [Parameter exploration and model optimization](../notebooks/4_optimization.qmd)
 
 - Brain network models as computational hypotheses of the brain
-- Use-case A: mechanistic simulation of Alzheimer's disease and integration of biomedical data
-- Use-case B: homogeneous vs. heterogeneous parameter fitting of frequency gradients (or another map from TVBase)
+- [Use-case A: mechanistic simulation of Alzheimer's disease and integration of biomedical data](../notebooks/04a_alzheimer_usecase.qmd)
+- [Use-case B: homogeneous vs. heterogeneous parameter fitting](../notebooks/04b_parameter_fitting.qmd)
 
-1. Stimulating the brain
+1. [Stimulating the brain](../notebooks/5_stimulation.qmd)
 
-- Visual and TMS-evoked potentials (JR)
+- [Visual and TMS-evoked potentials](../notebooks/05_stimulation.qmd)
 
 ### Day 2: Mini Hackathon
 
