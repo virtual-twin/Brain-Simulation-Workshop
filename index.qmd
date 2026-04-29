@@ -1,16 +1,45 @@
 ---
-title: "TVB Workshop 2026"
-subtitle: "Towards translational and mechanistic whole-brain simulations with The Virtual Brain"
+title: "Towards translational and mechanistic whole-brain simulations with The Virtual Brain"
+subtitle: "Workshop"
 author:
   - "Leon Stefanovski"
   - "Marius Pille"
   - "Leon Martin"
 date: 2026-05-12
 toc: false
+page-layout: full
 ---
 
 Track 4 workshop of the **FAIR Brain Data Science Bootcamp**, 12–13 May 2026,
 Charité University Medicine Berlin and Berlin Institute of Health.
+
+## About
+
+In this workshop, participants learn core concepts and methods for personalized
+whole-brain network modeling using The Virtual Brain (TVB). The workflow combines
+individualized model definition, simulation, and analysis with ontology-driven
+model specification ([TVB-O](https://virtual-twin.github.io/tvbo)) and
+gradient-based optimization tooling
+([TVB-Optim](https://virtual-twin.github.io/tvboptim)) [@Martin2025; @Pille2025].
+
+## Getting started
+
+The Python environment is managed with [uv](https://docs.astral.sh/uv/):
+
+```bash
+pip install uv
+```
+
+Tools used:
+
+```bash
+uv pip install tvb
+uv pip install tvbo
+uv pip install tvboptim
+```
+
+The full source code lives at
+<https://github.com/virtual-twin/tvb-ontology-optim-workshop>.
 
 ## Quick links
 
@@ -32,33 +61,6 @@ Hands-on Jupyter notebooks for each session.
 :::
 
 :::
-
-## About
-
-In this workshop, participants learn core concepts and methods for personalized
-whole-brain network modeling using The Virtual Brain (TVB). The workflow combines
-individualized model definition, simulation, and analysis with ontology-driven
-model specification ([TVB-O](https://virtual-twin.github.io/tvbo)) and
-gradient-based optimization tooling
-([TVB-Optim](https://virtual-twin.github.io/tvboptim)) [@Martin2025; @Pille2025].
-
-## Getting started
-
-The Python environment is managed with [uv](https://docs.astral.sh/uv/):
-
-```bash
-uv sync
-```
-
-Render the website locally with [Quarto](https://quarto.org) (>= 1.8):
-
-```bash
-uv run quarto preview
-uv run quarto render
-```
-
-The full source code lives at
-<https://github.com/virtual-twin/tvb-ontology-optim-workshop>.
 
 ## References {.unnumbered}
 

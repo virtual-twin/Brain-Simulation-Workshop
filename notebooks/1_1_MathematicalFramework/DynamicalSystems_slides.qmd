@@ -1,0 +1,45 @@
+---
+title: "Dynamical Systems"
+subtitle: "A Spring-Mass Example"
+format:
+  revealjs:
+    theme: default
+    slide-number: false
+    chalkboard: true
+    incremental: false
+    toc: false
+    logo: ../../img/Charite.png
+    footer: "TVB Workshop · Mathematical Framework"
+    link-external-newwindow: true
+    highlight-style: github
+    include-in-header: ../../_slides-home-btn.html
+    fig-align: center
+execute:
+  enabled: false
+---
+
+## The Spring Equation {background-color="#ffffff"}
+
+$$\dot{x} = v \qquad \dot{v} = -\frac{k}{m}\,x$$
+
+![](phase_space.png){fig-align="center" height="440px"}
+
+## A Dynamical System {background-color="#ffffff"}
+
+![](spring_single.gif){.fragment fig-align="center" height="580px"}
+
+## Initial Conditions {background-color="#ffffff"}
+
+![](spring_ics.gif){.fragment fig-align="center" height="580px"}
+
+## Phase Space {background-color="#ffffff"}
+
+![](phase_space.png){fig-align="center" height="580px"}
+
+## Parameters — Mass {background-color="#ffffff"}
+
+![](spring_mass.gif){.fragment fig-align="center" height="580px"}
+
+## Parameters — Stiffness {background-color="#ffffff"}
+
+![](spring_stiffness.gif){.fragment fig-align="center" height="580px"}
