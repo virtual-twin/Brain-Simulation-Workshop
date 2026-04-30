@@ -119,7 +119,7 @@ $$
 \dot{x} = v
 $$
 $$
-\dot{v} = - \frac{k*x}{m}
+\dot{v} = - \frac{k}{m}*x
 $$
 
 **State Variables**
@@ -153,11 +153,30 @@ $$
 
 ## Initial Conditions {background-color="#ffffff"}
 
-::: {.r-stack}
-![](notebooks/1_1_MathematicalFramework/spring_ics_thumb.png){fig-align="center" height="580px"}
 
-![](notebooks/1_1_MathematicalFramework/spring_ics.gif){.fragment fig-align="center" height="580px"}
+:::: {.columns}
+::: {.column width="20%"}
+
+::: {style="font-size: 0.8em;"}
+
+$$
+\dot{x} = v
+$$
+$$
+\dot{v} = - \frac{k}{m}*x
+$$
 :::
+
+:::
+::: {.column width="80%"}
+::: {.r-stack}
+![](notebooks/1_1_MathematicalFramework/spring_ics_thumb.png){fig-align="center"}
+
+![](notebooks/1_1_MathematicalFramework/spring_ics.gif){.fragment fig-align="center" }
+:::
+:::
+
+::::
 
 ## Phase Space {background-color="#ffffff"}
 
