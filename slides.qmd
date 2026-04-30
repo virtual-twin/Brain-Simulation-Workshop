@@ -1,21 +1,24 @@
 ---
 title: "Towards translational and mechanistic whole-brain simulations with The Virtual Brain"
 subtitle: "Track 4 Workshop — FAIR Brain Data Science Bootcamp"
-author:
-  - "Leon Stefanovski"
-  - "Marius Pille"
-  - "Leon Martin"
-institute: "Charité University Medicine Berlin · Berlin Institute of Health"
+authors:
+  - name: "Leon Stefanovski"
+  - name: "Marius Pille"
+  - name: "Leon Martin"
+affiliations:
+  - id: 1
+    name: "Charité University Medicine Berlin · Berlin Institute of Health"
 date: 2026-05-12
 format:
-  revealjs:
-    theme: default
+  clean-revealjs:
     slide-number: true
+    scrollable: true
+    auto-play-media: false
     chalkboard: true
     incremental: false
     toc: false
     logo: img/Charite.png
-    footer: "TVB Workshop · 12–13 May 2026"
+    footer: "© Pille, Martin, Stefanovski, Charité Unviersity Medicine Berlin"
     link-external-newwindow: true
     code-line-numbers: true
     highlight-style: github
@@ -55,16 +58,128 @@ jupyter: python3
 :::
 
 # 1. Intro to The Virtual Brain {background-color="#0b3d91"}
-
-## Basic ideas and history
-
 - TODO: motivation for whole-brain network modeling
 - TODO: brief historical arc of TVB
 
+
+## Basic ideas and history
+
+:::: {.columns}
+::: {.column width="25%"}
+![](img/figures/basic_idea_imaging_workflow1.png){width="100%"}
+:::
+
+::: {.column width="25%" .fragment}
+![](img/figures/basic_idea_imaging_workflow2.png){width="100%"}
+:::
+
+::: {.column width="25%" .fragment}
+![](img/figures/basic_idea_imaging_workflow3.png){width="100%"}
+:::
+
+::: {.column width="25%" .fragment}
+![](img/figures/basic_idea_imaging_workflow4.png){width="100%"}
+:::
+
+::::
+
+
+
 ## Mathematical framework
 
-- TODO: nodes, coupling, delays, noise
+$$
+dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
+$$
+
+
+::: {.fragment}
+
+**State Evolution**
+
+- $S_i$ - state variables at node $i$
+- $f_d$ - dynamics function with parameters $\theta^d$
+- $C_i$ - coupling input from connected nodes
+- $I_i$ - external input (stimulation, driving signals)
+- $g$ - noise diffusion coefficient with parameters $\theta^g$
+- $dW_i$ - Wiener process (stochastic fluctuations)
+:::
+
+
+## The Spring Equation {background-color="#ffffff"}
+
+$$
+\dot{x} = v \qquad \dot{v} = -\frac{k}{m}\,x
+$$
+
+::: {.r-stack}
+![](notebooks/1_1_MathematicalFramework/spring_single_thumb.png){fig-align="center" height="500px"}
+
+![](notebooks/1_1_MathematicalFramework/spring_single.gif){.fragment fig-align="center" height="500px"}
+:::
+
+## Initial Conditions {background-color="#ffffff"}
+
+::: {.r-stack}
+![](notebooks/1_1_MathematicalFramework/spring_ics_thumb.png){fig-align="center" height="580px"}
+
+![](notebooks/1_1_MathematicalFramework/spring_ics.gif){.fragment fig-align="center" height="580px"}
+:::
+
+## Phase Space {background-color="#ffffff"}
+
+![](notebooks/1_1_MathematicalFramework/phase_space.png){fig-align="center" height="580px"}
+
+## Parameters — Mass {background-color="#ffffff"}
+
+::: {.r-stack}
+![](notebooks/1_1_MathematicalFramework/spring_mass_thumb.png){fig-align="center" height="580px"}
+
+![](notebooks/1_1_MathematicalFramework/spring_mass.gif){.fragment fig-align="center" height="580px"}
+:::
+
+## Parameters — Stiffness {background-color="#ffffff"}
+
+::: {.r-stack}
+![](notebooks/1_1_MathematicalFramework/spring_stiffness_thumb.png){fig-align="center" height="580px"}
+
+![](notebooks/1_1_MathematicalFramework/spring_stiffness.gif){.fragment fig-align="center" height="580px"}
+:::
+
+## Towards Realism — Damping & Load {background-color="#ffffff"}
+
+::: {.r-stack}
+![](notebooks/1_1_MathematicalFramework/spring_realism_thumb.png){fig-align="center" height="580px"}
+
+![](notebooks/1_1_MathematicalFramework/spring_realism.gif){.fragment fig-align="center" height="580px"}
+:::
+
+## Neural Mass Models
 - TODO: neural mass / mean-field formulation
+
+## Network
+- TODO: nodes, coupling, delays, noise
+
+
+::: {.fragment fragment-index=2}
+$$
+C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij}), \theta^c), S_i, \theta^c\Big)
+$$
+
+::: {style="font-size: 0.55em;"}
+**Coupling**
+
+- $f_c^{\text{pre}}$ - pre-aggregation transformation
+- $A_{ij}$ - structural connectivity weight ($j \to i$)
+- $\tau_{ij}$ - transmission delay (tract length / conduction speed)
+- $f_c^{\text{post}}$ - post-aggregation transformation
+- $\theta^c$ - coupling parameters
+:::
+
+:::
+
+
+
+
 
 ## Applications in basic research
 

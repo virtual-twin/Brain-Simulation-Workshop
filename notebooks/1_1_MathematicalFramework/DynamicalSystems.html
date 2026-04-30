@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.7.24" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+
+<title>Dynamical Systems — A Spring-Mass Example – Brainsimulation Workshop</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<!-- htmldependencies:E3FAD763 -->
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="/index.html" class="navbar-brand navbar-brand-logo">
+    <img src="/img/logo.png" alt="" class="navbar-logo" />
+    </a>
+    <a class="navbar-brand" href="/index.html">
+    <span class="navbar-title">Brainsimulation Workshop</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+  aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation"
+  onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="/index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="/agenda/agenda.html"> 
+<span class="menu-text">Agenda</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="/slides.html"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-notebooks" role="link" data-bs-toggle="dropdown" aria-expanded="false" >
+ <span class="menu-text">Notebooks</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-notebooks">    
+        <li>
+    <a class="dropdown-item" href="/notebooks/1_introduction.html">
+ <span class="dropdown-text">1. Introduction to Brain Network Modelling</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="/notebooks/1_1_MathematicalFramework/DynamicalSystems.html">
+ <span class="dropdown-text">  1.1 Mathematical Framework</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="/notebooks/2_fair_model.html">
+ <span class="dropdown-text">2. Defining a FAIR model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="/notebooks/02a_mean_field_models.html">
+ <span class="dropdown-text">  2.1 Mean field models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="/notebooks/02b_coupled_networks.html">
+ <span class="dropdown-text">  2.2 Coupled networks</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="/notebooks/3_dynamics.html">
+ <span class="dropdown-text">3. Dynamical perspective</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="/notebooks/03_bifurcation_analysis.html">
+ <span class="dropdown-text">  3.1 Bifurcation analysis</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="/notebooks/4_optimization.html">
+ <span class="dropdown-text">4. Parameter optimisation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="/notebooks/04a_alzheimer_usecase.html">
+ <span class="dropdown-text">  4.1 Alzheimer use case</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="/notebooks/04b_parameter_fitting.html">
+ <span class="dropdown-text">  4.2 Parameter fitting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="/notebooks/5_stimulation.html">
+ <span class="dropdown-text">5. Stimulating the brain</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="/notebooks/05_stimulation.html">
+ <span class="dropdown-text">  5.1 Stimulation</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/virtual-twin/tvb-ontology-optim-workshop"> <i 
+  class="bi bi-github" 
+  role="img" 
+  aria-label="GitHub" 
+>
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn"
+      data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" 
+      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs"></h1>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" role="link"
+        aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+        onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/notebooks/1_introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Introduction to The Virtual Brain</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1"  role="navigation" aria-expanded="true">
+ <span class="menu-text">1.1 Mathematical Framework</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/notebooks/1_1_MathematicalFramework/DynamicalSystems.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Dynamical Systems — A Spring-Mass Example</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="/notebooks/2_fair_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Defining a FAIR model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/notebooks/02a_mean_field_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.1 Mean field models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/notebooks/02b_coupled_networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.2 Coupled network dynamics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="/notebooks/3_dynamics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Dynamical perspective</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/notebooks/03_bifurcation_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3.1 Bifurcation analysis</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="/notebooks/4_optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Parameter optimisation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/notebooks/04a_alzheimer_usecase.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Use-case A — Alzheimer's disease</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/notebooks/04b_parameter_fitting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Use-case B — homogeneous vs. heterogeneous parameter fitting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="/notebooks/5_stimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5. Stimulating the brain</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/notebooks/05_stimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5.1 Stimulating the brain</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" ></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <div id="quarto-toc-target"></div>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Dynamical Systems — A Spring-Mass Example</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#dynamical-systems" id="toc-dynamical-systems"><span class="header-section-number">1</span> Dynamical Systems</a>
+  <ul>
+  <li><a href="#the-spring-equation" id="toc-the-spring-equation"><span class="header-section-number">1.1</span> The Spring Equation</a></li>
+  <li><a href="#initial-conditions" id="toc-initial-conditions"><span class="header-section-number">1.3</span> Initial Conditions</a>
+  <ul>
+  <li><a href="#varying-initial-conditions" id="toc-varying-initial-conditions"><span class="header-section-number">1.3.1</span> Varying initial conditions</a></li>
+  </ul></li>
+  <li><a href="#phase-space" id="toc-phase-space"><span class="header-section-number">1.4</span> Phase Space</a></li>
+  <li><a href="#parameters-1" id="toc-parameters-1"><span class="header-section-number">1.5</span> Parameters</a></li>
+  <li><a href="#from-toy-models-to-better-realism" id="toc-from-toy-models-to-better-realism"><span class="header-section-number">1.6</span> From Toy Models to Better Realism</a></li>
+  </ul></li>
+  </ul>
+</nav>
+<div id="812cabda" class="cell" data-collapse="true" data-execution_count="1">
+<div class="sourceCode" id="cb1"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> bsplot</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Markdown, HTML</span></code></pre></div>
+</div>
+<section id="dynamical-systems" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Dynamical Systems</h1>
+<p>Before we simulate large-scale brain networks, we need a common language to <em>describe</em> and <em>run</em> dynamical systems. This notebook introduces that language using the most familiar dynamical system there is: <strong>a mass on a spring</strong>.</p>
+<p>Every concept introduced here — state variables, parameters, initial conditions, phase space — carries over directly to neural mass models and whole-brain simulations.</p>
+<section id="the-spring-equation" class="level2" data-number="1.1">
+<h2 data-number="1.1"><span class="header-section-number">1.1</span> The Spring Equation</h2>
+<p>A mass <span class="math inline">\(m\)</span> attached to a spring with stiffness <span class="math inline">\(k\)</span> satisfies Newton’s second law:</p>
+<p><span class="math display">\[m\,\ddot{x} = -k\,x\]</span></p>
+<p>Rewriting as a first-order system (the standard form for any ODE solver):</p>
+<p><span class="math display">\[\dot{x} = v \qquad \dot{v} = -\frac{k}{m}\,x\]</span></p>
+<p>This is a <strong><code>DynamicalSystem</code></strong>: a set of <strong>state variables</strong> <span class="math inline">\((x, v)\)</span> with equations of motion, and <strong>parameters</strong> <span class="math inline">\((k, m)\)</span> that control the behaviour. Below we define it using the TVBO framework.</p>
+<div id="06b7d614" class="cell" data-execution_count="2">
+<div class="sourceCode" id="cb2"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> Dynamics <span class="im">as</span> DynamicalSystem</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> SimulationExperiment</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>bsplot.style.use(<span class="st">&#39;tvbo&#39;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>system <span class="op">=</span> DynamicalSystem(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    state_variables<span class="op">=</span>[</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;name&quot;</span>: <span class="st">&quot;x&quot;</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;equation&quot;</span>: {<span class="st">&quot;rhs&quot;</span>: <span class="st">&quot;v&quot;</span>},</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;initial_value&quot;</span>: <span class="fl">2.0</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;name&quot;</span>: <span class="st">&quot;v&quot;</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;equation&quot;</span>: {<span class="st">&quot;rhs&quot;</span>: <span class="st">&quot;-(k/m) * x&quot;</span>},</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;initial_value&quot;</span>: <span class="fl">0.0</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>[</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        {<span class="st">&quot;name&quot;</span>: <span class="st">&quot;k&quot;</span>, <span class="st">&quot;value&quot;</span>: <span class="fl">0.0001</span>},</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        {<span class="st">&quot;name&quot;</span>: <span class="st">&quot;m&quot;</span>, <span class="st">&quot;value&quot;</span>: <span class="fl">1.0</span>},</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>Markdown(system.render(<span class="st">&#39;markdown&#39;</span>))</span></code></pre></div>
+<section id="dynamics" class="level2 cell-output cell-output-display cell-output-markdown" data-execution_count="2" data-number="1.2">
+<h2 data-number="1.2"><span class="header-section-number">1.2</span> Dynamics</h2>
+<section id="state-equations" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1"><span class="header-section-number">1.2.1</span> State Equations</h3>
+<p><span class="math display">\[
+\dot{x} = v
+\]</span> <span class="math display">\[
+\dot{v} = - \frac{k*x}{m}
+\]</span></p>
+</section>
+<section id="parameters" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2"><span class="header-section-number">1.2.2</span> Parameters</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><strong>Parameter</strong></th>
+<th><strong>Value</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(k\)</span></td>
+<td>0.0001</td>
+<td>—</td>
+<td>None</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(m\)</span></td>
+<td>1.0</td>
+<td>—</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</div>
+</section>
+<section id="initial-conditions" class="level2" data-number="1.3">
+<h2 data-number="1.3"><span class="header-section-number">1.3</span> Initial Conditions</h2>
+<p>To actually <em>run</em> the system we must pick a <strong>starting point</strong> <span class="math inline">\((x_0, v_0)\)</span> — the <strong>initial condition</strong>.</p>
+<blockquote>
+<p>Think of it as placing the mass at position <span class="math inline">\(x_0\)</span> and releasing it from rest (<span class="math inline">\(v_0 = 0\)</span>).</p>
+</blockquote>
+<p>The initial condition determines <em>which</em> trajectory the system follows, but not the overall dynamics — that is governed by the parameters.</p>
+<div id="0be15c90" class="cell" data-execution_count="3">
+<div class="sourceCode" id="cb3"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>system.state_variables[<span class="st">&#39;x&#39;</span>][<span class="st">&#39;initial_value&#39;</span>] <span class="op">=</span> <span class="fl">2.0</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> SimulationExperiment(dynamics<span class="op">=</span>system).run()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================</code></pre>
+</div>
+</div>
+<div id="98c15524" class="cell" data-execution_count="4">
+<div class="sourceCode" id="cb5"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys, os</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sys.path.insert(<span class="dv">0</span>, os.path.abspath(<span class="st">&#39;..&#39;</span>))  <span class="co"># make notebooks/ importable</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spring_animation <span class="im">import</span> animate_spring</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_animation_video(ani, stem, fps<span class="op">=</span><span class="dv">30</span>):</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Static thumbnail: draw first real frame (frame index 0)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    ani._init_draw()   <span class="co"># sets up blit state</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    ani._func(<span class="dv">0</span>)       <span class="co"># calls update(0) → places spring + mass at initial position</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    ani._fig.savefig(<span class="vs">rf&quot;</span><span class="sc">{</span>stem<span class="sc">}</span><span class="vs">_thumb</span><span class="dv">.</span><span class="vs">png&quot;</span>, bbox_inches<span class="op">=</span><span class="st">&quot;tight&quot;</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    ani.save(<span class="vs">rf&quot;</span><span class="sc">{</span>stem<span class="sc">}</span><span class="dv">.</span><span class="vs">gif&quot;</span>, writer<span class="op">=</span><span class="st">&quot;pillow&quot;</span>, fps<span class="op">=</span>fps)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>x_ts <span class="op">=</span> np.asarray(result.data.sel({<span class="st">&quot;variable&quot;</span>: <span class="st">&quot;x&quot;</span>})).ravel()</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> animate_spring(</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    [x_ts],</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    orientation<span class="op">=</span><span class="st">&quot;horizontal&quot;</span>,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    anchor_pos<span class="op">=-</span><span class="fl">3.0</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    coil_amplitude<span class="op">=</span><span class="fl">0.15</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    mass_sizes<span class="op">=</span><span class="fl">0.3</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[<span class="st">&quot;$x$&quot;</span>],</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    titles<span class="op">=</span>[<span class="st">&quot;Spring oscillator&quot;</span>],</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    n_periods<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>save_animation_video(ani, <span class="st">&#39;spring_single&#39;</span>, fps<span class="op">=</span><span class="dv">30</span>)</span></code></pre></div>
+</div>
+<p><img src="spring_single.gif" class="img-fluid" /></p>
+<section id="varying-initial-conditions" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1"><span class="header-section-number">1.3.1</span> Varying initial conditions</h3>
+<p>Same spring (<span class="math inline">\(k\)</span> and <span class="math inline">\(m\)</span> fixed), three different release positions <span class="math inline">\(x_0\)</span>.</p>
+<p>Notice: <strong>bigger stretch → larger amplitude, same frequency</strong>. The frequency <span class="math inline">\(\omega = \sqrt{k/m}\)</span> depends only on the parameters, not on where you start.</p>
+<div id="a6e9c045" class="cell" data-execution_count="5">
+<div class="sourceCode" id="cb6"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spring_animation <span class="im">import</span> animate_spring</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 3 initial conditions, same k and m ---</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>init_xs <span class="op">=</span> [<span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">2.0</span>, <span class="op">-</span><span class="fl">3.0</span>]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>results_multi <span class="op">=</span> []</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x0 <span class="kw">in</span> init_xs:</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    system.state_variables[<span class="st">&#39;x&#39;</span>][<span class="st">&#39;initial_value&#39;</span>] <span class="op">=</span> x0</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    results_multi.append(SimulationExperiment(dynamics<span class="op">=</span>system).run())</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ts_arrays <span class="op">=</span> [np.asarray(r.data.sel({<span class="st">&quot;variable&quot;</span>: <span class="st">&quot;x&quot;</span>})).ravel() <span class="cf">for</span> r <span class="kw">in</span> results_multi]</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> animate_spring(</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    ts_arrays,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[<span class="ss">f&#39;$x_0=</span><span class="sc">{</span>x0<span class="sc">}</span><span class="ss">$&#39;</span> <span class="cf">for</span> x0 <span class="kw">in</span> init_xs],</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    titles<span class="op">=</span>[<span class="ss">f&#39;$x_0 = </span><span class="sc">{</span>x0<span class="sc">}</span><span class="ss">$&#39;</span> <span class="cf">for</span> x0 <span class="kw">in</span> init_xs],</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    mass_sizes<span class="op">=</span><span class="fl">0.4</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    orientation<span class="op">=</span><span class="st">&quot;vertical&quot;</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    anchor_pos<span class="op">=</span><span class="fl">3.5</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    n_periods<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>save_animation_video(ani, <span class="st">&#39;spring_ics&#39;</span>, fps<span class="op">=</span><span class="dv">30</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================
+
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================
+
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================</code></pre>
+</div>
+</div>
+<p><img src="spring_ics.gif" class="img-fluid" /></p>
+</section>
+</section>
+<section id="phase-space" class="level2" data-number="1.4">
+<h2 data-number="1.4"><span class="header-section-number">1.4</span> Phase Space</h2>
+<p>You just watched three separate time series. <strong>Phase space</strong> is a more compact way to show all of them at once: instead of plotting <span class="math inline">\(x\)</span> vs. time, we plot <span class="math inline">\(x\)</span> (position) vs. <span class="math inline">\(v\)</span> (velocity) for every moment simultaneously.</p>
+<ul>
+<li>Each <strong>closed curve</strong> is one trajectory — the system endlessly traces the same loop (energy is conserved).</li>
+<li>Larger loops correspond to larger initial displacements <span class="math inline">\(x_0\)</span> (more energy).</li>
+<li>The <strong>arrows</strong> (vector field) show the direction of motion everywhere, independent of any particular trajectory.</li>
+</ul>
+<div id="b9fbad8d" class="cell" data-execution_count="6">
+<div class="sourceCode" id="cb8"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> init_x <span class="kw">in</span> [<span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">1.5</span>, <span class="fl">2.0</span>]:</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    system.state_variables[<span class="st">&#39;x&#39;</span>][<span class="st">&#39;initial_value&#39;</span>] <span class="op">=</span> init_x</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    system.plot(kind<span class="op">=</span><span class="st">&#39;phase&#39;</span>, ax<span class="op">=</span>ax, cmap<span class="op">=</span><span class="st">&#39;grey_r&#39;</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>system.plot(kind<span class="op">=</span><span class="st">&#39;vectorfield&#39;</span>, ax<span class="op">=</span>ax, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&quot;x (position)&quot;</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">&quot;v (velocity)&quot;</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">&#39;phase_space.png&#39;</span>, dpi<span class="op">=</span><span class="dv">150</span>, bbox_inches<span class="op">=</span><span class="st">&#39;tight&#39;</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img src="DynamicalSystems_files/figure-html/cell-7-output-1.png" class="img-fluid" /></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="parameters-1" class="level2" data-number="1.5">
+<h2 data-number="1.5"><span class="header-section-number">1.5</span> Parameters</h2>
+<p>Parameters are the <em>knobs</em> of the system. Here we vary the <strong>mass</strong> <span class="math inline">\(m\)</span> while keeping the spring constant <span class="math inline">\(k\)</span> fixed.</p>
+<p>The oscillation frequency is:</p>
+<p><span class="math display">\[\omega = \sqrt{\frac{k}{m}}\]</span></p>
+<p>For the animations below, we start from a stretched state (<span class="math inline">\(x_0 &lt; 0\)</span>, below equilibrium) so the first motion is an upward snap-back, which is usually more intuitive to interpret visually.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 40%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(m\)</span></th>
+<th><span class="math inline">\(\omega\)</span></th>
+<th>intuition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>small</td>
+<td>high</td>
+<td>light mass → spring accelerates it quickly → fast oscillation</td>
+</tr>
+<tr class="even">
+<td>large</td>
+<td>low</td>
+<td>heavy mass → same spring force has less effect → slow oscillation</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Analogy:</strong> a stiff guitar string vibrates faster with less tension (more “resistance” slows it down). Heavier mass = more inertia = slower response to the restoring force.</p>
+</blockquote>
+<p>The box size below encodes mass visually: <strong>bigger box = heavier mass</strong>.</p>
+<div id="c670a2c8" class="cell" data-execution_count="7">
+<div class="sourceCode" id="cb9"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spring_animation <span class="im">import</span> animate_spring</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Same x0 and k, 3 different masses m ---</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Heavier mass → lower frequency (ω = sqrt(k/m))</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Box size scales as m^(1/3) so volume ∝ mass</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>m_values <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">2.0</span>]</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>x0_fixed <span class="op">=</span> <span class="op">-</span><span class="fl">2.0</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>k_fixed  <span class="op">=</span> system.parameters[<span class="st">&#39;k&#39;</span>][<span class="st">&#39;value&#39;</span>]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>results_m <span class="op">=</span> []</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m <span class="kw">in</span> m_values:</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    system.state_variables[<span class="st">&#39;x&#39;</span>][<span class="st">&#39;initial_value&#39;</span>] <span class="op">=</span> x0_fixed</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    system.state_variables[<span class="st">&#39;v&#39;</span>][<span class="st">&#39;initial_value&#39;</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    system.parameters[<span class="st">&#39;m&#39;</span>][<span class="st">&#39;value&#39;</span>] <span class="op">=</span> m</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    results_m.append(SimulationExperiment(dynamics<span class="op">=</span>system).run())</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>system.parameters[<span class="st">&#39;m&#39;</span>][<span class="st">&#39;value&#39;</span>] <span class="op">=</span> <span class="fl">1.0</span>  <span class="co"># restore default</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>ts_m   <span class="op">=</span> [np.asarray(r.data.sel({<span class="st">&quot;variable&quot;</span>: <span class="st">&quot;x&quot;</span>})).ravel() <span class="cf">for</span> r <span class="kw">in</span> results_m]</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>sizes  <span class="op">=</span> [<span class="fl">0.4</span> <span class="op">*</span> (m <span class="op">**</span> (<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>)) <span class="cf">for</span> m <span class="kw">in</span> m_values]          <span class="co"># cube-root: volume ∝ m</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>titles <span class="op">=</span> [<span class="vs">rf&#39;</span><span class="dv">$</span><span class="vs">m=</span><span class="sc">{</span>m<span class="sc">}</span><span class="vs">,</span><span class="ch">\,</span><span class="vs"> </span><span class="er">\</span><span class="vs">omega=</span><span class="sc">{</span>(k_fixed<span class="op">/</span>m)<span class="op">**</span><span class="fl">0.5</span><span class="sc">:.4f}</span><span class="dv">$</span><span class="vs">&#39;</span> <span class="cf">for</span> m <span class="kw">in</span> m_values]</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> animate_spring(</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    ts_m,</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[<span class="ss">f&#39;$m=</span><span class="sc">{</span>m<span class="sc">}</span><span class="ss">$&#39;</span> <span class="cf">for</span> m <span class="kw">in</span> m_values],</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    titles<span class="op">=</span>titles,</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    mass_sizes<span class="op">=</span>sizes,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    orientation<span class="op">=</span><span class="st">&quot;vertical&quot;</span>,</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    anchor_pos<span class="op">=</span><span class="fl">3.5</span>,</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    n_periods<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>save_animation_video(ani, <span class="st">&#39;spring_mass&#39;</span>, fps<span class="op">=</span><span class="dv">30</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================
+
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================
+
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================</code></pre>
+</div>
+</div>
+<p><img src="spring_mass.gif" class="img-fluid" /></p>
+</section>
+<section id="from-toy-models-to-better-realism" class="level2" data-number="1.6">
+<h2 data-number="1.6"><span class="header-section-number">1.6</span> From Toy Models to Better Realism</h2>
+<p>The same framework lets us add more realistic assumptions. For example, we can include:</p>
+<ul>
+<li>damping (energy loss / friction)</li>
+<li>a constant load term (gravity-like bias)</li>
+</ul>
+<p>This changes both the transient behaviour (oscillations decay) and the equilibrium level.</p>
+<div id="56723af6" class="cell" data-execution_count="8">
+<div class="sourceCode" id="cb11"><pre class="sourceCode python cell-code"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo.datamodel.schema <span class="im">import</span> Parameter</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy System</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>realistic <span class="op">=</span> system.copy()</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Change State-Equation</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>realistic.state_variables[<span class="st">&quot;v&quot;</span>][<span class="st">&quot;equation&quot;</span>][<span class="st">&quot;rhs&quot;</span>] <span class="op">=</span> <span class="st">&quot;-(k/m) * x - (c/m) * v + g_eff&quot;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Parameters</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>realistic.parameters[<span class="st">&quot;c&quot;</span>] <span class="op">=</span> Parameter(name<span class="op">=</span><span class="st">&quot;c&quot;</span>, value<span class="op">=</span><span class="fl">0.006</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>realistic.parameters[<span class="st">&quot;g_eff&quot;</span>] <span class="op">=</span> Parameter(name<span class="op">=</span><span class="st">&quot;g_eff&quot;</span>, value<span class="op">=</span><span class="fl">0.00015</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>r_ideal <span class="op">=</span> SimulationExperiment(dynamics<span class="op">=</span>system).run()</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>r_real <span class="op">=</span> SimulationExperiment(dynamics<span class="op">=</span>realistic).run()</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># x_eq = m * g_eff / k  (where the damped system settles)</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>g_eff <span class="op">=</span> realistic.parameters[<span class="st">&quot;g_eff&quot;</span>][<span class="st">&quot;value&quot;</span>]</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> realistic.parameters[<span class="st">&quot;k&quot;</span>][<span class="st">&quot;value&quot;</span>]</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> realistic.parameters[<span class="st">&quot;m&quot;</span>][<span class="st">&quot;value&quot;</span>]</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>x_eq_real <span class="op">=</span> m <span class="op">*</span> g_eff <span class="op">/</span> k</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> animate_spring(</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    [r_ideal.data.sel({<span class="st">&quot;variable&quot;</span>: <span class="st">&quot;x&quot;</span>}), r_real.data.sel({<span class="st">&quot;variable&quot;</span>: <span class="st">&quot;x&quot;</span>})],</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[<span class="st">&quot;toy model&quot;</span>, <span class="st">&quot;damped + load&quot;</span>],</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    titles<span class="op">=</span>[<span class="st">&quot;Toy model&quot;</span>, <span class="st">&quot;Damped + load&quot;</span>],</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    equilibrium<span class="op">=</span>[<span class="fl">0.0</span>, x_eq_real],</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    mass_sizes<span class="op">=</span><span class="fl">0.4</span>,</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    orientation<span class="op">=</span><span class="st">&quot;vertical&quot;</span>,</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    anchor_pos<span class="op">=</span><span class="fl">3.5</span>,</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    n_periods<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>save_animation_video(ani, <span class="st">&quot;spring_realism&quot;</span>, fps<span class="op">=</span><span class="dv">30</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================
+
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================</code></pre>
+</div>
+</div>
+<p><img src="spring_realism.gif" class="img-fluid" /></p>
+<div id="quarto-navigation-envelope" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyLXRpdGxl">Notebooks</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXItdGl0bGU=">Brainsimulation Workshop</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uZXh0">2. Defining a FAIR model</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1wcmV2">1. Introduction to The Virtual Brain</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9ub3RlYm9va3MvMV9pbnRyb2R1Y3Rpb24uaHRtbDEuLUludHJvZHVjdGlvbi10by1UaGUtVmlydHVhbC1CcmFpbg==">1. Introduction to The Virtual Brain</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOnF1YXJ0by1zaWRlYmFyLXNlY3Rpb24tMQ==">1.1 Mathematical Framework</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9ub3RlYm9va3MvMV8xX01hdGhlbWF0aWNhbEZyYW1ld29yay9EeW5hbWljYWxTeXN0ZW1zLmh0bWxEeW5hbWljYWwtU3lzdGVtcy3igJQtQS1TcHJpbmctTWFzcy1FeGFtcGxl">Dynamical Systems — A Spring-Mass Example</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOnF1YXJ0by1zaWRlYmFyLXNlY3Rpb24tMg==">2. Defining a FAIR model</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9ub3RlYm9va3MvMDJhX21lYW5fZmllbGRfbW9kZWxzLmh0bWwyLjEtTWVhbi1maWVsZC1tb2RlbHM=">2.1 Mean field models</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9ub3RlYm9va3MvMDJiX2NvdXBsZWRfbmV0d29ya3MuaHRtbDIuMi1Db3VwbGVkLW5ldHdvcmstZHluYW1pY3M=">2.2 Coupled network dynamics</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOnF1YXJ0by1zaWRlYmFyLXNlY3Rpb24tMw==">3. Dynamical perspective</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9ub3RlYm9va3MvMDNfYmlmdXJjYXRpb25fYW5hbHlzaXMuaHRtbDMuMS1CaWZ1cmNhdGlvbi1hbmFseXNpcw==">3.1 Bifurcation analysis</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOnF1YXJ0by1zaWRlYmFyLXNlY3Rpb24tNA==">4. Parameter optimisation</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9ub3RlYm9va3MvMDRhX2FsemhlaW1lcl91c2VjYXNlLmh0bWxVc2UtY2FzZS1BLeKAlC1BbHpoZWltZXIncy1kaXNlYXNl">Use-case A — Alzheimer’s disease</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9ub3RlYm9va3MvMDRiX3BhcmFtZXRlcl9maXR0aW5nLmh0bWxVc2UtY2FzZS1CLeKAlC1ob21vZ2VuZW91cy12cy4taGV0ZXJvZ2VuZW91cy1wYXJhbWV0ZXItZml0dGluZw==">Use-case B — homogeneous vs. heterogeneous parameter fitting</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOnF1YXJ0by1zaWRlYmFyLXNlY3Rpb24tNQ==">5. Stimulating the brain</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyOi9ub3RlYm9va3MvMDVfc3RpbXVsYXRpb24uaHRtbDUuMS1TdGltdWxhdGluZy10aGUtYnJhaW4=">5.1 Stimulating the brain</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6SG9tZQ==">Home</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L2luZGV4Lmh0bWw=">/index.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6QWdlbmRh">Agenda</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L2FnZW5kYS9hZ2VuZGEuaHRtbA==">/agenda/agenda.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6U2xpZGVz">Slides</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L3NsaWRlcy5odG1s">/slides.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6Tm90ZWJvb2tz">Notebooks</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6MS4gSW50cm9kdWN0aW9uIHRvIEJyYWluIE5ldHdvcmsgTW9kZWxsaW5n">1. Introduction to Brain Network Modelling</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8xX2ludHJvZHVjdGlvbi5odG1s">/notebooks/1_introduction.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6MS4xIE1hdGhlbWF0aWNhbCBGcmFtZXdvcms=">1.1 Mathematical Framework</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8xXzFfTWF0aGVtYXRpY2FsRnJhbWV3b3JrL0R5bmFtaWNhbFN5c3RlbXMuaHRtbA==">/notebooks/1_1_MathematicalFramework/DynamicalSystems.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6LS0t">—</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6Mi4gRGVmaW5pbmcgYSBGQUlSIG1vZGVs">2. Defining a FAIR model</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8yX2ZhaXJfbW9kZWwuaHRtbA==">/notebooks/2_fair_model.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6Mi4xIE1lYW4gZmllbGQgbW9kZWxz">2.1 Mean field models</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8wMmFfbWVhbl9maWVsZF9tb2RlbHMuaHRtbA==">/notebooks/02a_mean_field_models.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6Mi4yIENvdXBsZWQgbmV0d29ya3M=">2.2 Coupled networks</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8wMmJfY291cGxlZF9uZXR3b3Jrcy5odG1s">/notebooks/02b_coupled_networks.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6My4gRHluYW1pY2FsIHBlcnNwZWN0aXZl">3. Dynamical perspective</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8zX2R5bmFtaWNzLmh0bWw=">/notebooks/3_dynamics.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6My4xIEJpZnVyY2F0aW9uIGFuYWx5c2lz">3.1 Bifurcation analysis</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8wM19iaWZ1cmNhdGlvbl9hbmFseXNpcy5odG1s">/notebooks/03_bifurcation_analysis.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6NC4gUGFyYW1ldGVyIG9wdGltaXNhdGlvbg==">4. Parameter optimisation</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy80X29wdGltaXphdGlvbi5odG1s">/notebooks/4_optimization.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6NC4xIEFsemhlaW1lciB1c2UgY2FzZQ==">4.1 Alzheimer use case</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8wNGFfYWx6aGVpbWVyX3VzZWNhc2UuaHRtbA==">/notebooks/04a_alzheimer_usecase.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6NC4yIFBhcmFtZXRlciBmaXR0aW5n">4.2 Parameter fitting</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8wNGJfcGFyYW1ldGVyX2ZpdHRpbmcuaHRtbA==">/notebooks/04b_parameter_fitting.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6NS4gU3RpbXVsYXRpbmcgdGhlIGJyYWlu">5. Stimulating the brain</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy81X3N0aW11bGF0aW9uLmh0bWw=">/notebooks/5_stimulation.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6NS4xIFN0aW11bGF0aW9u">5.1 Stimulation</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L25vdGVib29rcy8wNV9zdGltdWxhdGlvbi5odG1s">/notebooks/05_stimulation.html</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6aHR0cHM6Ly9naXRodWIuY29tL3ZpcnR1YWwtdHdpbi90dmItb250b2xvZ3ktb3B0aW0td29ya3Nob3A=">https://github.com/virtual-twin/tvb-ontology-optim-workshop</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWJyZWFkY3J1bWJzLTEuMS1NYXRoZW1hdGljYWwtRnJhbWV3b3Jr">1.1 Mathematical Framework</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWJyZWFkY3J1bWJzLUR5bmFtaWNhbC1TeXN0ZW1zLeKAlC1BLVNwcmluZy1NYXNzLUV4YW1wbGU=">Dynamical Systems — A Spring-Mass Example</span></p>
+<div class="hidden quarto-markdown-envelope-contents" data-render-id="Zm9vdGVyLWxlZnQ=">
+<p>© 2026 TVB Workshop. Charité University Medicine Berlin and Berlin Institute of Health.</p>
+</div>
+<div class="hidden quarto-markdown-envelope-contents" data-render-id="Zm9vdGVyLWNlbnRlcg==">
+<p><a href="https://www.charite.de"><img src="../../img/Charite.png" alt="Charité" height="40" /></a>    <a href="https://www.bihealth.org"><img src="../../img/BIH.png" alt="BIH" height="40" /></a>    <a href="https://www.berlin-school-of-mind-and-brain.de"><img src="../../img/BSS.png" alt="BSS" height="40" /></a>    <a href="https://ebrains.eu"><img src="../../img/EBRAINS.svg" alt="EBRAINS" height="40" /></a></p>
+</div>
+</div>
+<div id="quarto-meta-markdown" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW1ldGF0aXRsZQ==">Dynamical Systems — A Spring-Mass Example – Brainsimulation Workshop</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLXR3aXR0ZXJjYXJkdGl0bGU=">Dynamical Systems — A Spring-Mass Example – Brainsimulation Workshop</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW9nY2FyZHRpdGxl">Dynamical Systems — A Spring-Mass Example – Brainsimulation Workshop</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW1ldGFzaXRlbmFtZQ==">Brainsimulation Workshop</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLXR3aXR0ZXJjYXJkZGVzYw==">Towards translational and mechanistic whole-brain simulations with The Virtual Brain</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW9nY2FyZGRkZXNj">Towards translational and mechanistic whole-brain simulations with The Virtual Brain</span></p>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id = "quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/virtual-twin\.github\.io\/tvb-ontology-optim-workshop");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a  href="/notebooks/1_introduction.html" class="pagination-link" aria-label="1. Introduction to The Virtual Brain">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">1. Introduction to The Virtual Brain</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a  href="/notebooks/2_fair_model.html" class="pagination-link" aria-label="2. Defining a FAIR model">
+        <span class="nav-page-text">2. Defining a FAIR model</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <div class='footer-contents'>© 2026 TVB Workshop. Charité University Medicine Berlin and Berlin Institute of Health.</div>  
+    </div>   
+    <div class="nav-footer-center">
+      <div class='footer-contents'>[![Charité](/img/Charite.png){fig-alt="Charité" height="40px"}](https://www.charite.de)
+&nbsp;&nbsp;
+[![BIH](/img/BIH.png){fig-alt="BIH" height="40px"}](https://www.bihealth.org)
+&nbsp;&nbsp;
+[![BSS](/img/BSS.png){fig-alt="BSS" height="40px"}](https://www.berlin-school-of-mind-and-brain.de)
+&nbsp;&nbsp;
+[![EBRAINS](/img/EBRAINS.svg){fig-alt="EBRAINS" height="40px"}](https://ebrains.eu)
+</div>  
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/virtual-twin/tvb-ontology-optim-workshop">
+      <i 
+  class="bi bi-github" 
+  role="img" 
+>
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>

@@ -2,6 +2,11 @@
 jupyter: python3
 title: "Dynamical Systems — A Spring-Mass Example"
 ---
+```{python}
+# | collapse: true
+import bsplot
+from IPython.display import Markdown, HTML
+```
 
 # Dynamical Systems
 
@@ -20,12 +25,6 @@ Rewriting as a first-order system (the standard form for any ODE solver):
 $$\dot{x} = v \qquad \dot{v} = -\frac{k}{m}\,x$$
 
 This is a **`DynamicalSystem`**: a set of **state variables** $(x, v)$ with equations of motion, and **parameters** $(k, m)$ that control the behaviour. Below we define it using the TVBO framework.
-
-```{python}
-# | collapse: true
-import bsplot
-from IPython.display import Markdown, HTML
-```
 
 ```{python}
 from tvbo import Dynamics as DynamicalSystem
@@ -73,7 +72,14 @@ import sys, os
 sys.path.insert(0, os.path.abspath('..'))  # make notebooks/ importable
 from spring_animation import animate_spring
 import numpy as np
-from IPython.display import Image
+
+
+def save_animation_video(ani, stem, fps=30):
+    # Static thumbnail: draw first real frame (frame index 0)
+    ani._init_draw()   # sets up blit state
+    ani._func(0)       # calls update(0) → places spring + mass at initial position
+    ani._fig.savefig(rf"{stem}_thumb.png", bbox_inches="tight")
+    ani.save(rf"{stem}.gif", writer="pillow", fps=fps)
 
 x_ts = np.asarray(result.data.sel({"variable": "x"})).ravel()
 
@@ -87,7 +93,7 @@ ani = animate_spring(
     titles=["Spring oscillator"],
     n_periods=1,
 )
-ani.save('spring_single.gif', writer='pillow', fps=30)
+save_animation_video(ani, 'spring_single', fps=30)
 ```
 
 ![](spring_single.gif)
@@ -101,16 +107,14 @@ The frequency $\omega = \sqrt{k/m}$ depends only on the parameters, not on where
 
 ```{python}
 import numpy as np
-from IPython.display import Image
 from spring_animation import animate_spring
 
 # --- 3 initial conditions, same k and m ---
-init_xs = [1.0, 2.0, 3.0]
+init_xs = [-1.0, -2.0, -3.0]
 
 results_multi = []
 for x0 in init_xs:
     system.state_variables['x']['initial_value'] = x0
-    system.state_variables['v']['initial_value'] = 0.0
     results_multi.append(SimulationExperiment(dynamics=system).run())
 
 ts_arrays = [np.asarray(r.data.sel({"variable": "x"})).ravel() for r in results_multi]
@@ -124,7 +128,7 @@ ani = animate_spring(
     anchor_pos=3.5,
     n_periods=1,
 )
-ani.save('spring_ics.gif', writer='pillow', fps=30)
+save_animation_video(ani, 'spring_ics', fps=30)
 ```
 
 ![](spring_ics.gif)
@@ -160,6 +164,8 @@ The oscillation frequency is:
 
 $$\omega = \sqrt{\frac{k}{m}}$$
 
+For the animations below, we start from a stretched state ($x_0 < 0$, below equilibrium) so the first motion is an upward snap-back, which is usually more intuitive to interpret visually.
+
 | $m$ | $\omega$ | intuition |
 |-----|----------|----------|
 | small | high | light mass → spring accelerates it quickly → fast oscillation |
@@ -171,14 +177,13 @@ The box size below encodes mass visually: **bigger box = heavier mass**.
 
 ```{python}
 import numpy as np
-from IPython.display import Image
 from spring_animation import animate_spring
 
 # --- Same x0 and k, 3 different masses m ---
 # Heavier mass → lower frequency (ω = sqrt(k/m))
 # Box size scales as m^(1/3) so volume ∝ mass
 m_values = [0.5, 1.0, 2.0]
-x0_fixed = 2.0
+x0_fixed = -2.0
 k_fixed  = system.parameters['k']['value']
 
 results_m = []
@@ -191,7 +196,7 @@ system.parameters['m']['value'] = 1.0  # restore default
 
 ts_m   = [np.asarray(r.data.sel({"variable": "x"})).ravel() for r in results_m]
 sizes  = [0.4 * (m ** (1/3)) for m in m_values]          # cube-root: volume ∝ m
-titles = [f'$m={m},\ \\omega={(k_fixed/m)**0.5:.4f}$' for m in m_values]
+titles = [rf'$m={m},\, \omega={(k_fixed/m)**0.5:.4f}$' for m in m_values]
 
 ani = animate_spring(
     ts_m,
@@ -202,62 +207,55 @@ ani = animate_spring(
     anchor_pos=3.5,
     n_periods=1,
 )
-ani.save('spring_mass.gif', writer='pillow', fps=30)
+save_animation_video(ani, 'spring_mass', fps=30)
 ```
 
 ![](spring_mass.gif)
 
-### Varying stiffness
 
-Now we fix the mass and initial condition and vary the **spring constant** $k$.
+## From Toy Models to Better Realism
 
-The stiffer the spring, the faster it snaps back — and the higher the frequency.
+The same framework lets us add more realistic assumptions. For example, we can include:
 
-$$\omega = \sqrt{\frac{k}{m}}$$
+- damping (energy loss / friction)
+- a constant load term (gravity-like bias)
 
-| $k$ | $\omega$ | intuition |
-|-----|----------|----------|
-| small | low | loose spring → weak restoring force → slow oscillation |
-| large | high | stiff spring → strong restoring force → fast oscillation |
-
-The **linewidth** of the spring encodes stiffness visually: **thinner coil = stiffer spring (high $k$, fast)** — a thin, taut wire oscillates faster than a thick, heavy coil.
+This changes both the transient behaviour (oscillations decay) and the equilibrium level.
 
 ```{python}
-import numpy as np
-from IPython.display import Image
-from spring_animation import animate_spring
+from tvbo.datamodel.schema import Parameter
 
-# --- Same m and x0, 3 different stiffnesses k ---
-k_values = [0.00005, 0.0001, 0.0002]
-m_fixed  = 1.0
-x0_fixed = 2.0
+# Copy System
+realistic = system.copy()
 
-system.parameters['m']['value'] = m_fixed
-system.state_variables['v']['initial_value'] = 0.0
+# Change State-Equation
+realistic.state_variables["v"]["equation"]["rhs"] = "-(k/m) * x - (c/m) * v + g_eff"
 
-results_k = []
-for k in k_values:
-    system.parameters['k']['value'] = k
-    system.state_variables['x']['initial_value'] = x0_fixed
-    results_k.append(SimulationExperiment(dynamics=system).run())
-system.parameters['k']['value'] = 0.0001  # restore default
+# Add Parameters
+realistic.parameters["c"] = Parameter(name="c", value=0.006)
+realistic.parameters["g_eff"] = Parameter(name="g_eff", value=0.00015)
 
-ts_k   = [np.asarray(r.data.sel({"variable": "x"})).ravel() for r in results_k]
-lws    = [5.0 - 4.0 * (k / max(k_values)) for k in k_values]  # thin=stiff/fast, thick=loose/slow
-titles = [f'$k={k},\\ \\omega={(k/m_fixed)**0.5:.4f}$' for k in k_values]
+r_ideal = SimulationExperiment(dynamics=system).run()
+r_real = SimulationExperiment(dynamics=realistic).run()
+
+# x_eq = m * g_eff / k  (where the damped system settles)
+g_eff = realistic.parameters["g_eff"]["value"]
+k = realistic.parameters["k"]["value"]
+m = realistic.parameters["m"]["value"]
+x_eq_real = m * g_eff / k
 
 ani = animate_spring(
-    ts_k,
-    labels=[f'$k={k}$' for k in k_values],
-    titles=titles,
+    [r_ideal.data.sel({"variable": "x"}), r_real.data.sel({"variable": "x"})],
+    labels=["toy model", "damped + load"],
+    titles=["Toy model", "Damped + load"],
+    equilibrium=[0.0, x_eq_real],
     mass_sizes=0.4,
-    spring_lw=lws,
     orientation="vertical",
     anchor_pos=3.5,
-    n_periods=1,
+    n_periods=3,
 )
-ani.save('spring_stiffness.gif', writer='pillow', fps=30)
+save_animation_video(ani, "spring_realism", fps=30)
 
 ```
 
-![](spring_stiffness.gif)
+![](spring_realism.gif)

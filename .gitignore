@@ -13,4 +13,4 @@ __pycache__/
 
 # Notebooks rendered from notebooks/*.qmd sources
 /notebooks/*.ipynb
-_freeze
+site_libs

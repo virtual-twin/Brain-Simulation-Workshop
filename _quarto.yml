@@ -11,7 +11,6 @@ render:
     - slides.qmd
     - notebooks/1_introduction.qmd
     - notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
-    - notebooks/1_1_MathematicalFramework/DynamicalSystems_slides.qmd
     - notebooks/2_fair_model.qmd
     - notebooks/02a_mean_field_models.qmd
     - notebooks/02b_coupled_networks.qmd
@@ -48,8 +47,6 @@ website:
             text: "1. Introduction to Brain Network Modelling"
           - href: notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
             text: "  1.1 Mathematical Framework"
-          - href: notebooks/1_1_MathematicalFramework/DynamicalSystems_slides.qmd
-            text: "    ↳ Slides"
           - text: "---"
           - href: notebooks/2_fair_model.qmd
             text: "2. Defining a FAIR model"
@@ -86,7 +83,6 @@ website:
         - section: "1.1 Mathematical Framework"
           contents:
             - notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
-            - notebooks/1_1_MathematicalFramework/DynamicalSystems_slides.qmd
         - section: "2. Defining a FAIR model"
           href: notebooks/2_fair_model.qmd
           contents:

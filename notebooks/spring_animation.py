@@ -101,7 +101,7 @@ def animate_spring(
     mass_sizes: float | list[float] = 0.4,
     orientation: str = "vertical",
     anchor_pos: float = 3.5,
-    equilibrium: float = 0.0,
+    equilibrium: float | list[float] = 0.0,
     n_coils: int = 8,
     coil_amplitude: float = 0.08,
     figsize: tuple[float, float] | None = None,
@@ -208,9 +208,15 @@ def animate_spring(
     n_pts = min(len(a) for a in trajectories)
     trajs = [np.asarray(a).ravel()[:n_pts] for a in trajectories]
 
+    # Normalise equilibrium to a per-trajectory list
+    if np.isscalar(equilibrium):
+        equilibria = [float(equilibrium)] * n
+    else:
+        equilibria = [float(e) for e in equilibrium]
+
     # --- Optionally trim to whole periods for seamless looping ---
     if n_periods is not None:
-        ref = trajs[0] - equilibrium
+        ref = trajs[0] - equilibria[0]
         # Find zero-crossings (positive-going) after the first sample
         crossings = np.where((ref[:-1] < 0) & (ref[1:] >= 0))[0] + 1
         if len(crossings) >= int(n_periods) + 1:
@@ -270,12 +276,12 @@ def animate_spring(
 
     if orientation == "vertical":
         y_hi = anchor_pos + anchor_thickness + 0.2
-        y_lo = equilibrium - amp_max - size_max - 0.4
+        y_lo = min(equilibria) - amp_max - size_max - 0.4
         sp_xlim = (-1.0, 1.0)
         sp_ylim = (y_lo, y_hi)
     else:
         x_lo = anchor_pos - anchor_thickness - 0.2
-        x_hi = equilibrium + amp_max + size_max + 0.4
+        x_hi = max(equilibria) + amp_max + size_max + 0.4
         sp_xlim = (x_lo, x_hi)
         sp_ylim = (-1.0, 1.0)
 
@@ -285,7 +291,7 @@ def animate_spring(
     spring_lines: list = []
     mass_patches: list = []
 
-    for ax, traj, col, title, side, lw in zip(spring_axes, trajs, _colors, _titles, sizes, lws):
+    for ax, traj, col, title, side, lw, eq in zip(spring_axes, trajs, _colors, _titles, sizes, lws, equilibria):
         ax.set_xlim(*sp_xlim)
         ax.set_ylim(*sp_ylim)
         ax.set_aspect("equal")
@@ -301,7 +307,7 @@ def animate_spring(
             )
             ax.axhline(anchor_pos, color="gray", lw=2)
             if show_equilibrium:
-                ax.axhline(equilibrium, color="red", lw=0.8, ls="--", alpha=0.4)
+                ax.axhline(eq, color="red", lw=0.8, ls="--", alpha=0.4)
         else:
             ax.fill_betweenx(
                 [-anchor_half_width, anchor_half_width],
@@ -311,7 +317,7 @@ def animate_spring(
             )
             ax.axvline(anchor_pos, color="gray", lw=2)
             if show_equilibrium:
-                ax.axvline(equilibrium, color="red", lw=0.8, ls="--", alpha=0.4)
+                ax.axvline(eq, color="red", lw=0.8, ls="--", alpha=0.4)
 
         sl, = ax.plot([], [], "k-", lw=lw)
         mr = Rectangle(
@@ -332,7 +338,8 @@ def animate_spring(
     ax_t.set_xlabel(ts_xlabel)
     ax_t.set_ylabel(ts_ylabel)
     if show_equilibrium:
-        ax_t.axhline(equilibrium, color="red", lw=0.8, ls="--", alpha=0.4)
+        for eq in set(equilibria):
+            ax_t.axhline(eq, color="red", lw=0.8, ls="--", alpha=0.4)
 
     ts_lines: list = []
     ts_dots: list = []
