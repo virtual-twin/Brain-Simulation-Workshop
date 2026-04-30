@@ -61,7 +61,6 @@ jupyter: python3
 - TODO: motivation for whole-brain network modeling
 - TODO: brief historical arc of TVB
 
-
 ## Basic ideas and history
 
 :::: {.columns}
@@ -105,17 +104,42 @@ $$
 :::
 
 
-## The Spring Equation {background-color="#ffffff"}
+## Dynamical Systems
 
+
+:::: {.columns}
+
+::: {.column style="font-size: 0.55em;"}
+
+**State Equations:**
 $$
-\dot{x} = v \qquad \dot{v} = -\frac{k}{m}\,x
+\dot{x} = v
 $$
+$$
+\dot{v} = - \frac{k*x}{m}
+$$
+
+**Parameters**
+
+| **Parameter** | **Value** | **Unit** | **Description** |
+|---------------|-----------|----------|-----------------|
+| $k$ | 0.0001 | $\frac{\mathrm{N}}{\mathrm{m}}$ | Spring stiffness constant |
+| $m$ | 1.0 | $\mathrm{kg}$ | Mass of the oscillating body |
+
+
+:::
+
+::: {.column}
 
 ::: {.r-stack}
-![](notebooks/1_1_MathematicalFramework/spring_single_thumb.png){fig-align="center" height="500px"}
 
-![](notebooks/1_1_MathematicalFramework/spring_single.gif){.fragment fig-align="center" height="500px"}
+![](notebooks/1_1_MathematicalFramework/spring_single_thumb.png){fig-align="center"}
+
+![](notebooks/1_1_MathematicalFramework/spring_single.gif){.fragment fig-align="center"}
 :::
+:::
+
+::::
 
 ## Initial Conditions {background-color="#ffffff"}
 

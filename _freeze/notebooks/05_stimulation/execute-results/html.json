@@ -1,0 +1,12 @@
+{
+  "hash": "7b4c5fb4e0ad7486861536ff03410c19",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"5.1 Stimulating the brain\"\nsubtitle: \"Visual and TMS-evoked potentials\"\njupyter: python3\n---\n\n## Goals\n\n- TODO: configure a Jansen–Rit network\n- TODO: deliver a focal stimulus (visual / TMS)\n- TODO: extract evoked potentials and compare to references\n\n## Setup\n\n::: {#372d0e99 .cell execution_count=1}\n``` {.python .cell-code}\n# TODO: imports\n```\n:::\n\n\n## Build the JR network\n\n::: {#5dbde2e8 .cell execution_count=2}\n``` {.python .cell-code}\n# TODO: instantiate model, connect via connectome\n```\n:::\n\n\n## Configure the stimulus\n\n::: {#0626df9f .cell execution_count=3}\n``` {.python .cell-code}\n# TODO: spatial pattern + temporal waveform\n```\n:::\n\n\n## Run and extract evoked responses\n\n::: {#48bd919e .cell execution_count=4}\n``` {.python .cell-code}\n# TODO: simulate, average across trials, plot ERPs\n```\n:::\n\n\n## Exercises\n\n- TODO: vary stimulus intensity and locate the response threshold\n- TODO: compare visual vs. TMS-like protocols\n\n",
+    "supporting": [
+      "05_stimulation_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "hash": "76dd3176cae062cc9bd79594743cbc6c",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"3.1 Bifurcation analysis\"\nsubtitle: \"Dynamical perspective\"\njupyter: python3\n---\n\n## Goals\n\n- TODO: locate fixed points of a 2D mean-field model\n- TODO: compute and visualise a 1D bifurcation diagram\n- TODO: relate bifurcations to network-level phenomena\n\n## Setup\n\n::: {#6bad3e8e .cell execution_count=1}\n``` {.python .cell-code}\n# TODO: imports\n```\n:::\n\n\n## Fixed points and stability\n\n::: {#0c52d6b9 .cell execution_count=2}\n``` {.python .cell-code}\n# TODO: nullclines, Jacobian, eigenvalues\n```\n:::\n\n\n## 1D bifurcation diagram\n\n::: {#702666f2 .cell execution_count=3}\n``` {.python .cell-code}\n# TODO: sweep one parameter, track equilibria and limit cycles\n```\n:::\n\n\n## 2D bifurcation diagram (optional)\n\n::: {#a10ce3b6 .cell execution_count=4}\n``` {.python .cell-code}\n# TODO: codim-2 sweep\n```\n:::\n\n\n## Exercises\n\n- TODO: identify Hopf vs. saddle-node bifurcations\n- TODO: connect the bifurcation type to a behavioural regime\n\n---\njupyter:\n  kernelspec:\n    display_name: Python 3 (ipykernel)\n    language: python\n    name: python3\n    path: /Users/leonmartin_bih/projects/TVB-O/tvb-ontology-optim-workshop/.venv/share/jupyter/kernels/python3\n  language_info:\n    codemirror_mode:\n      name: ipython\n      version: 3\n    file_extension: .py\n    mimetype: text/x-python\n    name: python\n    nbconvert_exporter: python\n    pygments_lexer: ipython3\n    version: 3.12.11\n---\n",
+    "supporting": [
+      "03_bifurcation_analysis_files/figure-ipynb"
+    ],
+    "filters": []
+  }
+}
