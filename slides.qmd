@@ -190,13 +190,6 @@ $$
 ![](notebooks/1_1_MathematicalFramework/spring_mass.gif){.fragment fig-align="center" height="580px"}
 :::
 
-## Parameters — Stiffness {background-color="#ffffff"}
-
-::: {.r-stack}
-![](notebooks/1_1_MathematicalFramework/spring_stiffness_thumb.png){fig-align="center" height="580px"}
-
-![](notebooks/1_1_MathematicalFramework/spring_stiffness.gif){.fragment fig-align="center" height="580px"}
-:::
 
 ## Towards Realism — Damping & Load {background-color="#ffffff"}
 
