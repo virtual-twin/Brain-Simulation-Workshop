@@ -111,6 +111,9 @@ $$
 
 ::: {.column style="font-size: 0.55em;"}
 
+A mass $m$ on a spring with stiffness $k$. <br/>
+Perpetual oscillation at $\omega = \sqrt{k/m}$.
+
 **State Equations:**
 $$
 \dot{x} = v
@@ -118,6 +121,13 @@ $$
 $$
 \dot{v} = - \frac{k*x}{m}
 $$
+
+**State Variables**
+
+| **Variable** | **Initial Value** | **Unit** | **Description** |
+|--------------|-------------------|----------|-----------------|
+| $x$ | 2.0 | $\mathrm{m}$ | Displacement from equilibrium |
+| $v$ | 0.0 | $\frac{\mathrm{m}}{\mathrm{s}}$ | Velocity |
 
 **Parameters**
 
