@@ -12,9 +12,52 @@ jupyter: python3
 
 ## Setup
 
+Bifurcation analysis reveals how a system's qualitative behavior changes as parameters vary — fixed points, oscillations, and transitions.
+
+TVBO supports multiple backends for bifurcation analysis using the **same** `Continuation` specification:
+
+- **BifurcationKit.jl** — Julia-based, via `exp.run("bifurcationkit.jl")`
+- **PyRates/PyCoBi** — Python-based (AUTO-07p), via `exp.run("pyrates-bifurcation")`
+
+## Quick Start
+
 ```{python}
-# TODO: imports
+from IPython.display import Markdown
+from tvbo import Continuation, Dynamics, SimulationExperiment
+model = Dynamics.from_ontology('Generic2dOscillator')
+Markdown(model.generate_report())
 ```
+
+
+```{python}
+cont = Continuation.from_string(
+    """\
+name: eq_in_a
+label: "Equilibrium branch in a"
+description: >-
+    Continue the equilibrium branch of the Generic2dOscillator as parameter a is varied. Detect Hopf bifurcations and continue periodic orbits from all Hopf points.
+
+dynamics: Generic2dOscillator
+
+free_parameters:
+    - name: I
+      domain:
+          lo: "-10"
+          hi: "20"
+
+branches:
+    - name: po_from_hopf
+      source_point: "hopf:all"
+"""
+)
+
+exp = SimulationExperiment(dynamics=model, continuations=[cont])
+```
+
+```{python}
+
+```
+
 
 ## Fixed points and stability
 
@@ -26,12 +69,43 @@ jupyter: python3
 
 ```{python}
 # TODO: sweep one parameter, track equilibria and limit cycles
+bif_result_jl = exp.run("bifurcationkit.jl")
+bif_result_jl.plot(VOI='V')
 ```
 
 ## 2D bifurcation diagram (optional)
 
 ```{python}
-# TODO: codim-2 sweep
+cont_c2 = Continuation.from_string(
+    """\
+name: eq_I_with_codim2
+dynamics: Generic2dOscillator
+
+free_parameters:
+    - name: I
+      domain:
+          lo: "-10"
+          hi: "20"
+
+branches:
+    - name: po_from_hopf
+      source_point: "hopf:all"
+    - name: hopf_curve_in_b
+      source_point: "hopf:all"
+      bothside: true
+      continuation:
+          name: c2_hopf_in_b
+          free_parameters:
+              - name: b
+                domain:
+                    lo: "-20"
+                    hi: "0"
+          max_steps: 500
+          ds: 0.01
+"""
+)
+
+exp_c2 = SimulationExperiment(dynamics=model, continuations=[cont_c2])
 ```
 
 ## Exercises
