@@ -43,7 +43,7 @@ jupyter: python3
 ::: {.column width="60%" .smaller}
 **Day 1**\
 **Block 1 - 09:00-12:00:**\
-1. Intro to TVB\
+1. Intro to Brain Network Modelling\
 2. Defining a FAIR brain network model\
 3. Dynamical perspective\
 4. Setup & First examples
