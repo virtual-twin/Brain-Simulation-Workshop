@@ -1,0 +1,11 @@
+{
+  "hash": "2b6c5a197b940ac9b67adf2446409a28",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"2.1 Mean field models\"\nsubtitle: \"Defining a FAIR brain network model\"\njupyter: python3\n---\n\n## Goals\n\n- TODO: pick a mean-field model from TVB\n- TODO: inspect parameters and state variables\n- TODO: simulate a single node and visualise dynamics\n\n## Setup\n\n::: {#68397a8a .cell execution_count=1}\n``` {.python .cell-code}\n# TODO: imports\n```\n:::\n\n\n## Inspect the model\n\n::: {#84408c10 .cell execution_count=2}\n``` {.python .cell-code}\n# TODO: instantiate model, print parameter table\n```\n:::\n\n\n## Simulate a single node\n\n::: {#c2bdecbc .cell execution_count=3}\n``` {.python .cell-code}\n# TODO: short simulation, plot time series\n```\n:::\n\n\n## Exercises\n\n- TODO: vary one parameter and describe the qualitative change\n- TODO: compare two mean-field models on the same input\n\n---\njupyter:\n  kernelspec:\n    display_name: Python 3 (ipykernel)\n    language: python\n    name: python3\n    path: /Users/leonmartin_bih/projects/TVB-O/tvb-ontology-optim-workshop/.venv/share/jupyter/kernels/python3\n  language_info:\n    codemirror_mode:\n      name: ipython\n      version: 3\n    file_extension: .py\n    mimetype: text/x-python\n    name: python\n    nbconvert_exporter: python\n    pygments_lexer: ipython3\n    version: 3.12.11\n---\n",
+    "supporting": [
+      "02a_mean_field_models_files/figure-ipynb"
+    ],
+    "filters": []
+  }
+}

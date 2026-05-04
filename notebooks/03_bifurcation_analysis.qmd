@@ -1,6 +1,6 @@
 ---
-title: "Bifurcation analysis — hands on"
-subtitle: "Session 3 · Dynamical perspective"
+title: "3.1 Bifurcation analysis"
+subtitle: "Dynamical perspective"
 jupyter: python3
 ---
 

@@ -1,6 +1,6 @@
 ---
-title: "Stimulating the brain — hands on"
-subtitle: "Session 5 · Visual and TMS-evoked potentials (Jansen–Rit)"
+title: "5.1 Stimulating the brain"
+subtitle: "Visual and TMS-evoked potentials"
 jupyter: python3
 ---
 

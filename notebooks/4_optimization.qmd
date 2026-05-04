@@ -1,0 +1,34 @@
+---
+title: "4. Parameter exploration and model optimization"
+subtitle: "Sessions 4.1 · 4.2"
+toc: false
+---
+
+In this chapter you will fit personalized whole-brain models to empirical data
+using TVB-Optim's gradient-based optimisation. Two complementary approaches
+are covered: a disease use case with biomedical data integration, and a
+systematic comparison of homogeneous versus heterogeneous parameter strategies.
+
+## Sessions
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### [4a · Alzheimer's disease use case](04a_alzheimer_usecase.qmd)
+Build a personalised model using patient-specific connectivity and tau
+deposition maps. Reproduce empirical BOLD signals and interpret the result in
+the context of network degeneration.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### [4b · Parameter fitting](04b_parameter_fitting.qmd)
+Compare homogeneous and heterogeneous parameter fitting strategies.
+Use TVB-Optim to optimise a frequency gradient (or another map from TVBase)
+and assess the impact on model fit quality.
+:::
+
+:::
+
+---
+
+*Part of [Day 1](day1.qmd)*

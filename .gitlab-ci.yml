@@ -1,0 +1,70 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# GitLab CI — render Quarto website/slides → deploy to GitLab Pages
+#
+# Deployment:
+#   GitLab Pages — artifacts-based (public/), served at your GitLab Pages URL
+# ─────────────────────────────────────────────────────────────────────────────
+
+stages:
+  - render
+  - deploy
+
+variables:
+  QUARTO_VERSION: "1.7.24"
+  PYTHON_VERSION: "3.13"
+
+# ── Shared setup template (macOS shell executor) ─────────────────────────────
+.install_quarto: &install_quarto
+  - |
+    if command -v quarto &>/dev/null && [[ "$(quarto --version)" == "${QUARTO_VERSION}" ]]; then
+      echo "Quarto ${QUARTO_VERSION} already installed"
+    else
+      ARCH=$(uname -m)
+      URL="https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-macos.pkg"
+      curl -fsSL "$URL" -o /tmp/quarto.pkg
+      sudo installer -pkg /tmp/quarto.pkg -target /
+      rm /tmp/quarto.pkg
+    fi
+  - quarto check install
+
+# ── Job: render ──────────────────────────────────────────────────────────────
+render:
+  stage: render
+  before_script:
+    - *install_quarto
+    # Install uv if not already available
+    - command -v uv &>/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.local/bin:$PATH"
+    # Create venv and install dependencies
+    - uv venv .venv --python ${PYTHON_VERSION}
+    - source .venv/bin/activate
+    - uv pip install tvbo[all] bsplot jupyter-cache qrcode
+  script:
+    - source .venv/bin/activate
+    - quarto render
+    - rm -rf public
+    - mv _site public
+  artifacts:
+    name: "workshop-site-html"
+    paths:
+      - public/
+    expire_in: 7 days
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+# ── Job: pages (GitLab Pages) ────────────────────────────────────────────────
+# Must be named exactly "pages" and produce a "public/" artifact.
+# Served at: https://<namespace>.pages.<gitlab-host>/<project>/
+pages:
+  stage: deploy
+  needs:
+    - job: render
+      artifacts: true
+  script:
+    - echo "Deploying to GitLab Pages"
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'

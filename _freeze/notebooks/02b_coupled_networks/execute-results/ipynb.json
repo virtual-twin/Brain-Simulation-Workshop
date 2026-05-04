@@ -1,0 +1,11 @@
+{
+  "hash": "450bde9a1c288527f1b29a9a50a0f241",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"2.2 Coupled network dynamics\"\nsubtitle: \"Defining a FAIR brain network model\"\njupyter: python3\n---\n\n## Goals\n\n- TODO: load a connectome\n- TODO: assemble a network simulation with delays and coupling\n- TODO: explore the global coupling parameter\n\n## Setup\n\n::: {#28a80ec8 .cell execution_count=1}\n``` {.python .cell-code}\n# TODO: imports\n```\n:::\n\n\n## Load the connectome\n\n::: {#c8365121 .cell execution_count=2}\n``` {.python .cell-code}\n# TODO: load weights, tract lengths, region labels\n```\n:::\n\n\n## Run a network simulation\n\n::: {#3743721c .cell execution_count=3}\n``` {.python .cell-code}\n# TODO: configure simulator, integrate, collect outputs\n```\n:::\n\n\n## Sweep global coupling\n\n::: {#4c434de6 .cell execution_count=4}\n``` {.python .cell-code}\n# TODO: loop over coupling values, summarise activity\n```\n:::\n\n\n## Exercises\n\n- TODO: identify the coupling regime that maximises FC correlation\n- TODO: swap in a different parcellation\n\n---\njupyter:\n  kernelspec:\n    display_name: Python 3 (ipykernel)\n    language: python\n    name: python3\n    path: /Users/leonmartin_bih/projects/TVB-O/tvb-ontology-optim-workshop/.venv/share/jupyter/kernels/python3\n  language_info:\n    codemirror_mode:\n      name: ipython\n      version: 3\n    file_extension: .py\n    mimetype: text/x-python\n    name: python\n    nbconvert_exporter: python\n    pygments_lexer: ipython3\n    version: 3.12.11\n---\n",
+    "supporting": [
+      "02b_coupled_networks_files/figure-ipynb"
+    ],
+    "filters": []
+  }
+}

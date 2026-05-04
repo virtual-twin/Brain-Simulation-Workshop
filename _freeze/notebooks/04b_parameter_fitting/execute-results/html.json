@@ -1,0 +1,12 @@
+{
+  "hash": "8800bdb69de77fc23f30a7cc08af1706",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Use-case B — homogeneous vs. heterogeneous parameter fitting\"\nsubtitle: \"4.2 Parameter exploration and model optimization\"\njupyter: python3\n---\n\n## Goals\n\n- TODO: fit a global parameter to a target observable (e.g. frequency gradient)\n- TODO: fit region-wise heterogeneous parameters with TVB-Optim\n- TODO: compare goodness of fit and interpretability\n\n## Setup\n\n::: {#7a71a894 .cell execution_count=1}\n``` {.python .cell-code}\n# TODO: imports, including tvboptim\n```\n:::\n\n\n## Define target and loss\n\n::: {#1b909392 .cell execution_count=2}\n``` {.python .cell-code}\n# TODO: load TVBase map, define loss against simulated observable\n```\n:::\n\n\n## Homogeneous fit\n\n::: {#cd40affa .cell execution_count=3}\n``` {.python .cell-code}\n# TODO: optimise a single global parameter\n```\n:::\n\n\n## Heterogeneous fit\n\n::: {#ff2ef44a .cell execution_count=4}\n``` {.python .cell-code}\n# TODO: optimise a per-region parameter vector\n```\n:::\n\n\n## Compare\n\n::: {#2c5fd911 .cell execution_count=5}\n``` {.python .cell-code}\n# TODO: residuals, parameter maps, runtime\n```\n:::\n\n\n## Exercises\n\n- TODO: regularise the heterogeneous fit and discuss the trade-off\n- TODO: try a different target map\n\n",
+    "supporting": [
+      "04b_parameter_fitting_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

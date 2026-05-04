@@ -1,4 +1,5 @@
 /.quarto/
+/_site/
 
 # Quarto / RevealJS render artifacts for slides
 /slides.html
@@ -12,3 +13,4 @@ __pycache__/
 
 # Notebooks rendered from notebooks/*.qmd sources
 /notebooks/*.ipynb
+site_libs

@@ -1,0 +1,12 @@
+{
+  "hash": "76dd3176cae062cc9bd79594743cbc6c",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"3.1 Bifurcation analysis\"\nsubtitle: \"Dynamical perspective\"\njupyter: python3\n---\n\n## Goals\n\n- TODO: locate fixed points of a 2D mean-field model\n- TODO: compute and visualise a 1D bifurcation diagram\n- TODO: relate bifurcations to network-level phenomena\n\n## Setup\n\n::: {#225af6ce .cell execution_count=1}\n``` {.python .cell-code}\n# TODO: imports\n```\n:::\n\n\n## Fixed points and stability\n\n::: {#7cc60a03 .cell execution_count=2}\n``` {.python .cell-code}\n# TODO: nullclines, Jacobian, eigenvalues\n```\n:::\n\n\n## 1D bifurcation diagram\n\n::: {#f24f958a .cell execution_count=3}\n``` {.python .cell-code}\n# TODO: sweep one parameter, track equilibria and limit cycles\n```\n:::\n\n\n## 2D bifurcation diagram (optional)\n\n::: {#52366a31 .cell execution_count=4}\n``` {.python .cell-code}\n# TODO: codim-2 sweep\n```\n:::\n\n\n## Exercises\n\n- TODO: identify Hopf vs. saddle-node bifurcations\n- TODO: connect the bifurcation type to a behavioural regime\n\n",
+    "supporting": [
+      "03_bifurcation_analysis_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
