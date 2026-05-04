@@ -40,20 +40,30 @@ jupyter: python3
 ## Schedule {.unnumbered}
 
 ::: {.columns}
-::: {.column width="50%"}
-**Day 1**
+::: {.column width="60%" .smaller}
+**Day 1**\
+**Block 1 - 09:00-12:00:**\
+1. Intro to TVB\
+2. Defining a FAIR brain network model\
+3. Dynamical perspective\
+4. Setup & First examples
 
-1. Intro to TVB
-2. Defining a FAIR brain network model
-3. Dynamical perspective
-4. Parameter exploration & optimization
-5. Stimulating the brain
+**Block 2 - 13:00-15:00:**\
+5. Bifurcation Theory\
+6. Parameter exploration & optimization
+
+**Block 3 - 15:30-17:30:**\
+7. Stimulating the brain
 :::
-::: {.column width="50%"}
-**Day 2**
+::: {.column width="40%" .smaller}
+**Day 2**\
+**Block 1 - 09:00-11:30:**\
+Mini hackathon - Bring your own data / research question
 
-- Mini hackathon
-- Bring your own data / research question
+
+**Block 2 - 12:00-13:30:**\
+Mini hackathon - Bring your own data / research question
+
 :::
 :::
 
