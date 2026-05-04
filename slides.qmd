@@ -50,7 +50,7 @@ jupyter: python3
 
 **Block 2 - 13:00-15:00:**\
 5. Bifurcation Theory\
-6. Parameter exploration & optimization
+6. Parameter exploration & inference
 
 **Block 3 - 15:30-17:30:**\
 7. Stimulating the brain
@@ -67,7 +67,7 @@ Mini hackathon - Bring your own data / research question
 :::
 :::
 
-# 1. Intro to The Virtual Brain {background-color="#0b3d91"}
+# 1. Intro to Brain Network Modelling {background-color="#0b3d91"}
 - TODO: motivation for whole-brain network modeling
 - TODO: brief historical arc of TVB
 
@@ -275,22 +275,11 @@ $$
 - TODO: 1D / 2D bifurcation diagrams
 - TODO: interpretation in the brain-network context
 
-# 4. Parameter exploration and model optimization {background-color="#0b3d91"}
+{{< include _slides-section-4.qmd >}}
 
-## Brain network models as computational hypotheses
+<!-- section 4 lives in _slides-section-4.qmd to keep diffs scoped and
+     reduce merge conflicts when collaborators touch slides.qmd -->
 
-- TODO: framing — model fitting as hypothesis testing
-- TODO: TVB-Optim overview [@Pille2025]
-
-## Use-case A — Alzheimer's disease
-
-- TODO: mechanistic simulation
-- TODO: integration of biomedical data
-
-## Use-case B — homogeneous vs. heterogeneous fitting
-
-- TODO: frequency gradients (or another TVBase map)
-- TODO: comparison protocol
 
 # 5. Stimulating the brain {background-color="#0b3d91"}
 

@@ -35,7 +35,7 @@ transitions between dynamical regimes.
 :::
 
 ::: {.g-col-12 .g-col-md-3}
-### [4. Parameter exploration and optimisation](4_optimization.qmd)
+### [4. Parameter exploration and inference](4_optimization.qmd)
 Fit personalised models to empirical data using TVB-Optim.
 
 - [4.1 Alzheimer's disease](04a_alzheimer_usecase.qmd)
