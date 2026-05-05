@@ -1,0 +1,31 @@
+.reveal #title-slide {
+  color: #ffffff;
+  text-align: left;
+}
+
+.reveal .slide-background iframe {
+  pointer-events: none;
+}
+
+.reveal #title-slide h1.title {
+  max-width: 850px;
+  color: #ffffff;
+  font-size: 1.65em;
+  line-height: 1.05;
+  letter-spacing: 0;
+  text-shadow: 0 2px 26px rgba(0, 0, 0, 0.72);
+}
+
+.reveal #title-slide .subtitle {
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.82em;
+  line-height: 1.35;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.68);
+}
+
+.reveal #title-slide .quarto-title-authors,
+.reveal #title-slide .date {
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65);
+}

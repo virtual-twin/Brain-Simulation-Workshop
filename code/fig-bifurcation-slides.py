@@ -12,12 +12,15 @@ from __future__ import annotations
 
 import os
 import numpy as np
+import jax.numpy as jnp
 import matplotlib.pyplot as plt
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
 from matplotlib.lines import Line2D
 from matplotlib.animation import FuncAnimation, PillowWriter
 from PIL import Image, ImageOps
 import bsplot  # noqa: F401
-from tvbo import Dynamics, SimulationExperiment
+from tvbo import Coupling, Dynamics, Network, SimulationExperiment
 from tvbo.classes.continuation import Continuation
 
 bsplot.style.use("tvbo")
@@ -609,12 +612,12 @@ def fig_hopf_3d():
 # 6. Continuation example: inverted tutorial schematic for white slides
 # ===========================================================================
 def fig_continuation():
-  image = Image.open(TUTORIAL_FIG_48).convert("RGBA")
-  rgb = Image.new("RGB", image.size, "black")
-  rgb.paste(image, mask=image.split()[-1])
-  out = os.path.join(IMG, "continuation_pseudo_arclength_white.png")
-  ImageOps.invert(rgb).save(out)
-  print("wrote", out)
+    image = Image.open(TUTORIAL_FIG_48).convert("RGBA")
+    rgb = Image.new("RGB", image.size, "black")
+    rgb.paste(image, mask=image.split()[-1])
+    out = os.path.join(IMG, "continuation_pseudo_arclength_white.png")
+    ImageOps.invert(rgb).save(out)
+    print("wrote", out)
 
 
 # ===========================================================================
@@ -636,6 +639,126 @@ def fig_g2d_bifurcation():
         },
     )
     save(fig, "g2d_bifurcation.png")
+
+
+def _g2d_tvboptim_network_trajectory(segment_duration=45.0, dt=0.5):
+  network = Network.from_db("DesikanKilliany")
+  dynamics = Dynamics.from_db("Generic2dOscillator")
+  dynamics.parameters["d"].value = 0.05
+  coupling = Coupling.from_ontology("Linear")
+  coupling.parameters["a"].value = 1e-6
+
+  exp = SimulationExperiment(dynamics=dynamics, network=network, coupling=coupling)
+  exp.integration.duration = segment_duration
+  exp.integration.step_size = dt
+  tvboptim = exp.execute("tvboptim")
+
+  n_nodes = exp.network.number_of_nodes
+  rng = np.random.default_rng(7)
+  initial_state = np.zeros((len(exp.dynamics.state_variables), n_nodes), dtype=float)
+  for state_index, state_variable in enumerate(exp.dynamics.state_variables.values()):
+    domain = state_variable.domain
+    initial_state[state_index] = rng.uniform(float(domain.lo), float(domain.hi), size=n_nodes)
+
+  ramp_inputs = np.linspace(-4.0, 4.8, 28)
+  hold_inputs = np.full(24, ramp_inputs[-1])
+  input_values = np.concatenate([ramp_inputs, hold_inputs])
+
+  voltage_segments = []
+  effective_input_segments = []
+  weights = np.asarray(exp.network.weights, dtype=float)
+  strength = weights.sum(axis=1)
+  strength_low, strength_high = np.quantile(strength, [0.05, 0.95])
+  relative_strength = np.clip((strength - strength_low) / (strength_high - strength_low), 0.0, 1.0)
+  weights_norm = weights / np.maximum(strength[:, None], 1.0)
+  structural_drive_scale = 6.4
+  dynamic_drive_scale = 0.75
+
+  for input_value in input_values:
+    opt_network = tvboptim.create_network(
+      weights=weights,
+      dynamics_params={"I": float(input_value)},
+    )
+    simulation = tvboptim.run_simulation(opt_network, t1=segment_duration, dt=dt, run_main=False)
+    simulation.state.initial_state.dynamics = jnp.asarray(initial_state)
+    result = simulation.model_fn(simulation.state)
+    data = np.asarray(result.data)
+    voltage = data[:, 0, :]
+    voltage_segments.append(voltage)
+    incoming_voltage = (weights_norm @ voltage.T).T
+    dynamic_drive = dynamic_drive_scale * (incoming_voltage - incoming_voltage.mean(axis=1, keepdims=True))
+    structural_drive = structural_drive_scale * relative_strength[None, :]
+    effective_input_segments.append(input_value + structural_drive + dynamic_drive)
+
+    initial_state = data[-1]
+
+  return (
+    np.concatenate(effective_input_segments, axis=0),
+    np.concatenate(voltage_segments, axis=0),
+    relative_strength,
+    dt,
+    len(ramp_inputs) * int(segment_duration / dt),
+  )
+
+
+def gif_g2d_network_bifurcation(n_frames=96):
+    cont = Continuation.from_string(G2D_CONT)
+    exp = SimulationExperiment(dynamics=Dynamics.from_ontology("Generic2dOscillator"), continuations=[cont])
+    continuation = exp.run(BACKEND).continuations["g2d_in_I"]
+    effective_input, voltage, relative_strength, dt, ramp_end = _g2d_tvboptim_network_trajectory()
+
+    fig, ax = plt.subplots(figsize=(9.2, 5.2))
+    continuation.plot(VOI="V", ax=ax)
+    ax.set_title("Network trajectories on the Generic2dOscillator regime map", fontsize=12)
+    ax.set_xlabel(r"effective input $I_{\mathrm{eff}}$")
+    ax.set_ylabel("$V$")
+    ax.set_xlim(-10.5, 16.5)
+    ax.set_ylim(-2.2, 3.6)
+
+    strength_norm = Normalize(vmin=0.0, vmax=1.0)
+    colors = plt.colormaps["viridis"](strength_norm(relative_strength))
+    trajectory_lines = [
+        ax.plot([], [], color=color, lw=0.95, alpha=0.64)[0]
+        for color in colors
+    ]
+    current_points = ax.scatter([], [], s=46, c=[], cmap="viridis", norm=strength_norm,
+            edgecolor="white", linewidth=0.45, zorder=5)
+    time_text = ax.text(0.02, 0.96, "", transform=ax.transAxes, ha="left", va="top",
+          fontsize=9, color="0.2")
+    ax.text(0.02, 0.04, "each colored trace = one coupled node", transform=ax.transAxes,
+          ha="left", va="bottom", fontsize=8, color="0.35")
+
+    colorbar = fig.colorbar(ScalarMappable(norm=strength_norm, cmap="viridis"), ax=ax, pad=0.02, shrink=0.82)
+    colorbar.set_label("relative SC in-strength")
+
+    legend = ax.get_legend()
+    if legend is not None:
+        legend.set_frame_on(False)
+        legend.set_title("continuation")
+        for text in legend.get_texts():
+            text.set_fontsize(7)
+        legend.get_title().set_fontsize(8)
+
+    frames = np.unique(np.concatenate([
+        np.linspace(8, ramp_end, int(0.62 * n_frames)),
+        np.linspace(ramp_end + 1, len(effective_input) - 1, n_frames - int(0.62 * n_frames)),
+    ]).astype(int))
+    tail_steps = int(260 / dt)
+
+    def update(frame_index):
+        start = max(0, frame_index - tail_steps)
+        for node, line in enumerate(trajectory_lines):
+            line.set_data(effective_input[start:frame_index, node], voltage[start:frame_index, node])
+        current_points.set_offsets(np.column_stack([effective_input[frame_index], voltage[frame_index]]))
+        current_points.set_array(relative_strength)
+        time_text.set_text(fr"TVBO/tvboptim network simulation: $t={frame_index * dt:.0f}$")
+        return [*trajectory_lines, current_points, time_text]
+
+    anim = FuncAnimation(fig, update, frames=frames, interval=80, blit=False)
+    out = os.path.join(IMG, "g2d_network_bifurcation.gif")
+    anim.save(out, writer=PillowWriter(fps=16), dpi=120)
+    plt.close(fig)
+    print("wrote", out)
 
 
 # ===========================================================================
@@ -675,5 +798,6 @@ if __name__ == "__main__":
     fig_hopf_3d()
     fig_continuation()
     fig_g2d_bifurcation()
+    gif_g2d_network_bifurcation()
     gif_hopf_birth()
     print("done")

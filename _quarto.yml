@@ -1,6 +1,11 @@
 project:
   type: website
   output-dir: _site
+  resources:
+    - brain-network-background.html
+    - data/brain_mesh.json
+    - data/tracts_preview.json
+    - js/home-visual.js
 
 execute:
   freeze: auto
@@ -117,7 +122,7 @@ website:
       [![EBRAINS](/img/EBRAINS.svg){fig-alt="EBRAINS" height="40px"}](https://ebrains.eu)
     right:
       - icon: github
-        href: "https://github.com/virtual-twin/tvb-ontology-optim-workshop"
+        href: "https://github.com/virtual-twin/Brain-Simulation-Workshop"
 
 bibliography: bibliography.bib
 link-external-newwindow: true
@@ -125,6 +130,7 @@ link-external-newwindow: true
 format:
   html:
     theme: cosmo
+    css: styles.css
     toc: true
     toc-depth: 3
     code-copy: true

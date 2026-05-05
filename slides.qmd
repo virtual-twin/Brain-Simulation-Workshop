@@ -23,6 +23,11 @@ format:
     code-line-numbers: true
     highlight-style: github
     include-in-header: _slides-home-btn.html
+    css: slides.css
+    title-slide-attributes:
+      data-background-iframe: brain-network-background.html
+      data-background-color: "#6880af"
+      data-background-opacity: "0.35"
 engine: jupyter
 jupyter: python3
 ---
@@ -363,6 +368,14 @@ resting branch | oscillatory window | folds and Hopf points
 ```python
 result = exp.run("bifurcationkit.jl")
 ```
+
+## TVB simulation infused with bifurcation analysis
+
+![](img/g2d_network_bifurcation.gif){fig-align="center" width="94%"}
+
+::: {.smaller}
+TVBO/tvboptim Desikan-Killiany node trajectories in $(I_{\mathrm{eff}}, V)$ space, overlaid on the continuation map
+:::
 
 {{< include _slides-section-4.qmd >}}
 
