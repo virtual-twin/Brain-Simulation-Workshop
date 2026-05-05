@@ -26,11 +26,15 @@ body.workshop-home-page {
 
 .workshop-hero {
   position: relative;
+  max-width: 1120px;
+  margin: 2rem auto;
   min-height: 60vh;
   display: flex;
   align-items: center;
   overflow: hidden;
   background: var(--c-primary);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
 }
 
 /* Background animation, contained inside the hero */

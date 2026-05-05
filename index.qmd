@@ -35,6 +35,7 @@ model specification, and gradient-based optimization.
 [Start Setup](setup.qmd){.workshop-action .workshop-action--primary}
 [Open Slides](slides.qmd){.workshop-action}
 [View Agenda](agenda/agenda.qmd){.workshop-action}
+[Notebooks](notebooks/1_introduction.qmd){.workshop-action}
 :::
 :::
 :::
