@@ -123,8 +123,8 @@ def population_rate(spikes_subset, t_ms, bin_ms=4.0):
     pad = 6
     padded = np.concatenate([rate[:pad][::-1], rate, rate[-pad:][::-1]])
     smooth = gaussian_filter1d(padded, sigma=2.0)[pad:-pad]
-    # Trim first/last bin to drop histogram edge artifacts
-    return centers[1:-1], smooth[1:-1]
+    # Trim first/last bins to drop histogram edge artifacts
+    return centers[3:-3], smooth[3:-3]
 
 
 # ---- mean field (Jansen-Rit) ------------------------------------------------
@@ -190,22 +190,22 @@ def draw_jr_schematic(ax):
             ax.add_patch(Circle(b, radius=0.06, facecolor=color,
                                 edgecolor="none", zorder=3))
 
-    # PC -> E (excitatory, curved)
-    _arrow((pc_xy[0] - 0.25, pc_xy[1] - 0.15),
-           (e_xy[0] + 0.20, e_xy[1] + 0.20),
-           P_COLOR, rad=-0.25)
-    # PC -> I (excitatory, curved)
-    _arrow((pc_xy[0] + 0.25, pc_xy[1] - 0.15),
-           (i_xy[0] - 0.20, i_xy[1] + 0.20),
-           P_COLOR, rad=0.25)
-    # E -> PC (excitatory feedback)
-    _arrow((e_xy[0] + 0.30, e_xy[1] + 0.05),
-           (pc_xy[0] - 0.30, pc_xy[1] - 0.05),
-           E_COLOR, rad=0.35)
-    # I -> PC (inhibitory feedback)
-    _arrow((i_xy[0] - 0.30, i_xy[1] + 0.05),
-           (pc_xy[0] + 0.30, pc_xy[1] - 0.05),
-           I_COLOR, rad=-0.35, inhibitory=True)
+    # PC -> E (excitatory feed-forward, outer curve on the left)
+    _arrow((pc_xy[0] - 0.30, pc_xy[1] - 0.20),
+           (e_xy[0] + 0.25, e_xy[1] + 0.25),
+           P_COLOR, rad=0.30)
+    # PC -> I (excitatory feed-forward, outer curve on the right)
+    _arrow((pc_xy[0] + 0.30, pc_xy[1] - 0.20),
+           (i_xy[0] - 0.25, i_xy[1] + 0.20),
+           P_COLOR, rad=-0.30)
+    # E -> PC (excitatory feedback, inner curve on the left)
+    _arrow((e_xy[0] + 0.30, e_xy[1] + 0.10),
+           (pc_xy[0] - 0.20, pc_xy[1] - 0.30),
+           E_COLOR, rad=-0.30)
+    # I -> PC (inhibitory feedback, inner curve on the right)
+    _arrow((i_xy[0] - 0.30, i_xy[1] + 0.10),
+           (pc_xy[0] + 0.20, pc_xy[1] - 0.30),
+           I_COLOR, rad=0.30, inhibitory=True)
 
 
 def make_figure():
