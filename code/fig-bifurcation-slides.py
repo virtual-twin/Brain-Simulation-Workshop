@@ -6,18 +6,18 @@ Everything is computed by TVBO itself: ``Dynamics.plot``, ``Continuation.plot``,
 
 Continuation figures need the ``bifurcationkit.jl`` backend (Julia).
 """
+
+# %%
 from __future__ import annotations
 
 import os
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
-
 import bsplot  # noqa: F401
-bsplot.style.use("tvbo")
-
 from tvbo import Dynamics, SimulationExperiment
 from tvbo.classes.continuation import Continuation
 
+bsplot.style.use("tvbo")
 ROOT = os.path.dirname(os.path.abspath(__file__))
 IMG = os.path.abspath(os.path.join(ROOT, "..", "img"))
 os.makedirs(IMG, exist_ok=True)
@@ -27,7 +27,7 @@ BACKEND = "bifurcationkit.jl"
 
 def save(fig, name, **kw):
     out = os.path.join(IMG, name)
-    fig.savefig(out, dpi=150, bbox_inches="tight", **kw)
+    fig.savefig(out, dpi=500, bbox_inches="tight", **kw)
     print("wrote", out)
     plt.close(fig)
 
@@ -145,6 +145,23 @@ state_variables:
       lhs: Derivative(x, t)
       rhs: a*x - x**3
     initial_value: 0.01
+"""
+PITCHFORK_TRIVIAL = """
+name: Pitchfork
+parameters:
+  a:
+    name: a
+    value: 1.0
+state_variables:
+  x:
+    name: x
+    domain:
+      lo: -2.0
+      hi: 2.0
+    equation:
+      lhs: Derivative(x, t)
+      rhs: a*x - x**3
+    initial_value: 0.0
 """
 PITCHFORK_CONT = """
 name: pitchfork_cont
@@ -290,6 +307,17 @@ branches:
     bothside: true
 """
 
+G2D_EXPLORATION = {
+    "name": "g2d_I_timeseries",
+    "space": [
+        {
+            "parameter": "I",
+            "explored_values": [-10.0, 5.0, 20.0],
+        }
+    ],
+    "observable": {"function": "V"},
+}
+
 
 def _bif(dyn_yaml, cont_yaml):
     """Run a continuation and return the single Continuation result."""
@@ -308,15 +336,20 @@ def fig_overview():
 
     dyn_stable = Dynamics.from_string(HOPF)
     dyn_stable.parameters["a"].value = -0.5
-    dyn_stable.plot("x1", kind="timeseries", duration=4000, dt=0.5, ax=ax[0])
+    dyn_stable.plot("x1", kind="timeseries", duration=10, dt=0.01, ax=ax[0])
     dyn_osc = Dynamics.from_string(HOPF)
     dyn_osc.parameters["a"].value = +0.5
-    dyn_osc.plot("x1", kind="timeseries", duration=4000, dt=0.5, ax=ax[0])
+    dyn_osc.plot("x1", kind="timeseries", duration=10, dt=0.01, ax=ax[0])
     ax[0].set_title("Time series ($a=\\pm 0.5$)")
 
     Dynamics.from_string(HOPF).plot(
-        "x1", "x2", kind="phaseplane", ax=ax[1],
-        grid_n=22, n_trajectories=3, duration=15,
+        "x1",
+        "x2",
+        kind="phaseplane",
+        ax=ax[1],
+        grid_n=22,
+        n_trajectories=3,
+        duration=15,
     )
     ax[1].set_title("Phase plane ($a=0.5$)")
 
@@ -337,8 +370,7 @@ def fig_linear_stability():
     for a in [-1.0, -0.5, 0.0, 0.5, 1.0]:
         dyn.parameters["a"].value = a
         dyn.plot("x", kind="timeseries", duration=4.0, dt=0.01, ax=ax)
-    ax.set(xlabel="$t$", ylabel="$x(t)$",
-           title=r"$\dot x = a\,x,\quad x(0)=1$")
+    ax.set(xlabel="$t$", ylabel="$x(t)$", title=r"$\dot x = a\,x,\quad x(0)=1$")
     fig.tight_layout()
     save(fig, "linear_stability.png")
 
@@ -350,14 +382,19 @@ def fig_phase_portraits():
     fig, axes = plt.subplots(2, 2, figsize=(8.0, 7.2))
     cases = [
         ("Stable node", NODE_2D),
-        ("Saddle",      SADDLE_2D),
+        ("Saddle", SADDLE_2D),
         ("Stable focus", FOCUS_2D),
-        ("Centre",      CENTRE_2D),
+        ("Centre", CENTRE_2D),
     ]
     for ax, (label, yml) in zip(axes.flat, cases):
         Dynamics.from_string(yml).plot(
-            "x1", "x2", kind="phaseplane", ax=ax,
-            grid_n=20, n_trajectories=4, duration=15,
+            "x1",
+            "x2",
+            kind="phaseplane",
+            ax=ax,
+            grid_n=20,
+            n_trajectories=4,
+            duration=15,
         )
         ax.set_title(label, fontsize=10)
     fig.tight_layout()
@@ -372,6 +409,7 @@ def fig_normal_forms():
     _bif(SADDLE_NODE, SADDLE_NODE_CONT).plot(VOI="x", ax=ax[0])
     ax[0].set_title(r"Saddle-node: $\dot x = a - x^2$")
     _bif(PITCHFORK, PITCHFORK_CONT).plot(VOI="x", ax=ax[1])
+    _bif(PITCHFORK_TRIVIAL, PITCHFORK_CONT).plot(VOI="x", ax=ax[1])
     ax[1].set_title(r"Pitchfork: $\dot x = a x - x^3$")
     _bif(HYSTERESIS, HYSTERESIS_CONT).plot(VOI="x", ax=ax[2])
     ax[2].set_title(r"Hysteresis: $\dot x = a + x - x^3$")
@@ -407,12 +445,18 @@ def fig_continuation():
 def fig_g2d_bifurcation():
     dyn = Dynamics.from_ontology("Generic2dOscillator")
     cont = Continuation.from_string(G2D_CONT)
-    exp = SimulationExperiment(dynamics=dyn, continuations=[cont])
-    g2d = exp.run(BACKEND).continuations["g2d_in_I"]
-    fig, ax = plt.subplots(figsize=(6.5, 3.8))
-    g2d.plot(VOI="V", ax=ax)
-    ax.set_title("Generic2dOscillator: codim-1 in $I$")
-    fig.tight_layout()
+    exp = SimulationExperiment(
+        dynamics=dyn,
+        continuations=[cont],
+        explorations=[G2D_EXPLORATION],
+    )
+    fig = exp.plot(
+        figsize=(10.0, 3.8),
+        run_kwargs={
+            "format": BACKEND,
+            "exploration_kwargs": {"duration": 1000, "dt": 0.01},
+        },
+    )
     save(fig, "g2d_bifurcation.png")
 
 
@@ -421,12 +465,20 @@ def fig_g2d_bifurcation():
 # ===========================================================================
 def gif_hopf_birth(n_frames=24):
     import numpy as np
+
     dyn = Dynamics.from_string(HOPF)
     cont = _bif(HOPF, HOPF_CONT)
     values = np.linspace(-2.0, 1.5, n_frames)
     anim = cont.animate(
-        dyn, "a", values, "x1", "x2", VOI="x1",
-        grid_n=18, n_trajectories=3, duration=15,
+        dyn,
+        "a",
+        values,
+        "x1",
+        "x2",
+        VOI="x1",
+        grid_n=18,
+        n_trajectories=3,
+        duration=15,
         figsize=(11, 4.8),
         title_fmt=r"$a = {value:+.2f}$",
     )
@@ -434,6 +486,8 @@ def gif_hopf_birth(n_frames=24):
     anim.save(out, writer=PillowWriter(fps=8))
     print("wrote", out)
 
+
+# %%
 
 if __name__ == "__main__":
     fig_overview()
