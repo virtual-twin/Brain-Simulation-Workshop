@@ -262,137 +262,107 @@ $$
 
 ## How to analyse a brain system
 
+![](img/bifurcation_overview.png){fig-align="center" width="96%"}
+
 ::: {.columns}
 ::: {.column width="33%" .smaller}
-**Time series** — *what* the model does
-
-Simulate trajectories $x(t)$ for fixed parameters. Direct comparison with EEG / fMRI signals; spectra, FC, FCD.
+**Time series**
+$x(t)$ at fixed $(a, x_0)$
 :::
 ::: {.column width="33%" .smaller}
-**Phase plane** — *how* it does it
-
-Vector field, nullclines and trajectories in state space. Reveals fixed points, basins of attraction and limit cycles **at one parameter value**.
+**Phase plane**
+flow geometry at fixed $a$
 :::
 ::: {.column width="34%" .smaller}
-**Bifurcation diagram** — *when* it changes
-
-Track equilibria and limit cycles **as a parameter varies**. Locates regime shifts, multistability, oscillation onset.
+**Bifurcation diagram**
+regimes as $a$ varies
 :::
 :::
 
-![](img/bifurcation_overview.png){fig-align="center" width="95%"}
-
-::: {.smaller}
-The three views are **complementary**: time series live at one $(a, x_0)$;
-the phase plane shows the geometry around them; the bifurcation diagram
-organises *all* of them into a single map of regimes. We use all three in
-the rest of this section.
-:::
-
-## Linear stability — the simplest bifurcation
+## Linear stability
 
 $$
 \dot x = a\,x \quad\Rightarrow\quad x(t) = x_0\,e^{a t}
 $$
 
 ::: {.columns}
-::: {.column width="55%"}
-- $a < 0$ → **stable** (decay); $a > 0$ → **unstable** (growth); $a = 0$ → **bifurcation point**
-- For $\dot x = f(x)$ near a fixed point $x^\ast$, linearise: $\dot{\delta x} = J\,\delta x$ with $J = \partial f/\partial x|_{x^\ast}$
-- **Stability** is read off the spectrum $\sigma(J) = \{\lambda_k\}$:
-  $\max_k \mathrm{Re}\,\lambda_k < 0$ → stable
-- A **bifurcation** occurs when an eigenvalue **crosses the imaginary axis** as a parameter changes
-  - real $\lambda \to 0$: saddle-node / pitchfork / transcritical
-  - complex pair $\alpha \pm i\omega \to \pm i\omega$: Hopf
+::: {.column width="38%" .smaller}
+- $\lambda=a$: growth rate
+- $a < 0$: decay
+- $a = 0$: marginal
+- $a > 0$: growth
+- **change point:** $\lambda=a=0$
 :::
-::: {.column width="45%"}
+::: {.column width="62%"}
 ![](img/linear_stability.png){width="100%"}
 :::
 :::
 
-## 2D portraits — node, saddle, focus, centre
+## 2D portraits
 
-![](img/phase_portraits_2d.png){fig-align="center" width="75%"}
-
-## Codim-1 normal forms in the brain
-
-![](img/normal_forms.png){fig-align="center" width="95%"}
-
-::: {.columns}
-::: {.column width="33%" .smaller}
-**Saddle-node** — $\dot x = a - x^2$. Two equilibria collide → **regime shift**.
-:::
-::: {.column width="33%" .smaller}
-**Pitchfork** — $\dot x = a x - x^3$. **Symmetry breaking** → two new branches.
-:::
-::: {.column width="34%" .smaller}
-**Hopf** — $\alpha\pm i\omega$ crosses zero → **limit cycle** of radius $\sqrt a$.
-:::
-:::
-
-. . .
-
-These are the **universal local pictures**: by the centre-manifold and
-normal-form theorems, any smooth system close to such a bifurcation is
-*locally diffeomorphic* to one of these few canonical equations. A small
-tilt unfolds the pitchfork into a **hysteresis loop** — two saddle-nodes
-framing a bistable region: the model *remembers its history*.
-
-## Hopf — birth of an oscillation
-
-::: {.columns}
-::: {.column width="50%"}
-![](img/hopf_3d.png){fig-align="center" width="100%"}
-:::
-::: {.column width="50%"}
-![](img/hopf_birth.gif){fig-align="center" width="100%"}
-:::
-:::
+![](img/phase_portraits_2d.png){fig-align="center" width="82%"}
 
 ::: {.smaller}
-Normal form: $\dot z = (a + i\omega)\,z - |z|^2 z$ with $z = x_1 + i x_2$.
-As $a$ crosses 0 the spiral **inverts** and a stable limit cycle of radius
-$\sqrt a$ is born — exactly the orbit traced in the GIF.
+**Same local rule:** arrows define the flow; trajectories reveal attraction, repulsion, rotation and separatrices.
 :::
 
-## Numerical continuation in one slide
+## Regime-change building blocks
+
+![](img/normal_forms.png){fig-align="center" width="100%"}
+
+::: {.smaller}
+Top: equilibria as $a$ varies. Bottom: local flow $\dot x=f(x)$ at the dotted parameter slice.
+:::
+
+## Hopf: birth of an oscillation
+
+$$
+\dot z = (a + i\omega)z - |z|^2z,
+\qquad r_{\mathrm{cycle}} = \sqrt a
+$$
+
+![](img/hopf_birth.gif){fig-align="center" width="100%"}
+
+::: {.smaller}
+fixed point loses stability $\Rightarrow$ stable oscillation appears
+:::
+
+## Numerical continuation
+
+$$
+F(x, a)=0,
+\qquad (x,a)=(x(s),a(s))
+$$
 
 ::: {.columns}
-::: {.column width="55%"}
-- Track $F(x, a) = 0$ along **arclength** $s$, not along $a$ — solves
-  $\bigl[F(x,a),\; \langle (x,a) - (x_0,a_0), t_0 \rangle - \Delta s\bigr] = 0$
-- **Predictor**: tangent $t_0 \in \ker J_{(x,a)}F$ → **Corrector**: Newton on the augmented system
-- Walks **through folds** where $\partial F/\partial x$ is singular (the parameter is no longer a function of the state)
-- Bifurcations detected via **test functions**: $\det J = 0$ (fold), $\mathrm{Re}\,\lambda = 0$ with $\mathrm{Im}\,\lambda \ne 0$ (Hopf)
-- **Branch switching** at a Hopf restarts along the centre eigenvector → continues the periodic orbit
+::: {.column width="62%"}
+![](img/continuation_pseudo_arclength_white.png){width="100%"}
 :::
-::: {.column width="45%"}
-![](img/continuation_schematic.png){width="100%"}
+::: {.column width="38%" .smaller}
+- follow branches through folds
+- detect folds and Hopf points
+- switch to periodic orbits
 :::
 :::
 
-. . .
+## Generic2dOscillator: regimes over input $I$
 
-In TVBO, all of this is one YAML and one call:
+![](img/g2d_bifurcation.png){fig-align="center" width="82%"}
+
+::: {.smaller}
+resting branch | oscillatory window | folds and Hopf points
+:::
+
+## 3.1 Bifurcation analysis: hands-on
+
+- Notebook: [`notebooks/03_bifurcation_analysis.qmd`](notebooks/03_bifurcation_analysis.qmd)
+- Sweep input $I$ in a TVB neural mass model
+- Continue fixed points and periodic orbits
+- Read the diagram as a **map of regimes**
 
 ```python
 result = exp.run("bifurcationkit.jl")
-result.continuations["my_cont"].plot_3d(VOI="x1")
 ```
-
-## Generic2dOscillator — brain-relevant example
-
-![](img/g2d_bifurcation.png){fig-align="center" width="75%"}
-
-## 3.1 Bifurcation analysis — hands-on
-
-- Notebook: [`notebooks/03_bifurcation_analysis.qmd`](notebooks/03_bifurcation_analysis.qmd)
-- Same `Continuation` schema, single backend (`bifurcationkit.jl`)
-- Run on the **Generic2dOscillator** (TVB neural mass): sweep input $I$, continue periodic orbits from each Hopf
-- **Reading the diagram:**
-  - stable branch → resting / persistent activity
-  - limit cycle → oscillatory regime
-  - fold → abrupt regime shift (e.g. seizure onset)
 
 {{< include _slides-section-4.qmd >}}
 

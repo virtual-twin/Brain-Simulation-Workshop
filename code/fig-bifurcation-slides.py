@@ -11,8 +11,11 @@ Continuation figures need the ``bifurcationkit.jl`` backend (Julia).
 from __future__ import annotations
 
 import os
+import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 from matplotlib.animation import FuncAnimation, PillowWriter
+from PIL import Image, ImageOps
 import bsplot  # noqa: F401
 from tvbo import Dynamics, SimulationExperiment
 from tvbo.classes.continuation import Continuation
@@ -20,6 +23,7 @@ from tvbo.classes.continuation import Continuation
 bsplot.style.use("tvbo")
 ROOT = os.path.dirname(os.path.abspath(__file__))
 IMG = os.path.abspath(os.path.join(ROOT, "..", "img"))
+TUTORIAL_FIG_48 = "/Users/leonmartin_bih/tools/tvbo/dev/BifurcationTutorial/slides/img/fig_48.png"
 os.makedirs(IMG, exist_ok=True)
 
 BACKEND = "bifurcationkit.jl"
@@ -328,6 +332,78 @@ def _bif(dyn_yaml, cont_yaml):
     return exp.run(BACKEND).continuations[name]
 
 
+def _plot_scalar_flow(dyn_yaml, parameter_value, ax, xlim=(-2.0, 2.0)):
+    dynamics = Dynamics.from_string(dyn_yaml)
+    dynamics.parameters["a"].value = parameter_value
+    rhs = dynamics.execute(format="python")
+    state_names = list(dynamics.state_variables)
+    state_index = state_names.index("x")
+    base_state = np.asarray(dynamics.get_initial_values(), dtype=float).reshape(-1)
+
+    state_values = np.linspace(xlim[0], xlim[1], 401)
+    flow_values = []
+    for state_value in state_values:
+        state_vector = base_state.copy()
+        state_vector[state_index] = state_value
+        derivative = np.asarray(rhs(state_vector, 0.0), dtype=float).reshape(-1)
+        flow_values.append(derivative[state_index])
+    flow_values = np.asarray(flow_values)
+
+    ax.plot(state_values, flow_values, color="0.2", lw=1.4)
+    ax.axhline(0, color="0.65", lw=0.9)
+    arrow_positions = np.linspace(xlim[0] + 0.25, xlim[1] - 0.25, 11)
+    arrow_flow = np.interp(arrow_positions, state_values, flow_values)
+    arrow_lengths = 0.22 * np.sign(arrow_flow)
+    ax.quiver(
+        arrow_positions,
+        np.zeros_like(arrow_positions),
+        arrow_lengths,
+        np.zeros_like(arrow_positions),
+        angles="xy",
+        scale_units="xy",
+        scale=1,
+        width=0.006,
+        color="C0",
+        zorder=4,
+    )
+
+    root_points = []
+    for index in range(len(state_values) - 1):
+        left_flow = flow_values[index]
+        right_flow = flow_values[index + 1]
+        if left_flow == 0:
+            root_points.append(state_values[index])
+        elif left_flow * right_flow < 0:
+            left_state = state_values[index]
+            right_state = state_values[index + 1]
+            root_points.append(left_state - left_flow * (right_state - left_state) / (right_flow - left_flow))
+    for root_point in root_points:
+        delta = 1e-3
+        left_state = base_state.copy()
+        right_state = base_state.copy()
+        left_state[state_index] = root_point - delta
+        right_state[state_index] = root_point + delta
+        left_derivative = np.asarray(rhs(left_state, 0.0), dtype=float).reshape(-1)[state_index]
+        right_derivative = np.asarray(rhs(right_state, 0.0), dtype=float).reshape(-1)[state_index]
+        stable = (right_derivative - left_derivative) < 0
+        ax.plot(
+            root_point,
+            0,
+            "o",
+            ms=4.5,
+            mfc="0.2" if stable else "white",
+            mec="0.2",
+            mew=1.0,
+            zorder=5,
+        )
+
+    ax.set(xlim=xlim, ylim=(-1.15, 1.15), xlabel="$x$", ylabel=r"$\dot x$")
+    ax.set_title(fr"slice at $a={parameter_value:g}$", fontsize=9)
+    ax.xaxis.label.set_size(9)
+    ax.yaxis.label.set_size(9)
+    ax.tick_params(labelsize=7)
+
+
 # ===========================================================================
 # 1. Overview: time series · phase plane · bifurcation diagram (Hopf NF)
 # ===========================================================================
@@ -350,6 +426,7 @@ def fig_overview():
         grid_n=22,
         n_trajectories=3,
         duration=15,
+        traj_dt=0.01,
     )
     ax[1].set_title("Phase plane ($a=0.5$)")
 
@@ -367,10 +444,39 @@ def fig_overview():
 def fig_linear_stability():
     fig, ax = plt.subplots(figsize=(5.2, 3.4))
     dyn = Dynamics.from_string(LINEAR)
-    for a in [-1.0, -0.5, 0.0, 0.5, 1.0]:
+    x0 = 0.25
+    styles = {
+        -1.0: {"color": "C0", "ls": "-"},
+        -0.5: {"color": "C1", "ls": "-"},
+        0.0: {"color": "0.15", "ls": "--"},
+        0.5: {"color": "C2", "ls": "-"},
+        1.0: {"color": "C3", "ls": "-"},
+    }
+    for a, style in styles.items():
         dyn.parameters["a"].value = a
-        dyn.plot("x", kind="timeseries", duration=4.0, dt=0.01, ax=ax)
-    ax.set(xlabel="$t$", ylabel="$x(t)$", title=r"$\dot x = a\,x,\quad x(0)=1$")
+        dyn.plot("x", kind="timeseries", duration=3.0, dt=0.01, u_0=[x0], ax=ax)
+        line = ax.lines[-1]
+        line.set(color=style["color"], linestyle=style["ls"], linewidth=2.0)
+        if a == 0.0:
+            line.set_label(r"$a=0$ ($\lambda=0$)")
+            line.set_linewidth(2.6)
+        else:
+            line.set_label(fr"$a={a:g}$")
+    ax.set(
+        xlabel="$t$",
+        ylabel="$x(t)$",
+        ylim=(0.0, 5.4),
+        title=fr"$\dot x = a\,x,\quad x(0)={x0:g},\quad \lambda=a$",
+    )
+    ax.annotate(
+        r"neutral trajectory: $\lambda=a=0$",
+        xy=(1.75, x0),
+        xytext=(0.7, 1.3),
+        arrowprops={"arrowstyle": "->", "lw": 1.0, "color": "0.2"},
+        color="0.2",
+        fontsize=8,
+    )
+    ax.legend(title="growth rate", loc="upper left", fontsize=7, title_fontsize=8, frameon=False)
     fig.tight_layout()
     save(fig, "linear_stability.png")
 
@@ -395,6 +501,7 @@ def fig_phase_portraits():
             grid_n=20,
             n_trajectories=4,
             duration=15,
+            traj_dt=0.01,
         )
         ax.set_title(label, fontsize=10)
     fig.tight_layout()
@@ -402,19 +509,90 @@ def fig_phase_portraits():
 
 
 # ===========================================================================
-# 4. Codim-1 normal forms: real continuations
+# 4. Regime-change building blocks: continuations + local scalar flows
 # ===========================================================================
 def fig_normal_forms():
-    fig, ax = plt.subplots(1, 3, figsize=(11.5, 3.2))
-    _bif(SADDLE_NODE, SADDLE_NODE_CONT).plot(VOI="x", ax=ax[0])
-    ax[0].set_title(r"Saddle-node: $\dot x = a - x^2$")
-    _bif(PITCHFORK, PITCHFORK_CONT).plot(VOI="x", ax=ax[1])
-    _bif(PITCHFORK_TRIVIAL, PITCHFORK_CONT).plot(VOI="x", ax=ax[1])
-    ax[1].set_title(r"Pitchfork: $\dot x = a x - x^3$")
-    _bif(HYSTERESIS, HYSTERESIS_CONT).plot(VOI="x", ax=ax[2])
-    ax[2].set_title(r"Hysteresis: $\dot x = a + x - x^3$")
-    fig.tight_layout()
-    save(fig, "normal_forms.png")
+  fig, ax = plt.subplots(2, 3, figsize=(11.5, 5.6), height_ratios=[1.15, 1.0])
+
+  examples = [
+    {
+      "title": r"Saddle-node: $\dot x = a - x^2$",
+      "continuations": [(SADDLE_NODE, SADDLE_NODE_CONT)],
+      "flow": SADDLE_NODE,
+      "parameter_value": 0.6,
+    },
+    {
+      "title": r"Pitchfork: $\dot x = a x - x^3$",
+      "continuations": [
+        (PITCHFORK, PITCHFORK_CONT),
+        (PITCHFORK_TRIVIAL, PITCHFORK_CONT),
+      ],
+      "flow": PITCHFORK,
+      "parameter_value": 0.8,
+    },
+    {
+      "title": r"Hysteresis: $\dot x = a + x - x^3$",
+      "continuations": [(HYSTERESIS, HYSTERESIS_CONT)],
+      "flow": HYSTERESIS,
+      "parameter_value": 0.2,
+    },
+  ]
+
+  for column, example in enumerate(examples):
+    bifurcation_ax = ax[0, column]
+    flow_ax = ax[1, column]
+    for dyn_yaml, cont_yaml in example["continuations"]:
+      _bif(dyn_yaml, cont_yaml).plot(VOI="x", ax=bifurcation_ax)
+    bifurcation_ax.axvline(example["parameter_value"], color="0.35", lw=1.1, ls=":")
+    bifurcation_ax.set_title(example["title"], fontsize=10)
+    bifurcation_ax.set_xlabel("$a$", fontsize=9)
+    bifurcation_ax.set_ylabel("$x$" if column == 0 else "", fontsize=9)
+    bifurcation_ax.tick_params(labelsize=7)
+    legend = bifurcation_ax.get_legend()
+    if legend is not None:
+      handles, labels = bifurcation_ax.get_legend_handles_labels()
+      legend.remove()
+      if column == 0:
+        bifurcation_ax.legend(
+          handles,
+          labels,
+          loc="upper left",
+          fontsize=6,
+          frameon=False,
+          handlelength=1.4,
+          markerscale=0.55,
+          borderaxespad=0.2,
+        )
+    _plot_scalar_flow(example["flow"], example["parameter_value"], flow_ax)
+    flow_ax.set_ylabel(r"$\dot x$" if column == 0 else "", fontsize=9)
+
+  flow_legend = [
+    Line2D([0], [0], color="0.2", lw=1.4, label=r"curve: $\dot x=f(x)$"),
+    Line2D([0], [0], color="0.65", lw=0.9, label=r"baseline: $\dot x=0$"),
+    Line2D(
+      [0], [0], color="C0", marker=r"$\rightarrow$", linestyle="None",
+      markersize=11, label="arrows: flow direction",
+    ),
+    Line2D(
+      [0], [0], marker="o", color="0.2", mfc="0.2", mec="0.2",
+      linestyle="None", markersize=5, label="filled dot: stable FP",
+    ),
+    Line2D(
+      [0], [0], marker="o", color="0.2", mfc="white", mec="0.2",
+      linestyle="None", markersize=5, label="open dot: unstable FP",
+    ),
+  ]
+  fig.legend(
+    handles=flow_legend,
+    loc="lower center",
+    ncol=5,
+    fontsize=7,
+    frameon=False,
+    bbox_to_anchor=(0.5, 0.005),
+    columnspacing=1.2,
+  )
+  fig.tight_layout(rect=(0.0, 0.06, 1.0, 1.0))
+  save(fig, "normal_forms.png")
 
 
 # ===========================================================================
@@ -428,15 +606,15 @@ def fig_hopf_3d():
 
 
 # ===========================================================================
-# 6. Continuation example: real bifurcation diagram of the hysteresis system
+# 6. Continuation example: inverted tutorial schematic for white slides
 # ===========================================================================
 def fig_continuation():
-    cont = _bif(HYSTERESIS, HYSTERESIS_CONT)
-    fig, ax = plt.subplots(figsize=(6.5, 3.6))
-    cont.plot(VOI="x", ax=ax)
-    ax.set_title("Pseudo-arclength continuation along an S-curve")
-    fig.tight_layout()
-    save(fig, "continuation_schematic.png")
+  image = Image.open(TUTORIAL_FIG_48).convert("RGBA")
+  rgb = Image.new("RGB", image.size, "black")
+  rgb.paste(image, mask=image.split()[-1])
+  out = os.path.join(IMG, "continuation_pseudo_arclength_white.png")
+  ImageOps.invert(rgb).save(out)
+  print("wrote", out)
 
 
 # ===========================================================================

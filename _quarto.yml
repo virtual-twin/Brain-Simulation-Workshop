@@ -26,8 +26,8 @@ render:
 website:
   title: "Brainsimulation Workshop"
   description: "Towards translational and mechanistic whole-brain simulations with The Virtual Brain"
-  site-url: "https://virtual-twin.github.io/tvb-ontology-optim-workshop"
-  repo-url: "https://github.com/virtual-twin/tvb-ontology-optim-workshop"
+  site-url: "https://virtual-twin.github.io/Brain-Simulation-Workshop"
+  repo-url: "https://github.com/virtual-twin/Brain-Simulation-Workshop"
   repo-actions: [edit, issue]
   page-navigation: true
   back-to-top-navigation: true
@@ -76,7 +76,7 @@ website:
             text: "  5.1 Stimulation"
     right:
       - icon: github
-        href: "https://github.com/virtual-twin/tvb-ontology-optim-workshop"
+        href: "https://github.com/virtual-twin/Brain-Simulation-Workshop"
         aria-label: GitHub
   sidebar:
     - title: "Notebooks"
