@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b7eda2101a7a109d5067cba531cf9672.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.24">
+
+  <meta name="dcterms.date" content="2026-05-12">
+  <title>Brainsimulation Workshop – Towards translational and mechanistic whole-brain simulations with The Virtual Brain</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-12873a65cf666e61daa4b3cf91a98e13.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <style>
+  .home-btn {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 6px 10px;
+    line-height: 1;
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    transition: background 0.15s;
+  }
+  .home-btn:hover { background: rgba(255,255,255,1); color: #000; }
+  </style>
+  </head><body class="quarto-light"><a class="home-btn" href="index.html" title="Back to workshop home">
+    <i class="fa fa-home"></i>
+  </a>
+
+
+<script src="mathjax-config.js"></script>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Towards translational and mechanistic whole-brain simulations with The Virtual Brain</h1>
+  <p class="subtitle">Track 4 Workshop — FAIR Brain Data Science Bootcamp</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Leon Stefanovski 
+</div>
+</div>
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Marius Pille 
+</div>
+</div>
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Leon Martin 
+</div>
+</div>
+</div>
+
+  <p class="date">May 12, 2026</p>
+</section>
+<section id="welcome" class="slide level2 unnumbered">
+<h2>Welcome</h2>
+<ul>
+<li>Two-day hands-on workshop on personalized whole-brain modeling with TVB</li>
+<li>Day 1: structured sessions</li>
+<li>Day 2: mini hackathon — bring your own questions / data</li>
+<li>Useful links:
+<ul>
+<li><a href="https://thevirtualbrain.org" class="uri">https://thevirtualbrain.org</a></li>
+<li><a href="https://virtual-twin.github.io/tvbo" class="uri">https://virtual-twin.github.io/tvbo</a></li>
+<li><a href="https://virtual-twin.github.io/tvboptim" class="uri">https://virtual-twin.github.io/tvboptim</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="schedule" class="slide level2 unnumbered">
+<h2>Schedule</h2>
+<div class="columns">
+<div class="column smaller" style="width:60%;">
+<p><strong>Day 1</strong><br>
+<strong>Block 1 - 09:00-12:00:</strong><br>
+1. Intro to Brain Network Modelling<br>
+2. Defining a FAIR brain network model<br>
+3. Dynamical perspective<br>
+4. Setup &amp; First examples</p>
+<p><strong>Block 2 - 13:00-15:00:</strong><br>
+5. Bifurcation Theory<br>
+6. Parameter exploration &amp; inference</p>
+<p><strong>Block 3 - 15:30-17:30:</strong><br>
+7. Stimulating the brain</p>
+</div><div class="column smaller" style="width:40%;">
+<p><strong>Day 2</strong><br>
+<strong>Block 1 - 09:00-11:30:</strong><br>
+Mini hackathon - Bring your own data / research question</p>
+<p><strong>Block 2 - 12:00-13:30:</strong><br>
+Mini hackathon - Bring your own data / research question</p>
+</div></div>
+</section>
+<section>
+<section id="intro-to-brain-network-modelling" class="title-slide slide level1 center" data-background-color="#0b3d91">
+<h1>1. Intro to Brain Network Modelling</h1>
+<ul>
+<li>TODO: motivation for whole-brain network modeling</li>
+<li>TODO: brief historical arc of TVB</li>
+</ul>
+</section>
+<section id="basic-ideas-and-history" class="slide level2">
+<h2>Basic ideas and history</h2>
+<div class="columns">
+<div class="column" style="width:25%;">
+<p><img data-src="img/figures/basic_idea_imaging_workflow1.png" style="width:100.0%"></p>
+</div><div class="column fragment" style="width:25%;">
+<p><img data-src="img/figures/basic_idea_imaging_workflow2.png" style="width:100.0%"></p>
+</div><div class="column fragment" style="width:25%;">
+<p><img data-src="img/figures/basic_idea_imaging_workflow3.png" style="width:100.0%"></p>
+</div><div class="column fragment" style="width:25%;">
+<p><img data-src="img/figures/basic_idea_imaging_workflow4.png" style="width:100.0%"></p>
+</div></div>
+</section>
+<section id="mathematical-framework" class="slide level2">
+<h2>Mathematical framework</h2>
+<p><span class="math display">\[
+dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
+\]</span></p>
+<div class="fragment">
+<p><strong>State Evolution</strong></p>
+<ul>
+<li><span class="math inline">\(S_i\)</span> - state variables at node <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(f_d\)</span> - dynamics function with parameters <span class="math inline">\(\theta^d\)</span></li>
+<li><span class="math inline">\(C_i\)</span> - coupling input from connected nodes</li>
+<li><span class="math inline">\(I_i\)</span> - external input (stimulation, driving signals)</li>
+<li><span class="math inline">\(g\)</span> - noise diffusion coefficient with parameters <span class="math inline">\(\theta^g\)</span></li>
+<li><span class="math inline">\(dW_i\)</span> - Wiener process (stochastic fluctuations)</li>
+</ul>
+</div>
+</section>
+<section id="dynamical-systems" class="slide level2">
+<h2>Dynamical Systems</h2>
+<div class="columns">
+<div class="column" style="font-size: 0.55em;">
+<p>A mass <span class="math inline">\(m\)</span> on a spring with stiffness <span class="math inline">\(k\)</span>. <br> Perpetual oscillation at <span class="math inline">\(\omega = \sqrt{k/m}\)</span>.</p>
+<p><strong>State Equations:</strong> <span class="math display">\[
+\dot{x} = v
+\]</span> <span class="math display">\[
+\dot{v} = - \frac{k}{m}*x
+\]</span></p>
+<p><strong>State Variables</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><strong>Variable</strong></th>
+<th><strong>Initial Value</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(x\)</span></td>
+<td>2.0</td>
+<td><span class="math inline">\(\mathrm{m}\)</span></td>
+<td>Displacement from equilibrium</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(v\)</span></td>
+<td>0.0</td>
+<td><span class="math inline">\(\frac{\mathrm{m}}{\mathrm{s}}\)</span></td>
+<td>Velocity</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Parameters</strong></p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 20%">
+<col style="width: 18%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Parameter</strong></th>
+<th><strong>Value</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(k\)</span></td>
+<td>0.0001</td>
+<td><span class="math inline">\(\frac{\mathrm{N}}{\mathrm{m}}\)</span></td>
+<td>Spring stiffness constant</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(m\)</span></td>
+<td>1.0</td>
+<td><span class="math inline">\(\mathrm{kg}\)</span></td>
+<td>Mass of the oscillating body</td>
+</tr>
+</tbody>
+</table>
+</div><div class="column">
+<div class="r-stack">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="notebooks/1_1_MathematicalFramework/spring_single_thumb.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="notebooks/1_1_MathematicalFramework/spring_single.gif" class="fragment quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div></div>
+</section>
+<section id="initial-conditions" class="slide level2" data-background-color="#ffffff">
+<h2>Initial Conditions</h2>
+<div class="columns">
+<div class="column" style="width:20%;">
+<div style="font-size: 0.8em;">
+<p><span class="math display">\[
+\dot{x} = v
+\]</span> <span class="math display">\[
+\dot{v} = - \frac{k}{m}*x
+\]</span></p>
+</div>
+</div><div class="column" style="width:80%;">
+<div class="r-stack">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="notebooks/1_1_MathematicalFramework/spring_ics_thumb.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="notebooks/1_1_MathematicalFramework/spring_ics.gif" class="fragment quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div></div>
+</section>
+<section id="phase-space" class="slide level2" data-background-color="#ffffff">
+<h2>Phase Space</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="notebooks/1_1_MathematicalFramework/phase_space.png" class="quarto-figure quarto-figure-center" height="580"></p>
+</figure>
+</div>
+</section>
+<section id="parameters-mass" class="slide level2" data-background-color="#ffffff">
+<h2>Parameters — Mass</h2>
+<div class="r-stack">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="notebooks/1_1_MathematicalFramework/spring_mass_thumb.png" class="quarto-figure quarto-figure-center" height="580"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="notebooks/1_1_MathematicalFramework/spring_mass.gif" class="fragment quarto-figure quarto-figure-center" height="580"></p>
+</figure>
+</div>
+</div>
+</section>
+<section id="towards-realism-damping-load" class="slide level2" data-background-color="#ffffff">
+<h2>Towards Realism — Damping &amp; Load</h2>
+<div class="r-stack">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="notebooks/1_1_MathematicalFramework/spring_realism_thumb.png" class="quarto-figure quarto-figure-center" height="580"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="notebooks/1_1_MathematicalFramework/spring_realism.gif" class="fragment quarto-figure quarto-figure-center" height="580"></p>
+</figure>
+</div>
+</div>
+</section>
+<section id="mean-field-models-neural-masses" class="slide level2">
+<h2>Mean field models &amp; Neural Masses</h2>
+<ul>
+<li>TODO: notebook link</li>
+<li>TODO: pick a model, inspect parameters, simulate</li>
+<li>TODO: neural mass / mean-field formulation</li>
+</ul>
+</section>
+<section id="coupled-network-dynamics" class="slide level2">
+<h2>Coupled network dynamics</h2>
+<ul>
+<li>TODO: nodes, coupling, delays, noise</li>
+<li>TODO: connectome loading</li>
+<li>TODO: global coupling sweep</li>
+</ul>
+<div class="fragment" data-fragment-index="2">
+<p><span class="math display">\[
+C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij}), \theta^c), S_i, \theta^c\Big)
+\]</span></p>
+<div style="font-size: 0.55em;">
+<p><strong>Coupling</strong></p>
+<ul>
+<li><span class="math inline">\(f_c^{\text{pre}}\)</span> - pre-aggregation transformation</li>
+<li><span class="math inline">\(A_{ij}\)</span> - structural connectivity weight (<span class="math inline">\(j \to i\)</span>)</li>
+<li><span class="math inline">\(\tau_{ij}\)</span> - transmission delay (tract length / conduction speed)</li>
+<li><span class="math inline">\(f_c^{\text{post}}\)</span> - post-aggregation transformation</li>
+<li><span class="math inline">\(\theta^c\)</span> - coupling parameters</li>
+</ul>
+</div>
+</div>
+</section></section>
+<section>
+<section id="defining-a-fair-brain-network-model" class="title-slide slide level1 center" data-background-color="#0b3d91">
+<h1>2. Defining a FAIR brain network model</h1>
+
+</section>
+<section id="why-fair-tvb-o-in-one-slide" class="slide level2">
+<h2>Why FAIR? TVB-O in one slide</h2>
+<ul>
+<li>TODO: ontology-driven model specification <span class="citation" data-cites="Martin2025">(<a href="#/references" role="doc-biblioref" onclick="">Martin et al. 2025</a>)</span></li>
+<li>TODO: metadata + automated code generation</li>
+</ul>
+</section>
+<section id="applications-in-basic-research" class="slide level2">
+<h2>Applications in basic research</h2>
+<ul>
+<li>TODO: representative findings</li>
+<li>TODO: links to <span class="citation" data-cites="Schirner2023 Koller2024 Kashyap2025">(<a href="#/references" role="doc-biblioref" onclick="">Schirner, Deco, and Ritter 2023</a>; <a href="#/references" role="doc-biblioref" onclick="">Koller, Schirner, and Ritter 2024</a>; <a href="#/references" role="doc-biblioref" onclick="">Kashyap et al. 2025</a>)</span></li>
+</ul>
+</section>
+<section id="clinical-applications" class="slide level2">
+<h2>Clinical applications</h2>
+<ul>
+<li>TODO: translational use-cases</li>
+<li>TODO: virtual epileptic / Alzheimer / stroke patient examples</li>
+</ul>
+</section></section>
+<section>
+<section id="dynamical-perspective" class="title-slide slide level1 center" data-background-color="#0b3d91">
+<h1>3. Dynamical perspective</h1>
+
+</section>
+<section id="how-to-analyse-a-brain-system" class="slide level2">
+<h2>How to analyse a brain system</h2>
+
+<img data-src="img/bifurcation_overview.png" class="quarto-figure quarto-figure-center r-stretch" style="width:96.0%"><div class="columns">
+<div class="column smaller" style="width:33%;">
+<p><strong>Time series</strong> <span class="math inline">\(x(t)\)</span> at fixed <span class="math inline">\((a, x_0)\)</span></p>
+</div><div class="column smaller" style="width:33%;">
+<p><strong>Phase plane</strong> flow geometry at fixed <span class="math inline">\(a\)</span></p>
+</div><div class="column smaller" style="width:34%;">
+<p><strong>Bifurcation diagram</strong> regimes as <span class="math inline">\(a\)</span> varies</p>
+</div></div>
+</section>
+<section id="linear-stability" class="slide level2">
+<h2>Linear stability</h2>
+<p><span class="math display">\[
+\dot x = a\,x \quad\Rightarrow\quad x(t) = x_0\,e^{a t}
+\]</span></p>
+<div class="columns">
+<div class="column smaller" style="width:38%;">
+<ul>
+<li><span class="math inline">\(\lambda=a\)</span>: growth rate</li>
+<li><span class="math inline">\(a &lt; 0\)</span>: decay</li>
+<li><span class="math inline">\(a = 0\)</span>: marginal</li>
+<li><span class="math inline">\(a &gt; 0\)</span>: growth</li>
+<li><strong>change point:</strong> <span class="math inline">\(\lambda=a=0\)</span></li>
+</ul>
+</div><div class="column" style="width:62%;">
+<p><img data-src="img/linear_stability.png" style="width:100.0%"></p>
+</div></div>
+</section>
+<section id="d-portraits" class="slide level2">
+<h2>2D portraits</h2>
+
+<img data-src="img/phase_portraits_2d.png" class="quarto-figure quarto-figure-center r-stretch" style="width:82.0%"><div class="smaller">
+<p><strong>Same local rule:</strong> arrows define the flow; trajectories reveal attraction, repulsion, rotation and separatrices.</p>
+</div>
+</section>
+<section id="regime-change-building-blocks" class="slide level2">
+<h2>Regime-change building blocks</h2>
+
+<img data-src="img/normal_forms.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><div class="smaller">
+<p>Top: equilibria as <span class="math inline">\(a\)</span> varies. Bottom: local flow <span class="math inline">\(\dot x=f(x)\)</span> at the dotted parameter slice.</p>
+</div>
+</section>
+<section id="hopf-birth-of-an-oscillation" class="slide level2">
+<h2>Hopf: birth of an oscillation</h2>
+<p><span class="math display">\[
+\dot z = (a + i\omega)z - |z|^2z,
+\qquad r_{\mathrm{cycle}} = \sqrt a
+\]</span></p>
+
+<img data-src="img/hopf_birth.gif" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><div class="smaller">
+<p>fixed point loses stability <span class="math inline">\(\Rightarrow\)</span> stable oscillation appears</p>
+</div>
+</section>
+<section id="numerical-continuation" class="slide level2">
+<h2>Numerical continuation</h2>
+<p><span class="math display">\[
+F(x, a)=0,
+\qquad (x,a)=(x(s),a(s))
+\]</span></p>
+<div class="columns">
+<div class="column" style="width:62%;">
+<p><img data-src="img/continuation_pseudo_arclength_white.png" style="width:100.0%"></p>
+</div><div class="column smaller" style="width:38%;">
+<ul>
+<li>follow branches through folds</li>
+<li>detect folds and Hopf points</li>
+<li>switch to periodic orbits</li>
+</ul>
+</div></div>
+</section>
+<section id="generic2doscillator-regimes-over-input-i" class="slide level2">
+<h2>Generic2dOscillator: regimes over input <span class="math inline">\(I\)</span></h2>
+
+<img data-src="img/g2d_bifurcation.png" class="quarto-figure quarto-figure-center r-stretch" style="width:82.0%"><div class="smaller">
+<p>resting branch | oscillatory window | folds and Hopf points</p>
+</div>
+</section>
+<section id="bifurcation-analysis-hands-on" class="slide level2">
+<h2>3.1 Bifurcation analysis: hands-on</h2>
+<ul>
+<li>Notebook: <a href="./notebooks/03_bifurcation_analysis.html"><code>notebooks/03_bifurcation_analysis.qmd</code></a></li>
+<li>Sweep input <span class="math inline">\(I\)</span> in a TVB neural mass model</li>
+<li>Continue fixed points and periodic orbits</li>
+<li>Read the diagram as a <strong>map of regimes</strong></li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>result <span class="op">=</span> exp.run(<span class="st">"bifurcationkit.jl"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section></section>
+<section>
+<section id="parameter-exploration-and-inference" class="title-slide slide level1 center" data-background-color="#0b3d91">
+<h1>4. Parameter exploration and inference</h1>
+
+</section>
+<section id="models-as-computational-hypotheses" class="slide level2">
+<h2>Models as computational hypotheses</h2>
+<p>A brain network model is a <strong>hypothesis with knobs</strong>. Picking knob values is how we test the hypothesis against data.</p>
+<div class="fragment">
+<p><span class="math display">\[
+\theta \;\longrightarrow\; \text{simulator} \;\longrightarrow\; \hat{y}(\theta) \;\longrightarrow\; \mathcal{L}\big(\hat{y}(\theta),\, y_{\text{obs}}\big)
+\]</span></p>
+<ul>
+<li><span class="math inline">\(\theta\)</span> — model parameters (the knobs)</li>
+<li><span class="math inline">\(\hat{y}(\theta)\)</span> — simulated observable (FC, power spectrum, BOLD …)</li>
+<li><span class="math inline">\(y_{\text{obs}}\)</span> — empirical observable</li>
+<li><span class="math inline">\(\mathcal{L}\)</span> — loss / discrepancy</li>
+</ul>
+</div>
+<div class="fragment">
+<p><em>Inference = which <span class="math inline">\(\theta\)</span> are consistent with the data?</em> <span class="citation" data-cites="Pille2025">(<a href="#/references" role="doc-biblioref" onclick="">Pille et al. 2025</a>)</span></p>
+</div>
+</section>
+<section id="the-shape-of-the-problem" class="slide level2">
+<h2>The shape of the problem</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p>Optimization over a parameter landscape <span class="math inline">\(\mathcal{L}(\theta)\)</span>.</p>
+<p>Running example for this block: <strong>fit global coupling <span class="math inline">\(G\)</span> so the simulated FC matches an empirical FC.</strong></p>
+<ul>
+<li>one parameter → easy to picture</li>
+<li>but every method we’ll see scales (or doesn’t) to many</li>
+</ul>
+</div><div class="column" style="width:45%;">
+<p>TODO: 1D / 2D loss-surface plot for <span class="math inline">\(G\)</span> vs FC fit</p>
+</div></div>
+</section>
+<section id="why-this-is-hard-for-brain-models" class="slide level2">
+<h2>Why this is hard for brain models</h2>
+<ul>
+<li><strong>Expensive simulator</strong> — seconds to minutes per run</li>
+<li><strong>High-dimensional</strong> — when parameters become regional (<span class="math inline">\(\times N\)</span> nodes)</li>
+<li><strong>Non-smooth dynamics</strong> — chaos, stochasticity, stiffness</li>
+<li><strong>Bumpy observables</strong> — FC, FCD, PSD are summary statistics</li>
+</ul>
+<div class="fragment">
+<p>Every method below is a <strong>bet</strong> about which of these difficulties dominates.</p>
+</div>
+</section>
+<section id="grid-search-map-the-whole-landscape" class="slide level2">
+<h2>Grid search — map the whole landscape</h2>
+<ul>
+<li>Same idea as the bifurcation diagrams from §3</li>
+<li>Wins when: <span class="math inline">\(\le 2\)</span>–<span class="math inline">\(3\)</span> parameters, you want to <em>see</em> the landscape</li>
+<li>Cost grows as <span class="math inline">\(N^d\)</span> — unusable beyond a handful of dimensions</li>
+</ul>
+<div class="fragment">
+<p>TODO: grid scan of <span class="math inline">\(G\)</span> vs FC loss; mark the minimum</p>
+</div>
+</section>
+<section id="random-search-the-surprising-upgrade" class="slide level2">
+<h2>Random search — the surprising upgrade</h2>
+<p>In more than 2–3 dimensions, <strong>random search beats grid</strong> for the same budget.</p>
+<div class="fragment">
+<p><strong>Why?</strong> Real loss surfaces have <strong>low effective dimensionality</strong> — most parameters barely matter. Grid spends its budget evenly across all axes; random samples <em>every axis at every trial</em> <span class="citation" data-cites="bergstra2012">(<a href="#/references" role="doc-biblioref" onclick="">Bergstra and Bengio 2012</a>)</span>.</p>
+</div>
+<div class="fragment">
+<p>TODO: axis-projection figure (Bergstra &amp; Bengio 2012, Fig. 1 style)</p>
+</div>
+<div class="fragment">
+<p><strong>Take-away.</strong> If you don’t know which parameters matter, <em>don’t grid</em>.</p>
+</div>
+</section>
+<section id="quasi-random-better-coverage-same-idea" class="slide level2">
+<h2>Quasi-random — better coverage, same idea</h2>
+<ul>
+<li><strong>Latin Hypercube</strong> and <strong>Sobol</strong> sequences: low-discrepancy samples</li>
+<li>Random’s robustness without the clumping</li>
+<li>Drop-in replacement for the sampler in your search loop</li>
+</ul>
+</section>
+<section id="evolutionary-cma-es-adaptive-no-gradients" class="slide level2">
+<h2>Evolutionary / CMA-ES — adaptive, no gradients</h2>
+<ul>
+<li>Maintains a <em>population</em> of <span class="math inline">\(\theta\)</span> and updates a covariance estimate to bias future samples toward good regions</li>
+<li>Wins when: ~10–50 parameters, no gradients available, moderate budget</li>
+<li>Naturally parallel — every generation is a <code>vmap</code> over the population</li>
+</ul>
+</section>
+<section id="gradient-descent-the-regime-changer" class="slide level2">
+<h2>Gradient descent — the regime-changer</h2>
+<p><span class="math display">\[
+\theta_{t+1} \;=\; \theta_t - \eta \,\nabla_\theta\, \mathcal{L}(\theta_t)
+\]</span></p>
+<ul>
+<li>The only method that scales to <strong>regional / per-node</strong> parameter vectors (hundreds–thousands of knobs)</li>
+<li>Local: needs a reasonable starting point</li>
+<li>Requires <span class="math inline">\(\nabla_\theta \mathcal{L}\)</span> — that’s where JAX comes in (next)</li>
+</ul>
+</section>
+<section id="bayesian-inference-when-you-want-a-posterior" class="slide level2">
+<h2>Bayesian inference — when you want a posterior</h2>
+<p>A point estimate <span class="math inline">\(\theta^\star\)</span> tells you <em>one</em> good fit. A posterior <span class="math inline">\(p(\theta \mid y) \propto p(y \mid \theta)\, p(\theta)\)</span> tells you <strong>how much you know</strong> — and lets you fold in priors (e.g.&nbsp;tau PET, anatomy).</p>
+<div class="fragment">
+<p>What you get out: uncertainty over predictions, identifiability, model comparison.</p>
+</div>
+<div class="fragment">
+<p><strong>One model, many inference algorithms.</strong> Define the simulator + priors once; pick how to approximate the posterior:</p>
+<ul>
+<li><strong>MCMC (HMC / NUTS)</strong> — asymptotically exact samples; uses gradients to navigate the posterior efficiently. Slow but accurate.</li>
+<li><strong>Variational inference (SVI)</strong> — fit a tractable family <span class="math inline">\(q_\phi(\theta)\)</span> to the posterior by gradient descent on the ELBO. Fast, approximate; scales to high-dim regional parameters.</li>
+<li><strong>Simulation-based inference (NPE / NLE)</strong> — train a neural density estimator on simulated <span class="math inline">\((\theta, y)\)</span> pairs. <strong>No gradients through the simulator needed</strong> → works when AD breaks (chaos, black-box code). <em>Amortized</em>: pay the simulation budget once, then query the posterior for any new observation almost instantly.</li>
+<li><strong>Laplace / SWAG</strong> — cheap Gaussian approximation around the optimum.</li>
+</ul>
+</div>
+<div class="fragment">
+<p>TODO: posterior plot for <span class="math inline">\(G\)</span> alongside the point estimate (HMC vs SVI)</p>
+</div>
+</section>
+<section id="choosing-a-method-cheat-sheet" class="slide level2">
+<h2>Choosing a method — cheat sheet</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 29%">
+<col style="width: 29%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>method</strong></th>
+<th style="text-align: right;"><strong>scales to</strong></th>
+<th><strong>cost (forward sims)</strong></th>
+<th><strong>what you get</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Grid</td>
+<td style="text-align: right;"><span class="math inline">\(\le 3\)</span> params</td>
+<td><span class="math inline">\(N^d\)</span></td>
+<td>full landscape</td>
+</tr>
+<tr class="even">
+<td>Random / Sobol</td>
+<td style="text-align: right;"><span class="math inline">\(\sim 20\)</span></td>
+<td><span class="math inline">\(10^2\)</span>–<span class="math inline">\(10^3\)</span></td>
+<td>landscape sketch</td>
+</tr>
+<tr class="odd">
+<td>CMA-ES / GA</td>
+<td style="text-align: right;"><span class="math inline">\(\sim 50\)</span></td>
+<td><span class="math inline">\(10^3\)</span>–<span class="math inline">\(10^4\)</span></td>
+<td>local optimum</td>
+</tr>
+<tr class="even">
+<td>Gradient descent</td>
+<td style="text-align: right;"><span class="math inline">\(10^4\)</span>+ (regional)</td>
+<td><span class="math inline">\(10^2\)</span>–<span class="math inline">\(10^3\)</span></td>
+<td>local optimum</td>
+</tr>
+<tr class="odd">
+<td>SVI</td>
+<td style="text-align: right;"><span class="math inline">\(10^4\)</span>+</td>
+<td><span class="math inline">\(10^2\)</span>–<span class="math inline">\(10^3\)</span></td>
+<td>approximate posterior</td>
+</tr>
+<tr class="even">
+<td>HMC / NUTS</td>
+<td style="text-align: right;">scales with <span class="math inline">\(d\)</span> — simulator-bound</td>
+<td><span class="math inline">\(10^4\)</span>–<span class="math inline">\(10^6\)</span></td>
+<td>(near-)exact posterior</td>
+</tr>
+<tr class="odd">
+<td>SBI (NPE / NLE)</td>
+<td style="text-align: right;"><span class="math inline">\(\sim 10^2\)</span>, simulator-bound</td>
+<td><span class="math inline">\(10^4\)</span>–<span class="math inline">\(10^6\)</span> upfront, <strong>amortized</strong></td>
+<td>amortized approximate posterior</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<p>Cost numbers assume reverse-mode AD makes a gradient step ≈ one forward sim (next slide). <em>Bayesian rows sit at the expensive end</em> — a posterior is worth roughly a thousand point estimates’ worth of compute.</p>
+</div>
+</section>
+<section id="parallelism-via-vmap" class="slide level2">
+<h2>Parallelism via <code>vmap</code></h2>
+<ul>
+<li>One simulator, batched over parameter sets, fused into a single GPU pass</li>
+<li>Random search and population methods become almost free on top of one forward simulation</li>
+<li>Same model code, no manual batching</li>
+</ul>
+<div class="fragment">
+<p>TODO: wall-clock plot — sequential vs <code>vmap</code>’d ensemble</p>
+</div>
+</section>
+<section id="reverse-mode-autodiff-the-headline-result" class="slide level2">
+<h2>Reverse-mode autodiff — the headline result</h2>
+<p>For a scalar loss <span class="math inline">\(\mathcal{L}:\mathbb{R}^d \to \mathbb{R}\)</span>:</p>
+<p><span class="math display">\[
+\text{cost}\!\left(\nabla_\theta \mathcal{L}\right) \;\approx\; c \cdot \text{cost}(\mathcal{L})
+\qquad\text{independent of } d
+\]</span></p>
+<div class="fragment">
+<ul>
+<li><strong>Finite differences:</strong> cost <span class="math inline">\(\sim d \times\)</span> forward → infeasible at regional scale</li>
+<li><strong>Forward-mode AD:</strong> same scaling as finite differences</li>
+<li><strong>Reverse-mode AD:</strong> cost <span class="math inline">\(\sim\)</span> one forward pass, <em>regardless</em> of <span class="math inline">\(d\)</span></li>
+</ul>
+<p>This is the reason per-region fits became tractable.</p>
+</div>
+</section>
+<section id="composability-one-simulator-four-uses" class="slide level2">
+<h2>Composability — one simulator, four uses</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 40%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>transform</strong></th>
+<th><strong>what it gives</strong></th>
+<th><strong>enables</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>jit</code></td>
+<td>compiled XLA</td>
+<td>speed</td>
+</tr>
+<tr class="even">
+<td><code>vmap</code></td>
+<td>batching</td>
+<td>random search, CMA-ES</td>
+</tr>
+<tr class="odd">
+<td><code>grad</code></td>
+<td>gradients</td>
+<td>gradient descent, SVI</td>
+</tr>
+<tr class="even">
+<td>probabilistic</td>
+<td>priors + likelihood</td>
+<td>Bayesian inference (HMC, NUTS, SVI — NumPyro / BlackJAX)</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<p>You write the model <strong>once</strong>.</p>
+</div>
+</section>
+<section id="chaos-eats-your-gradient" class="slide level2">
+<h2>Chaos eats your gradient</h2>
+<p>Sensitivity to initial conditions <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\|\nabla_\theta \mathcal{L}\|\)</span> <strong>explodes</strong> with integration length.</p>
+<div class="fragment">
+<p>Not a bug in autodiff — the dynamics are telling you the loss is non-smooth at fine scales.</p>
+</div>
+<div class="fragment">
+<p><strong>Mitigations</strong></p>
+<ul>
+<li>integrate over shorter windows</li>
+<li>use <em>smoothed</em> observables (FC, power spectra) instead of raw traces</li>
+<li>multiple shooting</li>
+<li>gradient clipping</li>
+</ul>
+</div>
+</section>
+<section id="other-failure-modes" class="slide level2">
+<h2>Other failure modes</h2>
+<ul>
+<li><strong>Stochasticity</strong> — gradients through <span class="math inline">\(dW\)</span> need the reparameterization trick or score-function estimators</li>
+<li><strong>Bifurcations near the optimum</strong> — genuine discontinuities in the loss as fixed points appear or disappear → gradient descent gets stuck on the wrong side</li>
+<li><strong>Stiffness / long transients</strong> — numerical noise compounds through the unrolled trajectory</li>
+</ul>
+<div class="fragment">
+<p><strong>Take-away.</strong> Gradients are powerful, not universal. Read the landscape (§3) before you trust the slope.</p>
+</div>
+<div class="fragment">
+<p>When gradients are <em>unsalvageable</em>: <strong>simulation-based inference</strong> (NPE / NLE) treats the simulator as a black box — see Bayesian slide.</p>
+</div>
+</section>
+<section id="the-default-tvboptim-recipe" class="slide level2 scrollable">
+<h2>The default tvboptim recipe</h2>
+<ol type="1">
+<li><strong>Bifurcation map</strong> (§3) → pick a <em>regime</em> of interest</li>
+<li><strong>Coarse random / Sobol search</strong> within that regime → find a basin</li>
+<li><strong>Gradient descent</strong> from the basin → polish to a local optimum</li>
+<li><strong>Bayesian inference</strong> (HMC, SVI, or SBI when gradients break) from the optimum → posterior + uncertainty</li>
+</ol>
+<div class="fragment">
+<p>Each step uses the output of the previous as a <strong>warm start</strong>.</p>
+</div>
+<div class="fragment">
+<p>TODO: pipeline diagram — same loss surface, four overlays</p>
+</div>
+</section>
+<section id="mini-demo-pipeline-on-the-running-example" class="slide level2">
+<h2>Mini-demo — pipeline on the running example</h2>
+<p>TODO: live (or pre-rendered) walkthrough running the full chain on <span class="math inline">\(G\)</span> vs FC. Lands the synthesis just before the hands-on.</p>
+</section>
+<section id="use-case-a-alzheimers-disease" class="slide level2">
+<h2>Use-case A — Alzheimer’s disease</h2>
+<ul>
+<li>TODO: tau PET / amyloid map → <em>prior</em> on regional parameters</li>
+<li>TODO: high-dim (regional) fit → gradient-descent territory</li>
+<li>TODO: healthy vs patient simulation, refs <span class="citation" data-cites="Schirner2023 Stefanovski2019">(<a href="#/references" role="doc-biblioref" onclick="">Schirner, Deco, and Ritter 2023</a>; <a href="#/references" role="doc-biblioref" onclick="">Stefanovski et al. 2019</a>)</span></li>
+</ul>
+</section>
+<section id="use-case-b-homogeneous-vs.-heterogeneous-fitting" class="slide level2">
+<h2>Use-case B — homogeneous vs.&nbsp;heterogeneous fitting</h2>
+<ul>
+<li>TODO: same model, same data — fit one <span class="math inline">\(G\)</span> vs per-region <span class="math inline">\(G_i\)</span></li>
+<li>TODO: low-dim vs high-dim head-to-head → why the toolbox matters</li>
+<li>TODO: TVBase frequency gradient as target <span class="citation" data-cites="Pille2025">(<a href="#/references" role="doc-biblioref" onclick="">Pille et al. 2025</a>)</span></li>
+</ul>
+<!-- section 4 lives in _slides-section-4.qmd to keep diffs scoped and
+     reduce merge conflicts when collaborators touch slides.qmd -->
+</section></section>
+<section>
+<section id="stimulating-the-brain" class="title-slide slide level1 center" data-background-color="#0b3d91">
+<h1>5. Stimulating the brain</h1>
+
+</section>
+<section id="visual-and-tms-evoked-potentials-jansenrit" class="slide level2">
+<h2>Visual and TMS-evoked potentials (Jansen–Rit)</h2>
+<ul>
+<li>TODO: stimulation primitives in TVB</li>
+<li>TODO: VEP / TEP example</li>
+</ul>
+</section></section>
+<section>
+<section id="day-2-mini-hackathon" class="title-slide slide level1 center" data-background-color="#0b3d91">
+<h1>Day 2 — Mini Hackathon</h1>
+
+</section>
+<section id="format" class="slide level2">
+<h2>Format</h2>
+<ul>
+<li>TODO: pitch your question (5 min each)</li>
+<li>TODO: form small groups</li>
+<li>TODO: checkpoint + wrap-up times</li>
+</ul>
+</section>
+<section id="bring-your-own" class="slide level2">
+<h2>Bring your own…</h2>
+<ul>
+<li>TODO: data formats we can support</li>
+<li>TODO: EBRAINS / local setup reminder</li>
+</ul>
+</section></section>
+<section>
+<section id="wrap-up" class="title-slide slide level1 center" data-background-color="#0b3d91">
+<h1>Wrap-up</h1>
+
+</section>
+<section id="take-aways" class="slide level2">
+<h2>Take-aways</h2>
+<ul>
+<li>TODO: what to remember from Day 1</li>
+<li>TODO: where to go next</li>
+</ul>
+</section>
+<section id="thanks-contact" class="slide level2">
+<h2>Thanks &amp; contact</h2>
+<ul>
+<li>TODO: contact info</li>
+<li>TODO: feedback link</li>
+</ul>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><img data-src="img/Charite.png" style="width:30.0%" alt="Charite logo"></th>
+<th style="text-align: center;"><img data-src="img/BIH.png" style="width:30.0%" alt="BIH logo"></th>
+<th style="text-align: center;"><img data-src="img/BSS.png" style="width:30.0%" alt="BSS logo"></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</section>
+<section id="references" class="slide level2 unnumbered smaller scrollable">
+<h2>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-bergstra2012" class="csl-entry" role="listitem">
+Bergstra, James, and Yoshua Bengio. 2012. <span>“Random Search for Hyper-Parameter Optimization.”</span> <em>Journal of Machine Learning Research</em> 13 (null): 281–305. <a href="https://dl.acm.org/doi/abs/10.5555/2188385.2188395">https://dl.acm.org/doi/abs/10.5555/2188385.2188395</a>.
+</div>
+<div id="ref-Kashyap2025" class="csl-entry" role="listitem">
+Kashyap, Amrit, Eloy Geenjaar, Patrik Bey, Kiret Dhindsa, Katharina Glomb, Sergey Plis, Shella Keilholz, and Petra Ritter. 2025. <span>“Using an Ordinary Differential Equation Model to Separate Rest and Task Signals in fMRI.”</span> <em>Nature Communications</em> 16 (1). <a href="https://doi.org/10.1038/s41467-025-62491-6">https://doi.org/10.1038/s41467-025-62491-6</a>.
+</div>
+<div id="ref-Koller2024" class="csl-entry" role="listitem">
+Koller, Dominik P., Michael Schirner, and Petra Ritter. 2024. <span>“Human Connectome Topology Directs Cortical Traveling Waves and Shapes Frequency Gradients.”</span> <em>Nature Communications</em> 15 (1). <a href="https://doi.org/10.1038/s41467-024-47860-x">https://doi.org/10.1038/s41467-024-47860-x</a>.
+</div>
+<div id="ref-Martin2025" class="csl-entry" role="listitem">
+Martin, Leon, Konstantin Buelau, Marius Pille, Rico Andre Schmitt, Christoph Huettl, Jil M Meier, Halgurd Taher, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. <span>“The Virtual Brain Ontology: A Digital Knowledge Framework for Reproducible Brain Network Modeling.”</span> <em>bioRxiv</em>, November. <a href="https://doi.org/10.1101/2025.11.19.689211">https://doi.org/10.1101/2025.11.19.689211</a>.
+</div>
+<div id="ref-Pille2025" class="csl-entry" role="listitem">
+Pille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. <span>“Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.”</span> <em>bioRxiv</em>, November. <a href="https://doi.org/10.1101/2025.11.18.689003">https://doi.org/10.1101/2025.11.18.689003</a>.
+</div>
+<div id="ref-Schirner2023" class="csl-entry" role="listitem">
+Schirner, Michael, Gustavo Deco, and Petra Ritter. 2023. <span>“Learning How Network Structure Shapes Decision-Making for Bio-Inspired Computing.”</span> <em>Nature Communications</em> 14 (1). <a href="https://doi.org/10.1038/s41467-023-38626-y">https://doi.org/10.1038/s41467-023-38626-y</a>.
+</div>
+<div id="ref-Stefanovski2019" class="csl-entry" role="listitem">
+Stefanovski, Leon, Paul Triebkorn, Andreas Spiegler, Margarita-Arimatea Diaz-Cortes, Ana Solodkin, Viktor Jirsa, Anthony Randal McIntosh, and Petra Ritter. 2019. <span>“Linking Molecular Pathways and Large-Scale Computational Modeling to Assess Candidate Disease Mechanisms and Pharmacodynamics in Alzheimer’s Disease.”</span> Edited by Anke Meyer-Baese Li Su. <em>Frontiers in Computational Neuroscience</em> 13 (August). <a href="https://doi.org/10.3389/fncom.2019.00054">https://doi.org/10.3389/fncom.2019.00054</a>.
+</div>
+</div>
+</section>
+<section id="section" class="slide level2 unnumbered">
+<h2></h2>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="img/Charite.png" class="slide-logo"></p>
+<div class="footer footer-default">
+<p>© Pille, Martin, Stefanovski, Charité Unviersity Medicine Berlin</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: false,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/github\.com\/virtual-twin\/Brain-Simulation-Workshop");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+                // target, if specified
+                link.setAttribute("target", "_blank");
+                if (link.getAttribute("rel") === null) {
+                  link.setAttribute("rel", "noopener");
+                }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

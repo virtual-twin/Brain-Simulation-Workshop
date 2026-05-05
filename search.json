@@ -1,0 +1,1255 @@
+[
+  {
+    "objectID": "notebooks/5_stimulation.html",
+    "href": "notebooks/5_stimulation.html",
+    "title": "5. Stimulating the brain",
+    "section": "",
+    "text": "Computational models can predict how external inputs — visual stimuli or transcranial magnetic stimulation — propagate through brain networks and generate measurable evoked potentials. This chapter applies the Jansen–Rit model to reproduce and interpret such responses.",
+    "crumbs": [
+      "Setup",
+      "5. Stimulating the brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/5_stimulation.html#session",
+    "href": "notebooks/5_stimulation.html#session",
+    "title": "5. Stimulating the brain",
+    "section": "1 Session",
+    "text": "1 Session\n\n\n1.1 5 · Stimulation\nConfigure the Jansen–Rit model to receive external drive. Simulate visual- and TMS-evoked potentials, compare them to empirical waveforms, and explore how stimulation parameters shape the network response.\n\n\n\nPart of Day 1",
+    "crumbs": [
+      "Setup",
+      "5. Stimulating the brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/03_bifurcation_analysis.html",
+    "href": "notebooks/03_bifurcation_analysis.html",
+    "title": "3.1 Bifurcation analysis",
+    "section": "",
+    "text": "Build intuition for fixed points, stability, and bifurcations from scalar and 2D normal forms.\nRun a numerical continuation in TVBO with one YAML and a single exp.run(backend) call.\nRead a brain-relevant bifurcation diagram (Generic2dOscillator) and connect it to network-level regimes.\n\nBifurcation analysis tells us how the qualitative behaviour of a model changes when we move a parameter. In TVBO every example below is just inline YAML + plotting — no Fortran files, no scratch directories.\n\n\nCode\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom tvbo import Dynamics, Continuation, SimulationExperiment",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective",
+      "3.1 Bifurcation analysis"
+    ]
+  },
+  {
+    "objectID": "notebooks/03_bifurcation_analysis.html#goals",
+    "href": "notebooks/03_bifurcation_analysis.html#goals",
+    "title": "3.1 Bifurcation analysis",
+    "section": "",
+    "text": "Build intuition for fixed points, stability, and bifurcations from scalar and 2D normal forms.\nRun a numerical continuation in TVBO with one YAML and a single exp.run(backend) call.\nRead a brain-relevant bifurcation diagram (Generic2dOscillator) and connect it to network-level regimes.\n\nBifurcation analysis tells us how the qualitative behaviour of a model changes when we move a parameter. In TVBO every example below is just inline YAML + plotting — no Fortran files, no scratch directories.\n\n\nCode\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom tvbo import Dynamics, Continuation, SimulationExperiment",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective",
+      "3.1 Bifurcation analysis"
+    ]
+  },
+  {
+    "objectID": "notebooks/03_bifurcation_analysis.html#linear-stability-sign-of-a-decides-everything",
+    "href": "notebooks/03_bifurcation_analysis.html#linear-stability-sign-of-a-decides-everything",
+    "title": "3.1 Bifurcation analysis",
+    "section": "2 1. Linear stability — sign of \\(a\\) decides everything",
+    "text": "2 1. Linear stability — sign of \\(a\\) decides everything\nThe simplest dynamical system is\n\\[\n\\dot x = a\\,x, \\qquad x(0) = x_0, \\qquad x(t) = x_0\\,e^{a t}.\n\\]\nFor \\(a &lt; 0\\) the origin is a stable fixed point, for \\(a &gt; 0\\) it is unstable, and \\(a = 0\\) is the prototype of a bifurcation.\n\nLIN = \"\"\"\nname: LinearScalar\nparameters:\n  a:\n    name: a\n    value: 1.0\nstate_variables:\n  x:\n    name: x\n    domain:\n      lo: -5.0\n      hi: 5.0\n    equation:\n      lhs: Derivative(x, t)\n      rhs: a*x\n    initial_value: 1.0\n\"\"\"\n\nfig, ax = plt.subplots(figsize=(5, 3.2))\nfor a, c in zip([-1.0, -0.5, 0.0, 0.5, 1.0],\n                [\"C0\", \"C1\", \"0.4\", \"C2\", \"C3\"]):\n    dyn = Dynamics.from_string(LIN); dyn.parameters[\"a\"].value = a\n    dyn.plot(\"x\", duration=4, dt=1e-3, ax=ax)\n    ax.lines[-1].set_color(c); ax.lines[-1].set_label(f\"$a = {a:+.1f}$\")\nax.set(xlabel=\"$t$\", ylabel=\"$x(t)$\", xlim=(0, 4), ylim=(-0.2, 4.0))\nax.legend(handlelength=1, fontsize=9); plt.tight_layout(); plt.show()\n\n\n\n\n\n\n\n\nThe slope at \\(t = 0\\) equals \\(a\\) — its sign decides growth vs. decay. For nonlinear systems \\(\\dot x = f(x)\\), stability of an equilibrium \\(x^*\\) is governed by the Jacobian eigenvalues \\(J = \\partial f/\\partial x|_{x^*}\\). Everything that follows is built from this idea.",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective",
+      "3.1 Bifurcation analysis"
+    ]
+  },
+  {
+    "objectID": "notebooks/03_bifurcation_analysis.html#d-phase-portraits-node-saddle-focus-centre",
+    "href": "notebooks/03_bifurcation_analysis.html#d-phase-portraits-node-saddle-focus-centre",
+    "title": "3.1 Bifurcation analysis",
+    "section": "3 2. 2D phase portraits — node, saddle, focus, centre",
+    "text": "3 2. 2D phase portraits — node, saddle, focus, centre\nFor \\(\\dot{\\vec x} = A\\vec x\\) in 2D, the eigenvalues of \\(A\\) classify the origin. TVBO’s kind=\"phaseplane\" overlays the vector field with both nullclines and the detected fixed points.\nEach system below is a complete, copy-pastable YAML. We feed it directly to Dynamics.from_string — no helper functions, no string interpolation.\n\nSADDLE = \"\"\"\nname: Saddle\nstate_variables:\n  x1:\n    name: x1\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x1, t)\n      rhs: x1 - x2\n    initial_value: 1.0\n  x2:\n    name: x2\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x2, t)\n      rhs: -x1 - x2\n    initial_value: 1.0\n\"\"\"\n\nSTABLE_NODE = \"\"\"\nname: StableNode\nstate_variables:\n  x1:\n    name: x1\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x1, t)\n      rhs: -2*x1\n    initial_value: 1.0\n  x2:\n    name: x2\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x2, t)\n      rhs: -x2\n    initial_value: 1.0\n\"\"\"\n\nSTABLE_FOCUS = \"\"\"\nname: StableFocus\nstate_variables:\n  x1:\n    name: x1\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x1, t)\n      rhs: -0.3*x1 - x2\n    initial_value: 1.0\n  x2:\n    name: x2\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x2, t)\n      rhs: x1 - 0.3*x2\n    initial_value: 1.0\n\"\"\"\n\nCENTRE = \"\"\"\nname: Centre\nstate_variables:\n  x1:\n    name: x1\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x1, t)\n      rhs: -x2\n    initial_value: 1.0\n  x2:\n    name: x2\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x2, t)\n      rhs: x1\n    initial_value: 1.0\n\"\"\"\n\nCASES = [\n    (\"Saddle\",       SADDLE),\n    (\"Stable node\",  STABLE_NODE),\n    (\"Stable focus\", STABLE_FOCUS),\n    (\"Centre\",       CENTRE),\n]\n\nfig, axes = plt.subplots(2, 2, figsize=(8, 6.5))\nfor ax, (label, yml) in zip(axes.flat, CASES):\n    dyn = Dynamics.from_string(yml)\n    dyn.plot(\"x1\", \"x2\", kind=\"phaseplane\", ax=ax,\n             grid_n=20, n_trajectories=3, duration=15)\n    ax.set_title(label, fontsize=10)\nplt.tight_layout(); plt.show()\n\n\n\n\n\n\n\n\nBifurcations occur when an eigenvalue of \\(A\\) — or, locally, of the Jacobian — crosses the imaginary axis as a parameter is varied.",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective",
+      "3.1 Bifurcation analysis"
+    ]
+  },
+  {
+    "objectID": "notebooks/03_bifurcation_analysis.html#the-three-codim-1-normal-forms",
+    "href": "notebooks/03_bifurcation_analysis.html#the-three-codim-1-normal-forms",
+    "title": "3.1 Bifurcation analysis",
+    "section": "4 3. The three codim-1 normal forms",
+    "text": "4 3. The three codim-1 normal forms\nWe cover the canonical scalar bifurcations and let TVBO continue the equilibrium branch bidirectionally. Each example is a self-contained YAML pair (Dynamics + Continuation) passed straight into from_string.\n\nSaddle-node — \\(\\dot x = a - x^2\\)\nTwo equilibria collide and annihilate at \\(a = 0\\). Beyond the fold no attractor survives. This is the prototype for regime shifts.\n\nSADDLE_NODE = \"\"\"\nname: SaddleNode\nparameters:\n  a:\n    name: a\n    value: 1.0\nstate_variables:\n  x:\n    name: x\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x, t)\n      rhs: a - x**2\n    initial_value: 1.0\n\"\"\"\n\nSADDLE_NODE_CONT = \"\"\"\nname: saddle_node_cont\ndynamics: SaddleNode\nfree_parameters:\n  - name: a\n    domain:\n      lo: -2.0\n      hi: 2.0\nmax_steps: 400\nds: 0.01\nbothside: true\n\"\"\"\n\nexp_sn = SimulationExperiment(\n    dynamics=Dynamics.from_string(SADDLE_NODE),\n    continuations=[Continuation.from_string(SADDLE_NODE_CONT)],\n)\nexp_sn.run(\"bifurcationkit.jl\").continuations[\"saddle_node_cont\"].plot(VOI=\"x\")\nplt.gca().set(xlim=(-2, 2), ylim=(-2, 2)); plt.show()\n\nDetected IPython. Loading juliacall extension. See https://juliapy.github.io/PythonCall.jl/stable/compat/#IPython\nCT: 1.052880 seconds (3.34 M allocations: 167.342 MiB, 3.67% gc time, 99.92% compilation time)\nCT: 0.000467 seconds (7.60 k allocations: 318.734 KiB)\n\n\n\n\n\n\n\n\n\n\n\nPitchfork — \\(\\dot x = a x - x^3\\)\nSymmetry breaking: the trivial branch loses stability at \\(a = 0\\) and a pair of asymmetric branches \\(\\pm\\sqrt a\\) emerges.\n\nPITCHFORK = \"\"\"\nname: Pitchfork\nparameters:\n  a:\n    name: a\n    value: 1.0\nstate_variables:\n  x:\n    name: x\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x, t)\n      rhs: a*x - x**3\n    initial_value: 0.01\n\"\"\"\n\nPITCHFORK_CONT = \"\"\"\nname: pitchfork_cont\ndynamics: Pitchfork\nfree_parameters:\n  - name: a\n    domain:\n      lo: -2.0\n      hi: 2.0\nmax_steps: 400\nds: 0.01\nbothside: true\n\"\"\"\n\nexp_pf = SimulationExperiment(\n    dynamics=Dynamics.from_string(PITCHFORK),\n    continuations=[Continuation.from_string(PITCHFORK_CONT)],\n)\nexp_pf.run(\"bifurcationkit.jl\").continuations[\"pitchfork_cont\"].plot(VOI=\"x\")\nplt.gca().set(xlim=(-1, 2), ylim=(-1.5, 1.5)); plt.show()\n\nCT: 0.432019 seconds (808.13 k allocations: 39.327 MiB, 99.90% compilation time)\nCT: 0.000236 seconds (4.43 k allocations: 189.656 KiB)\n\n\n\n\n\n\n\n\n\n\n\nHysteresis — \\(\\dot x = a + x - x^3\\)\nA small constant tilt unfolds the pitchfork into two saddle-nodes framing a bistable region. Sweeping \\(a\\) up then down traces a memory loop.\n\nHYSTERESIS = \"\"\"\nname: Hysteresis\nparameters:\n  a:\n    name: a\n    value: 1.0\nstate_variables:\n  x:\n    name: x\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x, t)\n      rhs: a + x - x**3\n    initial_value: 1.0\n\"\"\"\n\nHYSTERESIS_CONT = \"\"\"\nname: hysteresis_cont\ndynamics: Hysteresis\nfree_parameters:\n  - name: a\n    domain:\n      lo: -1.5\n      hi: 1.5\nmax_steps: 400\nds: 0.01\nbothside: true\n\"\"\"\n\nexp_hy = SimulationExperiment(\n    dynamics=Dynamics.from_string(HYSTERESIS),\n    continuations=[Continuation.from_string(HYSTERESIS_CONT)],\n)\nexp_hy.run(\"bifurcationkit.jl\").continuations[\"hysteresis_cont\"].plot(VOI=\"x\")\nplt.gca().set(xlim=(-1, 1), ylim=(-2, 2)); plt.show()\n\nCT: 0.437342 seconds (806.00 k allocations: 39.502 MiB, 99.91% compilation time)\nCT: 0.000507 seconds (10.88 k allocations: 451.875 KiB)\n\n\n\n\n\n\n\n\n\n\n\nCode\ndef sweep(a_start, a_end, n=4000, x0=1.0, dt=0.05):\n    a_traj = np.linspace(a_start, a_end, n); x = np.empty(n); x[0] = x0\n    for k in range(1, n):\n        x[k] = x[k-1] + dt * (a_traj[k-1] + x[k-1] - x[k-1]**3)\n    return a_traj, x\n\na_up, x_up   = sweep(-1.0, +1.0, x0=-1.0)\na_dn, x_dn   = sweep(+1.0, -1.0, x0=+1.0)\naf = 2.0/(3.0*np.sqrt(3.0))\n\nfig, ax = plt.subplots(figsize=(5.5, 3.5))\nax.plot(a_up, x_up, \"C0\", lw=2, label=r\"$a:-1\\to1$\")\nax.plot(a_dn, x_dn, \"C3\", lw=2, label=r\"$a:+1\\to-1$\")\nax.axvline(+af, color=\"0.5\", ls=\"--\", lw=0.8)\nax.axvline(-af, color=\"0.5\", ls=\"--\", lw=0.8)\nax.set(xlabel=\"$a$\", ylabel=\"$x$\", xlim=(-1, 1), ylim=(-2, 2))\nax.legend(); plt.tight_layout(); plt.show()",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective",
+      "3.1 Bifurcation analysis"
+    ]
+  },
+  {
+    "objectID": "notebooks/03_bifurcation_analysis.html#hopf-normal-form-birth-of-an-oscillation",
+    "href": "notebooks/03_bifurcation_analysis.html#hopf-normal-form-birth-of-an-oscillation",
+    "title": "3.1 Bifurcation analysis",
+    "section": "5 4. Hopf normal form — birth of an oscillation",
+    "text": "5 4. Hopf normal form — birth of an oscillation\nIn 2D, a Hopf bifurcation occurs when a pair of complex-conjugate eigenvalues crosses the imaginary axis. A stable focus turns into an unstable focus surrounded by a stable limit cycle of radius \\(\\sqrt a\\).\n\\[\n\\dot x_1 = (a - x_1^2 - x_2^2)\\,x_1 - w\\,x_2, \\qquad\n\\dot x_2 = (a - x_1^2 - x_2^2)\\,x_2 + w\\,x_1.\n\\]\n\nHOPF = r\"\"\"\nname: HopfNF\nparameters:\n  a:\n    name: a\n    value: 0.5\n  w:\n    name: w\n    value: 1.0\nstate_variables:\n  x1:\n    name: x1\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x1, t)\n      rhs: (a - x1**2 - x2**2)*x1 - w*x2\n    initial_value: 0.0\n  x2:\n    name: x2\n    domain:\n      lo: -2.0\n      hi: 2.0\n    equation:\n      lhs: Derivative(x2, t)\n      rhs: (a - x1**2 - x2**2)*x2 + w*x1\n    initial_value: 0.0\n\"\"\"\n\nCONT_HOPF = \"\"\"\nname: hopf_in_a\ndynamics: HopfNF\nfree_parameters:\n  - name: a\n    domain:\n      lo: -2.0\n      hi: 2.0\nmax_steps: 400\nds: 0.01\nbothside: true\nbranches:\n  - name: po_from_hopf\n    source_point: \"hopf:all\"\n    bothside: true\n\"\"\"\n\ndyn  = Dynamics.from_string(HOPF)\ncont = Continuation.from_string(CONT_HOPF)\nexp_hopf = SimulationExperiment(dynamics=dyn, continuations=[cont])\nhopf = exp_hopf.run(\"bifurcationkit.jl\").continuations[\"hopf_in_a\"]\n\nCT: 0.441436 seconds (883.62 k allocations: 42.973 MiB, 99.91% compilation time)\nCT: 0.000152 seconds (2.14 k allocations: 191.859 KiB)\nCT: 3.463870 seconds (3.80 M allocations: 546.510 MiB, 10.58% gc time, 82.30% compilation time)\nCT: 0.251196 seconds (226.88 k allocations: 390.487 MiB, 4.29% gc time)\n\n\nThe 2D bifurcation diagram (MIN/MAX envelope of the limit cycle):\n\nhopf.plot(VOI=\"x1\"); plt.show()\n\n\n\n\n\n\n\n\nThe 3D view shows the equilibrium spine, the Hopf point, and the limit-cycle tube whose radius grows like \\(\\sqrt a\\):\n\nhopf.plot_3d(VOI=\"x1\"); plt.show()",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective",
+      "3.1 Bifurcation analysis"
+    ]
+  },
+  {
+    "objectID": "notebooks/03_bifurcation_analysis.html#numerical-continuation-in-one-paragraph",
+    "href": "notebooks/03_bifurcation_analysis.html#numerical-continuation-in-one-paragraph",
+    "title": "3.1 Bifurcation analysis",
+    "section": "6 5. Numerical continuation in one paragraph",
+    "text": "6 5. Numerical continuation in one paragraph\nThe backend (bifurcationkit.jl) tracks equilibria \\(f(x, a) = 0\\) along arclength \\(s\\) instead of along \\(a\\) directly. A predictor-corrector scheme (tangent extrapolation + Newton on the augmented system) walks past folds where \\(J\\) becomes singular. Bifurcations are flagged by sign changes in test functions (\\(\\det J\\) for folds, \\(\\mathrm{Re}\\,\\lambda\\) for Hopf, etc.). At a branch point the corrector restarts in the eigenvector direction. This is branch switching, and in TVBO it is requested declaratively:\nbranches:\n  - name: po_from_hopf\n    source_point: \"hopf:all\"",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective",
+      "3.1 Bifurcation analysis"
+    ]
+  },
+  {
+    "objectID": "notebooks/03_bifurcation_analysis.html#brain-relevant-generic2doscillator",
+    "href": "notebooks/03_bifurcation_analysis.html#brain-relevant-generic2doscillator",
+    "title": "3.1 Bifurcation analysis",
+    "section": "7 6. Brain-relevant: Generic2dOscillator",
+    "text": "7 6. Brain-relevant: Generic2dOscillator\nThe same Continuation API drives a TVB neural-mass model. We sweep the external input \\(I\\) and let TVBO continue periodic orbits from every detected Hopf point.\n\nmodel = Dynamics.from_ontology(\"Generic2dOscillator\")\n\ncont = Continuation.from_string(\"\"\"\nname: g2d_in_I\ndynamics: Generic2dOscillator\nfree_parameters:\n  - name: I\n    domain:\n      lo: -10.0\n      hi: 20.0\nmax_steps: 500\nds: 0.05\nbothside: true\nbranches:\n  - name: po_from_hopf\n    source_point: \"hopf:all\"\n    bothside: true\n\"\"\")\n\nexp_g2d = SimulationExperiment(dynamics=model, continuations=[cont])\ng2d = exp_g2d.run(\"bifurcationkit.jl\").continuations[\"g2d_in_I\"]\ng2d.plot(VOI=\"V\"); plt.show()\n\nCT: 0.481507 seconds (907.12 k allocations: 44.919 MiB, 99.54% compilation time)\nCT: 0.004770 seconds (16.19 k allocations: 1.187 MiB, 82.75% compilation time)\nCT: 7.863721 seconds (7.54 M allocations: 7.533 GiB, 15.38% gc time, 36.50% compilation time)\nCT: 198.659356 seconds (4.44 M allocations: 7.412 GiB, 0.75% gc time)\nCT: 1189.297705 seconds (4.80 M allocations: 7.762 GiB, 0.25% gc time, 0.01% compilation time)\nCT: 647.007164 seconds (4.42 M allocations: 7.367 GiB, 0.36% gc time)\n\n\n\n\n\n\n\n\n\n\ng2d.plot_3d(VOI=\"V\"); plt.show()\n\n\n\n\n\n\n\n\nReading the diagram: stable branches → resting / persistent activity; limit cycles → oscillatory regime; folds → abrupt regime shifts (e.g. seizure onset). The same machinery applied to a whole-brain network predicts where the collective dynamics changes regime as global coupling or input is varied.",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective",
+      "3.1 Bifurcation analysis"
+    ]
+  },
+  {
+    "objectID": "notebooks/03_bifurcation_analysis.html#exercises",
+    "href": "notebooks/03_bifurcation_analysis.html#exercises",
+    "title": "3.1 Bifurcation analysis",
+    "section": "8 Exercises",
+    "text": "8 Exercises\n\nAdd a small constant input to the Hopf system: rhs: (a - r**2)*x1 - w*x2 + I0. Sweep I0 instead of a. What kind of bifurcation do you see?\nIn Generic2dOscillator, replace I by b as the free parameter. Where are the Hopf points now?",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective",
+      "3.1 Bifurcation analysis"
+    ]
+  },
+  {
+    "objectID": "notebooks/02a_mean_field_models.html",
+    "href": "notebooks/02a_mean_field_models.html",
+    "title": "2.1 Mean field models",
+    "section": "",
+    "text": "TODO: pick a mean-field model from TVB\nTODO: inspect parameters and state variables\nTODO: simulate a single node and visualise dynamics",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.1 Mean field models"
+    ]
+  },
+  {
+    "objectID": "notebooks/02a_mean_field_models.html#goals",
+    "href": "notebooks/02a_mean_field_models.html#goals",
+    "title": "2.1 Mean field models",
+    "section": "",
+    "text": "TODO: pick a mean-field model from TVB\nTODO: inspect parameters and state variables\nTODO: simulate a single node and visualise dynamics",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.1 Mean field models"
+    ]
+  },
+  {
+    "objectID": "notebooks/02a_mean_field_models.html#setup",
+    "href": "notebooks/02a_mean_field_models.html#setup",
+    "title": "2.1 Mean field models",
+    "section": "2 Setup",
+    "text": "2 Setup\n\n# TODO: imports",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.1 Mean field models"
+    ]
+  },
+  {
+    "objectID": "notebooks/02a_mean_field_models.html#inspect-the-model",
+    "href": "notebooks/02a_mean_field_models.html#inspect-the-model",
+    "title": "2.1 Mean field models",
+    "section": "3 Inspect the model",
+    "text": "3 Inspect the model\n\n# TODO: instantiate model, print parameter table",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.1 Mean field models"
+    ]
+  },
+  {
+    "objectID": "notebooks/02a_mean_field_models.html#simulate-a-single-node",
+    "href": "notebooks/02a_mean_field_models.html#simulate-a-single-node",
+    "title": "2.1 Mean field models",
+    "section": "4 Simulate a single node",
+    "text": "4 Simulate a single node\n\n# TODO: short simulation, plot time series",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.1 Mean field models"
+    ]
+  },
+  {
+    "objectID": "notebooks/02a_mean_field_models.html#exercises",
+    "href": "notebooks/02a_mean_field_models.html#exercises",
+    "title": "2.1 Mean field models",
+    "section": "5 Exercises",
+    "text": "5 Exercises\n\nTODO: vary one parameter and describe the qualitative change\nTODO: compare two mean-field models on the same input",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.1 Mean field models"
+    ]
+  },
+  {
+    "objectID": "notebooks/05_stimulation.html",
+    "href": "notebooks/05_stimulation.html",
+    "title": "5.1 Stimulating the brain",
+    "section": "",
+    "text": "TODO: configure a Jansen–Rit network\nTODO: deliver a focal stimulus (visual / TMS)\nTODO: extract evoked potentials and compare to references",
+    "crumbs": [
+      "Setup",
+      "5. Stimulating the brain",
+      "5.1 Stimulating the brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/05_stimulation.html#goals",
+    "href": "notebooks/05_stimulation.html#goals",
+    "title": "5.1 Stimulating the brain",
+    "section": "",
+    "text": "TODO: configure a Jansen–Rit network\nTODO: deliver a focal stimulus (visual / TMS)\nTODO: extract evoked potentials and compare to references",
+    "crumbs": [
+      "Setup",
+      "5. Stimulating the brain",
+      "5.1 Stimulating the brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/05_stimulation.html#setup",
+    "href": "notebooks/05_stimulation.html#setup",
+    "title": "5.1 Stimulating the brain",
+    "section": "2 Setup",
+    "text": "2 Setup\n\n# TODO: imports",
+    "crumbs": [
+      "Setup",
+      "5. Stimulating the brain",
+      "5.1 Stimulating the brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/05_stimulation.html#build-the-jr-network",
+    "href": "notebooks/05_stimulation.html#build-the-jr-network",
+    "title": "5.1 Stimulating the brain",
+    "section": "3 Build the JR network",
+    "text": "3 Build the JR network\n\n# TODO: instantiate model, connect via connectome",
+    "crumbs": [
+      "Setup",
+      "5. Stimulating the brain",
+      "5.1 Stimulating the brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/05_stimulation.html#configure-the-stimulus",
+    "href": "notebooks/05_stimulation.html#configure-the-stimulus",
+    "title": "5.1 Stimulating the brain",
+    "section": "4 Configure the stimulus",
+    "text": "4 Configure the stimulus\n\n# TODO: spatial pattern + temporal waveform",
+    "crumbs": [
+      "Setup",
+      "5. Stimulating the brain",
+      "5.1 Stimulating the brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/05_stimulation.html#run-and-extract-evoked-responses",
+    "href": "notebooks/05_stimulation.html#run-and-extract-evoked-responses",
+    "title": "5.1 Stimulating the brain",
+    "section": "5 Run and extract evoked responses",
+    "text": "5 Run and extract evoked responses\n\n# TODO: simulate, average across trials, plot ERPs",
+    "crumbs": [
+      "Setup",
+      "5. Stimulating the brain",
+      "5.1 Stimulating the brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/05_stimulation.html#exercises",
+    "href": "notebooks/05_stimulation.html#exercises",
+    "title": "5.1 Stimulating the brain",
+    "section": "6 Exercises",
+    "text": "6 Exercises\n\nTODO: vary stimulus intensity and locate the response threshold\nTODO: compare visual vs. TMS-like protocols",
+    "crumbs": [
+      "Setup",
+      "5. Stimulating the brain",
+      "5.1 Stimulating the brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/2_fair_model.html",
+    "href": "notebooks/2_fair_model.html",
+    "title": "2. Defining a FAIR brain network model",
+    "section": "",
+    "text": "In this chapter you will use the TVB Ontology (TVB-O) to define a neural mass model in a FAIR-compliant way, simulate a single node, and then connect multiple nodes into a whole-brain network driven by structural connectivity.",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model"
+    ]
+  },
+  {
+    "objectID": "notebooks/2_fair_model.html#sessions",
+    "href": "notebooks/2_fair_model.html#sessions",
+    "title": "2. Defining a FAIR brain network model",
+    "section": "1 Sessions",
+    "text": "1 Sessions\n\n\n1.1 2.1 Mean field models\nLoad a neural mass model from the TVB-O knowledge base. Inspect parameters and state variables. Simulate a single uncoupled node and visualise its dynamics.\n\n\n1.2 2.2 Coupled networks\nConnect multiple neural masses via a structural connectome. Understand how coupling functions and long-range delays shape collective network activity.\n\n\n\nPart of Day 1",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model"
+    ]
+  },
+  {
+    "objectID": "notebooks/04a_alzheimer_usecase.html",
+    "href": "notebooks/04a_alzheimer_usecase.html",
+    "title": "Use-case A — Alzheimer’s disease",
+    "section": "",
+    "text": "TODO: integrate biomedical data (e.g. amyloid / tau PET) into a TVB model\nTODO: run a mechanistic simulation of disease progression\nTODO: compare healthy vs. patient-specific dynamics",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case A — Alzheimer's disease"
+    ]
+  },
+  {
+    "objectID": "notebooks/04a_alzheimer_usecase.html#goals",
+    "href": "notebooks/04a_alzheimer_usecase.html#goals",
+    "title": "Use-case A — Alzheimer’s disease",
+    "section": "",
+    "text": "TODO: integrate biomedical data (e.g. amyloid / tau PET) into a TVB model\nTODO: run a mechanistic simulation of disease progression\nTODO: compare healthy vs. patient-specific dynamics",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case A — Alzheimer's disease"
+    ]
+  },
+  {
+    "objectID": "notebooks/04a_alzheimer_usecase.html#setup",
+    "href": "notebooks/04a_alzheimer_usecase.html#setup",
+    "title": "Use-case A — Alzheimer’s disease",
+    "section": "2 Setup",
+    "text": "2 Setup\n\n# TODO: imports",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case A — Alzheimer's disease"
+    ]
+  },
+  {
+    "objectID": "notebooks/04a_alzheimer_usecase.html#load-patient-data",
+    "href": "notebooks/04a_alzheimer_usecase.html#load-patient-data",
+    "title": "Use-case A — Alzheimer’s disease",
+    "section": "3 Load patient data",
+    "text": "3 Load patient data\n\n# TODO: connectome + per-region biomarker maps",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case A — Alzheimer's disease"
+    ]
+  },
+  {
+    "objectID": "notebooks/04a_alzheimer_usecase.html#map-biomarkers-onto-model-parameters",
+    "href": "notebooks/04a_alzheimer_usecase.html#map-biomarkers-onto-model-parameters",
+    "title": "Use-case A — Alzheimer’s disease",
+    "section": "4 Map biomarkers onto model parameters",
+    "text": "4 Map biomarkers onto model parameters\n\n# TODO: parameterise a region-specific local model",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case A — Alzheimer's disease"
+    ]
+  },
+  {
+    "objectID": "notebooks/04a_alzheimer_usecase.html#simulate-and-compare",
+    "href": "notebooks/04a_alzheimer_usecase.html#simulate-and-compare",
+    "title": "Use-case A — Alzheimer’s disease",
+    "section": "5 Simulate and compare",
+    "text": "5 Simulate and compare\n\n# TODO: run healthy + patient simulations, contrast outputs",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case A — Alzheimer's disease"
+    ]
+  },
+  {
+    "objectID": "notebooks/04a_alzheimer_usecase.html#exercises",
+    "href": "notebooks/04a_alzheimer_usecase.html#exercises",
+    "title": "Use-case A — Alzheimer’s disease",
+    "section": "6 Exercises",
+    "text": "6 Exercises\n\nTODO: which biomarker has the strongest effect on global dynamics?\nTODO: how robust is the result to the chosen mapping?",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case A — Alzheimer's disease"
+    ]
+  },
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Setup",
+    "section": "",
+    "text": "This page explains how to set up your environment to run the workshop notebooks. Two options are available: Docker (recommended, no Python setup needed) or a local install via uv.",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#option-a-docker-recommended",
+    "href": "setup.html#option-a-docker-recommended",
+    "title": "Setup",
+    "section": "Option A: Docker (recommended)",
+    "text": "Option A: Docker (recommended)\nDocker gives you a ready-to-run environment with everything pre-installed.\nStep 1. Install Docker Desktop and start it.\nStep 2. Run Jupyter Lab:\ndocker run -p 8888:8888 ghcr.io/virtual-twin/tvbo:latest\nStep 3. Open the URL printed in the terminal (e.g. http://127.0.0.1:8888/lab?token=...) in your browser.\nTo keep your work across sessions, mount a local folder:\ndocker run -p 8888:8888 -v \"$PWD/notebooks:/home/tvbo/notebooks\" ghcr.io/virtual-twin/tvbo:latest",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#option-b-local-install-with-uv",
+    "href": "setup.html#option-b-local-install-with-uv",
+    "title": "Setup",
+    "section": "Option B: Local install with uv",
+    "text": "Option B: Local install with uv\nUse this option if you prefer to work directly on your machine or want to install your own packages alongside TVBO.\n\n1. Install uv\nuv is a fast Python package manager that also handles Python installation.\n\nmacOS / LinuxWindows\n\n\ncurl -LsSf https://astral.sh/uv/install.sh | sh\nRestart your terminal afterwards (or run source ~/.bashrc / source ~/.zshrc).\n\n\nOpen PowerShell and run:\npowershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\"\nRestart PowerShell afterwards.\n\n\n\nVerify:\nuv --version\n\n\n2. Install Python\nTVBO requires Python 3.11 or later. Install it with uv:\nuv python install 3.12\n\n\n3. Create an environment\nmkdir tvbo-workshop\ncd tvbo-workshop\nuv venv --python 3.12\nActivate it:\n\nmacOS / LinuxWindows\n\n\nsource .venv/bin/activate\n\n\n.venv\\Scripts\\activate\n\n\n\nYour prompt will show (.venv) when the environment is active.\n\n\n4. Install TVBO + TVB-Optim\nuv pip install \"tvbo[all]\"\nThis installs TVBO and the TVB simulator backend used in the workshop.\n\n\n5. Verify\nfrom tvbo import Dynamics, SimulationExperiment\nprint(\"Ready!\")",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#troubleshooting",
+    "href": "setup.html#troubleshooting",
+    "title": "Setup",
+    "section": "Troubleshooting",
+    "text": "Troubleshooting\n\n\n\n\n\n\n\nProblem\nFix\n\n\n\n\nuv: command not found\nRestart your terminal; on macOS/Linux check that ~/.local/bin is on your PATH\n\n\nNo module named tvbo\nActivate the virtual environment first — you should see (.venv) in your prompt\n\n\nPython version error\nRun uv python install 3.12, then uv venv --python 3.12\n\n\nWindows execution policy error\nOpen PowerShell as Administrator and run Set-ExecutionPolicy RemoteSigned -Scope CurrentUser\n\n\nDocker: port already in use\nChange the host port: docker run -p 8889:8888 ... and open localhost:8889",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "script.html",
+    "href": "script.html",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "The key idea for this section is that a dynamical system is not only a simulator. It is a geometry. We can look at the same model from three angles, and each angle answers a different question.\nTime series answer: what does the model do after I start it somewhere? This is the most direct link to data. We simulate \\(x(t)\\) at fixed parameters and compare the resulting signal with EEG, MEG, fMRI, spectra, functional connectivity, or FCD.\nThe phase plane answers: how does the model move through its state space? For a two-dimensional system, every point in the plane has an arrow attached to it. That arrow says where the system wants to go next. Fixed points are places where the arrows vanish. Nullclines are curves where one component of the motion is zero. Trajectories show which regions are attracted to which fixed point or cycle. This is a local geometric view at one parameter value.\nThe bifurcation diagram answers: when does the qualitative behaviour change? Instead of fixing the parameter, we vary it and track equilibria and periodic orbits. This gives a map of regimes: resting states, oscillatory states, multistability, folds, Hopf points and abrupt transitions. In brain modelling, this is often the most useful view because we care about transitions between healthy, oscillatory, seizure-like, or pathological regimes.\nThe intuitive sentence for the slide is: time series are the movie, the phase plane is the landscape, and the bifurcation diagram is the atlas of all landscapes as a parameter changes.\n\n\n\nStart with the smallest possible example:\n\\[\n\\dot x = a x,\n\\qquad\nx(t)=x_0 e^{at}.\n\\]\nThere is one fixed point at \\(x=0\\). Whether it attracts or repels depends only on the sign of \\(a\\).\nThis is where the symbol \\(\\lambda\\) enters. In stability analysis, \\(\\lambda\\) is an eigenvalue of the local linearised system. Intuitively, it is the growth rate of a tiny perturbation away from a fixed point. If \\(\\lambda&lt;0\\), the perturbation shrinks and the fixed point attracts nearby states. If \\(\\lambda&gt;0\\), the perturbation grows and the fixed point repels nearby states. If \\(\\lambda=0\\), the linear approximation is exactly neutral: this is the boundary where stability can change.\nIn this one-dimensional example, the Jacobian is just the number \\(a\\), so the single eigenvalue is\n\\[\n\\lambda=a.\n\\]\nThat is why the plot labels the dashed neutral trajectory as \\(a=0\\), \\(\\lambda=0\\). The line itself is not decaying and not growing. It marks the change point between decay and growth.\nIf \\(a&lt;0\\), then \\(e^{at}\\) decays and the state returns to zero. The fixed point is stable. If \\(a&gt;0\\), then \\(e^{at}\\) grows and any small perturbation moves away from zero. The fixed point is unstable. If \\(a=0\\), the system is exactly at the borderline. This is the simplest possible bifurcation point.\nFor a nonlinear system \\(\\dot x=f(x)\\), we use the same idea locally. Near a fixed point \\(x^\\ast\\), write \\(x=x^\\ast+\\delta x\\) and linearise:\n\\[\n\\dot{\\delta x} = J\\delta x,\n\\qquad\nJ = \\left.\\frac{\\partial f}{\\partial x}\\right|_{x^\\ast}.\n\\]\nIn many dimensions, stability is read from the eigenvalues of \\(J\\). If every eigenvalue has negative real part, perturbations decay. If one eigenvalue has positive real part, perturbations grow. A bifurcation occurs when an eigenvalue crosses the imaginary axis as a parameter changes.\nReal eigenvalue crossing zero gives saddle-node, pitchfork or transcritical bifurcations. A complex conjugate pair crossing the imaginary axis gives a Hopf bifurcation, which is the birth or death of an oscillation.\n\n\n\nThe phase portraits are meant to make stability visible without reading a long equation. The arrows show the vector field. The black trajectories show example solutions. The dots mark fixed points.\nFor a stable node, trajectories approach the fixed point without rotation. For a saddle, one direction attracts and another direction repels. This creates a separatrix: a boundary between qualitatively different futures. For a stable focus, trajectories spiral into the fixed point. For a centre, trajectories circle around without damping, so the amplitude is conserved.\nThe important brain-modelling intuition is that local geometry can already tell us what kind of signal we should expect. A node gives relaxation. A focus gives damped oscillations. A centre or limit cycle gives sustained oscillations. A saddle can create thresholds and switches.\n\n\n\nThe normal forms are the canonical local pictures. They are not meant to be full brain models. They are the small mathematical templates that appear near many different transitions.\nThe slide now shows each example in two linked views. The top row is the bifurcation diagram: equilibria as the parameter \\(a\\) changes. The dotted vertical line marks one chosen parameter value. The bottom row shows the scalar vector field at exactly that value: \\(\\dot x=f(x)\\) as a function of \\(x\\). Where the curve crosses zero, the system has a fixed point. Filled dots are stable fixed points; open dots are unstable fixed points. The arrows show the local flow direction along the state axis.\nSaddle-node:\n\\[\n\\dot x = a - x^2.\n\\]\nFor one side of the parameter there are two fixed points, one stable and one unstable. At the fold, they collide and disappear. This is the local geometry of an abrupt regime shift. In brain models, this is the kind of mechanism that can underlie sudden onset or offset transitions.\nPitchfork:\n\\[\n\\dot x = a x - x^3.\n\\]\nFor \\(a&lt;0\\), the symmetric state \\(x=0\\) is stable. For \\(a&gt;0\\), that symmetric state becomes unstable and two new stable states appear. This is symmetry breaking. The system must choose one of two equivalent states. The important visual cue is that the central branch continues, but its stability changes at the branching point.\nHysteresis:\n\\[\n\\dot x = a + x - x^3.\n\\]\nThis is the unfolded, tilted version of the pitchfork. The symmetry is broken, and instead of a clean fork we get an S-shaped curve. In the middle parameter range, two stable states coexist. Which one the system occupies depends on its history. This is why hysteresis is a natural mathematical image for memory, switching and delayed recovery.\nThe message for the audience: these pictures are universal local geometries. Different detailed models can have the same local transition because near the bifurcation they reduce to the same normal form.\n\n\n\nThe Hopf normal form is easiest to understand in the complex plane:\n\\[\n\\dot z = (a+i\\omega)z - |z|^2z,\n\\qquad z=x_1+i x_2.\n\\]\nWhen \\(a&lt;0\\), the origin is stable. Trajectories spiral inward. When \\(a&gt;0\\), the origin becomes unstable, but the cubic term prevents indefinite growth. The system settles on a stable circle with radius\n\\[\nr=\\sqrt a.\n\\]\nThat circle is a stable limit cycle. In the time series, it appears as a sustained oscillation. In the phase plane, it appears as a closed orbit. In the bifurcation diagram, it appears as a branch of periodic orbits born at the Hopf point.\nThis is the bridge to brain rhythms: a Hopf bifurcation is the cleanest local mechanism by which a resting fixed point can turn into a self-sustained oscillation.\n\n\n\nSimulation asks: what happens from this initial condition? Continuation asks: where are all the equilibria and cycles, and how do they change as a parameter moves?\nWe solve\n\\[\nF(x,a)=0\n\\]\nfor equilibria, but we do not simply step along the parameter \\(a\\). At a fold, the branch turns around, so \\(x\\) is no longer a single-valued function of \\(a\\). Pseudo-arclength continuation tracks the branch by an internal path variable \\(s\\):\n\\[\n(x,a)=(x(s),a(s)).\n\\]\nEach step has two parts. The predictor moves a short distance along the tangent of the branch. The corrector uses Newton’s method on an augmented system to land back on \\(F(x,a)=0\\). Because the step follows the branch geometry rather than the parameter axis, it can continue through folds.\nAlong the way, the algorithm monitors test functions. A zero eigenvalue marks a fold or related real-eigenvalue bifurcation. A complex pair crossing the imaginary axis marks a Hopf bifurcation. From a Hopf point, branch switching can start the continuation of periodic orbits.\nIn TVBO, the user describes this as a Continuation object. The backend bifurcationkit.jl performs the numerical continuation, and the result can be plotted directly:\nresult = exp.run(\"bifurcationkit.jl\")\nresult.continuations[\"my_cont\"].plot_3d(VOI=\"x1\")\n\n\n\nThe Generic2dOscillator example is the transition from textbook normal forms to a brain-relevant neural mass model. Here the swept parameter is the input current \\(I\\). The bifurcation diagram shows where the model rests, where it oscillates, and where abrupt transitions occur.\nStable fixed-point branches correspond to resting or persistent-activity regimes. Periodic-orbit branches correspond to oscillatory regimes. Fold points mark abrupt jumps. Hopf points mark where oscillations are born or disappear.\nThe panel with time series is important because it reconnects the abstract diagram to observable signals. A point on a fixed branch gives a steady or relaxing signal. A point on a periodic branch gives a rhythm. This is the main lesson: continuation is not an alternative to simulation. It organises many simulations into one regime map.\n\n\n\nIn the hands-on notebook, the audience should keep three questions in mind:\n\nWhich parameter controls the transition?\nWhich branches are stable, unstable or periodic?\nWhat signal would I observe if I simulated the system at a chosen point in the diagram?\n\nThe practical goal is to run the same Continuation schema on the Generic2dOscillator, sweep \\(I\\), continue fixed points and periodic orbits, then read the output as a map of resting, oscillatory and transition regimes."
+  },
+  {
+    "objectID": "script.html#how-to-analyse-a-brain-system",
+    "href": "script.html#how-to-analyse-a-brain-system",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "The key idea for this section is that a dynamical system is not only a simulator. It is a geometry. We can look at the same model from three angles, and each angle answers a different question.\nTime series answer: what does the model do after I start it somewhere? This is the most direct link to data. We simulate \\(x(t)\\) at fixed parameters and compare the resulting signal with EEG, MEG, fMRI, spectra, functional connectivity, or FCD.\nThe phase plane answers: how does the model move through its state space? For a two-dimensional system, every point in the plane has an arrow attached to it. That arrow says where the system wants to go next. Fixed points are places where the arrows vanish. Nullclines are curves where one component of the motion is zero. Trajectories show which regions are attracted to which fixed point or cycle. This is a local geometric view at one parameter value.\nThe bifurcation diagram answers: when does the qualitative behaviour change? Instead of fixing the parameter, we vary it and track equilibria and periodic orbits. This gives a map of regimes: resting states, oscillatory states, multistability, folds, Hopf points and abrupt transitions. In brain modelling, this is often the most useful view because we care about transitions between healthy, oscillatory, seizure-like, or pathological regimes.\nThe intuitive sentence for the slide is: time series are the movie, the phase plane is the landscape, and the bifurcation diagram is the atlas of all landscapes as a parameter changes."
+  },
+  {
+    "objectID": "script.html#linear-stability",
+    "href": "script.html#linear-stability",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "Start with the smallest possible example:\n\\[\n\\dot x = a x,\n\\qquad\nx(t)=x_0 e^{at}.\n\\]\nThere is one fixed point at \\(x=0\\). Whether it attracts or repels depends only on the sign of \\(a\\).\nThis is where the symbol \\(\\lambda\\) enters. In stability analysis, \\(\\lambda\\) is an eigenvalue of the local linearised system. Intuitively, it is the growth rate of a tiny perturbation away from a fixed point. If \\(\\lambda&lt;0\\), the perturbation shrinks and the fixed point attracts nearby states. If \\(\\lambda&gt;0\\), the perturbation grows and the fixed point repels nearby states. If \\(\\lambda=0\\), the linear approximation is exactly neutral: this is the boundary where stability can change.\nIn this one-dimensional example, the Jacobian is just the number \\(a\\), so the single eigenvalue is\n\\[\n\\lambda=a.\n\\]\nThat is why the plot labels the dashed neutral trajectory as \\(a=0\\), \\(\\lambda=0\\). The line itself is not decaying and not growing. It marks the change point between decay and growth.\nIf \\(a&lt;0\\), then \\(e^{at}\\) decays and the state returns to zero. The fixed point is stable. If \\(a&gt;0\\), then \\(e^{at}\\) grows and any small perturbation moves away from zero. The fixed point is unstable. If \\(a=0\\), the system is exactly at the borderline. This is the simplest possible bifurcation point.\nFor a nonlinear system \\(\\dot x=f(x)\\), we use the same idea locally. Near a fixed point \\(x^\\ast\\), write \\(x=x^\\ast+\\delta x\\) and linearise:\n\\[\n\\dot{\\delta x} = J\\delta x,\n\\qquad\nJ = \\left.\\frac{\\partial f}{\\partial x}\\right|_{x^\\ast}.\n\\]\nIn many dimensions, stability is read from the eigenvalues of \\(J\\). If every eigenvalue has negative real part, perturbations decay. If one eigenvalue has positive real part, perturbations grow. A bifurcation occurs when an eigenvalue crosses the imaginary axis as a parameter changes.\nReal eigenvalue crossing zero gives saddle-node, pitchfork or transcritical bifurcations. A complex conjugate pair crossing the imaginary axis gives a Hopf bifurcation, which is the birth or death of an oscillation."
+  },
+  {
+    "objectID": "script.html#d-portraits",
+    "href": "script.html#d-portraits",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "The phase portraits are meant to make stability visible without reading a long equation. The arrows show the vector field. The black trajectories show example solutions. The dots mark fixed points.\nFor a stable node, trajectories approach the fixed point without rotation. For a saddle, one direction attracts and another direction repels. This creates a separatrix: a boundary between qualitatively different futures. For a stable focus, trajectories spiral into the fixed point. For a centre, trajectories circle around without damping, so the amplitude is conserved.\nThe important brain-modelling intuition is that local geometry can already tell us what kind of signal we should expect. A node gives relaxation. A focus gives damped oscillations. A centre or limit cycle gives sustained oscillations. A saddle can create thresholds and switches."
+  },
+  {
+    "objectID": "script.html#regime-change-building-blocks",
+    "href": "script.html#regime-change-building-blocks",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "The normal forms are the canonical local pictures. They are not meant to be full brain models. They are the small mathematical templates that appear near many different transitions.\nThe slide now shows each example in two linked views. The top row is the bifurcation diagram: equilibria as the parameter \\(a\\) changes. The dotted vertical line marks one chosen parameter value. The bottom row shows the scalar vector field at exactly that value: \\(\\dot x=f(x)\\) as a function of \\(x\\). Where the curve crosses zero, the system has a fixed point. Filled dots are stable fixed points; open dots are unstable fixed points. The arrows show the local flow direction along the state axis.\nSaddle-node:\n\\[\n\\dot x = a - x^2.\n\\]\nFor one side of the parameter there are two fixed points, one stable and one unstable. At the fold, they collide and disappear. This is the local geometry of an abrupt regime shift. In brain models, this is the kind of mechanism that can underlie sudden onset or offset transitions.\nPitchfork:\n\\[\n\\dot x = a x - x^3.\n\\]\nFor \\(a&lt;0\\), the symmetric state \\(x=0\\) is stable. For \\(a&gt;0\\), that symmetric state becomes unstable and two new stable states appear. This is symmetry breaking. The system must choose one of two equivalent states. The important visual cue is that the central branch continues, but its stability changes at the branching point.\nHysteresis:\n\\[\n\\dot x = a + x - x^3.\n\\]\nThis is the unfolded, tilted version of the pitchfork. The symmetry is broken, and instead of a clean fork we get an S-shaped curve. In the middle parameter range, two stable states coexist. Which one the system occupies depends on its history. This is why hysteresis is a natural mathematical image for memory, switching and delayed recovery.\nThe message for the audience: these pictures are universal local geometries. Different detailed models can have the same local transition because near the bifurcation they reduce to the same normal form."
+  },
+  {
+    "objectID": "script.html#hopf-birth-of-an-oscillation",
+    "href": "script.html#hopf-birth-of-an-oscillation",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "The Hopf normal form is easiest to understand in the complex plane:\n\\[\n\\dot z = (a+i\\omega)z - |z|^2z,\n\\qquad z=x_1+i x_2.\n\\]\nWhen \\(a&lt;0\\), the origin is stable. Trajectories spiral inward. When \\(a&gt;0\\), the origin becomes unstable, but the cubic term prevents indefinite growth. The system settles on a stable circle with radius\n\\[\nr=\\sqrt a.\n\\]\nThat circle is a stable limit cycle. In the time series, it appears as a sustained oscillation. In the phase plane, it appears as a closed orbit. In the bifurcation diagram, it appears as a branch of periodic orbits born at the Hopf point.\nThis is the bridge to brain rhythms: a Hopf bifurcation is the cleanest local mechanism by which a resting fixed point can turn into a self-sustained oscillation."
+  },
+  {
+    "objectID": "script.html#numerical-continuation",
+    "href": "script.html#numerical-continuation",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "Simulation asks: what happens from this initial condition? Continuation asks: where are all the equilibria and cycles, and how do they change as a parameter moves?\nWe solve\n\\[\nF(x,a)=0\n\\]\nfor equilibria, but we do not simply step along the parameter \\(a\\). At a fold, the branch turns around, so \\(x\\) is no longer a single-valued function of \\(a\\). Pseudo-arclength continuation tracks the branch by an internal path variable \\(s\\):\n\\[\n(x,a)=(x(s),a(s)).\n\\]\nEach step has two parts. The predictor moves a short distance along the tangent of the branch. The corrector uses Newton’s method on an augmented system to land back on \\(F(x,a)=0\\). Because the step follows the branch geometry rather than the parameter axis, it can continue through folds.\nAlong the way, the algorithm monitors test functions. A zero eigenvalue marks a fold or related real-eigenvalue bifurcation. A complex pair crossing the imaginary axis marks a Hopf bifurcation. From a Hopf point, branch switching can start the continuation of periodic orbits.\nIn TVBO, the user describes this as a Continuation object. The backend bifurcationkit.jl performs the numerical continuation, and the result can be plotted directly:\nresult = exp.run(\"bifurcationkit.jl\")\nresult.continuations[\"my_cont\"].plot_3d(VOI=\"x1\")"
+  },
+  {
+    "objectID": "script.html#generic2doscillator-regimes-over-input-i",
+    "href": "script.html#generic2doscillator-regimes-over-input-i",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "The Generic2dOscillator example is the transition from textbook normal forms to a brain-relevant neural mass model. Here the swept parameter is the input current \\(I\\). The bifurcation diagram shows where the model rests, where it oscillates, and where abrupt transitions occur.\nStable fixed-point branches correspond to resting or persistent-activity regimes. Periodic-orbit branches correspond to oscillatory regimes. Fold points mark abrupt jumps. Hopf points mark where oscillations are born or disappear.\nThe panel with time series is important because it reconnects the abstract diagram to observable signals. A point on a fixed branch gives a steady or relaxing signal. A point on a periodic branch gives a rhythm. This is the main lesson: continuation is not an alternative to simulation. It organises many simulations into one regime map."
+  },
+  {
+    "objectID": "script.html#bifurcation-analysis-hands-on",
+    "href": "script.html#bifurcation-analysis-hands-on",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "In the hands-on notebook, the audience should keep three questions in mind:\n\nWhich parameter controls the transition?\nWhich branches are stable, unstable or periodic?\nWhat signal would I observe if I simulated the system at a chosen point in the diagram?\n\nThe practical goal is to run the same Continuation schema on the Generic2dOscillator, sweep \\(I\\), continue fixed points and periodic orbits, then read the output as a map of resting, oscillatory and transition regimes."
+  },
+  {
+    "objectID": "slides.html#welcome",
+    "href": "slides.html#welcome",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Welcome",
+    "text": "Welcome\n\nTwo-day hands-on workshop on personalized whole-brain modeling with TVB\nDay 1: structured sessions\nDay 2: mini hackathon — bring your own questions / data\nUseful links:\n\nhttps://thevirtualbrain.org\nhttps://virtual-twin.github.io/tvbo\nhttps://virtual-twin.github.io/tvboptim"
+  },
+  {
+    "objectID": "slides.html#schedule",
+    "href": "slides.html#schedule",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Schedule",
+    "text": "Schedule\n\n\nDay 1\nBlock 1 - 09:00-12:00:\n1. Intro to Brain Network Modelling\n2. Defining a FAIR brain network model\n3. Dynamical perspective\n4. Setup & First examples\nBlock 2 - 13:00-15:00:\n5. Bifurcation Theory\n6. Parameter exploration & inference\nBlock 3 - 15:30-17:30:\n7. Stimulating the brain\n\nDay 2\nBlock 1 - 09:00-11:30:\nMini hackathon - Bring your own data / research question\nBlock 2 - 12:00-13:30:\nMini hackathon - Bring your own data / research question"
+  },
+  {
+    "objectID": "slides.html#basic-ideas-and-history",
+    "href": "slides.html#basic-ideas-and-history",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Basic ideas and history",
+    "text": "Basic ideas and history"
+  },
+  {
+    "objectID": "slides.html#mathematical-framework",
+    "href": "slides.html#mathematical-framework",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Mathematical framework",
+    "text": "Mathematical framework\n\\[\ndS_i = \\left[f_d(S_i, \\theta^d, C_i, I_i) \\right]dt + g(S_i, \\theta^g)\\, dW_i\n\\]\n\nState Evolution\n\n\\(S_i\\) - state variables at node \\(i\\)\n\\(f_d\\) - dynamics function with parameters \\(\\theta^d\\)\n\\(C_i\\) - coupling input from connected nodes\n\\(I_i\\) - external input (stimulation, driving signals)\n\\(g\\) - noise diffusion coefficient with parameters \\(\\theta^g\\)\n\\(dW_i\\) - Wiener process (stochastic fluctuations)"
+  },
+  {
+    "objectID": "slides.html#dynamical-systems",
+    "href": "slides.html#dynamical-systems",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Dynamical Systems",
+    "text": "Dynamical Systems\n\n\nA mass \\(m\\) on a spring with stiffness \\(k\\).  Perpetual oscillation at \\(\\omega = \\sqrt{k/m}\\).\nState Equations: \\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k}{m}*x\n\\]\nState Variables\n\n\n\nVariable\nInitial Value\nUnit\nDescription\n\n\n\n\n\\(x\\)\n2.0\n\\(\\mathrm{m}\\)\nDisplacement from equilibrium\n\n\n\\(v\\)\n0.0\n\\(\\frac{\\mathrm{m}}{\\mathrm{s}}\\)\nVelocity\n\n\n\nParameters\n\n\n\n\n\n\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n\\(\\frac{\\mathrm{N}}{\\mathrm{m}}\\)\nSpring stiffness constant\n\n\n\\(m\\)\n1.0\n\\(\\mathrm{kg}\\)\nMass of the oscillating body"
+  },
+  {
+    "objectID": "slides.html#initial-conditions",
+    "href": "slides.html#initial-conditions",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Initial Conditions",
+    "text": "Initial Conditions\n\n\n\n\\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k}{m}*x\n\\]"
+  },
+  {
+    "objectID": "slides.html#phase-space",
+    "href": "slides.html#phase-space",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Phase Space",
+    "text": "Phase Space"
+  },
+  {
+    "objectID": "slides.html#parameters-mass",
+    "href": "slides.html#parameters-mass",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Parameters — Mass",
+    "text": "Parameters — Mass"
+  },
+  {
+    "objectID": "slides.html#towards-realism-damping-load",
+    "href": "slides.html#towards-realism-damping-load",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Towards Realism — Damping & Load",
+    "text": "Towards Realism — Damping & Load"
+  },
+  {
+    "objectID": "slides.html#mean-field-models-neural-masses",
+    "href": "slides.html#mean-field-models-neural-masses",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Mean field models & Neural Masses",
+    "text": "Mean field models & Neural Masses\n\nTODO: notebook link\nTODO: pick a model, inspect parameters, simulate\nTODO: neural mass / mean-field formulation"
+  },
+  {
+    "objectID": "slides.html#coupled-network-dynamics",
+    "href": "slides.html#coupled-network-dynamics",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Coupled network dynamics",
+    "text": "Coupled network dynamics\n\nTODO: nodes, coupling, delays, noise\nTODO: connectome loading\nTODO: global coupling sweep\n\n\n\\[\nC_i = f_c^{\\text{post}}\\Big(\\sum_j A_{ij}\\, f_c^{\\text{pre}}(S_i, S_j(t-\\tau_{ij}), \\theta^c), S_i, \\theta^c\\Big)\n\\]\n\nCoupling\n\n\\(f_c^{\\text{pre}}\\) - pre-aggregation transformation\n\\(A_{ij}\\) - structural connectivity weight (\\(j \\to i\\))\n\\(\\tau_{ij}\\) - transmission delay (tract length / conduction speed)\n\\(f_c^{\\text{post}}\\) - post-aggregation transformation\n\\(\\theta^c\\) - coupling parameters"
+  },
+  {
+    "objectID": "slides.html#why-fair-tvb-o-in-one-slide",
+    "href": "slides.html#why-fair-tvb-o-in-one-slide",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Why FAIR? TVB-O in one slide",
+    "text": "Why FAIR? TVB-O in one slide\n\nTODO: ontology-driven model specification (Martin et al. 2025)\nTODO: metadata + automated code generation"
+  },
+  {
+    "objectID": "slides.html#applications-in-basic-research",
+    "href": "slides.html#applications-in-basic-research",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Applications in basic research",
+    "text": "Applications in basic research\n\nTODO: representative findings\nTODO: links to (Schirner, Deco, and Ritter 2023; Koller, Schirner, and Ritter 2024; Kashyap et al. 2025)"
+  },
+  {
+    "objectID": "slides.html#clinical-applications",
+    "href": "slides.html#clinical-applications",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Clinical applications",
+    "text": "Clinical applications\n\nTODO: translational use-cases\nTODO: virtual epileptic / Alzheimer / stroke patient examples"
+  },
+  {
+    "objectID": "slides.html#how-to-analyse-a-brain-system",
+    "href": "slides.html#how-to-analyse-a-brain-system",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "How to analyse a brain system",
+    "text": "How to analyse a brain system\n\n\n\nTime series \\(x(t)\\) at fixed \\((a, x_0)\\)\n\nPhase plane flow geometry at fixed \\(a\\)\n\nBifurcation diagram regimes as \\(a\\) varies"
+  },
+  {
+    "objectID": "slides.html#linear-stability",
+    "href": "slides.html#linear-stability",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Linear stability",
+    "text": "Linear stability\n\\[\n\\dot x = a\\,x \\quad\\Rightarrow\\quad x(t) = x_0\\,e^{a t}\n\\]\n\n\n\n\\(\\lambda=a\\): growth rate\n\\(a &lt; 0\\): decay\n\\(a = 0\\): marginal\n\\(a &gt; 0\\): growth\nchange point: \\(\\lambda=a=0\\)"
+  },
+  {
+    "objectID": "slides.html#d-portraits",
+    "href": "slides.html#d-portraits",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "2D portraits",
+    "text": "2D portraits\n\n\nSame local rule: arrows define the flow; trajectories reveal attraction, repulsion, rotation and separatrices."
+  },
+  {
+    "objectID": "slides.html#regime-change-building-blocks",
+    "href": "slides.html#regime-change-building-blocks",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Regime-change building blocks",
+    "text": "Regime-change building blocks\n\n\nTop: equilibria as \\(a\\) varies. Bottom: local flow \\(\\dot x=f(x)\\) at the dotted parameter slice."
+  },
+  {
+    "objectID": "slides.html#hopf-birth-of-an-oscillation",
+    "href": "slides.html#hopf-birth-of-an-oscillation",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Hopf: birth of an oscillation",
+    "text": "Hopf: birth of an oscillation\n\\[\n\\dot z = (a + i\\omega)z - |z|^2z,\n\\qquad r_{\\mathrm{cycle}} = \\sqrt a\n\\]\n\n\nfixed point loses stability \\(\\Rightarrow\\) stable oscillation appears"
+  },
+  {
+    "objectID": "slides.html#numerical-continuation",
+    "href": "slides.html#numerical-continuation",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Numerical continuation",
+    "text": "Numerical continuation\n\\[\nF(x, a)=0,\n\\qquad (x,a)=(x(s),a(s))\n\\]\n\n\n\n\n\nfollow branches through folds\ndetect folds and Hopf points\nswitch to periodic orbits"
+  },
+  {
+    "objectID": "slides.html#generic2doscillator-regimes-over-input-i",
+    "href": "slides.html#generic2doscillator-regimes-over-input-i",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Generic2dOscillator: regimes over input \\(I\\)",
+    "text": "Generic2dOscillator: regimes over input \\(I\\)\n\n\nresting branch | oscillatory window | folds and Hopf points"
+  },
+  {
+    "objectID": "slides.html#bifurcation-analysis-hands-on",
+    "href": "slides.html#bifurcation-analysis-hands-on",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "3.1 Bifurcation analysis: hands-on",
+    "text": "3.1 Bifurcation analysis: hands-on\n\nNotebook: notebooks/03_bifurcation_analysis.qmd\nSweep input \\(I\\) in a TVB neural mass model\nContinue fixed points and periodic orbits\nRead the diagram as a map of regimes\n\nresult = exp.run(\"bifurcationkit.jl\")"
+  },
+  {
+    "objectID": "slides.html#models-as-computational-hypotheses",
+    "href": "slides.html#models-as-computational-hypotheses",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Models as computational hypotheses",
+    "text": "Models as computational hypotheses\nA brain network model is a hypothesis with knobs. Picking knob values is how we test the hypothesis against data.\n\n\\[\n\\theta \\;\\longrightarrow\\; \\text{simulator} \\;\\longrightarrow\\; \\hat{y}(\\theta) \\;\\longrightarrow\\; \\mathcal{L}\\big(\\hat{y}(\\theta),\\, y_{\\text{obs}}\\big)\n\\]\n\n\\(\\theta\\) — model parameters (the knobs)\n\\(\\hat{y}(\\theta)\\) — simulated observable (FC, power spectrum, BOLD …)\n\\(y_{\\text{obs}}\\) — empirical observable\n\\(\\mathcal{L}\\) — loss / discrepancy\n\n\n\nInference = which \\(\\theta\\) are consistent with the data? (Pille et al. 2025)"
+  },
+  {
+    "objectID": "slides.html#the-shape-of-the-problem",
+    "href": "slides.html#the-shape-of-the-problem",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "The shape of the problem",
+    "text": "The shape of the problem\n\n\nOptimization over a parameter landscape \\(\\mathcal{L}(\\theta)\\).\nRunning example for this block: fit global coupling \\(G\\) so the simulated FC matches an empirical FC.\n\none parameter → easy to picture\nbut every method we’ll see scales (or doesn’t) to many\n\n\nTODO: 1D / 2D loss-surface plot for \\(G\\) vs FC fit"
+  },
+  {
+    "objectID": "slides.html#why-this-is-hard-for-brain-models",
+    "href": "slides.html#why-this-is-hard-for-brain-models",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Why this is hard for brain models",
+    "text": "Why this is hard for brain models\n\nExpensive simulator — seconds to minutes per run\nHigh-dimensional — when parameters become regional (\\(\\times N\\) nodes)\nNon-smooth dynamics — chaos, stochasticity, stiffness\nBumpy observables — FC, FCD, PSD are summary statistics\n\n\nEvery method below is a bet about which of these difficulties dominates."
+  },
+  {
+    "objectID": "slides.html#grid-search-map-the-whole-landscape",
+    "href": "slides.html#grid-search-map-the-whole-landscape",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Grid search — map the whole landscape",
+    "text": "Grid search — map the whole landscape\n\nSame idea as the bifurcation diagrams from §3\nWins when: \\(\\le 2\\)–\\(3\\) parameters, you want to see the landscape\nCost grows as \\(N^d\\) — unusable beyond a handful of dimensions\n\n\nTODO: grid scan of \\(G\\) vs FC loss; mark the minimum"
+  },
+  {
+    "objectID": "slides.html#random-search-the-surprising-upgrade",
+    "href": "slides.html#random-search-the-surprising-upgrade",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Random search — the surprising upgrade",
+    "text": "Random search — the surprising upgrade\nIn more than 2–3 dimensions, random search beats grid for the same budget.\n\nWhy? Real loss surfaces have low effective dimensionality — most parameters barely matter. Grid spends its budget evenly across all axes; random samples every axis at every trial (Bergstra and Bengio 2012).\n\n\nTODO: axis-projection figure (Bergstra & Bengio 2012, Fig. 1 style)\n\n\nTake-away. If you don’t know which parameters matter, don’t grid."
+  },
+  {
+    "objectID": "slides.html#quasi-random-better-coverage-same-idea",
+    "href": "slides.html#quasi-random-better-coverage-same-idea",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Quasi-random — better coverage, same idea",
+    "text": "Quasi-random — better coverage, same idea\n\nLatin Hypercube and Sobol sequences: low-discrepancy samples\nRandom’s robustness without the clumping\nDrop-in replacement for the sampler in your search loop"
+  },
+  {
+    "objectID": "slides.html#evolutionary-cma-es-adaptive-no-gradients",
+    "href": "slides.html#evolutionary-cma-es-adaptive-no-gradients",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Evolutionary / CMA-ES — adaptive, no gradients",
+    "text": "Evolutionary / CMA-ES — adaptive, no gradients\n\nMaintains a population of \\(\\theta\\) and updates a covariance estimate to bias future samples toward good regions\nWins when: ~10–50 parameters, no gradients available, moderate budget\nNaturally parallel — every generation is a vmap over the population"
+  },
+  {
+    "objectID": "slides.html#gradient-descent-the-regime-changer",
+    "href": "slides.html#gradient-descent-the-regime-changer",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Gradient descent — the regime-changer",
+    "text": "Gradient descent — the regime-changer\n\\[\n\\theta_{t+1} \\;=\\; \\theta_t - \\eta \\,\\nabla_\\theta\\, \\mathcal{L}(\\theta_t)\n\\]\n\nThe only method that scales to regional / per-node parameter vectors (hundreds–thousands of knobs)\nLocal: needs a reasonable starting point\nRequires \\(\\nabla_\\theta \\mathcal{L}\\) — that’s where JAX comes in (next)"
+  },
+  {
+    "objectID": "slides.html#bayesian-inference-when-you-want-a-posterior",
+    "href": "slides.html#bayesian-inference-when-you-want-a-posterior",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Bayesian inference — when you want a posterior",
+    "text": "Bayesian inference — when you want a posterior\nA point estimate \\(\\theta^\\star\\) tells you one good fit. A posterior \\(p(\\theta \\mid y) \\propto p(y \\mid \\theta)\\, p(\\theta)\\) tells you how much you know — and lets you fold in priors (e.g. tau PET, anatomy).\n\nWhat you get out: uncertainty over predictions, identifiability, model comparison.\n\n\nOne model, many inference algorithms. Define the simulator + priors once; pick how to approximate the posterior:\n\nMCMC (HMC / NUTS) — asymptotically exact samples; uses gradients to navigate the posterior efficiently. Slow but accurate.\nVariational inference (SVI) — fit a tractable family \\(q_\\phi(\\theta)\\) to the posterior by gradient descent on the ELBO. Fast, approximate; scales to high-dim regional parameters.\nSimulation-based inference (NPE / NLE) — train a neural density estimator on simulated \\((\\theta, y)\\) pairs. No gradients through the simulator needed → works when AD breaks (chaos, black-box code). Amortized: pay the simulation budget once, then query the posterior for any new observation almost instantly.\nLaplace / SWAG — cheap Gaussian approximation around the optimum.\n\n\n\nTODO: posterior plot for \\(G\\) alongside the point estimate (HMC vs SVI)"
+  },
+  {
+    "objectID": "slides.html#choosing-a-method-cheat-sheet",
+    "href": "slides.html#choosing-a-method-cheat-sheet",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Choosing a method — cheat sheet",
+    "text": "Choosing a method — cheat sheet\n\n\n\n\n\n\n\n\n\nmethod\nscales to\ncost (forward sims)\nwhat you get\n\n\n\n\nGrid\n\\(\\le 3\\) params\n\\(N^d\\)\nfull landscape\n\n\nRandom / Sobol\n\\(\\sim 20\\)\n\\(10^2\\)–\\(10^3\\)\nlandscape sketch\n\n\nCMA-ES / GA\n\\(\\sim 50\\)\n\\(10^3\\)–\\(10^4\\)\nlocal optimum\n\n\nGradient descent\n\\(10^4\\)+ (regional)\n\\(10^2\\)–\\(10^3\\)\nlocal optimum\n\n\nSVI\n\\(10^4\\)+\n\\(10^2\\)–\\(10^3\\)\napproximate posterior\n\n\nHMC / NUTS\nscales with \\(d\\) — simulator-bound\n\\(10^4\\)–\\(10^6\\)\n(near-)exact posterior\n\n\nSBI (NPE / NLE)\n\\(\\sim 10^2\\), simulator-bound\n\\(10^4\\)–\\(10^6\\) upfront, amortized\namortized approximate posterior\n\n\n\n\nCost numbers assume reverse-mode AD makes a gradient step ≈ one forward sim (next slide). Bayesian rows sit at the expensive end — a posterior is worth roughly a thousand point estimates’ worth of compute."
+  },
+  {
+    "objectID": "slides.html#parallelism-via-vmap",
+    "href": "slides.html#parallelism-via-vmap",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Parallelism via vmap",
+    "text": "Parallelism via vmap\n\nOne simulator, batched over parameter sets, fused into a single GPU pass\nRandom search and population methods become almost free on top of one forward simulation\nSame model code, no manual batching\n\n\nTODO: wall-clock plot — sequential vs vmap’d ensemble"
+  },
+  {
+    "objectID": "slides.html#reverse-mode-autodiff-the-headline-result",
+    "href": "slides.html#reverse-mode-autodiff-the-headline-result",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Reverse-mode autodiff — the headline result",
+    "text": "Reverse-mode autodiff — the headline result\nFor a scalar loss \\(\\mathcal{L}:\\mathbb{R}^d \\to \\mathbb{R}\\):\n\\[\n\\text{cost}\\!\\left(\\nabla_\\theta \\mathcal{L}\\right) \\;\\approx\\; c \\cdot \\text{cost}(\\mathcal{L})\n\\qquad\\text{independent of } d\n\\]\n\n\nFinite differences: cost \\(\\sim d \\times\\) forward → infeasible at regional scale\nForward-mode AD: same scaling as finite differences\nReverse-mode AD: cost \\(\\sim\\) one forward pass, regardless of \\(d\\)\n\nThis is the reason per-region fits became tractable."
+  },
+  {
+    "objectID": "slides.html#composability-one-simulator-four-uses",
+    "href": "slides.html#composability-one-simulator-four-uses",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Composability — one simulator, four uses",
+    "text": "Composability — one simulator, four uses\n\n\n\n\n\n\n\n\ntransform\nwhat it gives\nenables\n\n\n\n\njit\ncompiled XLA\nspeed\n\n\nvmap\nbatching\nrandom search, CMA-ES\n\n\ngrad\ngradients\ngradient descent, SVI\n\n\nprobabilistic\npriors + likelihood\nBayesian inference (HMC, NUTS, SVI — NumPyro / BlackJAX)\n\n\n\n\nYou write the model once."
+  },
+  {
+    "objectID": "slides.html#chaos-eats-your-gradient",
+    "href": "slides.html#chaos-eats-your-gradient",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Chaos eats your gradient",
+    "text": "Chaos eats your gradient\nSensitivity to initial conditions \\(\\Rightarrow\\) \\(\\|\\nabla_\\theta \\mathcal{L}\\|\\) explodes with integration length.\n\nNot a bug in autodiff — the dynamics are telling you the loss is non-smooth at fine scales.\n\n\nMitigations\n\nintegrate over shorter windows\nuse smoothed observables (FC, power spectra) instead of raw traces\nmultiple shooting\ngradient clipping"
+  },
+  {
+    "objectID": "slides.html#other-failure-modes",
+    "href": "slides.html#other-failure-modes",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Other failure modes",
+    "text": "Other failure modes\n\nStochasticity — gradients through \\(dW\\) need the reparameterization trick or score-function estimators\nBifurcations near the optimum — genuine discontinuities in the loss as fixed points appear or disappear → gradient descent gets stuck on the wrong side\nStiffness / long transients — numerical noise compounds through the unrolled trajectory\n\n\nTake-away. Gradients are powerful, not universal. Read the landscape (§3) before you trust the slope.\n\n\nWhen gradients are unsalvageable: simulation-based inference (NPE / NLE) treats the simulator as a black box — see Bayesian slide."
+  },
+  {
+    "objectID": "slides.html#the-default-tvboptim-recipe",
+    "href": "slides.html#the-default-tvboptim-recipe",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "The default tvboptim recipe",
+    "text": "The default tvboptim recipe\n\nBifurcation map (§3) → pick a regime of interest\nCoarse random / Sobol search within that regime → find a basin\nGradient descent from the basin → polish to a local optimum\nBayesian inference (HMC, SVI, or SBI when gradients break) from the optimum → posterior + uncertainty\n\n\nEach step uses the output of the previous as a warm start.\n\n\nTODO: pipeline diagram — same loss surface, four overlays"
+  },
+  {
+    "objectID": "slides.html#mini-demo-pipeline-on-the-running-example",
+    "href": "slides.html#mini-demo-pipeline-on-the-running-example",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Mini-demo — pipeline on the running example",
+    "text": "Mini-demo — pipeline on the running example\nTODO: live (or pre-rendered) walkthrough running the full chain on \\(G\\) vs FC. Lands the synthesis just before the hands-on."
+  },
+  {
+    "objectID": "slides.html#use-case-a-alzheimers-disease",
+    "href": "slides.html#use-case-a-alzheimers-disease",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Use-case A — Alzheimer’s disease",
+    "text": "Use-case A — Alzheimer’s disease\n\nTODO: tau PET / amyloid map → prior on regional parameters\nTODO: high-dim (regional) fit → gradient-descent territory\nTODO: healthy vs patient simulation, refs (Schirner, Deco, and Ritter 2023; Stefanovski et al. 2019)"
+  },
+  {
+    "objectID": "slides.html#use-case-b-homogeneous-vs.-heterogeneous-fitting",
+    "href": "slides.html#use-case-b-homogeneous-vs.-heterogeneous-fitting",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Use-case B — homogeneous vs. heterogeneous fitting",
+    "text": "Use-case B — homogeneous vs. heterogeneous fitting\n\nTODO: same model, same data — fit one \\(G\\) vs per-region \\(G_i\\)\nTODO: low-dim vs high-dim head-to-head → why the toolbox matters\nTODO: TVBase frequency gradient as target (Pille et al. 2025)"
+  },
+  {
+    "objectID": "slides.html#visual-and-tms-evoked-potentials-jansenrit",
+    "href": "slides.html#visual-and-tms-evoked-potentials-jansenrit",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Visual and TMS-evoked potentials (Jansen–Rit)",
+    "text": "Visual and TMS-evoked potentials (Jansen–Rit)\n\nTODO: stimulation primitives in TVB\nTODO: VEP / TEP example"
+  },
+  {
+    "objectID": "slides.html#format",
+    "href": "slides.html#format",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Format",
+    "text": "Format\n\nTODO: pitch your question (5 min each)\nTODO: form small groups\nTODO: checkpoint + wrap-up times"
+  },
+  {
+    "objectID": "slides.html#bring-your-own",
+    "href": "slides.html#bring-your-own",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Bring your own…",
+    "text": "Bring your own…\n\nTODO: data formats we can support\nTODO: EBRAINS / local setup reminder"
+  },
+  {
+    "objectID": "slides.html#take-aways",
+    "href": "slides.html#take-aways",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Take-aways",
+    "text": "Take-aways\n\nTODO: what to remember from Day 1\nTODO: where to go next"
+  },
+  {
+    "objectID": "slides.html#thanks-contact",
+    "href": "slides.html#thanks-contact",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Thanks & contact",
+    "text": "Thanks & contact\n\nTODO: contact info\nTODO: feedback link"
+  },
+  {
+    "objectID": "slides.html#references",
+    "href": "slides.html#references",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "References",
+    "text": "References\n\n\nBergstra, James, and Yoshua Bengio. 2012. “Random Search for Hyper-Parameter Optimization.” Journal of Machine Learning Research 13 (null): 281–305. https://dl.acm.org/doi/abs/10.5555/2188385.2188395.\n\n\nKashyap, Amrit, Eloy Geenjaar, Patrik Bey, Kiret Dhindsa, Katharina Glomb, Sergey Plis, Shella Keilholz, and Petra Ritter. 2025. “Using an Ordinary Differential Equation Model to Separate Rest and Task Signals in fMRI.” Nature Communications 16 (1). https://doi.org/10.1038/s41467-025-62491-6.\n\n\nKoller, Dominik P., Michael Schirner, and Petra Ritter. 2024. “Human Connectome Topology Directs Cortical Traveling Waves and Shapes Frequency Gradients.” Nature Communications 15 (1). https://doi.org/10.1038/s41467-024-47860-x.\n\n\nMartin, Leon, Konstantin Buelau, Marius Pille, Rico Andre Schmitt, Christoph Huettl, Jil M Meier, Halgurd Taher, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. “The Virtual Brain Ontology: A Digital Knowledge Framework for Reproducible Brain Network Modeling.” bioRxiv, November. https://doi.org/10.1101/2025.11.19.689211.\n\n\nPille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. “Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.” bioRxiv, November. https://doi.org/10.1101/2025.11.18.689003.\n\n\nSchirner, Michael, Gustavo Deco, and Petra Ritter. 2023. “Learning How Network Structure Shapes Decision-Making for Bio-Inspired Computing.” Nature Communications 14 (1). https://doi.org/10.1038/s41467-023-38626-y.\n\n\nStefanovski, Leon, Paul Triebkorn, Andreas Spiegler, Margarita-Arimatea Diaz-Cortes, Ana Solodkin, Viktor Jirsa, Anthony Randal McIntosh, and Petra Ritter. 2019. “Linking Molecular Pathways and Large-Scale Computational Modeling to Assess Candidate Disease Mechanisms and Pharmacodynamics in Alzheimer’s Disease.” Edited by Anke Meyer-Baese Li Su. Frontiers in Computational Neuroscience 13 (August). https://doi.org/10.3389/fncom.2019.00054."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "",
+    "text": "Track 4 workshop of the FAIR Brain Data Science Bootcamp, 12–13 May 2026, Charité University Medicine Berlin and Berlin Institute of Health."
+  },
+  {
+    "objectID": "index.html#about",
+    "href": "index.html#about",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "About",
+    "text": "About\nIn this workshop, participants learn core concepts and methods for personalized whole-brain network modeling using The Virtual Brain (TVB). The workflow combines individualized model definition, simulation, and analysis with ontology-driven model specification (TVB-O) and gradient-based optimization tooling (TVB-Optim) (Martin et al. 2025; Pille et al. 2025)."
+  },
+  {
+    "objectID": "index.html#getting-started",
+    "href": "index.html#getting-started",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Getting started",
+    "text": "Getting started\nThe Python environment is managed with uv:\npip install uv\nTools used:\nuv pip install tvb\nuv pip install tvbo\nuv pip install tvboptim\nThe full source code lives at https://github.com/virtual-twin/tvb-ontology-optim-workshop."
+  },
+  {
+    "objectID": "index.html#quick-links",
+    "href": "index.html#quick-links",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Quick links",
+    "text": "Quick links\n\n\nAgenda\nTwo-day program with sessions, breaks, and references.\n\n\nSlides\nRevealJS workshop slides used in the live sessions.\n\n\nNotebooks\nHands-on Jupyter notebooks for each session."
+  },
+  {
+    "objectID": "index.html#references",
+    "href": "index.html#references",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "References",
+    "text": "References\n\n\nMartin, Leon, Konstantin Buelau, Marius Pille, Rico Andre Schmitt, Christoph Huettl, Jil M Meier, Halgurd Taher, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. “The Virtual Brain Ontology: A Digital Knowledge Framework for Reproducible Brain Network Modeling.” bioRxiv, November. https://doi.org/10.1101/2025.11.19.689211.\n\n\nPille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. “Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.” bioRxiv, November. https://doi.org/10.1101/2025.11.18.689003."
+  },
+  {
+    "objectID": "agenda/agenda.html",
+    "href": "agenda/agenda.html",
+    "title": "Brainsimulation Workshop",
+    "section": "",
+    "text": "Workshop Dates: 12-13 May 2026"
+  },
+  {
+    "objectID": "agenda/agenda.html#about",
+    "href": "agenda/agenda.html#about",
+    "title": "Brainsimulation Workshop",
+    "section": "About",
+    "text": "About\nIn this workshop, participants will learn core concepts and methods for personalized whole-brain network modeling using The Virtual Brain (TVB). The workflow combines individualized model definition, simulation, and analysis with ontology-driven model specification and optimization tooling (Martin et al. 2025; Pille et al. 2025).\nThe Virtual Brain Ontology (TVB-O) provides a knowledge framework for FAIR model specification and automated code generation, while connecting model metadata to biomedical ontologies (Martin et al. 2025).\nTVB-Optim enables gradient-based fitting of large parameter spaces in whole-brain models and supports efficient scaling for computationally intensive optimization experiments (Pille et al. 2025).\nRelevant examples of mechanistic and translational whole-brain modeling include connectome-constrained decision dynamics (Schirner, Deco, and Ritter 2023), connectome-driven cortical wave phenomena (Koller, Schirner, and Ritter 2024), and ODE-based separation of task and rest fMRI signals (Kashyap et al. 2025).\nUseful links:\n\nThe Virtual Brain: https://thevirtualbrain.org\nTVB-O: https://virtual-twin.github.io/tvbo\nTVB-Optim: https://virtual-twin.github.io/tvboptim"
+  },
+  {
+    "objectID": "agenda/agenda.html#format",
+    "href": "agenda/agenda.html#format",
+    "title": "Brainsimulation Workshop",
+    "section": "Format",
+    "text": "Format\nHands-on session introducing the theoretical and programmatic framework for specifying, running, analyzing, and optimizing dynamical brain network models."
+  },
+  {
+    "objectID": "agenda/agenda.html#agenda",
+    "href": "agenda/agenda.html#agenda",
+    "title": "Brainsimulation Workshop",
+    "section": "Agenda",
+    "text": "Agenda\n\nDay 1\n\nIntro to The Virtual Brain and its applications\n\n\nBasic ideas and history\nMathematical framework\nApplications in basic research\nClinical applications\n\n\nDefining a FAIR brain network model\n\n\nMean field models\nCoupled network dynamics\n\n\nDynamical perspective: how to analyze a brain system\n\n\nBifurcation analysis\n\n\nParameter exploration and model optimization\n\n\nBrain network models as computational hypotheses of the brain\nUse-case A: mechanistic simulation of Alzheimer’s disease and integration of biomedical data\nUse-case B: homogeneous vs. heterogeneous parameter fitting\n\n\nStimulating the brain\n\n\nVisual and TMS-evoked potentials\n\n\n\nDay 2: Mini Hackathon\nWe help participants answer and gain insight into their own research questions. Bring your own data if possible."
+  },
+  {
+    "objectID": "agenda/agenda.html#target-audience",
+    "href": "agenda/agenda.html#target-audience",
+    "title": "Brainsimulation Workshop",
+    "section": "Target Audience",
+    "text": "Target Audience\nResearchers interested in computational neuroscience, including data scientists, clinicians, engineers, and generally curious participants. Prior TVB experience is helpful but not mandatory."
+  },
+  {
+    "objectID": "agenda/agenda.html#requirements",
+    "href": "agenda/agenda.html#requirements",
+    "title": "Brainsimulation Workshop",
+    "section": "Requirements",
+    "text": "Requirements\n\nBasic Python programming skills are recommended.\nNotebooks can be run online (EBRAINS account required).\nLimited support for local setups is also provided."
+  },
+  {
+    "objectID": "notebooks/3_dynamics.html",
+    "href": "notebooks/3_dynamics.html",
+    "title": "3. Dynamical perspective",
+    "section": "",
+    "text": "Neural mass models are dynamical systems. Before fitting them to data it is essential to understand their bifurcation structure: which parameter regions produce oscillations, fixed points, or multistability. This chapter gives you the tools to map that landscape.",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective"
+    ]
+  },
+  {
+    "objectID": "notebooks/3_dynamics.html#session",
+    "href": "notebooks/3_dynamics.html#session",
+    "title": "3. Dynamical perspective",
+    "section": "1 Session",
+    "text": "1 Session\n\n\n1.1 3 · Bifurcation analysis\nUse numerical continuation and phase-plane analysis to identify bifurcation points in a neural mass model. Learn to interpret the results and choose biologically plausible operating points for whole-brain simulations.\n\n\n\nPart of Day 1",
+    "crumbs": [
+      "Setup",
+      "3. Dynamical perspective"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_introduction.html",
+    "href": "notebooks/1_introduction.html",
+    "title": "1. Introduction to The Virtual Brain",
+    "section": "",
+    "text": "This session gives an overview of The Virtual Brain (TVB) — its history, mathematical foundations, and applications in basic and translational neuroscience. It sets the stage for all hands-on notebooks that follow.",
+    "crumbs": [
+      "Setup",
+      "1. Introduction to The Virtual Brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_introduction.html#topics",
+    "href": "notebooks/1_introduction.html#topics",
+    "title": "1. Introduction to The Virtual Brain",
+    "section": "1 Topics",
+    "text": "1 Topics\n\n\n1.1 Basic ideas and history\nTVB is an open-source, multi-scale brain simulation framework. Learn how it emerged from empirical connectivity science and why whole-brain network models offer a principled window into brain function and dysfunction.\n\n\n1.2 Mathematical framework\nBrain network models are systems of coupled ODEs or SDEs on a structural connectome graph. This section introduces the key equations: local dynamics, coupling functions, long-range delays, and noise.\n\n\n1.3 Applications in basic research\nConnectome-constrained decision dynamics (Schirner, Deco, and Ritter 2023), cortical wave phenomena (Koller, Schirner, and Ritter 2024), and ODE-based separation of task and rest fMRI signals (Kashyap et al. 2025).\n\n\n1.4 Clinical applications\nMechanistic simulation of Alzheimer’s disease, epilepsy surgery planning, and brain stimulation protocols — linking biophysical parameters to clinical biomarkers.",
+    "crumbs": [
+      "Setup",
+      "1. Introduction to The Virtual Brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_introduction.html#key-concepts",
+    "href": "notebooks/1_introduction.html#key-concepts",
+    "title": "1. Introduction to The Virtual Brain",
+    "section": "2 Key concepts",
+    "text": "2 Key concepts\n\n\n\n\n\n\n\nConcept\nDescription\n\n\n\n\nNeural mass model\nMean-field ODE describing the activity of a cortical region\n\n\nStructural connectivity\nWhite-matter tractography-derived coupling weights and delays\n\n\nCoupling function\nHow the activity of connected regions influences each other\n\n\nParcellation / atlas\nDiscrete spatial partition mapping brain regions to connectome nodes\n\n\nBOLD signal\nHaemodynamic observable linked to simulated neural activity via a balloon model",
+    "crumbs": [
+      "Setup",
+      "1. Introduction to The Virtual Brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_introduction.html#useful-resources",
+    "href": "notebooks/1_introduction.html#useful-resources",
+    "title": "1. Introduction to The Virtual Brain",
+    "section": "3 Useful resources",
+    "text": "3 Useful resources\n\nTVB website: https://thevirtualbrain.org\nTVB-O documentation: https://virtual-twin.github.io/tvbo\nTVB-Optim documentation: https://virtual-twin.github.io/tvboptim\n\n\nPart of Day 1",
+    "crumbs": [
+      "Setup",
+      "1. Introduction to The Virtual Brain"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html",
+    "title": "Dynamical Systems — A Spring-Mass Example",
+    "section": "",
+    "text": "import bsplot\nfrom IPython.display import Markdown, HTML",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems — A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#the-spring-equation",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#the-spring-equation",
+    "title": "Dynamical Systems — A Spring-Mass Example",
+    "section": "1.1 The Spring Equation",
+    "text": "1.1 The Spring Equation\nA mass \\(m\\) attached to a spring with stiffness \\(k\\) satisfies Newton’s second law:\n\\[m\\,\\ddot{x} = -k\\,x\\]\nRewriting as a first-order system (the standard form for any ODE solver):\n\\[\\dot{x} = v \\qquad \\dot{v} = -\\frac{k}{m}\\,x\\]\nThis is a DynamicalSystem: a set of state variables \\((x, v)\\) with equations of motion, and parameters \\((k, m)\\) that control the behaviour. Below we define it using the TVBO framework.\n\nfrom tvbo import Dynamics as DynamicalSystem\nfrom tvbo import SimulationExperiment\n\nbsplot.style.use('tvbo')\n\nsystem = DynamicalSystem(\n    state_variables=[\n        {\n            \"name\": \"x\",\n            \"equation\": {\"rhs\": \"v\"},\n            \"initial_value\": 2.0,\n        },\n        {\n            \"name\": \"v\",\n            \"equation\": {\"rhs\": \"-(k/m) * x\"},\n            \"initial_value\": 0.0,\n        },\n    ],\n    parameters=[\n        {\"name\": \"k\", \"value\": 0.0001},\n        {\"name\": \"m\", \"value\": 1.0},\n    ],\n)\n\nMarkdown(system.render('markdown'))\n\n1.2 Dynamics\n\n1.2.1 State Equations\n\\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k*x}{m}\n\\]\n\n\n1.2.2 Parameters\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n—\nNone\n\n\n\\(m\\)\n1.0\n—\nNone",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems — A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#dynamics",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#dynamics",
+    "title": "Dynamical Systems — A Spring-Mass Example",
+    "section": "1.2 Dynamics",
+    "text": "1.2 Dynamics\n\n1.2.1 State Equations\n\\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k*x}{m}\n\\]\n\n\n1.2.2 Parameters\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n—\nNone\n\n\n\\(m\\)\n1.0\n—\nNone",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems — A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#initial-conditions",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#initial-conditions",
+    "title": "Dynamical Systems — A Spring-Mass Example",
+    "section": "1.3 Initial Conditions",
+    "text": "1.3 Initial Conditions\nTo actually run the system we must pick a starting point \\((x_0, v_0)\\) — the initial condition.\n\nThink of it as placing the mass at position \\(x_0\\) and releasing it from rest (\\(v_0 = 0\\)).\n\nThe initial condition determines which trajectory the system follows, but not the overall dynamics — that is governed by the parameters.\n\nsystem.state_variables['x']['initial_value'] = 2.0\nresult = SimulationExperiment(dynamics=system).run()\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n\n\nimport sys, os\nsys.path.insert(0, os.path.abspath('..'))  # make notebooks/ importable\nfrom spring_animation import animate_spring\nimport numpy as np\n\n\ndef save_animation_video(ani, stem, fps=30):\n    # Static thumbnail: draw first real frame (frame index 0)\n    ani._init_draw()   # sets up blit state\n    ani._func(0)       # calls update(0) → places spring + mass at initial position\n    ani._fig.savefig(rf\"{stem}_thumb.png\", bbox_inches=\"tight\")\n    ani.save(rf\"{stem}.gif\", writer=\"pillow\", fps=fps)\n\nx_ts = np.asarray(result.data.sel({\"variable\": \"x\"})).ravel()\n\nani = animate_spring(\n    [x_ts],\n    orientation=\"horizontal\",\n    anchor_pos=-3.0,\n    coil_amplitude=0.15,\n    mass_sizes=0.3,\n    labels=[\"$x$\"],\n    titles=[\"Spring oscillator\"],\n    n_periods=1,\n)\nsave_animation_video(ani, 'spring_single', fps=30)\n\n\n\n1.3.1 Varying initial conditions\nSame spring (\\(k\\) and \\(m\\) fixed), three different release positions \\(x_0\\).\nNotice: bigger stretch → larger amplitude, same frequency. The frequency \\(\\omega = \\sqrt{k/m}\\) depends only on the parameters, not on where you start.\n\nimport numpy as np\nfrom spring_animation import animate_spring\n\n# --- 3 initial conditions, same k and m ---\ninit_xs = [-1.0, -2.0, -3.0]\n\nresults_multi = []\nfor x0 in init_xs:\n    system.state_variables['x']['initial_value'] = x0\n    results_multi.append(SimulationExperiment(dynamics=system).run())\n\nts_arrays = [np.asarray(r.data.sel({\"variable\": \"x\"})).ravel() for r in results_multi]\n\nani = animate_spring(\n    ts_arrays,\n    labels=[f'$x_0={x0}$' for x0 in init_xs],\n    titles=[f'$x_0 = {x0}$' for x0 in init_xs],\n    mass_sizes=0.4,\n    orientation=\"vertical\",\n    anchor_pos=3.5,\n    n_periods=1,\n)\nsave_animation_video(ani, 'spring_ics', fps=30)\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems — A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#phase-space",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#phase-space",
+    "title": "Dynamical Systems — A Spring-Mass Example",
+    "section": "1.4 Phase Space",
+    "text": "1.4 Phase Space\nYou just watched three separate time series. Phase space is a more compact way to show all of them at once: instead of plotting \\(x\\) vs. time, we plot \\(x\\) (position) vs. \\(v\\) (velocity) for every moment simultaneously.\n\nEach closed curve is one trajectory — the system endlessly traces the same loop (energy is conserved).\nLarger loops correspond to larger initial displacements \\(x_0\\) (more energy).\nThe arrows (vector field) show the direction of motion everywhere, independent of any particular trajectory.\n\n\nimport matplotlib.pyplot as plt\n\nfig, ax = plt.subplots()\n\nfor init_x in [0.5, 1.0, 1.5, 2.0]:\n    system.state_variables['x']['initial_value'] = init_x\n    system.plot(kind='phase', ax=ax, cmap='grey_r')\n\nsystem.plot(kind='vectorfield', ax=ax, alpha=0.3)\nax.set_xlabel(\"x (position)\")\nax.set_ylabel(\"v (velocity)\")\nfig.savefig('phase_space.png', dpi=150, bbox_inches='tight')",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems — A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#parameters-1",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#parameters-1",
+    "title": "Dynamical Systems — A Spring-Mass Example",
+    "section": "1.5 Parameters",
+    "text": "1.5 Parameters\nParameters are the knobs of the system. Here we vary the mass \\(m\\) while keeping the spring constant \\(k\\) fixed.\nThe oscillation frequency is:\n\\[\\omega = \\sqrt{\\frac{k}{m}}\\]\nFor the animations below, we start from a stretched state (\\(x_0 &lt; 0\\), below equilibrium) so the first motion is an upward snap-back, which is usually more intuitive to interpret visually.\n\n\n\n\n\n\n\n\n\\(m\\)\n\\(\\omega\\)\nintuition\n\n\n\n\nsmall\nhigh\nlight mass → spring accelerates it quickly → fast oscillation\n\n\nlarge\nlow\nheavy mass → same spring force has less effect → slow oscillation\n\n\n\n\nAnalogy: a stiff guitar string vibrates faster with less tension (more “resistance” slows it down). Heavier mass = more inertia = slower response to the restoring force.\n\nThe box size below encodes mass visually: bigger box = heavier mass.\n\nimport numpy as np\nfrom spring_animation import animate_spring\n\n# --- Same x0 and k, 3 different masses m ---\n# Heavier mass → lower frequency (ω = sqrt(k/m))\n# Box size scales as m^(1/3) so volume ∝ mass\nm_values = [0.5, 1.0, 2.0]\nx0_fixed = -2.0\nk_fixed  = system.parameters['k']['value']\n\nresults_m = []\nfor m in m_values:\n    system.state_variables['x']['initial_value'] = x0_fixed\n    system.state_variables['v']['initial_value'] = 0.0\n    system.parameters['m']['value'] = m\n    results_m.append(SimulationExperiment(dynamics=system).run())\nsystem.parameters['m']['value'] = 1.0  # restore default\n\nts_m   = [np.asarray(r.data.sel({\"variable\": \"x\"})).ravel() for r in results_m]\nsizes  = [0.4 * (m ** (1/3)) for m in m_values]          # cube-root: volume ∝ m\ntitles = [rf'$m={m},\\, \\omega={(k_fixed/m)**0.5:.4f}$' for m in m_values]\n\nani = animate_spring(\n    ts_m,\n    labels=[f'$m={m}$' for m in m_values],\n    titles=titles,\n    mass_sizes=sizes,\n    orientation=\"vertical\",\n    anchor_pos=3.5,\n    n_periods=1,\n)\nsave_animation_video(ani, 'spring_mass', fps=30)\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems — A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#from-toy-models-to-better-realism",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#from-toy-models-to-better-realism",
+    "title": "Dynamical Systems — A Spring-Mass Example",
+    "section": "1.6 From Toy Models to Better Realism",
+    "text": "1.6 From Toy Models to Better Realism\nThe same framework lets us add more realistic assumptions. For example, we can include:\n\ndamping (energy loss / friction)\na constant load term (gravity-like bias)\n\nThis changes both the transient behaviour (oscillations decay) and the equilibrium level.\n\nfrom tvbo.datamodel.schema import Parameter\n\n# Copy System\nrealistic = system.copy()\n\n# Change State-Equation\nrealistic.state_variables[\"v\"][\"equation\"][\"rhs\"] = \"-(k/m) * x - (c/m) * v + g_eff\"\n\n# Add Parameters\nrealistic.parameters[\"c\"] = Parameter(name=\"c\", value=0.006)\nrealistic.parameters[\"g_eff\"] = Parameter(name=\"g_eff\", value=0.00015)\n\nr_ideal = SimulationExperiment(dynamics=system).run()\nr_real = SimulationExperiment(dynamics=realistic).run()\n\n# x_eq = m * g_eff / k  (where the damped system settles)\ng_eff = realistic.parameters[\"g_eff\"][\"value\"]\nk = realistic.parameters[\"k\"][\"value\"]\nm = realistic.parameters[\"m\"][\"value\"]\nx_eq_real = m * g_eff / k\n\nani = animate_spring(\n    [r_ideal.data.sel({\"variable\": \"x\"}), r_real.data.sel({\"variable\": \"x\"})],\n    labels=[\"toy model\", \"damped + load\"],\n    titles=[\"Toy model\", \"Damped + load\"],\n    equilibrium=[0.0, x_eq_real],\n    mass_sizes=0.4,\n    orientation=\"vertical\",\n    anchor_pos=3.5,\n    n_periods=3,\n)\nsave_animation_video(ani, \"spring_realism\", fps=30)\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems — A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/04b_parameter_fitting.html",
+    "href": "notebooks/04b_parameter_fitting.html",
+    "title": "Use-case B — homogeneous vs. heterogeneous parameter fitting",
+    "section": "",
+    "text": "TODO: fit a global parameter to a target observable (e.g. frequency gradient)\nTODO: fit region-wise heterogeneous parameters with TVB-Optim\nTODO: compare goodness of fit and interpretability",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case B — homogeneous vs. heterogeneous parameter fitting"
+    ]
+  },
+  {
+    "objectID": "notebooks/04b_parameter_fitting.html#goals",
+    "href": "notebooks/04b_parameter_fitting.html#goals",
+    "title": "Use-case B — homogeneous vs. heterogeneous parameter fitting",
+    "section": "",
+    "text": "TODO: fit a global parameter to a target observable (e.g. frequency gradient)\nTODO: fit region-wise heterogeneous parameters with TVB-Optim\nTODO: compare goodness of fit and interpretability",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case B — homogeneous vs. heterogeneous parameter fitting"
+    ]
+  },
+  {
+    "objectID": "notebooks/04b_parameter_fitting.html#setup",
+    "href": "notebooks/04b_parameter_fitting.html#setup",
+    "title": "Use-case B — homogeneous vs. heterogeneous parameter fitting",
+    "section": "2 Setup",
+    "text": "2 Setup\n\n# TODO: imports, including tvboptim",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case B — homogeneous vs. heterogeneous parameter fitting"
+    ]
+  },
+  {
+    "objectID": "notebooks/04b_parameter_fitting.html#define-target-and-loss",
+    "href": "notebooks/04b_parameter_fitting.html#define-target-and-loss",
+    "title": "Use-case B — homogeneous vs. heterogeneous parameter fitting",
+    "section": "3 Define target and loss",
+    "text": "3 Define target and loss\n\n# TODO: load TVBase map, define loss against simulated observable",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case B — homogeneous vs. heterogeneous parameter fitting"
+    ]
+  },
+  {
+    "objectID": "notebooks/04b_parameter_fitting.html#homogeneous-fit",
+    "href": "notebooks/04b_parameter_fitting.html#homogeneous-fit",
+    "title": "Use-case B — homogeneous vs. heterogeneous parameter fitting",
+    "section": "4 Homogeneous fit",
+    "text": "4 Homogeneous fit\n\n# TODO: optimise a single global parameter",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case B — homogeneous vs. heterogeneous parameter fitting"
+    ]
+  },
+  {
+    "objectID": "notebooks/04b_parameter_fitting.html#heterogeneous-fit",
+    "href": "notebooks/04b_parameter_fitting.html#heterogeneous-fit",
+    "title": "Use-case B — homogeneous vs. heterogeneous parameter fitting",
+    "section": "5 Heterogeneous fit",
+    "text": "5 Heterogeneous fit\n\n# TODO: optimise a per-region parameter vector",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case B — homogeneous vs. heterogeneous parameter fitting"
+    ]
+  },
+  {
+    "objectID": "notebooks/04b_parameter_fitting.html#compare",
+    "href": "notebooks/04b_parameter_fitting.html#compare",
+    "title": "Use-case B — homogeneous vs. heterogeneous parameter fitting",
+    "section": "6 Compare",
+    "text": "6 Compare\n\n# TODO: residuals, parameter maps, runtime",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case B — homogeneous vs. heterogeneous parameter fitting"
+    ]
+  },
+  {
+    "objectID": "notebooks/04b_parameter_fitting.html#exercises",
+    "href": "notebooks/04b_parameter_fitting.html#exercises",
+    "title": "Use-case B — homogeneous vs. heterogeneous parameter fitting",
+    "section": "7 Exercises",
+    "text": "7 Exercises\n\nTODO: regularise the heterogeneous fit and discuss the trade-off\nTODO: try a different target map",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation",
+      "Use-case B — homogeneous vs. heterogeneous parameter fitting"
+    ]
+  },
+  {
+    "objectID": "notebooks/02b_coupled_networks.html",
+    "href": "notebooks/02b_coupled_networks.html",
+    "title": "2.2 Coupled network dynamics",
+    "section": "",
+    "text": "TODO: load a connectome\nTODO: assemble a network simulation with delays and coupling\nTODO: explore the global coupling parameter",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.2 Coupled network dynamics"
+    ]
+  },
+  {
+    "objectID": "notebooks/02b_coupled_networks.html#goals",
+    "href": "notebooks/02b_coupled_networks.html#goals",
+    "title": "2.2 Coupled network dynamics",
+    "section": "",
+    "text": "TODO: load a connectome\nTODO: assemble a network simulation with delays and coupling\nTODO: explore the global coupling parameter",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.2 Coupled network dynamics"
+    ]
+  },
+  {
+    "objectID": "notebooks/02b_coupled_networks.html#setup",
+    "href": "notebooks/02b_coupled_networks.html#setup",
+    "title": "2.2 Coupled network dynamics",
+    "section": "2 Setup",
+    "text": "2 Setup\n\n# TODO: imports",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.2 Coupled network dynamics"
+    ]
+  },
+  {
+    "objectID": "notebooks/02b_coupled_networks.html#load-the-connectome",
+    "href": "notebooks/02b_coupled_networks.html#load-the-connectome",
+    "title": "2.2 Coupled network dynamics",
+    "section": "3 Load the connectome",
+    "text": "3 Load the connectome\n\n# TODO: load weights, tract lengths, region labels",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.2 Coupled network dynamics"
+    ]
+  },
+  {
+    "objectID": "notebooks/02b_coupled_networks.html#run-a-network-simulation",
+    "href": "notebooks/02b_coupled_networks.html#run-a-network-simulation",
+    "title": "2.2 Coupled network dynamics",
+    "section": "4 Run a network simulation",
+    "text": "4 Run a network simulation\n\n# TODO: configure simulator, integrate, collect outputs",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.2 Coupled network dynamics"
+    ]
+  },
+  {
+    "objectID": "notebooks/02b_coupled_networks.html#sweep-global-coupling",
+    "href": "notebooks/02b_coupled_networks.html#sweep-global-coupling",
+    "title": "2.2 Coupled network dynamics",
+    "section": "5 Sweep global coupling",
+    "text": "5 Sweep global coupling\n\n# TODO: loop over coupling values, summarise activity",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.2 Coupled network dynamics"
+    ]
+  },
+  {
+    "objectID": "notebooks/02b_coupled_networks.html#exercises",
+    "href": "notebooks/02b_coupled_networks.html#exercises",
+    "title": "2.2 Coupled network dynamics",
+    "section": "6 Exercises",
+    "text": "6 Exercises\n\nTODO: identify the coupling regime that maximises FC correlation\nTODO: swap in a different parcellation",
+    "crumbs": [
+      "Setup",
+      "2. Defining a FAIR model",
+      "2.2 Coupled network dynamics"
+    ]
+  },
+  {
+    "objectID": "notebooks/4_optimization.html",
+    "href": "notebooks/4_optimization.html",
+    "title": "4. Parameter exploration and inference",
+    "section": "",
+    "text": "In this chapter you will fit personalized whole-brain models to empirical data using TVB-Optim’s gradient-based optimisation. Two complementary approaches are covered: a disease use case with biomedical data integration, and a systematic comparison of homogeneous versus heterogeneous parameter strategies.",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation"
+    ]
+  },
+  {
+    "objectID": "notebooks/4_optimization.html#sessions",
+    "href": "notebooks/4_optimization.html#sessions",
+    "title": "4. Parameter exploration and inference",
+    "section": "1 Sessions",
+    "text": "1 Sessions\n\n\n1.1 4a · Alzheimer’s disease use case\nBuild a personalised model using patient-specific connectivity and tau deposition maps. Reproduce empirical BOLD signals and interpret the result in the context of network degeneration.\n\n\n1.2 4b · Parameter fitting\nCompare homogeneous and heterogeneous parameter fitting strategies. Use TVB-Optim to optimise a frequency gradient (or another map from TVBase) and assess the impact on model fit quality.\n\n\n\nPart of Day 1",
+    "crumbs": [
+      "Setup",
+      "4. Parameter optimisation"
+    ]
+  }
+]
