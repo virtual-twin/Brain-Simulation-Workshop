@@ -1,0 +1,263 @@
+# 4. Parameter exploration and inference {background-color="#0b3d91"}
+
+## Models as computational hypotheses
+
+A brain network model is a **hypothesis with knobs**.
+Picking knob values is how we test the hypothesis against data.
+
+::: {.fragment}
+$$
+\theta \;\longrightarrow\; \text{simulator} \;\longrightarrow\; \hat{y}(\theta) \;\longrightarrow\; \mathcal{L}\big(\hat{y}(\theta),\, y_{\text{obs}}\big)
+$$
+
+- $\theta$ — model parameters (the knobs)
+- $\hat{y}(\theta)$ — simulated observable (FC, power spectrum, BOLD …)
+- $y_{\text{obs}}$ — empirical observable
+- $\mathcal{L}$ — loss / discrepancy
+:::
+
+::: {.fragment}
+*Inference = which $\theta$ are consistent with the data?* [@Pille2025]
+:::
+
+## The shape of the problem
+
+:::: {.columns}
+::: {.column width="55%"}
+Optimization over a parameter landscape $\mathcal{L}(\theta)$.
+
+Running example for this block:
+**fit global coupling $G$ so the simulated FC matches an empirical FC.**
+
+- one parameter → easy to picture
+- but every method we'll see scales (or doesn't) to many
+:::
+::: {.column width="45%"}
+TODO: 1D / 2D loss-surface plot for $G$ vs FC fit
+:::
+::::
+
+## Why this is hard for brain models
+
+- **Expensive simulator** — seconds to minutes per run
+- **High-dimensional** — when parameters become regional ($\times N$ nodes)
+- **Non-smooth dynamics** — chaos, stochasticity, stiffness
+- **Bumpy observables** — FC, FCD, PSD are summary statistics
+
+::: {.fragment}
+Every method below is a **bet** about which of these difficulties dominates.
+:::
+
+## Grid search — map the whole landscape
+
+- Same idea as the bifurcation diagrams from §3
+- Wins when: $\le 2$–$3$ parameters, you want to *see* the landscape
+- Cost grows as $N^d$ — unusable beyond a handful of dimensions
+
+::: {.fragment}
+TODO: grid scan of $G$ vs FC loss; mark the minimum
+:::
+
+## Random search — the surprising upgrade
+
+In more than 2–3 dimensions, **random search beats grid** for the same budget.
+
+::: {.fragment}
+**Why?** Real loss surfaces have **low effective dimensionality** — most
+parameters barely matter. Grid spends its budget evenly across all axes;
+random samples *every axis at every trial* [@bergstra2012].
+:::
+
+::: {.fragment}
+TODO: axis-projection figure (Bergstra & Bengio 2012, Fig. 1 style)
+:::
+
+::: {.fragment}
+**Take-away.** If you don't know which parameters matter, *don't grid*.
+:::
+
+## Quasi-random — better coverage, same idea
+
+- **Latin Hypercube** and **Sobol** sequences: low-discrepancy samples
+- Random's robustness without the clumping
+- Drop-in replacement for the sampler in your search loop
+
+## Evolutionary / CMA-ES — adaptive, no gradients
+
+- Maintains a *population* of $\theta$ and updates a covariance estimate
+  to bias future samples toward good regions
+- Wins when: ~10–50 parameters, no gradients available, moderate budget
+- Naturally parallel — every generation is a `vmap` over the population
+
+## Gradient descent — the regime-changer
+
+$$
+\theta_{t+1} \;=\; \theta_t - \eta \,\nabla_\theta\, \mathcal{L}(\theta_t)
+$$
+
+- The only method that scales to **regional / per-node** parameter vectors
+  (hundreds–thousands of knobs)
+- Local: needs a reasonable starting point
+- Requires $\nabla_\theta \mathcal{L}$ — that's where JAX comes in (next)
+
+## Bayesian inference — when you want a posterior
+
+A point estimate $\theta^\star$ tells you *one* good fit.
+A posterior $p(\theta \mid y) \propto p(y \mid \theta)\, p(\theta)$ tells you
+**how much you know** — and lets you fold in priors (e.g. tau PET, anatomy).
+
+::: {.fragment}
+What you get out: uncertainty over predictions, identifiability,
+model comparison.
+:::
+
+::: {.fragment}
+**One model, many inference algorithms.** Define the simulator + priors
+once; pick how to approximate the posterior:
+
+- **MCMC (HMC / NUTS)** — asymptotically exact samples; uses gradients to
+  navigate the posterior efficiently. Slow but accurate.
+- **Variational inference (SVI)** — fit a tractable family $q_\phi(\theta)$
+  to the posterior by gradient descent on the ELBO. Fast, approximate;
+  scales to high-dim regional parameters.
+- **Simulation-based inference (NPE / NLE)** — train a neural density
+  estimator on simulated $(\theta, y)$ pairs. **No gradients through the
+  simulator needed** → works when AD breaks (chaos, black-box code).
+  *Amortized*: pay the simulation budget once, then query the posterior
+  for any new observation almost instantly.
+- **Laplace / SWAG** — cheap Gaussian approximation around the optimum.
+:::
+
+::: {.fragment}
+TODO: posterior plot for $G$ alongside the point estimate (HMC vs SVI)
+:::
+
+## Choosing a method — cheat sheet
+
+| **method**       | **scales to**                      | **cost (forward sims)**            | **what you get**                |
+|------------------|-----------------------------------:|------------------------------------|---------------------------------|
+| Grid             | $\le 3$ params                     | $N^d$                              | full landscape                  |
+| Random / Sobol   | $\sim 20$                          | $10^2$–$10^3$                      | landscape sketch                |
+| CMA-ES / GA      | $\sim 50$                          | $10^3$–$10^4$                      | local optimum                   |
+| Gradient descent | $10^4$+ (regional)                 | $10^2$–$10^3$                      | local optimum                   |
+| SVI              | $10^4$+                            | $10^2$–$10^3$                      | approximate posterior           |
+| HMC / NUTS       | scales with $d$ — simulator-bound  | $10^4$–$10^6$                      | (near-)exact posterior          |
+| SBI (NPE / NLE)  | $\sim 10^2$, simulator-bound       | $10^4$–$10^6$ upfront, **amortized** | amortized approximate posterior |
+
+::: {.fragment}
+Cost numbers assume reverse-mode AD makes a gradient step ≈ one forward sim (next slide).
+*Bayesian rows sit at the expensive end* — a posterior is worth roughly a thousand point estimates' worth of compute.
+:::
+
+## Parallelism via `vmap`
+
+- One simulator, batched over parameter sets, fused into a single GPU pass
+- Random search and population methods become almost free on top of one
+  forward simulation
+- Same model code, no manual batching
+
+::: {.fragment}
+TODO: wall-clock plot — sequential vs `vmap`'d ensemble
+:::
+
+## Reverse-mode autodiff — the headline result
+
+For a scalar loss $\mathcal{L}:\mathbb{R}^d \to \mathbb{R}$:
+
+$$
+\text{cost}\!\left(\nabla_\theta \mathcal{L}\right) \;\approx\; c \cdot \text{cost}(\mathcal{L})
+\qquad\text{independent of } d
+$$
+
+::: {.fragment}
+
+- **Finite differences:** cost $\sim d \times$ forward → infeasible at regional scale
+- **Forward-mode AD:** same scaling as finite differences
+- **Reverse-mode AD:** cost $\sim$ one forward pass, *regardless* of $d$
+
+This is the reason per-region fits became tractable.
+:::
+
+## Composability — one simulator, four uses
+
+| **transform** | **what it gives** | **enables** |
+|---------------|-------------------|-------------|
+| `jit`         | compiled XLA      | speed |
+| `vmap`        | batching          | random search, CMA-ES |
+| `grad`        | gradients         | gradient descent, SVI |
+| probabilistic | priors + likelihood | Bayesian inference (HMC, NUTS, SVI — NumPyro / BlackJAX) |
+
+::: {.fragment}
+You write the model **once**.
+:::
+
+## Chaos eats your gradient
+
+Sensitivity to initial conditions $\Rightarrow$ $\|\nabla_\theta \mathcal{L}\|$
+**explodes** with integration length.
+
+::: {.fragment}
+Not a bug in autodiff — the dynamics are telling you the loss is non-smooth
+at fine scales.
+:::
+
+::: {.fragment}
+**Mitigations**
+
+- integrate over shorter windows
+- use *smoothed* observables (FC, power spectra) instead of raw traces
+- multiple shooting
+- gradient clipping
+:::
+
+## Other failure modes
+
+- **Stochasticity** — gradients through $dW$ need the reparameterization
+  trick or score-function estimators
+- **Bifurcations near the optimum** — genuine discontinuities in the loss
+  as fixed points appear or disappear → gradient descent gets stuck on the
+  wrong side
+- **Stiffness / long transients** — numerical noise compounds through the
+  unrolled trajectory
+
+::: {.fragment}
+**Take-away.** Gradients are powerful, not universal. Read the landscape
+(§3) before you trust the slope.
+:::
+
+::: {.fragment}
+When gradients are *unsalvageable*: **simulation-based inference**
+(NPE / NLE) treats the simulator as a black box — see Bayesian slide.
+:::
+
+## The default tvboptim recipe
+
+1. **Bifurcation map** (§3) → pick a *regime* of interest
+2. **Coarse random / Sobol search** within that regime → find a basin
+3. **Gradient descent** from the basin → polish to a local optimum
+4. **Bayesian inference** (HMC, SVI, or SBI when gradients break) from the optimum → posterior + uncertainty
+
+::: {.fragment}
+Each step uses the output of the previous as a **warm start**.
+:::
+
+::: {.fragment}
+TODO: pipeline diagram — same loss surface, four overlays
+:::
+
+## Mini-demo — pipeline on the running example
+
+TODO: live (or pre-rendered) walkthrough running the full chain on $G$ vs FC.
+Lands the synthesis just before the hands-on.
+
+## Use-case A — Alzheimer's disease
+
+- TODO: tau PET / amyloid map → *prior* on regional parameters
+- TODO: high-dim (regional) fit → gradient-descent territory
+- TODO: healthy vs patient simulation, refs [@Schirner2023; @Stefanovski2019]
+
+## Use-case B — homogeneous vs. heterogeneous fitting
+
+- TODO: same model, same data — fit one $G$ vs per-region $G_i$
+- TODO: low-dim vs high-dim head-to-head → why the toolbox matters
+- TODO: TVBase frequency gradient as target [@Pille2025]

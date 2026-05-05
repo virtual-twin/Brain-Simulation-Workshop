@@ -1,6 +1,6 @@
 ---
 title: "Use-case A — Alzheimer's disease"
-subtitle: "4.1 Parameter exploration and model optimization"
+subtitle: "4.1 Parameter exploration and inference"
 jupyter: python3
 ---
 

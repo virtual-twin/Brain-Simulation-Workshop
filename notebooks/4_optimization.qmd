@@ -1,5 +1,5 @@
 ---
-title: "4. Parameter exploration and model optimization"
+title: "4. Parameter exploration and inference"
 subtitle: "Sessions 4.1 · 4.2"
 toc: false
 ---
