@@ -641,12 +641,18 @@ def fig_g2d_bifurcation():
     save(fig, "g2d_bifurcation.png")
 
 
-def _g2d_tvboptim_network_trajectory(segment_duration=45.0, dt=0.5):
+def _g2d_tvboptim_network_trajectory(segment_duration=45.0, dt=0.25, warmup_duration=260.0):
   network = Network.from_db("DesikanKilliany")
   dynamics = Dynamics.from_db("Generic2dOscillator")
-  dynamics.parameters["d"].value = 0.05
+  dynamics.parameters["d"].value = 0.35
+  sample_domains = {
+    name: (float(state_variable.domain.lo), float(state_variable.domain.hi))
+    for name, state_variable in dynamics.state_variables.items()
+  }
+  dynamics.state_variables["W"].domain.lo = -60.0
+  dynamics.state_variables["W"].domain.hi = 20.0
   coupling = Coupling.from_ontology("Linear")
-  coupling.parameters["a"].value = 1e-6
+  coupling.parameters["a"].value = 1e-8
 
   exp = SimulationExperiment(dynamics=dynamics, network=network, coupling=coupling)
   exp.integration.duration = segment_duration
@@ -657,10 +663,10 @@ def _g2d_tvboptim_network_trajectory(segment_duration=45.0, dt=0.5):
   rng = np.random.default_rng(7)
   initial_state = np.zeros((len(exp.dynamics.state_variables), n_nodes), dtype=float)
   for state_index, state_variable in enumerate(exp.dynamics.state_variables.values()):
-    domain = state_variable.domain
-    initial_state[state_index] = rng.uniform(float(domain.lo), float(domain.hi), size=n_nodes)
+    lo, hi = sample_domains[state_variable.name]
+    initial_state[state_index] = rng.uniform(lo, hi, size=n_nodes)
 
-  ramp_inputs = np.linspace(-4.0, 4.8, 28)
+  ramp_inputs = np.linspace(-7.0, 2.0, 28)
   hold_inputs = np.full(24, ramp_inputs[-1])
   input_values = np.concatenate([ramp_inputs, hold_inputs])
 
@@ -670,14 +676,19 @@ def _g2d_tvboptim_network_trajectory(segment_duration=45.0, dt=0.5):
   strength = weights.sum(axis=1)
   strength_low, strength_high = np.quantile(strength, [0.05, 0.95])
   relative_strength = np.clip((strength - strength_low) / (strength_high - strength_low), 0.0, 1.0)
-  weights_norm = weights / np.maximum(strength[:, None], 1.0)
-  structural_drive_scale = 6.4
-  dynamic_drive_scale = 0.75
+  structural_drive_scale = 8.0
+
+  warmup_input = input_values[0] + structural_drive_scale * relative_strength
+  warmup_network = tvboptim.create_network(weights=weights, dynamics_params={"I": warmup_input})
+  warmup = tvboptim.run_simulation(warmup_network, t1=warmup_duration, dt=dt, run_main=False)
+  warmup.state.initial_state.dynamics = jnp.asarray(initial_state)
+  initial_state = np.asarray(warmup.model_fn(warmup.state).data)[-1]
 
   for input_value in input_values:
+    node_input = input_value + structural_drive_scale * relative_strength
     opt_network = tvboptim.create_network(
       weights=weights,
-      dynamics_params={"I": float(input_value)},
+      dynamics_params={"I": node_input},
     )
     simulation = tvboptim.run_simulation(opt_network, t1=segment_duration, dt=dt, run_main=False)
     simulation.state.initial_state.dynamics = jnp.asarray(initial_state)
@@ -685,10 +696,7 @@ def _g2d_tvboptim_network_trajectory(segment_duration=45.0, dt=0.5):
     data = np.asarray(result.data)
     voltage = data[:, 0, :]
     voltage_segments.append(voltage)
-    incoming_voltage = (weights_norm @ voltage.T).T
-    dynamic_drive = dynamic_drive_scale * (incoming_voltage - incoming_voltage.mean(axis=1, keepdims=True))
-    structural_drive = structural_drive_scale * relative_strength[None, :]
-    effective_input_segments.append(input_value + structural_drive + dynamic_drive)
+    effective_input_segments.append(np.broadcast_to(node_input, voltage.shape))
 
     initial_state = data[-1]
 
@@ -702,57 +710,90 @@ def _g2d_tvboptim_network_trajectory(segment_duration=45.0, dt=0.5):
 
 
 def gif_g2d_network_bifurcation(n_frames=96):
-    cont = Continuation.from_string(G2D_CONT)
-    exp = SimulationExperiment(dynamics=Dynamics.from_ontology("Generic2dOscillator"), continuations=[cont])
-    continuation = exp.run(BACKEND).continuations["g2d_in_I"]
-    effective_input, voltage, relative_strength, dt, ramp_end = _g2d_tvboptim_network_trajectory()
+  cont = Continuation.from_string(G2D_CONT)
+  exp = SimulationExperiment(dynamics=Dynamics.from_ontology("Generic2dOscillator"), continuations=[cont])
+  continuation = exp.run(BACKEND).continuations["g2d_in_I"]
+  effective_input, voltage, relative_strength, dt, ramp_end = _g2d_tvboptim_network_trajectory()
+  time = np.arange(len(voltage)) * dt
 
-    fig, ax = plt.subplots(figsize=(9.2, 5.2))
-    continuation.plot(VOI="V", ax=ax)
-    ax.set_title("Network trajectories on the Generic2dOscillator regime map", fontsize=12)
-    ax.set_xlabel(r"effective input $I_{\mathrm{eff}}$")
-    ax.set_ylabel("$V$")
-    ax.set_xlim(-10.5, 16.5)
-    ax.set_ylim(-2.2, 3.6)
+  fig, axes = plt.subplot_mosaic(
+    [["map", "timeseries"]],
+    figsize=(12.8, 5.2),
+    gridspec_kw={"width_ratios": [1.08, 0.92], "wspace": 0.24},
+  )
+  map_ax = axes["map"]
+  timeseries_ax = axes["timeseries"]
 
-    strength_norm = Normalize(vmin=0.0, vmax=1.0)
-    colors = plt.colormaps["viridis"](strength_norm(relative_strength))
-    trajectory_lines = [
-        ax.plot([], [], color=color, lw=0.95, alpha=0.64)[0]
-        for color in colors
-    ]
-    current_points = ax.scatter([], [], s=46, c=[], cmap="viridis", norm=strength_norm,
-            edgecolor="white", linewidth=0.45, zorder=5)
-    time_text = ax.text(0.02, 0.96, "", transform=ax.transAxes, ha="left", va="top",
-          fontsize=9, color="0.2")
-    ax.text(0.02, 0.04, "each colored trace = one coupled node", transform=ax.transAxes,
-          ha="left", va="bottom", fontsize=8, color="0.35")
+  continuation.plot(VOI="V", ax=map_ax)
+  map_ax.set_title("Regime map", fontsize=12)
+  map_ax.set_xlabel(r"effective input $I_{\mathrm{eff}}$")
+  map_ax.set_ylabel("$V$")
+  map_ax.set_xlim(-10.5, 16.5)
+  map_ax.set_ylim(-2.2, 3.6)
 
-    colorbar = fig.colorbar(ScalarMappable(norm=strength_norm, cmap="viridis"), ax=ax, pad=0.02, shrink=0.82)
-    colorbar.set_label("relative SC in-strength")
+  timeseries_ax.set_title("Node voltage traces", fontsize=12)
+  timeseries_ax.set_xlabel("time")
+  timeseries_ax.set_ylabel("$V(t)$")
+  timeseries_ax.set_ylim(-2.2, 3.6)
 
-    legend = ax.get_legend()
-    if legend is not None:
-        legend.set_frame_on(False)
-        legend.set_title("continuation")
-        for text in legend.get_texts():
-            text.set_fontsize(7)
-        legend.get_title().set_fontsize(8)
+  strength_norm = Normalize(vmin=0.0, vmax=1.0)
+  colors = plt.colormaps["viridis"](strength_norm(relative_strength))
+  trajectory_lines = [
+    map_ax.plot([], [], color=color, lw=0.95, alpha=0.64)[0]
+    for color in colors
+  ]
+  voltage_lines = [
+    timeseries_ax.plot([], [], color=color, lw=0.78, alpha=0.55)[0]
+    for color in colors
+  ]
+  current_points = map_ax.scatter([], [], s=46, c=[], cmap="viridis", norm=strength_norm,
+                                  edgecolor="white", linewidth=0.45, zorder=5)
+  voltage_points = timeseries_ax.scatter([], [], s=26, c=[], cmap="viridis", norm=strength_norm,
+                                         edgecolor="white", linewidth=0.35, zorder=5)
+  current_time_line = timeseries_ax.axvline(0, color="0.25", lw=0.9, ls=":", alpha=0.75)
+  time_text = map_ax.text(0.02, 0.96, "", transform=map_ax.transAxes, ha="left", va="top",
+                          fontsize=9, color="0.2")
+  map_ax.text(0.02, 0.04, "each colored trace = one coupled node", transform=map_ax.transAxes,
+              ha="left", va="bottom", fontsize=8, color="0.35")
 
-    frames = np.unique(np.concatenate([
-        np.linspace(8, ramp_end, int(0.62 * n_frames)),
-        np.linspace(ramp_end + 1, len(effective_input) - 1, n_frames - int(0.62 * n_frames)),
-    ]).astype(int))
-    tail_steps = int(260 / dt)
+  colorbar = fig.colorbar(
+    ScalarMappable(norm=strength_norm, cmap="viridis"),
+    ax=[map_ax, timeseries_ax],
+    pad=0.018,
+    shrink=0.82,
+  )
+  colorbar.set_label("relative SC in-strength")
 
-    def update(frame_index):
-        start = max(0, frame_index - tail_steps)
-        for node, line in enumerate(trajectory_lines):
-            line.set_data(effective_input[start:frame_index, node], voltage[start:frame_index, node])
-        current_points.set_offsets(np.column_stack([effective_input[frame_index], voltage[frame_index]]))
-        current_points.set_array(relative_strength)
-        time_text.set_text(fr"TVBO/tvboptim network simulation: $t={frame_index * dt:.0f}$")
-        return [*trajectory_lines, current_points, time_text]
+  legend = map_ax.get_legend()
+  if legend is not None:
+    legend.set_frame_on(False)
+    legend.set_title("continuation")
+    for text in legend.get_texts():
+      text.set_fontsize(7)
+    legend.get_title().set_fontsize(8)
+
+  frames = np.unique(np.concatenate([
+    np.linspace(8, ramp_end, int(0.62 * n_frames)),
+    np.linspace(ramp_end + 1, len(effective_input) - 1, n_frames - int(0.62 * n_frames)),
+  ]).astype(int))
+  tail_steps = int(260 / dt)
+
+  def update(frame_index):
+    start = max(0, frame_index - tail_steps)
+    window_start = time[start]
+    window_end = max(window_start + tail_steps * dt, time[frame_index])
+    timeseries_ax.set_xlim(window_start, window_end)
+    for node, line in enumerate(trajectory_lines):
+      line.set_data(effective_input[start:frame_index, node], voltage[start:frame_index, node])
+    for node, line in enumerate(voltage_lines):
+      line.set_data(time[start:frame_index], voltage[start:frame_index, node])
+    current_points.set_offsets(np.column_stack([effective_input[frame_index], voltage[frame_index]]))
+    current_points.set_array(relative_strength)
+    voltage_points.set_offsets(np.column_stack([np.full_like(relative_strength, time[frame_index]), voltage[frame_index]]))
+    voltage_points.set_array(relative_strength)
+    current_time_line.set_xdata([time[frame_index], time[frame_index]])
+    time_text.set_text(fr"TVBO/tvboptim network simulation: $t={frame_index * dt:.0f}$")
+    return [*trajectory_lines, *voltage_lines, current_points, voltage_points, current_time_line, time_text]
 
     anim = FuncAnimation(fig, update, frames=frames, interval=80, blit=False)
     out = os.path.join(IMG, "g2d_network_bifurcation.gif")

@@ -130,7 +130,9 @@ link-external-newwindow: true
 format:
   html:
     theme: cosmo
-    css: styles.css
+    css:
+      - _brand.css
+      - styles.css
     toc: true
     toc-depth: 3
     code-copy: true

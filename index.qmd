@@ -1,38 +1,34 @@
 ---
 title: "Brain Simulation Workshop"
-author:
-  - "Leon Stefanovski"
-  - "Marius Pille"
-  - "Leon Martin"
-date: 2026-05-12
 toc: false
 page-layout: full
 body-class: workshop-home-page
+title-block-banner: false
 format: html
 ---
 
-::: {.workshop-home}
 ::: {.workshop-hero aria-labelledby="workshop-hero-title"}
-<iframe class="workshop-hero__visual-frame" src="brain-network-background.html" title="Animated brain network visualization" aria-hidden="true" tabindex="-1"></iframe>
+<iframe class="workshop-hero__visual" src="brain-network-background.html" title="Animated brain network visualization" aria-hidden="true" tabindex="-1"></iframe>
 
-::: {.workshop-hero__texture aria-hidden="true"}
+::: {.workshop-hero__overlay aria-hidden="true"}
 :::
 
-::: {.workshop-hero__content}
+::: {.workshop-hero__inner}
 ::: {.workshop-kicker}
-FAIR Brain Data Science Bootcamp | Track 4
+[FAIR Brain Data Science Bootcamp](https://ebrains.eu/news-and-events/events/2026/fair-brain-data-science-bootcamp-2026) · Track 4
 :::
 
 # Mechanistic Whole-Brain Simulation Workshop {#workshop-hero-title}
 
 ::: {.workshop-hero__lead}
-Personalized brain network modeling with The Virtual Brain, ontology-driven model specification, and gradient-based optimization.
+Personalized brain network modeling with The Virtual Brain, ontology-driven
+model specification, and gradient-based optimization.
 :::
 
 ::: {.workshop-hero__meta aria-label="Workshop details"}
 [12-13 May 2026]{.workshop-hero__pill}
-[Charité University Medicine Berlin]{.workshop-hero__pill}
-[Berlin Institute of Health]{.workshop-hero__pill}
+[Karolinska Institutet, Stockholm]{.workshop-hero__pill}
+[Widerströmska huset]{.workshop-hero__pill}
 :::
 
 ::: {.workshop-actions}
@@ -42,38 +38,41 @@ Personalized brain network modeling with The Virtual Brain, ontology-driven mode
 :::
 :::
 :::
-:::
 
-::: {.home-section .home-overview}
-::: {.home-copy}
+::: {.home-section}
 ## About
 
-Track 4 workshop of the **FAIR Brain Data Science Bootcamp**, 12-13 May 2026,
-Charité University Medicine Berlin and Berlin Institute of Health.
+Track 4 of the **FAIR Brain Data Science Bootcamp 2026** — a joint event by
+[EBRAINS](https://ebrains.eu/news-and-events/events/2026/fair-brain-data-science-bootcamp-2026)
+and [INCF](https://www.incf.org/incf-brain-data-science-bootcamp-2026), hosted
+at **Karolinska Institutet**, Widerströmska huset
+([Tomtebodavägen 18](https://maps.app.goo.gl/), Stockholm, Sweden).
 
-In this workshop, participants learn core concepts and methods for personalized
-whole-brain network modeling using The Virtual Brain (TVB). The workflow combines
+The bootcamp brings together hands-on training across brain atlasing,
+electrophysiology, data sharing, and computational modeling within the EBRAINS
+research infrastructure. Track 4 focuses on personalized whole-brain network
+modeling with [The Virtual Brain](https://thevirtualbrain.org), combining
 individualized model definition, simulation, and analysis with ontology-driven
 model specification ([TVB-O](https://virtual-twin.github.io/tvbo)) and
-gradient-based optimization tooling
-([TVB-Optim](https://virtual-twin.github.io/tvboptim)) [@Martin2025; @Pille2025].
-:::
+gradient-based optimization
+([TVB-Optim](https://virtual-twin.github.io/tvboptim))
+[@Martin2025; @Pille2025].
 
-::: {.home-signal-list}
-::: {.home-signal}
-**Network structure**
+::: {.home-pillars}
+::: {.home-pillar}
+### Network structure
 
 Brain regions, tractography, surface geometry, and anatomical constraints.
 :::
 
-::: {.home-signal}
-**Model dynamics**
+::: {.home-pillar}
+### Model dynamics
 
 Neural mass equations, coupling functions, integration, and observations.
 :::
 
-::: {.home-signal}
-**Optimization loop**
+::: {.home-pillar}
+### Optimization loop
 
 Simulation targets, differentiable workflows, and parameter fitting.
 :::
@@ -81,59 +80,57 @@ Simulation targets, differentiable workflows, and parameter fitting.
 :::
 
 ::: {.home-section}
-## Getting Started
-
-The Python environment is managed with [uv](https://docs.astral.sh/uv/):
-
-```bash
-pip install uv
-```
-
-Tools used:
-
-```bash
-uv pip install tvb
-uv pip install tvbo
-uv pip install tvboptim
-```
-
-The full source code lives at
-<https://github.com/virtual-twin/Brain-Simulation-Workshop>.
-:::
+## Program
 
 ::: {.home-pathways}
 ::: {.home-pathway}
-::: {.home-pathway__number}
-01
-:::
+[01]{.home-pathway__number}
 
-### [Agenda](agenda/agenda.qmd)
+#### [Setup](setup.qmd)
 
-Two-day program with sessions, breaks, and references.
-:::
-
-::: {.home-pathway}
-::: {.home-pathway__number}
-02
-:::
-
-### [Slides](slides.qmd)
-
-RevealJS workshop slides used in the live sessions.
+Install `uv`, `tvb`, `tvbo`, and `tvboptim`. Verify the environment before
+day one.
 :::
 
 ::: {.home-pathway}
-::: {.home-pathway__number}
-03
+[02]{.home-pathway__number}
+
+#### [Agenda](agenda/agenda.qmd)
+
+Two-day program: lectures, hands-on sessions, and a mini hackathon.
 :::
 
-### [Notebooks](notebooks/02a_mean_field_models.qmd)
+::: {.home-pathway}
+[03]{.home-pathway__number}
 
-Hands-on Jupyter notebooks for each session.
+#### [Slides](slides.qmd)
+
+RevealJS slides used in the live sessions.
+:::
+
+::: {.home-pathway}
+[04]{.home-pathway__number}
+
+#### [Notebooks](notebooks/1_introduction.qmd)
+
+Hands-on Jupyter notebooks: introduction, FAIR models, dynamics, optimization,
+and stimulation.
 :::
 :::
+:::
 
-::: {.home-references}
+::: {.home-section}
+## Quick start
+
+```bash
+pip install uv
+uv pip install tvb tvbo tvboptim
+```
+
+Source code: <https://github.com/virtual-twin/Brain-Simulation-Workshop>.
+:::
+
+::: {.home-section}
 ## References {.unnumbered}
 
 ::: {#refs}

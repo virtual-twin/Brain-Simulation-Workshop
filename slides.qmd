@@ -27,7 +27,7 @@ format:
     title-slide-attributes:
       data-background-iframe: brain-network-background.html
       data-background-color: "#6880af"
-      data-background-opacity: "0.35"
+      data-background-opacity: "1"
 engine: jupyter
 jupyter: python3
 ---
@@ -371,10 +371,10 @@ result = exp.run("bifurcationkit.jl")
 
 ## TVB simulation infused with bifurcation analysis
 
-![](img/g2d_network_bifurcation.gif){fig-align="center" width="94%"}
+![](img/g2d_network_bifurcation.gif){fig-align="center" width="100%"}
 
 ::: {.smaller}
-TVBO/tvboptim Desikan-Killiany node trajectories in $(I_{\mathrm{eff}}, V)$ space, overlaid on the continuation map
+TVBO/tvboptim Desikan-Killiany node trajectories in $(I_{\mathrm{eff}}, V)$ space and synchronized $V(t)$ traces
 :::
 
 {{< include _slides-section-4.qmd >}}
