@@ -1,0 +1,127 @@
+---
+title: "Setup"
+---
+
+This page explains how to set up your environment to run the workshop notebooks.
+Two options are available: Docker (recommended, no Python setup needed) or a local install via `uv`.
+
+## Option A: Docker (recommended)
+
+Docker gives you a ready-to-run environment with everything pre-installed.
+
+**Step 1.** Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and start it.
+
+**Step 2.** Run Jupyter Lab:
+
+```bash
+docker run -p 8888:8888 ghcr.io/virtual-twin/tvbo:latest
+```
+
+**Step 3.** Open the URL printed in the terminal (e.g. `http://127.0.0.1:8888/lab?token=...`) in your browser.
+
+To keep your work across sessions, mount a local folder:
+
+```bash
+docker run -p 8888:8888 -v "$PWD/notebooks:/home/tvbo/notebooks" ghcr.io/virtual-twin/tvbo:latest
+```
+
+---
+
+## Option B: Local install with uv
+
+Use this option if you prefer to work directly on your machine or want to install your own packages alongside TVBO.
+
+### 1. Install uv
+
+`uv` is a fast Python package manager that also handles Python installation.
+
+::: {.panel-tabset}
+
+#### macOS / Linux
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Restart your terminal afterwards (or run `source ~/.bashrc` / `source ~/.zshrc`).
+
+#### Windows
+
+Open **PowerShell** and run:
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Restart PowerShell afterwards.
+
+:::
+
+Verify:
+
+```bash
+uv --version
+```
+
+### 2. Install Python
+
+TVBO requires Python 3.11 or later. Install it with uv:
+
+```bash
+uv python install 3.12
+```
+
+### 3. Create an environment
+
+```bash
+mkdir tvbo-workshop
+cd tvbo-workshop
+uv venv --python 3.12
+```
+
+Activate it:
+
+::: {.panel-tabset}
+
+#### macOS / Linux
+
+```bash
+source .venv/bin/activate
+```
+
+#### Windows
+
+```powershell
+.venv\Scripts\activate
+```
+
+:::
+
+Your prompt will show `(.venv)` when the environment is active.
+
+### 4. Install TVBO + TVB-Optim
+
+```bash
+uv pip install "tvbo[all]"
+```
+
+This installs TVBO and the TVB simulator backend used in the workshop.
+
+### 5. Verify
+
+```python
+from tvbo import Dynamics, SimulationExperiment
+print("Ready!")
+```
+
+---
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `uv: command not found` | Restart your terminal; on macOS/Linux check that `~/.local/bin` is on your `PATH` |
+| `No module named tvbo` | Activate the virtual environment first — you should see `(.venv)` in your prompt |
+| Python version error | Run `uv python install 3.12`, then `uv venv --python 3.12` |
+| Windows execution policy error | Open PowerShell as Administrator and run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |
+| Docker: port already in use | Change the host port: `docker run -p 8889:8888 ...` and open `localhost:8889` |

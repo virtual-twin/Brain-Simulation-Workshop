@@ -7,6 +7,7 @@ execute:
 
 render:
     - index.qmd
+    - setup.qmd
     - agenda/agenda.qmd
     - slides.qmd
     - notebooks/1_introduction.qmd
@@ -37,6 +38,8 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: setup.qmd
+        text: Setup
       - href: agenda/agenda.qmd
         text: Agenda
       - href: slides.qmd
@@ -79,6 +82,7 @@ website:
     - title: "Notebooks"
       style: docked
       contents:
+        - setup.qmd
         - notebooks/1_introduction.qmd
         - section: "1.1 Mathematical Framework"
           contents:
@@ -132,3 +136,18 @@ format:
 
 
 
+authors:
+  - name: "Leon Stefanovski"
+    affiliation:
+       - ref: charite
+  - name: "Marius Pille"
+    affiliation:
+       - ref: bih
+  - name: "Leon Martin"
+    affiliation:
+       - ref: bih
+affiliations:
+  - id: charite
+    name: "Charité University Medicine Berlin"
+  - id: bih
+    name: "Berlin Institute of Health at Charité University Medicine"

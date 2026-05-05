@@ -1,38 +1,3 @@
----
-title: "Towards translational and mechanistic whole-brain simulations with The Virtual Brain"
-subtitle: "Track 4 Workshop"
-authors:
-  - name: "Leon Stefanovski"
-    affiliation:
-       - ref: charite
-       - ref: bih
-  - name: "Marius Pille"
-    affiliation:
-       - ref: charite
-       - ref: bih
-  - name: "Leon Martin"
-    affiliation:
-       - ref: charite
-       - ref: bih
-affiliations:
-  - id: charite
-    name: "Charité University Medicine Berlin"
-  - id: bih
-    name: "Berlin Institute of Health at Charité University Medicine"
-date: 2026-05-12
-format:
-  html:
-    toc: true
-    number-sections: false
-  pdf:
-    toc: true
-    number-sections: false
-  docx:
-    toc: true
-    number-sections: false
----
-
-
 **Workshop Dates:** 12-13 May 2026
 
 ## About
