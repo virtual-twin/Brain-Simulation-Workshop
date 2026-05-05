@@ -40,13 +40,16 @@ body.workshop-home-page {
 /* Background animation, contained inside the hero */
 .workshop-hero__visual {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 40%;
+  width: 60%;
   height: 100%;
   border: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 1;
 }
 
 /* Subtle gradient for legibility on top of the animation */
@@ -56,10 +59,10 @@ body.workshop-home-page {
   z-index: 1;
   pointer-events: none;
   background: linear-gradient(
-    180deg,
-    rgba(11, 16, 32, 0.55) 0%,
-    rgba(11, 16, 32, 0.20) 55%,
-    rgba(11, 16, 32, 0.70) 100%
+    90deg,
+    rgba(11, 16, 32, 0.92) 0%,
+    rgba(11, 16, 32, 0.55) 45%,
+    rgba(11, 16, 32, 0.10) 100%
   );
 }
 

@@ -216,9 +216,11 @@ $$
 
 ## Mean field models & Neural Masses
 
-- TODO: notebook link
-- TODO: pick a model, inspect parameters, simulate
-- TODO: neural mass / mean-field formulation
+![](img/mean_field_overview.png){fig-align="center" width="100%"}
+
+- From spiking populations to a single rate variable: $r(t) = \langle \#\text{spikes}\rangle / (N\,\Delta t)$
+- WilsonCowan: $\tau\,\dot r_E = -r_E + S(w_{EE} r_E - w_{EI} r_I + P)$
+- jaxley HH network (left) → population rate → TVBO neural mass (right)
 
 ## Coupled network dynamics
 - TODO: nodes, coupling, delays, noise
@@ -374,7 +376,7 @@ result = exp.run("bifurcationkit.jl")
 ![](img/g2d_network_bifurcation.gif){fig-align="center" width="100%"}
 
 ::: {.smaller}
-TVBO/tvboptim Desikan-Killiany node trajectories in $(I_{\mathrm{eff}}, V)$ space and synchronized $V(t)$ traces
+TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany network. Nodes are colored by their instantaneous $V(t)$ and projected onto axial (top) and sagittal views; the regime map places each node at its current $(I_{\mathrm{eff}}, V)$ on the bifurcation diagram.
 :::
 
 {{< include _slides-section-4.qmd >}}

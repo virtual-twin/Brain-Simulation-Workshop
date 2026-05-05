@@ -709,97 +709,124 @@ def _g2d_tvboptim_network_trajectory(segment_duration=45.0, dt=0.25, warmup_dura
   )
 
 
-def gif_g2d_network_bifurcation(n_frames=96):
+def gif_g2d_network_bifurcation(n_frames=72):
+  """Two-panel bsplot animation: bifurcation diagram (with trajectory tails)
+  next to a top-view brain surface (viridis nodes coloured by V(t))."""
+  from bsplot.graph import create_network, plot_network_on_surface
+  from matplotlib.collections import LineCollection
+
   cont = Continuation.from_string(G2D_CONT)
   exp = SimulationExperiment(dynamics=Dynamics.from_ontology("Generic2dOscillator"), continuations=[cont])
   continuation = exp.run(BACKEND).continuations["g2d_in_I"]
   effective_input, voltage, relative_strength, dt, ramp_end = _g2d_tvboptim_network_trajectory()
-  time = np.arange(len(voltage)) * dt
 
-  fig, axes = plt.subplot_mosaic(
-    [["map", "timeseries"]],
-    figsize=(12.8, 5.2),
-    gridspec_kw={"width_ratios": [1.08, 0.92], "wspace": 0.24},
+  # Network + bsplot graph
+  network = Network.from_db("DesikanKilliany")
+  centers = network.get_centers()
+  n_nodes = voltage.shape[1]
+  weights = np.asarray(network.weights, dtype=float)
+  centers_dict = {i: tuple(map(float, centers[i])) for i in range(n_nodes)}
+  G = create_network(centers_dict, weights, labels=list(range(n_nodes)),
+                     threshold_percentile=92, directed=False)
+  for u, v_, d in G.edges(data=True):
+    d["weight"] = float(np.log1p(d["weight"]))
+
+  # Top-view projection: x_mni → axes-x, y_mni → axes-y
+  node_xy = np.array([centers_dict[i][:2] for i in range(n_nodes)])
+
+  # Viridis colormap
+  v_min = float(np.percentile(voltage, 1))
+  v_max = float(np.percentile(voltage, 99))
+  v_norm = Normalize(vmin=v_min, vmax=v_max)
+  cmap_v = plt.colormaps["viridis"]
+
+  base_size = 30 + 100 * relative_strength
+
+  # Compressed two-panel layout
+  fig = plt.figure(figsize=(11.0, 4.8))
+  gs = fig.add_gridspec(1, 3, width_ratios=[1.0, 1.0, 0.035],
+                        wspace=0.10, left=0.06, right=0.96, top=0.90, bottom=0.12)
+  ax_map = fig.add_subplot(gs[0, 0])
+  ax_brain = fig.add_subplot(gs[0, 1])
+  cax = fig.add_subplot(gs[0, 2])
+
+  # --- Brain panel (bsplot surface + edges, animated scatter on top) ---
+  plot_network_on_surface(
+    G, ax=ax_brain,
+    template="fsLR", density="32k", hemi=("lh", "rh"),
+    view="top",
+    surface_alpha=0.25,
+    show_nodes=False,
+    edge_radius=0.25,
+    edge_cmap="viridis",
+    edge_data_key="weight",
+    edge_scale={"weight": 4, "mode": "log"},
   )
-  map_ax = axes["map"]
-  timeseries_ax = axes["timeseries"]
-
-  continuation.plot(VOI="V", ax=map_ax)
-  map_ax.set_title("Regime map", fontsize=12)
-  map_ax.set_xlabel(r"effective input $I_{\mathrm{eff}}$")
-  map_ax.set_ylabel("$V$")
-  map_ax.set_xlim(-10.5, 16.5)
-  map_ax.set_ylim(-2.2, 3.6)
-
-  timeseries_ax.set_title("Node voltage traces", fontsize=12)
-  timeseries_ax.set_xlabel("time")
-  timeseries_ax.set_ylabel("$V(t)$")
-  timeseries_ax.set_ylim(-2.2, 3.6)
-
-  strength_norm = Normalize(vmin=0.0, vmax=1.0)
-  colors = plt.colormaps["viridis"](strength_norm(relative_strength))
-  trajectory_lines = [
-    map_ax.plot([], [], color=color, lw=0.95, alpha=0.64)[0]
-    for color in colors
-  ]
-  voltage_lines = [
-    timeseries_ax.plot([], [], color=color, lw=0.78, alpha=0.55)[0]
-    for color in colors
-  ]
-  current_points = map_ax.scatter([], [], s=46, c=[], cmap="viridis", norm=strength_norm,
-                                  edgecolor="white", linewidth=0.45, zorder=5)
-  voltage_points = timeseries_ax.scatter([], [], s=26, c=[], cmap="viridis", norm=strength_norm,
-                                         edgecolor="white", linewidth=0.35, zorder=5)
-  current_time_line = timeseries_ax.axvline(0, color="0.25", lw=0.9, ls=":", alpha=0.75)
-  time_text = map_ax.text(0.02, 0.96, "", transform=map_ax.transAxes, ha="left", va="top",
-                          fontsize=9, color="0.2")
-  map_ax.text(0.02, 0.04, "each colored trace = one coupled node", transform=map_ax.transAxes,
-              ha="left", va="bottom", fontsize=8, color="0.35")
-
-  colorbar = fig.colorbar(
-    ScalarMappable(norm=strength_norm, cmap="viridis"),
-    ax=[map_ax, timeseries_ax],
-    pad=0.018,
-    shrink=0.82,
+  ax_brain.set_title("Desikan-Killiany cortex", fontsize=11)
+  ax_brain.set_axis_off()
+  node_scat = ax_brain.scatter(
+    node_xy[:, 0], node_xy[:, 1],
+    s=base_size, c=np.zeros(n_nodes), cmap=cmap_v, norm=v_norm,
+    edgecolor="white", linewidth=0.4, zorder=20,
   )
-  colorbar.set_label("relative SC in-strength")
 
-  legend = map_ax.get_legend()
+  # --- Bifurcation panel (continuation + trajectory tails + current point) ---
+  continuation.plot(VOI="V", ax=ax_map)
+  ax_map.set_title("regime map", fontsize=11)
+  ax_map.set_xlabel(r"effective input $I_{\mathrm{eff}}$")
+  ax_map.set_ylabel("$V$")
+  ax_map.set_xlim(-10.5, 16.5)
+  ax_map.set_ylim(-2.2, 3.6)
+  legend = ax_map.get_legend()
   if legend is not None:
     legend.set_frame_on(False)
-    legend.set_title("continuation")
     for text in legend.get_texts():
       text.set_fontsize(7)
-    legend.get_title().set_fontsize(8)
+
+  tail_steps = max(1, int(180 / dt))
+  tail_lc = LineCollection([], cmap=cmap_v, norm=v_norm,
+                           linewidths=0.7, alpha=0.45, zorder=4)
+  ax_map.add_collection(tail_lc)
+  node_points = ax_map.scatter(
+    [], [], s=22, c=[], cmap=cmap_v, norm=v_norm,
+    edgecolor="white", linewidth=0.3, zorder=6, alpha=0.95,
+  )
+
+  time_text = fig.text(
+    0.5, 0.97, "", ha="center", va="top", fontsize=10, color="0.15",
+  )
+
+  cbar = fig.colorbar(ScalarMappable(norm=v_norm, cmap=cmap_v), cax=cax)
+  cbar.set_label("$V(t)$")
 
   frames = np.unique(np.concatenate([
-    np.linspace(8, ramp_end, int(0.62 * n_frames)),
-    np.linspace(ramp_end + 1, len(effective_input) - 1, n_frames - int(0.62 * n_frames)),
+    np.linspace(8, ramp_end, int(0.55 * n_frames)),
+    np.linspace(ramp_end + 1, len(voltage) - 1, n_frames - int(0.55 * n_frames)),
   ]).astype(int))
-  tail_steps = int(260 / dt)
 
   def update(frame_index):
+    v_now = voltage[frame_index]
+    node_scat.set_array(v_now)
+    node_points.set_offsets(np.column_stack([effective_input[frame_index], v_now]))
+    node_points.set_array(v_now)
     start = max(0, frame_index - tail_steps)
-    window_start = time[start]
-    window_end = max(window_start + tail_steps * dt, time[frame_index])
-    timeseries_ax.set_xlim(window_start, window_end)
-    for node, line in enumerate(trajectory_lines):
-      line.set_data(effective_input[start:frame_index, node], voltage[start:frame_index, node])
-    for node, line in enumerate(voltage_lines):
-      line.set_data(time[start:frame_index], voltage[start:frame_index, node])
-    current_points.set_offsets(np.column_stack([effective_input[frame_index], voltage[frame_index]]))
-    current_points.set_array(relative_strength)
-    voltage_points.set_offsets(np.column_stack([np.full_like(relative_strength, time[frame_index]), voltage[frame_index]]))
-    voltage_points.set_array(relative_strength)
-    current_time_line.set_xdata([time[frame_index], time[frame_index]])
-    time_text.set_text(fr"TVBO/tvboptim network simulation: $t={frame_index * dt:.0f}$")
-    return [*trajectory_lines, *voltage_lines, current_points, voltage_points, current_time_line, time_text]
+    segs = [np.column_stack([effective_input[start:frame_index + 1, i],
+                             voltage[start:frame_index + 1, i]])
+            for i in range(n_nodes)]
+    tail_lc.set_segments(segs)
+    tail_lc.set_array(v_now)
+    mean_I = float(effective_input[frame_index].mean())
+    time_text.set_text(
+      fr"TVBO + tvboptim — Desikan-Killiany — $t={frame_index * dt:.0f}$ ms,  "
+      fr"$\langle I_{{\mathrm{{eff}}}}\rangle={mean_I:+.2f}$"
+    )
+    return [node_scat, node_points, tail_lc, time_text]
 
-    anim = FuncAnimation(fig, update, frames=frames, interval=80, blit=False)
-    out = os.path.join(IMG, "g2d_network_bifurcation.gif")
-    anim.save(out, writer=PillowWriter(fps=16), dpi=120)
-    plt.close(fig)
-    print("wrote", out)
+  anim = FuncAnimation(fig, update, frames=frames, interval=80, blit=False)
+  out = os.path.join(IMG, "g2d_network_bifurcation.gif")
+  anim.save(out, writer=PillowWriter(fps=14), dpi=120)
+  plt.close(fig)
+  print("wrote", out)
 
 
 # ===========================================================================
