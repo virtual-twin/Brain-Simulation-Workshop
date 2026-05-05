@@ -734,7 +734,12 @@ def gif_g2d_network_bifurcation(n_frames=72):
   # Top-view projection: x_mni → axes-x, y_mni → axes-y
   node_xy = np.array([centers_dict[i][:2] for i in range(n_nodes)])
 
-  # Viridis colormap
+  # Per-node degree (binary) for bifurcation panel coloring
+  degree = np.array([G.degree(i) for i in range(n_nodes)], dtype=float)
+  deg_norm = Normalize(vmin=float(degree.min()), vmax=float(degree.max()))
+  cmap_deg = plt.colormaps["plasma"]
+
+  # Voltage colormap (brain panel) — viridis
   v_min = float(np.percentile(voltage, 1))
   v_max = float(np.percentile(voltage, 99))
   v_norm = Normalize(vmin=v_min, vmax=v_max)
@@ -743,12 +748,13 @@ def gif_g2d_network_bifurcation(n_frames=72):
   base_size = 30 + 100 * relative_strength
 
   # Compressed two-panel layout
-  fig = plt.figure(figsize=(11.0, 4.8))
-  gs = fig.add_gridspec(1, 3, width_ratios=[1.0, 1.0, 0.035],
-                        wspace=0.10, left=0.06, right=0.96, top=0.90, bottom=0.12)
-  ax_map = fig.add_subplot(gs[0, 0])
-  ax_brain = fig.add_subplot(gs[0, 1])
-  cax = fig.add_subplot(gs[0, 2])
+  fig = plt.figure(figsize=(11.4, 4.8), facecolor="white")
+  gs = fig.add_gridspec(1, 4, width_ratios=[0.030, 1.0, 1.0, 0.030],
+                        wspace=0.10, left=0.06, right=0.96, top=0.93, bottom=0.12)
+  cax_deg = fig.add_subplot(gs[0, 0])
+  ax_map = fig.add_subplot(gs[0, 1])
+  ax_brain = fig.add_subplot(gs[0, 2])
+  cax_v = fig.add_subplot(gs[0, 3])
 
   # --- Brain panel (bsplot surface + edges, animated scatter on top) ---
   plot_network_on_surface(
@@ -784,20 +790,27 @@ def gif_g2d_network_bifurcation(n_frames=72):
       text.set_fontsize(7)
 
   tail_steps = max(1, int(180 / dt))
-  tail_lc = LineCollection([], cmap=cmap_v, norm=v_norm,
+  # Per-node tail colors fixed by degree
+  tail_colors = cmap_deg(deg_norm(degree))
+  tail_lc = LineCollection([], colors=tail_colors,
                            linewidths=0.7, alpha=0.45, zorder=4)
   ax_map.add_collection(tail_lc)
   node_points = ax_map.scatter(
-    [], [], s=22, c=[], cmap=cmap_v, norm=v_norm,
+    np.zeros(n_nodes), np.zeros(n_nodes),
+    s=22, c=degree, cmap=cmap_deg, norm=deg_norm,
     edgecolor="white", linewidth=0.3, zorder=6, alpha=0.95,
   )
 
   time_text = fig.text(
-    0.5, 0.97, "", ha="center", va="top", fontsize=10, color="0.15",
+    0.5, 0.985, "", ha="center", va="top", fontsize=10, color="0.15",
   )
 
-  cbar = fig.colorbar(ScalarMappable(norm=v_norm, cmap=cmap_v), cax=cax)
-  cbar.set_label("$V(t)$")
+  cbar_v = fig.colorbar(ScalarMappable(norm=v_norm, cmap=cmap_v), cax=cax_v)
+  cbar_v.set_label("$V(t)$  (activity)")
+  cbar_deg = fig.colorbar(ScalarMappable(norm=deg_norm, cmap=cmap_deg), cax=cax_deg)
+  cbar_deg.set_label("node degree")
+  cax_deg.yaxis.set_ticks_position("left")
+  cax_deg.yaxis.set_label_position("left")
 
   frames = np.unique(np.concatenate([
     np.linspace(8, ramp_end, int(0.55 * n_frames)),
@@ -808,13 +821,11 @@ def gif_g2d_network_bifurcation(n_frames=72):
     v_now = voltage[frame_index]
     node_scat.set_array(v_now)
     node_points.set_offsets(np.column_stack([effective_input[frame_index], v_now]))
-    node_points.set_array(v_now)
     start = max(0, frame_index - tail_steps)
     segs = [np.column_stack([effective_input[start:frame_index + 1, i],
                              voltage[start:frame_index + 1, i]])
             for i in range(n_nodes)]
     tail_lc.set_segments(segs)
-    tail_lc.set_array(v_now)
     mean_I = float(effective_input[frame_index].mean())
     time_text.set_text(
       fr"TVBO + tvboptim — Desikan-Killiany — $t={frame_index * dt:.0f}$ ms,  "
@@ -822,9 +833,27 @@ def gif_g2d_network_bifurcation(n_frames=72):
     )
     return [node_scat, node_points, tail_lc, time_text]
 
-  anim = FuncAnimation(fig, update, frames=frames, interval=80, blit=False)
+  # Render frames manually with a single shared palette.
+  # PillowWriter quantizes per-frame → colorbar gradients shimmer; there
+  # is no global-palette option in anim.save / PillowWriter.
+  import io
   out = os.path.join(IMG, "g2d_network_bifurcation.gif")
-  anim.save(out, writer=PillowWriter(fps=14), dpi=120)
+  rendered = []
+  for fi in frames:
+    update(int(fi))
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", facecolor="white", dpi=120)
+    buf.seek(0)
+    rendered.append(Image.open(buf).convert("RGB").copy())
+    buf.close()
+  w, h = rendered[0].size
+  big = Image.new("RGB", (w * len(rendered), h))
+  for i, f in enumerate(rendered):
+    big.paste(f, (i * w, 0))
+  pal_img = big.convert("P", palette=Image.Palette.ADAPTIVE, colors=256)
+  quantized = [f.quantize(palette=pal_img, dither=Image.Dither.NONE) for f in rendered]
+  quantized[0].save(out, save_all=True, append_images=quantized[1:],
+                    duration=int(1000 / 14), loop=0, disposal=2, optimize=False)
   plt.close(fig)
   print("wrote", out)
 

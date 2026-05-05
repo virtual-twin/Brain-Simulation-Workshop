@@ -12,7 +12,8 @@ date: 2026-05-12
 format:
   clean-revealjs:
     slide-number: true
-    scrollable: true
+    scrollable: false
+    auto-stretch: true
     auto-play-media: false
     chalkboard: true
     incremental: false
@@ -218,14 +219,26 @@ $$
 
 ![](img/mean_field_overview.png){fig-align="center" width="100%"}
 
-- From spiking populations to a single rate variable: $r(t) = \langle \#\text{spikes}\rangle / (N\,\Delta t)$
-- WilsonCowan: $\tau\,\dot r_E = -r_E + S(w_{EE} r_E - w_{EI} r_I + P)$
-- jaxley HH network (left) → population rate → TVBO neural mass (right)
+- Population rate: $r(t) = \langle \#\text{spikes}\rangle / (N\,\Delta t)$
+- Jansen-Rit (3 populations): PC = $y_1 - y_2$, the EEG-like PSP at pyramidal cells
 
-## Coupled network dynamics
+## Network dynamics
+
+:::: {.columns}
+
+::: {.column width=30%}
+![](img/fig-network.png)
+:::
+
+::: {.column width=70%}
 - TODO: nodes, coupling, delays, noise
 - TODO: connectome loading
 - TODO: global coupling sweep
+:::
+
+::::
+
+## Coupling
 
 ::: {.fragment fragment-index=2}
 $$
@@ -486,18 +499,19 @@ $$
 fixed point loses stability $\Rightarrow$ stable oscillation appears
 :::
 
-## Numerical continuation
+## Numerical continuation {.r-fit-text}
 
+
+
+::: {.columns}
+::: {.column width="62%"}
+![](img/continuation_pseudo_arclength_white.png)
+:::
+::: {.column width="38%" .smaller}
 $$
 F(x, a)=0,
 \qquad (x,a)=(x(s),a(s))
 $$
-
-::: {.columns}
-::: {.column width="62%"}
-![](img/continuation_pseudo_arclength_white.png){width="100%"}
-:::
-::: {.column width="38%" .smaller}
 - follow branches through folds
 - detect folds and Hopf points
 - switch to periodic orbits

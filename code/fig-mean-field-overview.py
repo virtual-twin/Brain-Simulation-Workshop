@@ -177,34 +177,36 @@ def draw_jr_schematic(ax):
     ax.text(i_xy[0], i_xy[1], "I", color="white",
             ha="center", va="center", fontsize=12, fontweight="bold", zorder=4)
 
-    def _arrow(a, b, color, inhibitory=False, rad=0.0):
+    def _at(center, angle_deg, r):
+        a = np.deg2rad(angle_deg)
+        return (center[0] + r * np.cos(a), center[1] + r * np.sin(a))
+
+    def _arrow(a, b, color, inhibitory=False, rad=0.0, lw=2.5):
         style = "-|>" if not inhibitory else "-"
         arrow = FancyArrowPatch(
-            a, b, arrowstyle=style, mutation_scale=18,
-            color=color, linewidth=2.5,
+            a, b, arrowstyle=style, mutation_scale=22,
+            color=color, linewidth=lw,
             connectionstyle=f"arc3,rad={rad}", zorder=2,
         )
         ax.add_patch(arrow)
         if inhibitory:
-            # round inhibitory terminal at the head
-            ax.add_patch(Circle(b, radius=0.06, facecolor=color,
+            ax.add_patch(Circle(b, radius=0.07, facecolor=color,
                                 edgecolor="none", zorder=3))
 
-    # PC -> E (excitatory feed-forward, outer curve on the left)
-    _arrow((pc_xy[0] - 0.30, pc_xy[1] - 0.20),
-           (e_xy[0] + 0.25, e_xy[1] + 0.25),
-           P_COLOR, rad=0.30)
-    # PC -> I (excitatory feed-forward, outer curve on the right)
-    _arrow((pc_xy[0] + 0.30, pc_xy[1] - 0.20),
-           (i_xy[0] - 0.25, i_xy[1] + 0.20),
-           P_COLOR, rad=-0.30)
-    # E -> PC (excitatory feedback, inner curve on the left)
-    _arrow((e_xy[0] + 0.30, e_xy[1] + 0.10),
-           (pc_xy[0] - 0.20, pc_xy[1] - 0.30),
+    # Anchors are at distinct angles on each shape so the two arcs of each
+    # reciprocal pair are visually well separated.
+    # PC -> E : leaves PC at lower-left-far, enters E at upper-right-far  (outer curve)
+    _arrow(_at(pc_xy, 225, 0.42), _at(e_xy, 70, 0.32),
+           P_COLOR, rad=0.45)
+    # E -> PC : leaves E at upper-right-near, enters PC at lower-left-near  (inner curve)
+    _arrow(_at(e_xy, 50, 0.32), _at(pc_xy, 250, 0.42),
            E_COLOR, rad=-0.30)
-    # I -> PC (inhibitory feedback, inner curve on the right)
-    _arrow((i_xy[0] - 0.30, i_xy[1] + 0.10),
-           (pc_xy[0] + 0.20, pc_xy[1] - 0.30),
+
+    # PC -> I : leaves PC at lower-right-far, enters I at upper-left-far  (outer curve)
+    _arrow(_at(pc_xy, 315, 0.42), _at(i_xy, 110, 0.27),
+           P_COLOR, rad=-0.45)
+    # I -> PC : leaves I at upper-left-near, enters PC at lower-right-near  (inner curve, inhibitory)
+    _arrow(_at(i_xy, 130, 0.27), _at(pc_xy, 290, 0.42),
            I_COLOR, rad=0.30, inhibitory=True)
 
 
