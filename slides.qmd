@@ -248,8 +248,8 @@ $$
 
 ## Why FAIR? TVB-O in one slide
 
-- TODO: ontology-driven model specification [@Martin2025]
-- TODO: metadata + automated code generation
+<!-- - TODO: ontology-driven model specification [@Martin2025]
+- TODO: metadata + automated code generation -->
 
 ```{=html}
 <style>
