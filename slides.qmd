@@ -11,12 +11,14 @@ affiliations:
 date: 2026-05-12
 format:
   clean-revealjs:
+    width: 1244
+    height: 750
     dpi: 500
     fig-dpi: 500
     slide-number: true
     scrollable: false
     auto-stretch: true
-    auto-play-media: false
+    auto-play-media: true
     chalkboard: true
     incremental: false
     toc: false
@@ -53,29 +55,33 @@ jupyter: python3
 **Block 1 - 09:00-12:00:**\
 1. Intro to Brain Network Modelling\
 2. Defining a FAIR brain network model\
-3. Dynamical perspective\
+3. Applications in Basic and Clinical Research\
 4. Setup & First examples
 
 **Block 2 - 13:00-15:00:**\
 5. Bifurcation Theory\
-6. Parameter exploration & inference
+6. Parameter exploration & inference I
 
 **Block 3 - 15:30-17:30:**\
-7. Stimulating the brain
+7. Parameter exploration & inference II\
+8. Stimulating the brain
+
 :::
 ::: {.column width="40%" .smaller}
 **Day 2**\
 **Block 1 - 09:00-11:30:**\
-Mini hackathon - Bring your own data / research question
+Mini hackathon - Bring your own data / research question\
+Plotting the Brain
 
 
 **Block 2 - 12:00-13:30:**\
-Mini hackathon - Bring your own data / research question
+Mini hackathon - Bring your own data / research question\
+Plotting the Brain
 
 :::
 :::
 
-# 1. Intro to Brain Network Modelling {background-color="#0b3d91"}
+# 1. Intro to Brain Network Modelling {background-color="#6880af"}
 - TODO: motivation for whole-brain network modeling
 - TODO: brief historical arc of TVB
 
@@ -217,6 +223,9 @@ $$
 ![](notebooks/1_1_MathematicalFramework/spring_realism.gif){.fragment fig-align="center" height="580px"}
 :::
 
+# Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
+
+
 ## Mean field models & Neural Masses
 
 ![](img/mean_field_overview.png){fig-align="center" width="100%"}
@@ -301,7 +310,7 @@ $$
 
 :::
 
-# 2. Defining a FAIR brain network model {background-color="#0b3d91"}
+# 2. Defining a FAIR brain network model {background-color="#6880af"}
 
 ## Why FAIR? TVB-O in one slide
 
@@ -472,9 +481,10 @@ $$
 - TODO: translational use-cases
 - TODO: virtual epileptic / Alzheimer / stroke patient examples
 
+# Setup & First Examples
 
 
-# 3. Dynamical perspective {background-color="#0b3d91"}
+# 3. Bifurcation Analysis {background-color="#6880af"}
 
 ## How to analyse a brain system
 
@@ -516,6 +526,8 @@ $$
 
 ## 2D portraits
 
+- TODO: Add Timeseries to Phase Planes
+
 ![](img/phase_portraits_2d.png){fig-align="center" width="82%"}
 
 ::: {.smaller}
@@ -523,6 +535,9 @@ $$
 :::
 
 ## Regime-change building blocks
+
+- TODO: remove Ptchfork bifurcation.
+- TODO: explain Hopf
 
 ![](img/normal_forms.png){fig-align="center" width="100%"}
 
@@ -543,9 +558,17 @@ $$
 fixed point loses stability $\Rightarrow$ stable oscillation appears
 :::
 
+
+## Generic2dOscillator: regimes over input $I$
+
+![](img/g2d_bifurcation.png){fig-align="center" width="82%"}
+
+::: {.smaller}
+resting branch | oscillatory window | folds and Hopf points
+:::
+
+
 ## Numerical continuation {.r-fit-text}
-
-
 
 ::: {.columns}
 ::: {.column width="62%"}
@@ -556,19 +579,23 @@ $$
 F(x, a)=0,
 \qquad (x,a)=(x(s),a(s))
 $$
+
 - follow branches through folds
 - detect folds and Hopf points
 - switch to periodic orbits
+
 :::
 :::
 
-## Generic2dOscillator: regimes over input $I$
 
-![](img/g2d_bifurcation.png){fig-align="center" width="82%"}
+## TVB simulation infused with bifurcation analysis
+
+![](img/g2d_network_bifurcation.gif){fig-align="center" width="100%"}
 
 ::: {.smaller}
-resting branch | oscillatory window | folds and Hopf points
+TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany network. Nodes are colored by their instantaneous $V(t)$ and projected onto axial (top) and sagittal views; the regime map places each node at its current $(I_{\mathrm{eff}}, V)$ on the bifurcation diagram.
 :::
+
 
 ## 3.1 Bifurcation analysis: hands-on
 
@@ -581,13 +608,7 @@ resting branch | oscillatory window | folds and Hopf points
 result = exp.run("bifurcationkit.jl")
 ```
 
-## TVB simulation infused with bifurcation analysis
 
-![](img/g2d_network_bifurcation.gif){fig-align="center" width="100%"}
-
-::: {.smaller}
-TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany network. Nodes are colored by their instantaneous $V(t)$ and projected onto axial (top) and sagittal views; the regime map places each node at its current $(I_{\mathrm{eff}}, V)$ on the bifurcation diagram.
-:::
 
 {{< include _slides-section-4.qmd >}}
 
@@ -595,14 +616,126 @@ TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany networ
      reduce merge conflicts when collaborators touch slides.qmd -->
 
 
-# 5. Stimulating the brain {background-color="#0b3d91"}
+# 5. Stimulating the brain {background-color="#6880af"}
 
-## Visual and TMS-evoked potentials (Jansen–Rit)
+## Visual evoked potentials
 
-- TODO: stimulation primitives in TVB
-- TODO: VEP / TEP example
+[@Jansen1995]
 
-# Day 2 — Mini Hackathon {background-color="#0b3d91"}
+::::: {.columns}
+
+:::: {.column width="30%"}
+**Original**
+
+![](img/figures/jansen1995/original/fig_11.png)
+::::
+
+:::: {.column width="40%"}
+**Specification**
+
+```yaml {code-line-numbers="|1-18|19-36|37-54|55-72|73-87"}
+- id: 6
+  label: "VEP: different columns, with delay
+          (Fig. 11)"
+  dynamics:
+    name: JansenRit1995_Delayed_VEP
+    parameters:
+      A: {value: 3.25, unit: mV}
+      B: {value: 22, unit: mV}
+      C: {value: 135}
+      a: {value: 100, unit: s^-1}
+      b: {value: 50, unit: s^-1}
+      v0: {value: 6, unit: mV}
+      e0: {value: 2.5, unit: s^-1}
+      r: {value: 0.56, unit: mV^-1}
+      p:
+        value: 220
+        unit: s^-1
+        shape: "(n_nodes,)"
+        distribution: *dist_p_uniform
+      a_d: {value: 30, unit: s^-1}
+      K: {value: 0, shape: "(n_nodes,)"}
+    derived_parameters: *jr_derived
+    functions: *jr_functions
+    coupling_terms: *jr_coupling
+    state_variables:
+      y0: {equation: {rhs: y3}}
+      y3:
+        equation:
+          rhs: >-
+            A*a*Sigm(y1 - y2)
+            - 2*a*y3 - a**2*y0
+      y1: {equation: {rhs: y4}}
+      y4:
+        equation:
+          rhs: >-
+            A*a*(p + P
+            + C2*Sigm(C1*y0) + z0)
+            - 2*a*y4 - a**2*y1
+      y2: {equation: {rhs: y5}}
+      y5:
+        equation:
+          rhs: >-
+            B*b*(C4*Sigm(C3*y0))
+            - 2*b*y5 - b**2*y2
+      z0: {equation: {rhs: z1}}
+      z1:
+        equation:
+          rhs: >-
+            A*a_d*K*c_intercolumn
+            - 2*a_d*z1 - a_d**2*z0
+    derived_variables:
+      v_pyr: {equation: {rhs: y1 - y2}}
+    output: [v_pyr]
+  network:
+    number_of_regions: 2
+    number_of_nodes: 2
+    conduction_speed: {value: 0}
+    nodes:
+      - {id: 0}
+      - id: 1
+        parameters:
+          B: {value: 17.6}
+          C: {value: 108}
+    edges:
+      - source: 0
+        target: 1
+        directed: true
+      - source: 1
+        target: 0
+        directed: true
+    coupling: *sigmoidal_coupling
+  events: *flash_events
+  integration: *integration_vep
+  execution:
+    random_seed: 42
+  explorations:
+    VEP_delayed_fig11:
+      mode: zip
+      n_trials: 40
+      average: trials
+      parameters:
+        K:
+          element_domains:
+            - element: 0
+              explored_values: [300, 100]
+            - element: 1
+              explored_values: [1000, 4000]
+```
+::::
+
+:::: {.column width="30%"}
+**Reproduced**
+
+![](img/figures/jansen1995/reproduced/Jansen1995_Fig11.png)
+::::
+
+:::::
+
+<!-- - TODO: stimulation primitives in TVB
+- TODO: VEP / TEP example -->
+
+# Day 2 — Mini Hackathon {background-color="#6880af"}
 
 ## Format
 
@@ -615,7 +748,7 @@ TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany networ
 - TODO: data formats we can support
 - TODO: EBRAINS / local setup reminder
 
-# Wrap-up {background-color="#0b3d91"}
+# Wrap-up {background-color="#6880af"}
 
 ## Take-aways
 

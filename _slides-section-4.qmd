@@ -1,23 +1,3 @@
----
-format:
-  clean-revealjs:
-    slide-number: true
-    scrollable: true
-    auto-play-media: false
-    chalkboard: true
-    incremental: false
-    toc: false
-    logo: img/Charite.png
-    footer: "© Pille, Martin, Stefanovski, Charité University Medicine Berlin"
-    link-external-newwindow: true
-    code-line-numbers: true
-    highlight-style: github
-    include-in-header: _slides-home-btn.html
-engine: jupyter
-jupyter: python3
-bibliography: bibliography.bib
----
-
 # 4. Parameter exploration and inference {background-color="#0b3d91"}
 
 ## Models as computational hypotheses
@@ -141,7 +121,7 @@ Random search, Sobol designs, and CMA-ES populations all become **one batched fo
 - Cost grows as $N^d$ — unusable beyond a handful of dimensions
 
 ```python
-# Explore a 32x32 grid space of w and G 
+# Explore a 32x32 grid space of w and G
 grid_state.dynamics.w = GridAxis(0.001, 0.7, 32)
 grid_state.coupling.G = GridAxis(0.001, 0.7, 32)
 grid = Space(grid_state, mode="product")
@@ -261,7 +241,7 @@ the FC loss lives on an effective **2D subspace**.
 
 ::: {.fragment}
 ```python
-es = cma.CMAEvolutionStrategy([0.05, 0.6], 0.15, 
+es = cma.CMAEvolutionStrategy([0.05, 0.6], 0.15,
   {"popsize": 16})
 while not es.stop():
     pop = np.array(es.ask())
@@ -447,7 +427,7 @@ Bayesian inference adds **priors + likelihood**, nothing else.
 ## HMC — posterior over (G, w)
 
 :::: {.columns}
-::: {.column width="40%"}
+::: {.column .r-fit-text width="40%"}
 Uniform priors on both knobs ($G, w \sim \mathcal{U}(0.001, 0.7)$).
 
 ::: {.fragment}
