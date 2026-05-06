@@ -1,22 +1,3 @@
----
-format:
-  clean-revealjs:
-    slide-number: true
-    scrollable: true
-    auto-play-media: false
-    chalkboard: true
-    incremental: false
-    toc: false
-    logo: img/Charite.png
-    footer: "© Pille, Martin, Stefanovski, Charité University Medicine Berlin"
-    link-external-newwindow: true
-    code-line-numbers: true
-    highlight-style: github
-    include-in-header: _slides-home-btn.html
-engine: jupyter
-jupyter: python3
-bibliography: bibliography.bib
----
 
 # 4. Parameter exploration and inference {background-color="#0b3d91"}
 
