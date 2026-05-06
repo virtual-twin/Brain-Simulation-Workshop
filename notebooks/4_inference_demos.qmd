@@ -1,0 +1,760 @@
+---
+title: "Inference demos — figures for §4"
+subtitle: "Running example: fit RWW global coupling G (and recurrence w) to empirical FC"
+format:
+  html:
+    code-fold: false
+    toc: true
+    echo: true
+    embed-resources: true
+    fig-width: 8
+    out-width: "100%"
+jupyter: python3
+execute:
+  cache: true
+---
+
+This notebook produces the figures embedded in `_slides-section-4.qmd`.
+It re-uses the Reduced Wong-Wang setup from `RWW.qmd` but pins the
+inference *running example* to **fitting `G` (and `w`) so simulated FC
+matches empirical FC**.
+
+Each figure is saved to `img/section-4/` and referenced from the slides
+by path. Re-run this notebook whenever the §4 figures need to change.
+
+## Setup
+
+```{python}
+#| output: false
+import os
+cpu = True
+if cpu:
+    N = 8
+    os.environ["XLA_FLAGS"] = f"--xla_force_host_platform_device_count={N}"
+
+import copy
+import numpy as np
+import matplotlib.pyplot as plt
+import jax
+import jax.numpy as jnp
+import optax
+
+jax.config.update("jax_enable_x64", True)
+
+from tvboptim.types import Parameter, Space, GridAxis, UniformAxis, DataAxis
+from tvboptim.utils import set_cache_path, cache
+from tvboptim.execution import ParallelExecution
+from tvboptim.optim.optax import OptaxOptimizer
+from tvboptim.optim.callbacks import MultiCallback, DefaultPrintCallback, SavingCallback
+
+from tvboptim.experimental.network_dynamics import Network, prepare
+from tvboptim.experimental.network_dynamics.dynamics.tvb import ReducedWongWang
+from tvboptim.experimental.network_dynamics.coupling import FastLinearCoupling
+from tvboptim.experimental.network_dynamics.graph import DenseGraph
+from tvboptim.experimental.network_dynamics.solvers import Heun
+from tvboptim.experimental.network_dynamics.noise import AdditiveNoise
+from tvboptim.data import load_structural_connectivity, load_functional_connectivity
+from tvboptim.observations.tvb_monitors.bold import Bold
+from tvboptim.observations.observation import compute_fc, rmse
+
+set_cache_path("./inference_demos")
+
+FIG_DIR = "../img/section-4"
+DPI = 200
+os.makedirs(FIG_DIR, exist_ok=True)
+
+def savefig(name, **kw):
+    path = os.path.join(FIG_DIR, name)
+    plt.savefig(path, dpi=DPI, bbox_inches="tight", **kw)
+    print(f"saved → {path}")
+```
+
+## Network and loss
+
+```{python}
+#| output: false
+weights, lengths, region_labels = load_structural_connectivity(name="dk_average")
+weights = weights / np.max(weights)
+n_nodes = weights.shape[0]
+fc_target = load_functional_connectivity(name="dk_average")
+
+graph = DenseGraph(weights, region_labels=region_labels)
+dynamics = ReducedWongWang(w=0.5, I_o=0.32, INITIAL_STATE=(0.3,))
+coupling = FastLinearCoupling(local_states=["S"], G=0.5)
+noise = AdditiveNoise(sigma=0.00283, apply_to="S")
+
+network = Network(
+    dynamics=dynamics,
+    coupling={"instant": coupling},
+    graph=graph,
+    noise=noise,
+)
+
+t1 = 120_000
+dt = 4.0
+model, state = prepare(network, Heun(), t1=t1, dt=dt)
+
+# warm-up transient
+result_init = model(state)
+network.update_history(result_init)
+model, state = prepare(network, Heun(), t1=t1, dt=dt)
+
+bold_monitor = Bold(period=1000.0, downsample_period=4.0, voi=0, history=result_init)
+
+def observation(s):
+    r = model(s)
+    b = bold_monitor(r)
+    return compute_fc(b, skip_t=20)
+
+def loss(s):
+    return rmse(observation(s), fc_target)
+```
+
+## 2D loss landscape over (w, G)
+
+The running example is the global-coupling fit. We sweep `w` *and* `G`
+because (a) it gives a nicer 2D picture for the slides and (b) brain
+network models typically show a **degeneracy**: a curved valley of
+roughly equivalent (`w`, `G`) combinations all produce comparable FC fits.
+
+```{python}
+#| output: false
+n_grid = 32
+
+grid_state = copy.deepcopy(state)
+grid_state.dynamics.w = GridAxis(0.001, 0.7, n_grid)
+grid_state.coupling.instant.G = GridAxis(0.001, 0.7, n_grid)
+grid = Space(grid_state, mode="product")
+
+@cache("explore_2d", redo=False)
+def explore_2d():
+    exec = ParallelExecution(loss, grid, n_pmap=8)
+    return exec.run()
+
+results_2d = explore_2d()
+df_results = results_2d.to_dataframe()  # columns: coupling.instant.G, dynamics.w, value
+
+# pivot to a (w × G) grid for imshow
+loss_grid = df_results.pivot(
+    index="dynamics.w", columns="coupling.instant.G", values="value"
+).sort_index().sort_index(axis=1)
+G_axis = loss_grid.columns.values.astype(float)
+w_axis = loss_grid.index.values.astype(float)
+```
+
+```{python}
+#| label: fig-loss-2d
+#| fig-cap: "Top: empirical FC we're fitting to. Bottom: loss landscape over (G, w). The curved low-loss valley — many parameter combinations fit FC about equally well — is the kind of degeneracy that brain network models routinely exhibit."
+
+fig, (ax_fc, ax) = plt.subplots(2, 1, figsize=(5.0, 9.0))
+
+fc_show = np.array(fc_target).copy()
+np.fill_diagonal(fc_show, np.nan)
+im_fc = ax_fc.imshow(fc_show, cmap="cividis", vmax=0.9)
+ax_fc.set_xticks([])
+ax_fc.set_yticks([])
+ax_fc.set_title("Empirical FC (target)")
+plt.colorbar(im_fc, ax=ax_fc, shrink=0.85, label="correlation")
+
+im = ax.imshow(
+    loss_grid.values,
+    cmap="cividis_r",
+    extent=[G_axis.min(), G_axis.max(), w_axis.min(), w_axis.max()],
+    origin="lower",
+    aspect="auto",
+    interpolation="none",
+)
+plt.colorbar(im, ax=ax, label="loss (RMSE)")
+ax.set_xlabel("global coupling G")
+ax.set_ylabel("excitatory recurrence w")
+ax.set_title("Loss landscape — RWW fit to empirical FC")
+
+plt.tight_layout()
+savefig("loss_surface_2d.png")
+plt.show()
+```
+
+## 1D slice along G
+
+Slice the 2D landscape along `G` at a fixed `w` (the model default
+`w = 0.5`). This is the "easy to picture" 1D view — but the 2D plot
+above is what reveals the degeneracy.
+
+```{python}
+#| label: fig-loss-1d
+#| fig-cap: "1D slice of the loss along G at fixed w = 0.5."
+
+w_slice = 0.5
+i_w_slice = int(np.argmin(np.abs(w_axis - w_slice)))
+loss_slice = loss_grid.values[i_w_slice, :]
+
+fig, ax = plt.subplots(figsize=(6.5, 3.6))
+ax.plot(G_axis, loss_slice, color="#0b3d91", linewidth=2)
+ax.set_xlabel("global coupling G")
+ax.set_ylabel("loss (RMSE)")
+ax.set_title(f"Loss vs G  (slice at w = {w_axis[i_w_slice]:.3f})")
+ax.grid(True, alpha=0.3)
+savefig("loss_surface_1d.png")
+plt.show()
+```
+
+## Random search over (w, G)
+
+Same parameter ranges as the grid scan, but 100 samples drawn uniformly
+and zipped into a single `Space`.
+
+```{python}
+#| output: false
+n_random = 100
+
+random_state = copy.deepcopy(state)
+random_state.dynamics.w = UniformAxis(0.001, 0.7, n_random)
+random_state.coupling.instant.G = UniformAxis(0.001, 0.7, n_random)
+random_space = Space(random_state, mode="zip", key=jax.random.key(42))
+
+@cache("explore_random", redo=False)
+def explore_random():
+    exec = ParallelExecution(loss, random_space, n_pmap=8)
+    return exec.run()
+
+results_random = explore_random()
+df_random = results_random.to_dataframe()
+```
+
+```{python}
+#| label: fig-random-search
+#| fig-cap: "Random search: 100 samples drawn uniformly over (G, w), overlaid on the grid-scan loss landscape. Marker color = loss; the search threads through the same low-loss valley without paying the N² grid cost."
+
+G_rand = df_random["coupling.instant.G"].values.astype(float)
+w_rand = df_random["dynamics.w"].values.astype(float)
+loss_rand = df_random["value"].values.astype(float)
+
+fig, ax = plt.subplots(figsize=(6.5, 5.0))
+im = ax.imshow(
+    loss_grid.values,
+    cmap="cividis_r",
+    extent=[G_axis.min(), G_axis.max(), w_axis.min(), w_axis.max()],
+    origin="lower",
+    aspect="auto",
+    interpolation="none",
+    alpha=0.55,
+)
+sc = ax.scatter(G_rand, w_rand, c=loss_rand, cmap="cividis_r",
+                s=35, edgecolors="white", linewidths=1.0, zorder=3)
+plt.colorbar(sc, ax=ax, label="loss (RMSE)")
+ax.set_xlabel("global coupling G")
+ax.set_ylabel("excitatory recurrence w")
+ax.set_title(f"Random search — {n_random} samples")
+savefig("random_search.png")
+plt.show()
+```
+
+## Sensitivity analysis (Sobol indices)
+
+Quasi-random Sobol sequences power more than just exploration: combined
+with Saltelli's design they let us compute **variance-based sensitivity
+indices** — a quantitative version of the Bergstra & Bengio "low
+effective dimensionality" claim. We extend the problem to four
+parameters (`G`, `w`, `I_o`, `sigma`) and ask which knobs the FC loss
+actually depends on.
+
+```{python}
+#| output: false
+from SALib.sample import sobol as sobol_sample
+from SALib.analyze import sobol as sobol_analyze
+
+problem = {
+    "num_vars": 3,
+    "names":  ["G", "w", "sigma"],
+    "bounds": [[0.001, 0.7], [0.001, 0.7], [0.001, 0.01]],
+}
+N_saltelli = 256                          # → 256 * (2D + 2) = 2048 evals
+samples = sobol_sample.sample(problem, N_saltelli)
+
+salib_state = copy.deepcopy(state)
+salib_state.coupling.instant.G = DataAxis(samples[:, 0])
+salib_state.dynamics.w         = DataAxis(samples[:, 1])
+salib_state.noise.sigma        = DataAxis(samples[:, 2])
+salib_space = Space(salib_state, mode="zip")
+
+@cache("explore_sobol_3p", redo=False)
+def explore_sobol():
+    exec = ParallelExecution(loss, salib_space, n_pmap=8)
+    return exec.run()
+
+results_sobol = explore_sobol()
+losses_sobol = np.array(results_sobol.to_dataframe()["value"].values, dtype=float)
+Si = sobol_analyze.analyze(problem, losses_sobol, print_to_console=False)
+```
+
+```{python}
+# Print Sobol indices for inspection / interpretation
+import pandas as pd
+
+names = problem["names"]
+
+first_order = pd.DataFrame({
+    "S1":      np.array(Si["S1"]),
+    "S1_conf": np.array(Si["S1_conf"]),
+    "ST":      np.array(Si["ST"]),
+    "ST_conf": np.array(Si["ST_conf"]),
+}, index=names).round(4)
+
+S2 = np.array(Si["S2"])              # upper-triangular interaction matrix, NaNs on/below diag
+S2_conf = np.array(Si["S2_conf"])
+pairs = []
+for i in range(len(names)):
+    for j in range(i + 1, len(names)):
+        pairs.append((f"{names[i]} × {names[j]}", S2[i, j], S2_conf[i, j]))
+second_order = pd.DataFrame(pairs, columns=["pair", "S2", "S2_conf"]).round(4)
+
+print("=== First / total order ===")
+print(first_order)
+print(f"\nΣ S1 = {first_order['S1'].sum():.3f}   (≈1 → additive,  ≪1 → interaction-dominated)")
+print(f"Σ ST = {first_order['ST'].sum():.3f}")
+print("\n=== Pairwise interactions (S2) ===")
+print(second_order.to_string(index=False))
+```
+
+```{python}
+#| label: fig-sensitivity
+#| fig-cap: "Variance-based sensitivity indices for the FC-fit loss. ST (total order) measures each parameter's full contribution including interactions; S1 (first order) only the direct effect. Whiskers are 95% bootstrap CIs. The ranking shows the loss is effectively driven by a subset of the parameters — the empirical version of the Bergstra & Bengio argument."
+
+names = problem["names"]
+S1, S1_conf = np.array(Si["S1"]), np.array(Si["S1_conf"])
+ST, ST_conf = np.array(Si["ST"]), np.array(Si["ST_conf"])
+
+order = np.argsort(ST)              # ascending → biggest at top
+y = np.arange(len(names))
+
+fig, ax = plt.subplots(figsize=(6.5, 3.6))
+ax.barh(y, ST[order], xerr=ST_conf[order], color="#0b3d91", alpha=0.85,
+        height=0.55, label="ST (total order)",
+        error_kw=dict(ecolor="black", lw=1, capsize=3))
+ax.barh(y, S1[order], xerr=S1_conf[order], color="#f6b352",
+        height=0.30, label="S1 (first order)",
+        error_kw=dict(ecolor="black", lw=1, capsize=3))
+ax.set_yticks(y, [names[i] for i in order])
+ax.set_xlabel("Sobol index")
+ax.set_title(f"Sensitivity of FC loss  (Saltelli, N={N_saltelli}, {len(samples)} sims)")
+ax.legend(loc="lower right", frameon=False)
+ax.grid(True, axis="x", alpha=0.3)
+savefig("sensitivity_sobol.png")
+plt.show()
+```
+
+## CMA-ES on (G, w) — population evolution
+
+Adaptive evolutionary strategy. Each generation a population of
+candidate `(G, w)` pairs is evaluated **in parallel** via `DataAxis`,
+the covariance of the sampling distribution is updated to align with
+the local descent direction, and the next generation is sampled.
+
+```{python}
+#| output: false
+import cma
+
+n_pop_cmaes = 16
+max_gens = 20
+
+@cache("cmaes_history", redo=False)
+def run_cmaes():
+    es = cma.CMAEvolutionStrategy(
+        [0.05, 0.6], 0.15,
+        {"bounds": [[0.001, 0.001], [0.7, 0.7]],
+         "popsize": n_pop_cmaes,
+         "maxiter": max_gens,
+         "verbose": -9,
+         "seed": 42},
+    )
+    history = []
+    while not es.stop():
+        pop = np.array(es.ask())          # (n_pop, 2)
+        s = copy.deepcopy(state)
+        s.coupling.instant.G = DataAxis(pop[:, 0])
+        s.dynamics.w         = DataAxis(pop[:, 1])
+        space = Space(s, mode="zip")
+        results = ParallelExecution(loss, space, n_pmap=8).run()
+        fits = np.array(results.to_dataframe()["value"].values, dtype=float)
+        es.tell(pop.tolist(), fits.tolist())
+        history.append({
+            "pop":   pop,
+            "fits":  fits,
+            "mean":  np.array(es.mean),
+            "C":     np.array(es.C),
+            "sigma": float(es.sigma),
+        })
+    return history
+
+cmaes_history = run_cmaes()
+print(f"ran {len(cmaes_history)} generations × {n_pop_cmaes} candidates "
+      f"= {len(cmaes_history) * n_pop_cmaes} evaluations")
+```
+
+```{python}
+#| output: false
+# Helpers for plotting one CMA-ES generation
+import matplotlib.animation as animation
+from matplotlib.patches import Ellipse
+
+def cov_ellipse(mean, C, sigma, ax, n_std=2.0, **kw):
+    """Add a 2-σ ellipse for the CMA-ES sampling distribution."""
+    cov = (sigma ** 2) * C
+    eigvals, eigvecs = np.linalg.eigh(cov)
+    order = np.argsort(eigvals)[::-1]
+    eigvals, eigvecs = eigvals[order], eigvecs[:, order]
+    angle = np.degrees(np.arctan2(eigvecs[1, 0], eigvecs[0, 0]))
+    width, height = 2 * n_std * np.sqrt(eigvals)
+    e = Ellipse(xy=mean, width=width, height=height, angle=angle, **kw)
+    ax.add_patch(e)
+    return e
+
+def draw_landscape(ax):
+    ax.imshow(
+        loss_grid.values,
+        cmap="cividis_r",
+        extent=[G_axis.min(), G_axis.max(), w_axis.min(), w_axis.max()],
+        origin="lower", aspect="auto", interpolation="none", alpha=0.55,
+    )
+    ax.set_xlim(G_axis.min(), G_axis.max())
+    ax.set_ylim(w_axis.min(), w_axis.max())
+    ax.set_xlabel("G")
+    ax.set_ylabel("w")
+
+def draw_generation(ax, gen_idx):
+    h = cmaes_history[gen_idx]
+    pop, fits = h["pop"], h["fits"]
+    ax.scatter(pop[:, 0], pop[:, 1], c=fits, cmap="cividis_r",
+               s=35, edgecolors="white", linewidths=0.8, zorder=5)
+    ax.scatter([h["mean"][0]], [h["mean"][1]], color="red", marker="x",
+               s=80, linewidths=2.5, zorder=6)
+    cov_ellipse(h["mean"], h["C"], h["sigma"], ax,
+                edgecolor="red", facecolor="none", linewidth=1.5, zorder=6)
+    best = float(np.min([np.min(g["fits"]) for g in cmaes_history[:gen_idx + 1]]))
+    ax.set_title(f"gen {gen_idx + 1}/{len(cmaes_history)}   best loss: {best:.4f}")
+```
+
+```{python}
+#| label: fig-cmaes-snapshots
+#| fig-cap: "CMA-ES on the (G, w) loss landscape: snapshots from four generations. Red × is the distribution mean, red ellipse is the 2-σ sampling region. The covariance rotates and shrinks to align with the curved valley."
+
+snap_idx = [0,
+            len(cmaes_history) // 4,
+            len(cmaes_history) // 2,
+            len(cmaes_history) - 1]
+
+fig, axes = plt.subplots(1, 4, figsize=(14, 3.6), sharey=True)
+for ax, idx in zip(axes, snap_idx):
+    draw_landscape(ax)
+    draw_generation(ax, idx)
+for ax in axes[1:]:
+    ax.set_ylabel("")
+plt.tight_layout()
+savefig("cma_es_snapshots.png")
+plt.show()
+```
+
+```{python}
+#| output: false
+# Animated GIF of every generation
+fig_anim, ax_anim = plt.subplots(figsize=(5.0, 5.0))
+
+def init():
+    ax_anim.clear()
+    draw_landscape(ax_anim)
+    return []
+
+def update(frame_idx):
+    ax_anim.clear()
+    draw_landscape(ax_anim)
+    draw_generation(ax_anim, frame_idx)
+    return []
+
+anim = animation.FuncAnimation(
+    fig_anim, update, init_func=init,
+    frames=len(cmaes_history), interval=700, blit=False,
+)
+
+gif_path = os.path.join(FIG_DIR, "cma_es_evolution.gif")
+anim.save(gif_path, writer=animation.PillowWriter(fps=1.0), dpi=DPI)
+print(f"saved → {gif_path}")
+plt.close(fig_anim)
+```
+
+## Gradient descent trajectory
+
+Run Adam from a deliberately off-valley starting point and overlay the
+iterate path on the same loss landscape.
+
+```{python}
+#| output: false
+opt_state = copy.deepcopy(state)
+opt_state.dynamics.w = Parameter(jnp.array(0.2))            # start high in w
+opt_state.coupling.instant.G = Parameter(jnp.array(0.1))   # start low in G
+
+cb = MultiCallback([
+    DefaultPrintCallback(every=20),
+    SavingCallback(key="state", save_fun=lambda *args: args[1]),
+])
+
+@cache("optimize_trajectory", redo=False)
+def optimize_trajectory():
+    opt = OptaxOptimizer(loss, optax.adam(0.01), callback=cb)
+    fitted, data = opt.run(opt_state, max_steps=200)
+    return fitted, data
+
+fitted_state, fitting_data = optimize_trajectory()
+
+G_route = np.array([s.coupling.instant.G.value for s in fitting_data["state"].save])
+w_route = np.array([s.dynamics.w.value         for s in fitting_data["state"].save])
+```
+
+```{python}
+#| label: fig-gradient-trajectory
+#| fig-cap: "Gradient descent (Adam) on the same (G, w) loss landscape. White path: iterates from the initial point (top circle) into the low-loss valley (bottom circle). Gradient descent finds *one* good fit cheaply but does not characterize the valley itself."
+
+import matplotlib.patheffects as path_effects
+
+fig, ax = plt.subplots(figsize=(6.5, 5.0))
+im = ax.imshow(
+    loss_grid.values,
+    cmap="cividis_r",
+    extent=[G_axis.min(), G_axis.max(), w_axis.min(), w_axis.max()],
+    origin="lower",
+    aspect="auto",
+    interpolation="none",
+)
+plt.colorbar(im, ax=ax, label="loss (RMSE)")
+
+ax.plot(G_route, w_route, color="white", linewidth=1.5, alpha=0.9, zorder=4)
+ax.scatter(G_route[::5], w_route[::5], color="white", s=18,
+           edgecolors="black", linewidths=0.6, zorder=5)
+
+# start / end markers
+for (G_pt, w_pt, label, dy) in [
+    (G_route[0],  w_route[0],  "start",     +0.04),
+    (G_route[-1], w_route[-1], "optimized", -0.05),
+]:
+    ax.scatter([G_pt], [w_pt], color="white", s=110,
+               edgecolors="black", linewidths=2, zorder=6)
+    ax.annotate(label, (G_pt, w_pt), xytext=(G_pt, w_pt + dy),
+                color="white", fontweight="bold", ha="center", zorder=7,
+                path_effects=[path_effects.withStroke(linewidth=2.5, foreground="black")])
+
+ax.set_xlabel("global coupling G")
+ax.set_ylabel("excitatory recurrence w")
+ax.set_title("Gradient descent trajectory (Adam, 200 steps)")
+savefig("gradient_trajectory.png")
+plt.show()
+```
+
+```{python}
+#| output: false
+# Animated GIF of the gradient descent trajectory
+fig_grad_anim, ax_grad_anim = plt.subplots(figsize=(5.5, 4.5))
+
+n_steps_total = len(G_route)
+anim_stride = max(1, n_steps_total // 60)
+frame_indices = list(range(0, n_steps_total, anim_stride))
+if frame_indices[-1] != n_steps_total - 1:
+    frame_indices.append(n_steps_total - 1)
+
+def draw_grad_landscape(ax):
+    ax.clear()
+    ax.imshow(
+        loss_grid.values,
+        cmap="cividis_r",
+        extent=[G_axis.min(), G_axis.max(), w_axis.min(), w_axis.max()],
+        origin="lower", aspect="auto", interpolation="none",
+    )
+    ax.set_xlim(G_axis.min(), G_axis.max())
+    ax.set_ylim(w_axis.min(), w_axis.max())
+    ax.set_xlabel("global coupling G")
+    ax.set_ylabel("excitatory recurrence w")
+
+def grad_init():
+    draw_grad_landscape(ax_grad_anim)
+    return []
+
+def grad_update(frame_idx):
+    i = frame_indices[frame_idx]
+    draw_grad_landscape(ax_grad_anim)
+    ax_grad_anim.plot(G_route[: i + 1], w_route[: i + 1],
+                      color="white", linewidth=1.5, alpha=0.9, zorder=4)
+    ax_grad_anim.scatter([G_route[0]], [w_route[0]], color="white", s=110,
+                         edgecolors="black", linewidths=2, zorder=6)
+    ax_grad_anim.scatter([G_route[i]], [w_route[i]], color="red", marker="x",
+                         s=80, linewidths=2.5, zorder=7)
+    ax_grad_anim.set_title(f"Adam   step {i + 1}/{n_steps_total}")
+    return []
+
+grad_anim = animation.FuncAnimation(
+    fig_grad_anim, grad_update, init_func=grad_init,
+    frames=len(frame_indices), interval=120, blit=False,
+)
+
+grad_gif_path = os.path.join(FIG_DIR, "gradient_trajectory.gif")
+grad_anim.save(grad_gif_path, writer=animation.PillowWriter(fps=8), dpi=DPI)
+print(f"saved → {grad_gif_path}")
+plt.close(fig_grad_anim)
+```
+
+## Bayesian inference — HMC over (G, w)
+
+A point estimate gives one fit; a posterior gives **all fits consistent
+with the data**. With the curved valley we already know the model is
+near-degenerate, so the posterior should *characterize* that valley.
+We run NUTS (Hamiltonian Monte Carlo with adaptive step size) under two
+prior choices:
+
+1. **Wide priors** — Uniform on both `G` and `w`. The posterior should
+   spread along the valley.
+2. **Tight prior on w** — Normal(0.5, 0.03) on `w` (think: literature
+   value, or a regional constraint from imaging). This should pin `G`
+   to a narrow basin, breaking the degeneracy.
+
+```{python}
+#| output: false
+import numpyro
+from numpyro import distributions as dist
+from numpyro.infer import MCMC, NUTS
+
+fc_target_jax = jnp.asarray(fc_target)
+triu_idx = jnp.triu_indices(fc_target_jax.shape[0], k=1)
+fc_target_flat = fc_target_jax[triu_idx]
+
+def fc_model(state_template, G_prior, w_prior, obs_sigma=0.05):
+    """NumPyro model: priors on (G, w), Gaussian likelihood on FC upper-tri."""
+    G = numpyro.sample("G", G_prior)
+    w = numpyro.sample("w", w_prior)
+
+    s = copy.deepcopy(state_template)
+    s.coupling.instant.G = G
+    s.dynamics.w         = w
+    fc_sim = observation(s)
+
+    numpyro.sample("obs",
+                   dist.Normal(fc_sim[triu_idx], obs_sigma),
+                   obs=fc_target_flat)
+
+NUM_WARMUP = 200
+NUM_SAMPLES = 300
+
+def run_nuts(G_prior, w_prior, seed):
+    kernel = NUTS(fc_model, target_accept_prob=0.7, max_tree_depth=7)
+    mcmc = MCMC(kernel,
+                num_warmup=NUM_WARMUP,
+                num_samples=NUM_SAMPLES,
+                num_chains=1,
+                progress_bar=True)
+    mcmc.run(jax.random.key(seed), state, G_prior, w_prior)
+    return {k: np.asarray(v) for k, v in mcmc.get_samples().items()}
+
+@cache("posterior_wide", redo=False)
+def posterior_wide():
+    return run_nuts(
+        G_prior=dist.Uniform(0.001, 0.7),
+        w_prior=dist.Uniform(0.001, 0.7),
+        seed=0,
+    )
+
+from numpyro.infer import SVI, Trace_ELBO
+from numpyro.infer.autoguide import AutoMultivariateNormal
+import numpyro.optim as numpyro_optim
+
+NUM_SVI_STEPS = 1500
+NUM_SVI_SAMPLES = 2000
+
+@cache("posterior_svi_wide", redo=False)
+def posterior_svi_wide():
+    """Same fc_model, same wide priors as posterior_wide — only the
+    inference algorithm changes. AutoMultivariateNormal fits a Gaussian
+    in unconstrained space; that family cannot bend along the curved
+    (G, w) valley, so the posterior should look broader on the marginals
+    but lose the diagonal correlation that HMC recovers."""
+    guide = AutoMultivariateNormal(fc_model)
+    svi = SVI(fc_model, guide,
+              numpyro_optim.Adam(step_size=5e-3), Trace_ELBO())
+    svi_result = svi.run(
+        jax.random.key(0), NUM_SVI_STEPS, state,
+        dist.Uniform(0.001, 0.7), dist.Uniform(0.001, 0.7),
+    )
+    posterior = guide.sample_posterior(
+        jax.random.key(1), svi_result.params,
+        sample_shape=(NUM_SVI_SAMPLES,),
+    )
+    return (
+        {k: np.asarray(v) for k, v in posterior.items()},
+        np.asarray(svi_result.losses),
+    )
+
+samples_wide = posterior_wide()
+samples_svi, svi_losses = posterior_svi_wide()
+print(f"HMC wide: G ∈ [{samples_wide['G'].min():.3f}, {samples_wide['G'].max():.3f}]   "
+      f"w ∈ [{samples_wide['w'].min():.3f}, {samples_wide['w'].max():.3f}]")
+print(f"SVI wide: G ∈ [{samples_svi['G'].min():.3f}, {samples_svi['G'].max():.3f}]   "
+      f"w ∈ [{samples_svi['w'].min():.3f}, {samples_svi['w'].max():.3f}]")
+print(f"SVI final ELBO loss: {svi_losses[-1]:.3f}  (start {svi_losses[0]:.3f})")
+```
+
+```{python}
+#| label: fig-posteriors
+#| fig-cap: "Posterior over (G, w) under wide priors — same fc_model, same data, two inference algorithms. Background: grid-scan loss landscape (faded). Red points: posterior samples; red contours: KDE; histograms on top/right: marginals. Left — HMC (NUTS) traces the curved valley, exposing the (G, w) degeneracy. Right — SVI with a multivariate-Normal guide is far cheaper but its unimodal Gaussian family cannot bend along the valley, so the diagonal correlation collapses."
+
+from scipy.stats import gaussian_kde
+
+def plot_posterior_panel(fig, gs_outer, samples, title):
+    inner = gs_outer.subgridspec(2, 2, width_ratios=[4, 1.0],
+                                 height_ratios=[1.0, 4],
+                                 wspace=0.04, hspace=0.04)
+    ax     = fig.add_subplot(inner[1, 0])
+    ax_top = fig.add_subplot(inner[0, 0], sharex=ax)
+    ax_rgt = fig.add_subplot(inner[1, 1], sharey=ax)
+
+    # loss heatmap as faded background
+    ax.imshow(
+        loss_grid.values,
+        cmap="cividis_r",
+        extent=[G_axis.min(), G_axis.max(), w_axis.min(), w_axis.max()],
+        origin="lower", aspect="auto", interpolation="none", alpha=0.75,
+    )
+
+    G_s = samples["G"]
+    w_s = samples["w"]
+
+    # joint KDE contours
+    kde = gaussian_kde(np.vstack([G_s, w_s]))
+    Gx, Wy = np.meshgrid(np.linspace(G_axis.min(), G_axis.max(), 120),
+                         np.linspace(w_axis.min(), w_axis.max(), 120))
+    dens = kde(np.vstack([Gx.ravel(), Wy.ravel()])).reshape(Gx.shape)
+    ax.contour(Gx, Wy, dens, levels=6, colors="#d62728", linewidths=1.0)
+    ax.scatter(G_s, w_s, s=4, alpha=0.25, color="#d62728", zorder=3)
+
+    ax.set_xlim(G_axis.min(), G_axis.max())
+    ax.set_ylim(w_axis.min(), w_axis.max())
+    ax.set_xlabel("G", fontsize=15)
+    ax.set_ylabel("w", fontsize=15)
+    ax.tick_params(axis="both", labelsize=12)
+
+    # marginals
+    ax_top.hist(G_s, bins=40, color="#d62728", alpha=0.7,
+                range=(G_axis.min(), G_axis.max()))
+    ax_rgt.hist(w_s, bins=40, color="#d62728", alpha=0.7,
+                orientation="horizontal",
+                range=(w_axis.min(), w_axis.max()))
+
+    for a in (ax_top, ax_rgt):
+        a.set_xticks([]); a.set_yticks([])
+        for sp in a.spines.values():
+            sp.set_visible(False)
+    ax_top.set_title(title)
+
+fig = plt.figure(figsize=(13, 5.6))
+outer = fig.add_gridspec(1, 2, wspace=0.18)
+plot_posterior_panel(fig, outer[0, 0], samples_wide,
+                     "HMC (NUTS)  ·  ~4 h")
+plot_posterior_panel(fig, outer[0, 1], samples_svi,
+                     "SVI (MV-Normal guide)  ·  ~12 min")
+savefig("posteriors_compare.png")
+plt.show()
+```

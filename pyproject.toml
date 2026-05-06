@@ -3,8 +3,10 @@ name = "tvb-workshop"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
+    "cma>=4.4.4",
     "ipykernel>=7.2.0",
     "jupyter>=1.1.1",
     "matplotlib>=3.10.9",
     "numpy>=2.4.4",
+    "salib>=1.5.2",
 ]
