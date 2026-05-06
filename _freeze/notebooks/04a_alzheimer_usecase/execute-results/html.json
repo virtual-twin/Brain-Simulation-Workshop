@@ -1,0 +1,12 @@
+{
+  "hash": "532e1ea0d8d3bbe685f9ec376006dc72",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Use-case A — Alzheimer's disease\"\nsubtitle: \"4.1 Parameter exploration and inference\"\njupyter: python3\n---\n\n## Goals\n\n- TODO: integrate biomedical data (e.g. amyloid / tau PET) into a TVB model\n- TODO: run a mechanistic simulation of disease progression\n- TODO: compare healthy vs. patient-specific dynamics\n\n## Setup\n\n::: {#858787b4 .cell execution_count=1}\n``` {.python .cell-code}\n# TODO: imports\n```\n:::\n\n\n## Load patient data\n\n::: {#8e3d0f0a .cell execution_count=2}\n``` {.python .cell-code}\n# TODO: connectome + per-region biomarker maps\n```\n:::\n\n\n## Map biomarkers onto model parameters\n\n::: {#4db25d15 .cell execution_count=3}\n``` {.python .cell-code}\n# TODO: parameterise a region-specific local model\n```\n:::\n\n\n## Simulate and compare\n\n::: {#bfd778e1 .cell execution_count=4}\n``` {.python .cell-code}\n# TODO: run healthy + patient simulations, contrast outputs\n```\n:::\n\n\n## Exercises\n\n- TODO: which biomarker has the strongest effect on global dynamics?\n- TODO: how robust is the result to the chosen mapping?\n\n",
+    "supporting": [
+      "04a_alzheimer_usecase_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

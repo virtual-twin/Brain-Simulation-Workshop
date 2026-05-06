@@ -1,0 +1,12 @@
+{
+  "hash": "450bde9a1c288527f1b29a9a50a0f241",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"2.2 Coupled network dynamics\"\nsubtitle: \"Defining a FAIR brain network model\"\njupyter: python3\n---\n\n## Goals\n\n- TODO: load a connectome\n- TODO: assemble a network simulation with delays and coupling\n- TODO: explore the global coupling parameter\n\n## Setup\n\n::: {#e3f92256 .cell execution_count=1}\n``` {.python .cell-code}\n# TODO: imports\n```\n:::\n\n\n## Load the connectome\n\n::: {#f2e325bb .cell execution_count=2}\n``` {.python .cell-code}\n# TODO: load weights, tract lengths, region labels\n```\n:::\n\n\n## Run a network simulation\n\n::: {#da917fab .cell execution_count=3}\n``` {.python .cell-code}\n# TODO: configure simulator, integrate, collect outputs\n```\n:::\n\n\n## Sweep global coupling\n\n::: {#aac11a8d .cell execution_count=4}\n``` {.python .cell-code}\n# TODO: loop over coupling values, summarise activity\n```\n:::\n\n\n## Exercises\n\n- TODO: identify the coupling regime that maximises FC correlation\n- TODO: swap in a different parcellation\n\n",
+    "supporting": [
+      "02b_coupled_networks_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

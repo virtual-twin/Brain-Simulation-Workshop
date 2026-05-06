@@ -1,0 +1,11 @@
+{
+  "hash": "532e1ea0d8d3bbe685f9ec376006dc72",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Use-case A — Alzheimer's disease\"\nsubtitle: \"4.1 Parameter exploration and inference\"\njupyter: python3\n---\n\n## Goals\n\n- TODO: integrate biomedical data (e.g. amyloid / tau PET) into a TVB model\n- TODO: run a mechanistic simulation of disease progression\n- TODO: compare healthy vs. patient-specific dynamics\n\n## Setup\n\n::: {#2014b82b .cell execution_count=1}\n``` {.python .cell-code}\n# TODO: imports\n```\n:::\n\n\n## Load patient data\n\n::: {#00d2a036 .cell execution_count=2}\n``` {.python .cell-code}\n# TODO: connectome + per-region biomarker maps\n```\n:::\n\n\n## Map biomarkers onto model parameters\n\n::: {#6c9130c6 .cell execution_count=3}\n``` {.python .cell-code}\n# TODO: parameterise a region-specific local model\n```\n:::\n\n\n## Simulate and compare\n\n::: {#bbc9b59c .cell execution_count=4}\n``` {.python .cell-code}\n# TODO: run healthy + patient simulations, contrast outputs\n```\n:::\n\n\n## Exercises\n\n- TODO: which biomarker has the strongest effect on global dynamics?\n- TODO: how robust is the result to the chosen mapping?\n\n---\njupyter:\n  kernelspec:\n    display_name: Python 3 (ipykernel)\n    language: python\n    name: python3\n    path: /Users/leonmartin_bih/projects/TVB-O/tvb-ontology-optim-workshop/.venv/share/jupyter/kernels/python3\n  language_info:\n    codemirror_mode:\n      name: ipython\n      version: 3\n    file_extension: .py\n    mimetype: text/x-python\n    name: python\n    nbconvert_exporter: python\n    pygments_lexer: ipython3\n    version: 3.12.11\n---\n",
+    "supporting": [
+      "04a_alzheimer_usecase_files/figure-ipynb"
+    ],
+    "filters": []
+  }
+}
