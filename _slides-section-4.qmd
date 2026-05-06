@@ -1,5 +1,4 @@
 ---
-title: "4. Parameter exploration and inference"
 format:
   clean-revealjs:
     slide-number: true
