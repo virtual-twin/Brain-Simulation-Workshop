@@ -1,0 +1,37 @@
+/* =========================================================
+   Design tokens – shared color palette & spacing
+   Used across the website (referenced from styles.css)
+   Primary color: #6880af (steel blue)
+   ========================================================= */
+
+:root {
+  /* Brand palette */
+  --c-primary:        #6880af;   /* main brand blue */
+  --c-primary-strong: #4a5d8a;   /* hover / pressed */
+  --c-primary-soft:   #8fa3c8;   /* highlights on dark */
+  --c-accent:         #f2c08c;   /* warm sand – complementary accent */
+  --c-accent-strong:  #e09f5c;
+
+  /* Neutrals */
+  --c-bg:        #0b1020;        /* deep navy background */
+  --c-bg-soft:   #131a2f;
+  --c-surface:   rgba(11, 16, 32, 0.78);
+  --c-surface-2: rgba(255, 255, 255, 0.04);
+  --c-border:    rgba(255, 255, 255, 0.10);
+  --c-border-strong: rgba(255, 255, 255, 0.22);
+
+  /* Text */
+  --c-text:       #e8eaf0;
+  --c-text-muted: rgba(232, 234, 240, 0.72);
+  --c-text-on-primary: #ffffff;
+
+  /* Code */
+  --c-code:       var(--c-accent);
+  --c-code-bg:    rgba(255, 255, 255, 0.06);
+
+  /* Radii & shadows */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-pill: 999px;
+  --shadow-soft: 0 2px 18px rgba(0, 0, 0, 0.45);
+}

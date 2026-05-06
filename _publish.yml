@@ -1,0 +1,4 @@
+- source: project
+  gh-pages:
+    - id: virtual-twin-brain-simulation-workshop
+      url: 'https://virtual-twin.github.io/Brain-Simulation-Workshop/'

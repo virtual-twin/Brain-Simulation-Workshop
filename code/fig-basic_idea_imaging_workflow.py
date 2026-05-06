@@ -157,7 +157,7 @@ for node_id in G.nodes():
 
 view = "horizontal"
 
-fig, ax = plt.subplots(figsize=(10, 10))
+fig, ax = plt.subplots(figsize=(5, 5))
 bsplot.plot_slice(
     bsplot.templates.bigbrain,
     ax=ax,
@@ -167,7 +167,7 @@ bsplot.plot_slice(
     zorder=-1,
 )
 ax.axis("off")
-
+fig.suptitle("MRI", fontsize=30)
 fig.savefig(
     os.path.join(ROOT, "..", "img", "figures", "basic_idea_imaging_workflow1.png"),
     dpi=300,
@@ -177,7 +177,7 @@ fig.savefig(
 
 # %%
 
-fig, ax = plt.subplots(figsize=(10, 10))
+fig, ax = plt.subplots(figsize=(5, 5), layout="compressed")
 
 tractogram_path = (
     "/Users/leonmartin_bih/tools/bsplot/docs/data/dTOR_10K_sample_subsampled_10k.tck"
@@ -204,16 +204,21 @@ bsplot.streamlines.plot_tractogram(
 )
 
 ax.axis("off")
+fig.suptitle(
+    "Tractography",
+    fontsize=30,
+)
+
 fig.savefig(
     os.path.join(ROOT, "..", "img", "figures", "basic_idea_imaging_workflow2.png"),
     dpi=300,
     bbox_inches="tight",
-    )
+)
 
 
 # %%
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(5, 5), layout="compressed")
 
 
 bsplot.streamlines.plot_tractogram(
@@ -248,6 +253,10 @@ bsplot.plot_slice(
 )
 
 ax.axis("off")
+fig.suptitle(
+    "Parcellation",
+    fontsize=30,
+)
 fig.savefig(
     os.path.join(ROOT, "..", "img", "figures", "basic_idea_imaging_workflow3.png"),
     dpi=300,
@@ -255,7 +264,7 @@ fig.savefig(
 )
 
 
-fig, ax = plt.subplots(layout="compressed", figsize=(3, 3))
+fig, ax = plt.subplots(figsize=(5, 5), layout="compressed")
 
 view = "top"
 _, _, mappables = plot_network_on_surface(
@@ -289,6 +298,10 @@ bsplot.plot_slice(
     zorder=-1,
 )
 ax.axis("off")
+fig.suptitle(
+    "Network",
+    fontsize=30,
+)
 fig.savefig(
     os.path.join(ROOT, "..", "img", "figures", "basic_idea_imaging_workflow4.png"),
     dpi=300,
