@@ -90,117 +90,15 @@ body.workshop-home-page #quarto-content {
   line-height: 1.6;
 }
 
-.workshop-hero__meta,
-.workshop-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.workshop-hero__meta {
-  margin-top: 1.75rem;
-}
-
 .workshop-hero__pill {
-  display: inline-block;
-  padding: 0.32rem 0.75rem;
+  padding: 0.45rem 0.8rem;
   border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: var(--r-pill);
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.92);
   background: rgba(255, 255, 255, 0.08);
 }
 
-.workshop-actions {
-  margin-top: 2rem;
-}
-
-.workshop-action {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.72rem 1.1rem;
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  border-radius: var(--r-sm);
-  color: #fff;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.workshop-action:hover,
-.workshop-action:focus {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.16);
-}
-
-.workshop-action--primary {
-  background: #fff;
-  border-color: #fff;
-  color: #22304f;
-}
-
-.workshop-action--primary:hover,
-.workshop-action--primary:focus {
-  color: #22304f;
-  background: rgba(255, 255, 255, 0.9);
-}
-
-.home-section {
+.container-lg {
   max-width: 1120px;
-  margin: 0 auto 3rem;
-  padding: 0 1rem;
-}
-
-.home-section h2 {
-  margin: 0 0 1rem;
-}
-
-.home-pillars,
-.home-pathways {
-  display: grid;
-  gap: 1.25rem;
-  margin-top: 1.25rem;
-}
-
-.home-pillars {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.home-pathways {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.home-pillar,
-.home-pathway {
-  padding: 1.15rem 1.2rem;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--r-sm);
-  background: #fff;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-}
-
-.home-pillar h3,
-.home-pathway h4 {
-  margin: 0 0 0.45rem;
-  color: inherit;
-}
-
-.home-pathway__number {
-  display: inline-block;
-  margin-bottom: 0.35rem;
-  color: var(--c-primary-strong);
-  font-weight: 700;
-  font-size: 0.82rem;
-  letter-spacing: 0.08em;
-}
-
-.home-pathway p {
-  margin: 0;
-}
-
-@media (max-width: 991px) {
-  .home-pillars,
-  .home-pathways {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 860px) {
@@ -220,10 +118,5 @@ body.workshop-home-page #quarto-content {
     inset: 0 -24% 0 30%;
     width: 82%;
     transform: translateX(12%) scale(1.08);
-  }
-
-  .home-pillars,
-  .home-pathways {
-    grid-template-columns: 1fr;
   }
 }

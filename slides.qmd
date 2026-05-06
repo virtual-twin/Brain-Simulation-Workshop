@@ -11,6 +11,8 @@ affiliations:
 date: 2026-05-12
 format:
   clean-revealjs:
+    dpi: 500
+    fig-dpi: 500
     slide-number: true
     scrollable: false
     auto-stretch: true
@@ -224,6 +226,39 @@ $$
 
 ## Network dynamics
 
+```{python}
+from tvbo import Network
+net = Network.from_string("""
+label: Visual Pathway
+
+nodes:
+  - {id: 0, label: V1}
+  - {id: 1, label: V2}
+  - {id: 2, label: MT}
+
+edges:
+  - source: 0
+    target: 1
+    parameters:
+      weight:
+        value: 0.7
+  - source: 1
+    target: 2
+    parameters:
+      weight:
+        value: 0.4
+  - source: 0
+    target: 2
+    parameters:
+      weight:
+        value: 0.2
+""")
+
+net.plot_overview()
+```
+
+##
+
 :::: {.columns}
 
 ::: {.column width=30%}
@@ -261,8 +296,9 @@ $$
 
 ## Why FAIR? TVB-O in one slide
 
-<!-- - TODO: ontology-driven model specification [@Martin2025]
-- TODO: metadata + automated code generation -->
+![](img/tvbo/tvbo-network-insets.png)
+
+## Why FAIR? TVB-O in one slide
 
 ```{=html}
 <style>
@@ -416,7 +452,6 @@ $$
   </div>
 </div>
 ```
-
 
 ## Applications in basic research
 
@@ -578,13 +613,24 @@ TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany networ
 - TODO: what to remember from Day 1
 - TODO: where to go next
 
-## Thanks & contact
+## Thanks & contact {.r-fit-text}
 
-- TODO: contact info
-- TODO: feedback link
+::::{.rows}
 
+:::{.row}
+![Your Feedback](img/survey_qr.png){fig-align=center height=200px}
+:::
+
+:::{.row}
+Contact
+:::
+
+:::{.row}
 | ![](img/Charite.png){fig-alt="Charite logo" width=30%} | ![](img/BIH.png){fig-alt="BIH logo" width=30%} | ![](img/BSS.png){fig-alt="BSS logo" width=30%} |
 |:---:|:---:|:---:|
+:::
+
+::::
 
 ## References {.unnumbered}
 

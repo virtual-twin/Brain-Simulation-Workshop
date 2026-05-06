@@ -25,22 +25,22 @@ Personalized brain network modeling with The Virtual Brain, ontology-driven
 model specification, and gradient-based optimization.
 :::
 
-::: {.workshop-hero__meta aria-label="Workshop details"}
-[12-13 May 2026]{.workshop-hero__pill}
-[Karolinska Institutet, Stockholm]{.workshop-hero__pill}
-[Widerströmska huset]{.workshop-hero__pill}
+::: {.workshop-hero__meta .d-flex .flex-wrap .gap-2 .mt-4 aria-label="Workshop details"}
+[12-13 May 2026]{.workshop-hero__pill .badge .rounded-pill}
+[Karolinska Institutet, Stockholm]{.workshop-hero__pill .badge .rounded-pill}
+[Widerströmska huset]{.workshop-hero__pill .badge .rounded-pill}
 :::
 
-::: {.workshop-actions}
-[Start Setup](setup.qmd){.workshop-action .workshop-action--primary}
-[Open Slides](slides.qmd){.workshop-action}
-[View Agenda](agenda/agenda.qmd){.workshop-action}
-[Notebooks](notebooks/1_introduction.qmd){.workshop-action}
+::: {.workshop-actions .d-flex .flex-wrap .gap-3 .mt-4}
+[Start Setup](setup.qmd){.btn .btn-light .btn-lg}
+[Open Slides](slides.qmd){.btn .btn-outline-light .btn-lg}
+[View Agenda](agenda/agenda.qmd){.btn .btn-outline-light .btn-lg}
+[Notebooks](notebooks/1_introduction.qmd){.btn .btn-outline-light .btn-lg}
 :::
 :::
 :::
 
-::: {.home-section}
+::: {.container-lg .mb-5}
 ## About
 
 Track 4 of the **FAIR Brain Data Science Bootcamp 2026** — a joint event by
@@ -59,58 +59,120 @@ gradient-based optimization
 ([TVB-Optim](https://virtual-twin.github.io/tvboptim))
 [@Martin2025; @Pille2025].
 
-::: {.home-pillars}
-::: {.home-pillar}
-### Network structure
+::: {.row .g-4 .mt-1}
+::: {.col-12 .col-md-6 .col-xl-4}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+### TVB foundations
 
-Brain regions, tractography, surface geometry, and anatomical constraints.
-:::
-
-::: {.home-pillar}
-### Model dynamics
-
-Neural mass equations, coupling functions, integration, and observations.
-:::
-
-::: {.home-pillar}
-### Optimization loop
-
-Simulation targets, differentiable workflows, and parameter fitting.
+Whole-brain network modeling concepts, coupled ODE/SDE systems, neural masses,
+and basic and clinical applications.
 :::
 :::
 :::
 
-::: {.home-section}
+::: {.col-12 .col-md-6 .col-xl-4}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+### FAIR model building
+
+Use TVB-O to describe parameters, state variables, equations, coupling,
+integration, observations, and execution metadata.
+:::
+:::
+:::
+
+::: {.col-12 .col-md-6 .col-xl-4}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+### Network simulation
+
+Load connectomes, assemble delayed coupling, run single-node and whole-brain
+simulations, and sweep global coupling regimes.
+:::
+:::
+:::
+
+::: {.col-12 .col-md-6 .col-xl-4}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+### Regime maps
+
+Read phase planes, stability, bifurcations, and numerical continuation diagrams
+to choose biologically plausible operating points.
+:::
+:::
+:::
+
+::: {.col-12 .col-md-6 .col-xl-4}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+### Parameter inference
+
+Compare grid, random, CMA-ES, gradient, and Bayesian strategies for fitting
+homogeneous and regional model parameters.
+:::
+:::
+:::
+
+::: {.col-12 .col-md-6 .col-xl-4}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+### Translation and stimulation
+
+Build Alzheimer and biomarker-driven use cases, simulate visual and TMS inputs,
+and carry the workflow into Day 2 research questions.
+:::
+:::
+:::
+:::
+:::
+
+::: {.container-lg .mb-5}
 ## Program
 
-::: {.home-pathways}
-::: {.home-pathway}
-[01]{.home-pathway__number}
+::: {.row .g-4 .mt-1}
+::: {.col-12 .col-md-6 .col-xl-3}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+[01]{.text-primary .fw-bold .small}
 
 #### [Setup](setup.qmd)
 
 Install `uv`, `tvb`, `tvbo`, and `tvboptim`. Verify the environment before
 day one.
 :::
+:::
+:::
 
-::: {.home-pathway}
-[02]{.home-pathway__number}
+::: {.col-12 .col-md-6 .col-xl-3}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+[02]{.text-primary .fw-bold .small}
 
 #### [Agenda](agenda/agenda.qmd)
 
 Two-day program: lectures, hands-on sessions, and a mini hackathon.
 :::
+:::
+:::
 
-::: {.home-pathway}
-[03]{.home-pathway__number}
+::: {.col-12 .col-md-6 .col-xl-3}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+[03]{.text-primary .fw-bold .small}
 
 #### [Slides](slides.qmd)
 
 RevealJS slides used in the live sessions.
 :::
+:::
+:::
 
-::: {.home-pathway}
-[04]{.home-pathway__number}
+::: {.col-12 .col-md-6 .col-xl-3}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+[04]{.text-primary .fw-bold .small}
 
 #### [Notebooks](notebooks/1_introduction.qmd)
 
@@ -119,8 +181,10 @@ and stimulation.
 :::
 :::
 :::
+:::
+:::
 
-::: {.home-section}
+::: {.container-lg .mb-5}
 ## Quick start
 
 ```bash
@@ -131,7 +195,7 @@ uv pip install tvb tvbo tvboptim
 Source code: <https://github.com/virtual-twin/Brain-Simulation-Workshop>.
 :::
 
-::: {.home-section}
+::: {.container-lg .mb-5}
 ## References {.unnumbered}
 
 ::: {#refs}
