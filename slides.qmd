@@ -279,6 +279,7 @@ net.plot_overview()
 - TODO: global coupling sweep
 :::
 
+
 ::::
 
 ## Coupling
