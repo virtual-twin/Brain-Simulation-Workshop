@@ -25,9 +25,9 @@ jobs:
       - run: pip install jupyter ipykernel matplotlib numpy
 
       - name: Render and Publish
-        uses: quarto-dev/quarto-actions/publish@v2
-        with:
-          target: gh-pages
-          site-id: virtual-twin-brain-simulation-workshop
+        run: |
+          git config --global user.email "quarto-github-actions-publish@example.com"
+          git config --global user.name "Quarto GitHub Actions"
+          quarto publish gh-pages --no-prompt --id virtual-twin-brain-simulation-workshop
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
