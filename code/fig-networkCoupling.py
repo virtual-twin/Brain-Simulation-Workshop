@@ -81,5 +81,5 @@ ani.save('/Users/leonmartin_bih/projects/TVB-O/tvb-ontology-optim-workshop/img/v
 
 exp.network.coupling['I'].parameters['K'].value = 0
 result_uncoupled = exp.run('tvboptim')
-ani_uncoupled = result_uncoupled.sel(variable='activity').animate()
+ani_uncoupled = result_uncoupled.sel(variable='activity').animate(edge_color='white')
 ani_uncoupled.save('/Users/leonmartin_bih/projects/TVB-O/tvb-ontology-optim-workshop/img/videos/NetworkDynamics/uncoupled_kuramoto.gif')

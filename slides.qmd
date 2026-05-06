@@ -257,6 +257,14 @@ edges:
 net.plot_overview()
 ```
 
+## Uncoupled system
+
+![](img/videos/NetworkDynamics/uncoupled_kuramoto.gif)
+
+## Coupled system
+
+![](img/videos/NetworkDynamics/coupled_kuramoto.gif)
+
 ##
 
 :::: {.columns}
