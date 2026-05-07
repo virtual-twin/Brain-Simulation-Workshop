@@ -286,6 +286,12 @@ def _simulate_via_experiment(dyn, duration, dt=0.01, initial_values=None):
     for name, value in initial_values.items():
       model.state_variables[name].initial_value = float(value)
 
+  # These workshop examples are didactic linear systems. Keep domain bounds
+  # for plotting extents, but do not let the simulation backend treat them as
+  # hard state bounds, otherwise unstable saddles get artificially clipped.
+  for sv in model.state_variables.values():
+    sv.domain = None
+
   init_map = {
     name: float(sv.initial_value) if sv.initial_value is not None else 0.0
     for name, sv in model.state_variables.items()
@@ -294,7 +300,7 @@ def _simulate_via_experiment(dyn, duration, dt=0.01, initial_values=None):
   exp = SimulationExperiment(dynamics=model)
   exp.integration.duration = duration
   exp.integration.step_size = dt
-  res = exp.run().integration
+  res = exp.run("tvboptim").integration
 
   time = np.asarray(res.time, dtype=float)
   series = {
@@ -308,6 +314,37 @@ def _simulate_via_experiment(dyn, duration, dt=0.01, initial_values=None):
       series[name] = np.r_[value, series[name]]
 
   return time, series
+
+
+def _sample_initial_values(dyn, n_trials=5, seed=0, shrink=0.9):
+  """Sample initial conditions from state-variable domains."""
+  rng = np.random.default_rng(seed)
+  trials = []
+  for _ in range(n_trials):
+    trial = {}
+    for name, sv in dyn.state_variables.items():
+      if getattr(sv, "domain", None) and sv.domain.lo is not None and sv.domain.hi is not None:
+        lo = float(sv.domain.lo)
+        hi = float(sv.domain.hi)
+      else:
+        value = float(sv.initial_value) if sv.initial_value is not None else 0.0
+        lo, hi = value - 1.0, value + 1.0
+      mid = 0.5 * (lo + hi)
+      half = 0.5 * (hi - lo) * shrink
+      trial[name] = rng.uniform(mid - half, mid + half) if half > 0 else mid
+    trials.append(trial)
+  return trials
+
+
+def _simulate_trials_via_experiment(dyn, duration, dt=0.01, n_trials=5, seed=0, initial_values_list=None):
+  """Run multiple experiment-backed trials from sampled initial conditions."""
+  if initial_values_list is None:
+    initial_values_list = _sample_initial_values(dyn, n_trials=n_trials, seed=seed)
+  runs = []
+  for initial_values in initial_values_list:
+    time, series = _simulate_via_experiment(dyn, duration=duration, dt=dt, initial_values=initial_values)
+    runs.append({"time": time, "series": series, "initial_values": initial_values})
+  return runs
 
 
 def _bif(dyn_yaml, cont_yaml):
