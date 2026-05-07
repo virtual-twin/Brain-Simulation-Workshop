@@ -134,6 +134,7 @@
     }
     .reveal .slide:not(.center) {
       height: 100%;
+      overflow-y: auto;
     }
     .reveal .slide.scrollable {
       overflow-y: auto;
@@ -312,8 +313,8 @@ Plotting the Brain</p>
 </section>
 <section id="basic-ideas-and-history" class="slide level2">
 <h2>Basic ideas and history</h2>
-<div class="basic-ideas-rows">
-<div class="basic-ideas-row" style="--row-height: 70%;">
+<div class="rows">
+<div class="row" height="70%">
 <div class="columns">
 <div class="column" style="width:25%;">
 <p><img data-src="img/figures/basic_idea_imaging_workflow1.png"></p>
@@ -325,7 +326,7 @@ Plotting the Brain</p>
 <p><img data-src="img/figures/basic_idea_imaging_workflow4.png"></p>
 </div></div>
 </div>
-<div class="basic-ideas-row fragment" style="--row-height: 90%;">
+<div class="row fragment" height="30%">
 <div class="columns">
 <div class="column">
 <p><img data-src="img/state_evolution_node.png"></p>
@@ -837,6 +838,12 @@ C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij
 </section>
 <section id="applications-in-basic-research" class="slide level2">
 <h2>Applications in basic research</h2>
+<div class="columns">
+<div class="column">
+
+</div><div class="column">
+
+</div></div>
 <ul>
 <li>TODO: representative findings</li>
 <li>TODO: links to <span class="citation" data-cites="Schirner2023 Koller2024 Kashyap2025">(<a href="#/references" role="doc-biblioref" onclick="">Schirner, Deco, and Ritter 2023</a>; <a href="#/references" role="doc-biblioref" onclick="">Koller, Schirner, and Ritter 2024</a>; <a href="#/references" role="doc-biblioref" onclick="">Kashyap et al. 2025</a>)</span></li>
@@ -1056,7 +1063,7 @@ F(x, a)=0,
 <li class="fragment"><span class="math inline">\(\mathcal{L}\)</span>: loss / discrepancy</li>
 </ul>
 </section>
-<section id="what-is-inference-for-brain-models" class="slide level2">
+<section id="what-is-inference-for-brain-models" class="slide level2 scrollable">
 <h2>What is inference for brain models?</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
@@ -1639,7 +1646,7 @@ F(x, a)=0,
 </div>
 </div></div>
 </section>
-<section id="the-tvb-optim-workflow" class="slide level2">
+<section id="the-tvb-optim-workflow" class="slide level2 scrollable">
 <h2>The TVB-Optim workflow</h2>
 <ol type="1">
 <li><strong>Bifurcation map</strong> (§3) → pick a <em>regime</em> of interest</li>
