@@ -9,8 +9,10 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.animation import FuncAnimation
 
 import bsplot
 from tvbo import Dynamics, SimulationExperiment
@@ -21,6 +23,9 @@ ROOT = Path(__file__).resolve().parent
 PROJECT = ROOT.parent
 FIG_DIR = PROJECT / "img" / "figures" / "dynamical_systems"
 PREFIX = "fig-dynamical_systems_springs"
+MEDIA_FIGSIZE = (7.0, 4.5)
+MEDIA_DPI = 180
+PHASE_ICS = [(-2.0, 0.0), (-1.0, 0.015), (2.0, -0.01)]
 
 sys.path.insert(0, str(PROJECT / "notebooks"))
 from spring_animation import animate_spring
@@ -60,21 +65,86 @@ def x_series(result) -> np.ndarray:
     return np.asarray(result.data.sel(variable="x")).ravel()
 
 
+def v_series(result) -> np.ndarray:
+    return np.asarray(result.data.sel(variable="v")).ravel()
+
+
 def save_animation(ani, stem: str, fps: int = 30) -> None:
     out_thumb = FIG_DIR / f"{PREFIX}_{stem}_thumb.png"
     out_mp4 = FIG_DIR / f"{PREFIX}_{stem}.mp4"
     ani._init_draw()
     ani._func(0)
-    ani._fig.savefig(out_thumb, dpi=300, bbox_inches="tight")
+    with mpl.rc_context({"savefig.bbox": "standard"}):
+        ani._fig.savefig(out_thumb, dpi=MEDIA_DPI)
     ani.save(
         str(out_mp4),
         writer="ffmpeg",
         fps=fps,
-        dpi=150,
+        dpi=MEDIA_DPI,
         extra_args=["-vcodec", "libx264", "-pix_fmt", "yuv420p"],
     )
     print(f"Saved -> {out_thumb}")
     print(f"Saved -> {out_mp4}")
+
+
+def make_damped_system() -> Dynamics:
+    system = make_system()
+    system.state_variables["v"]["equation"]["rhs"] = "-(k/m) * x - (c/m) * v + g_eff"
+    system.parameters["c"] = Parameter(name="c", value=0.006)
+    system.parameters["g_eff"] = Parameter(name="g_eff", value=0.00015)
+    return system
+
+
+def run_phase_trajectories(system: Dynamics, initials=PHASE_ICS):
+    results = []
+    for x0, v0 in initials:
+        model = system.copy(deep=True)
+        model.state_variables["x"]["initial_value"] = x0
+        model.state_variables["v"]["initial_value"] = v0
+        results.append(run_system(model))
+    return results
+
+
+def animate_phase_plane(system: Dynamics, results, title: str, equilibrium: tuple[float, float]) -> FuncAnimation:
+    fig, ax = plt.subplots(figsize=MEDIA_FIGSIZE)
+    system.plot(kind="vectorfield", ax=ax, alpha=0.28, grid_n=22, stream=True)
+
+    xs = [x_series(result) for result in results]
+    vs = [v_series(result) for result in results]
+    colors = mpl.rcParams["axes.prop_cycle"].by_key()["color"]
+    frame_idx = np.linspace(0, min(len(x) for x in xs) - 1, 180, dtype=int)
+
+    x_pad = 0.35 * max(max(np.ptp(x) for x in xs), 1.0)
+    v_pad = 0.35 * max(max(np.ptp(v) for v in vs), 0.02)
+    ax.set_xlim(min(float(x.min()) for x in xs) - x_pad, max(float(x.max()) for x in xs) + x_pad)
+    ax.set_ylim(min(float(v.min()) for v in vs) - v_pad, max(float(v.max()) for v in vs) + v_pad)
+    ax.plot(*equilibrium, "o", color="#c85030", ms=8, mec="white", mew=1.2, zorder=12)
+    ax.set_title(title)
+    ax.set_xlabel("x (position)")
+    ax.set_ylabel("v (velocity)")
+
+    lines = []
+    dots = []
+    for idx, (x, v) in enumerate(zip(xs, vs)):
+        color = colors[idx % len(colors)]
+        line, = ax.plot([], [], lw=2.0, color=color, alpha=0.9, zorder=8)
+        dot, = ax.plot([], [], "o", ms=6, color=color, mec="white", mew=0.8, zorder=10)
+        lines.append((line, x, v))
+        dots.append((dot, x, v))
+
+    def update(frame):
+        stop = frame_idx[frame]
+        changed = []
+        for line, x, v in lines:
+            line.set_data(x[:stop + 1], v[:stop + 1])
+            changed.append(line)
+        for dot, x, v in dots:
+            dot.set_data([x[stop]], [v[stop]])
+            changed.append(dot)
+        return changed
+
+    fig.tight_layout()
+    return FuncAnimation(fig, update, frames=len(frame_idx), interval=40, blit=True)
 
 
 def generate_single() -> None:
@@ -90,6 +160,7 @@ def generate_single() -> None:
         mass_sizes=0.3,
         labels=["$x$"],
         titles=["Spring oscillator"],
+        figsize=MEDIA_FIGSIZE,
         n_periods=1,
     )
     save_animation(ani, "single")
@@ -110,13 +181,14 @@ def generate_initial_conditions() -> None:
         mass_sizes=0.4,
         orientation="vertical",
         anchor_pos=3.5,
+        figsize=MEDIA_FIGSIZE,
         n_periods=1,
     )
     save_animation(ani, "ics")
 
 
 def generate_phase_space() -> None:
-    fig, ax = plt.subplots(figsize=(6.0, 5.0))
+    fig, ax = plt.subplots(figsize=MEDIA_FIGSIZE)
 
     for init_x in [0.5, 1.0, 1.5, 2.0]:
         system = make_system()
@@ -128,9 +200,25 @@ def generate_phase_space() -> None:
     ax.set_ylabel("v (velocity)")
     fig.tight_layout()
     out = FIG_DIR / f"{PREFIX}_phase_space.png"
-    fig.savefig(out, dpi=500, bbox_inches="tight")
+    with mpl.rc_context({"savefig.bbox": "standard"}):
+        fig.savefig(out, dpi=MEDIA_DPI)
     plt.close(fig)
     print(f"Saved -> {out}")
+
+
+def generate_phase_animation() -> None:
+    system = make_system()
+    results = run_phase_trajectories(system)
+    ani = animate_phase_plane(system, results, "Spring oscillator phase plane", (0.0, 0.0))
+    save_animation(ani, "phase_plane")
+
+
+def generate_damped_phase_animation() -> None:
+    system = make_damped_system()
+    results = run_phase_trajectories(system)
+    x_eq = system.parameters["m"]["value"] * system.parameters["g_eff"]["value"] / system.parameters["k"]["value"]
+    ani = animate_phase_plane(system, results, "Damped oscillator phase plane", (x_eq, 0.0))
+    save_animation(ani, "realism_phase_plane")
 
 
 def generate_mass() -> None:
@@ -157,6 +245,7 @@ def generate_mass() -> None:
         mass_sizes=sizes,
         orientation="vertical",
         anchor_pos=3.5,
+        figsize=MEDIA_FIGSIZE,
         n_periods=1,
     )
     save_animation(ani, "mass")
@@ -164,10 +253,7 @@ def generate_mass() -> None:
 
 def generate_realism() -> None:
     ideal = make_system()
-    realistic = make_system()
-    realistic.state_variables["v"]["equation"]["rhs"] = "-(k/m) * x - (c/m) * v + g_eff"
-    realistic.parameters["c"] = Parameter(name="c", value=0.006)
-    realistic.parameters["g_eff"] = Parameter(name="g_eff", value=0.00015)
+    realistic = make_damped_system()
 
     ideal_result = run_system(ideal)
     realistic_result = run_system(realistic)
@@ -185,6 +271,7 @@ def generate_realism() -> None:
         mass_sizes=0.4,
         orientation="vertical",
         anchor_pos=3.5,
+        figsize=MEDIA_FIGSIZE,
         n_periods=3,
     )
     save_animation(ani, "realism")
@@ -194,8 +281,10 @@ def main() -> None:
     generate_single()
     generate_initial_conditions()
     generate_phase_space()
+    generate_phase_animation()
     generate_mass()
     generate_realism()
+    generate_damped_phase_animation()
 
 
 if __name__ == "__main__":
