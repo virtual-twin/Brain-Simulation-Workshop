@@ -153,7 +153,7 @@ for init_x in [0.5, 1.0, 1.5, 2.0]:
 system.plot(kind='vectorfield', ax=ax, alpha=0.3)
 ax.set_xlabel("x (position)")
 ax.set_ylabel("v (velocity)")
-fig.savefig('phase_space.png', dpi=150, bbox_inches='tight')
+fig.savefig('phase_space.png', dpi=500, bbox_inches='tight')
 ```
 
 ## Parameters
