@@ -271,6 +271,45 @@ def save(fig, out, **kw):
     plt.close(fig)
 
 
+def _simulate_via_experiment(dyn, duration, dt=0.01, initial_values=None):
+  """Run a local Dynamics object through SimulationExperiment.run().
+
+  Returns
+  -------
+  time : np.ndarray
+    Time vector with the initial point prepended at t=0.
+  series : dict[str, np.ndarray]
+    One array per state variable, also prepended with the initial value.
+  """
+  model = dyn.copy()
+  if initial_values:
+    for name, value in initial_values.items():
+      model.state_variables[name].initial_value = float(value)
+
+  init_map = {
+    name: float(sv.initial_value) if sv.initial_value is not None else 0.0
+    for name, sv in model.state_variables.items()
+  }
+
+  exp = SimulationExperiment(dynamics=model)
+  exp.integration.duration = duration
+  exp.integration.step_size = dt
+  res = exp.run().integration
+
+  time = np.asarray(res.time, dtype=float)
+  series = {
+    name: np.asarray(res.data.sel(variable=name)).squeeze()
+    for name in model.state_variables
+  }
+
+  if time.size == 0 or time[0] > 0.0:
+    time = np.r_[0.0, time]
+    for name, value in init_map.items():
+      series[name] = np.r_[value, series[name]]
+
+  return time, series
+
+
 def _bif(dyn_yaml, cont_yaml):
     """Run a continuation and return the single Continuation result."""
     dyn = Dynamics.from_string(dyn_yaml)

@@ -539,7 +539,7 @@ regimes as $a$ varies
 
 :::: {.columns}
 
-::: {.column width="30%" .r-fit-text}
+::: {.column width="50%" .r-fit-text}
 $$
 \dot x = a\,x \quad\Rightarrow\quad x(t) = x_0\,e^{a t}
 $$
@@ -565,18 +565,9 @@ $$
 :::
 
 ::: {.column width="50%"}
-![](img/linear_stability.png){width="100%"}
+![](img/figures/bifurcation/fig-linear_system_a1_and_a_minus1.png)
 :::
 
-::: {.column width=10%}
-
-- $\lambda=a$: growth rate
-- $a < 0$: decay
-- $a = 0$: marginal
-- $a > 0$: growth
-- **change point:** $\lambda=a=0$
-
-:::
 
 ::::
 
