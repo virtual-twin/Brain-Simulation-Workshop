@@ -288,85 +288,133 @@
   {
     "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html",
     "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html",
-    "title": "Dynamical Systems — A Spring-Mass Example",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
     "section": "",
-    "text": "import bsplot\nfrom IPython.display import Markdown, HTML",
+    "text": "import bsplot\nimport matplotlib.pyplot as plt\nimport numpy as np\nfrom IPython.display import Markdown\n\nfrom tvbo import Dynamics, SimulationExperiment\nfrom tvbo.datamodel.schema import Parameter\n\nbsplot.style.use(\"tvbo\")",
     "crumbs": [
       "Setup",
       "1.1 Mathematical Framework",
-      "Dynamical Systems — A Spring-Mass Example"
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
     ]
   },
   {
-    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#the-spring-equation",
-    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#the-spring-equation",
-    "title": "Dynamical Systems — A Spring-Mass Example",
-    "section": "1.1 The Spring Equation",
-    "text": "1.1 The Spring Equation\nA mass \\(m\\) attached to a spring with stiffness \\(k\\) satisfies Newton’s second law:\n\\[m\\,\\ddot{x} = -k\\,x\\]\nRewriting as a first-order system (the standard form for any ODE solver):\n\\[\\dot{x} = v \\qquad \\dot{v} = -\\frac{k}{m}\\,x\\]\nThis is a DynamicalSystem: a set of state variables \\((x, v)\\) with equations of motion, and parameters \\((k, m)\\) that control the behaviour. Below we define it using the TVBO framework.\n\nfrom tvbo import Dynamics as DynamicalSystem\nfrom tvbo import SimulationExperiment\n\nbsplot.style.use('tvbo')\n\nsystem = DynamicalSystem(\n    name=\"SpringMass\",\n    state_variables=[\n        {\n            \"name\": \"x\",\n            \"equation\": {\"rhs\": \"v\"},\n            \"initial_value\": 2.0,\n        },\n        {\n            \"name\": \"v\",\n            \"equation\": {\"rhs\": \"-(k/m) * x\"},\n            \"initial_value\": 0.0,\n        },\n    ],\n    parameters=[\n        {\"name\": \"k\", \"value\": 0.0001},\n        {\"name\": \"m\", \"value\": 1.0},\n    ],\n)\n\nMarkdown(system.render('markdown'))\n\n1.2 SpringMass\n\n1.2.1 State Equations\n\\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k*x}{m}\n\\]\n\n\n1.2.2 State Variables\n\n\n\nVariable\nInitial Value\nUnit\nDescription\n\n\n\n\n\\(x\\)\n2.0\n—\n\n\n\n\\(v\\)\n0.0\n—\n\n\n\n\n\n\n1.2.3 Parameters\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n—\n\n\n\n\\(m\\)\n1.0\n—",
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#learning-path",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#learning-path",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.1 Learning Path",
+    "text": "1.1 Learning Path\n\nDefine a system as a TVBO Dynamics object.\nRun it through a SimulationExperiment.\nRead results with named xarray dimensions.\nCompare initial conditions as different trajectories in the same flow.\nUse phase space to see the geometry of the dynamics.\nVary parameters and inspect how the behavior changes.\nAdd damping and load terms to move from a toy model toward realism.\nConnect this toy example to neural mass models, networks, events, observations, and bifurcations.\n\nThe didactic arc follows the standard dynamical-systems progression: state space and flows, fixed points and stability, parameter-dependent behavior, and then richer systems. That is the same conceptual route used in Strogatz-style nonlinear dynamics and in Izhikevich-style phase-plane neuroscience, but the examples below use TVBO objects throughout.",
     "crumbs": [
       "Setup",
       "1.1 Mathematical Framework",
-      "Dynamical Systems — A Spring-Mass Example"
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
     ]
   },
   {
-    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#springmass",
-    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#springmass",
-    "title": "Dynamical Systems — A Spring-Mass Example",
-    "section": "1.2 SpringMass",
-    "text": "1.2 SpringMass\n\n1.2.1 State Equations\n\\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k*x}{m}\n\\]\n\n\n1.2.2 State Variables\n\n\n\nVariable\nInitial Value\nUnit\nDescription\n\n\n\n\n\\(x\\)\n2.0\n—\n\n\n\n\\(v\\)\n0.0\n—\n\n\n\n\n\n\n1.2.3 Parameters\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n—\n\n\n\n\\(m\\)\n1.0\n—",
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#from-a-second-order-equation-to-tvbo",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#from-a-second-order-equation-to-tvbo",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.2 From a Second-Order Equation to TVBO",
+    "text": "1.2 From a Second-Order Equation to TVBO\nA mass \\(m\\) attached to a spring with stiffness \\(k\\) satisfies\n\\[\nm\\ddot{x} = -kx.\n\\]\nNumerical ODE solvers work with first-order systems, so we introduce velocity \\(v = \\dot{x}\\):\n\\[\n\\dot{x} = v, \\qquad \\dot{v} = -\\frac{k}{m}x.\n\\]\nIn TVBO, these become state variables and parameters. State variables evolve over time. Parameters are fixed during one simulation unless we explicitly explore them.\n\ndef make_spring(x0=2.0, v0=0.0, k=0.0001, m=1.0):\n    return Dynamics(\n        name=\"SpringMass\",\n        description=\"Undamped spring-mass oscillator in first-order form.\",\n        state_variables={\n            \"x\": {\n                \"description\": \"Displacement from equilibrium\",\n                \"unit\": \"m\",\n                \"equation\": {\"rhs\": \"v\"},\n                \"initial_value\": x0,\n            },\n            \"v\": {\n                \"description\": \"Velocity\",\n                \"unit\": \"m/ms\",\n                \"equation\": {\"rhs\": \"-(k/m) * x\"},\n                \"initial_value\": v0,\n            },\n        },\n        parameters={\n            \"k\": {\n                \"description\": \"Spring stiffness\",\n                \"unit\": \"kg/ms^2\",\n                \"value\": k,\n            },\n            \"m\": {\n                \"description\": \"Mass\",\n                \"unit\": \"kg\",\n                \"value\": m,\n            },\n        },\n    )\n\n\nspring = make_spring()\nMarkdown(spring.render(\"markdown\"))\n\nSpringMass\nUndamped spring-mass oscillator in first-order form.\nautonomous: True; modes: 1; state variables: 2; parameters: 2.\nState Equations\n\\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k*x}{m}\n\\]\nState Variables\n\n\n\n\n\n\n\n\n\n\n\n\nVariable\nInitial Value\nUnit\nEquation\nDomain / Sampling\nFlags\nDescription\n\n\n\n\n\\(x\\)\n2.0\n\\(\\mathrm{m}\\)\ndifferential (order 1)\n—\nVOI, recorded\nDisplacement from equilibrium\n\n\n\\(v\\)\n0.0\n\\(\\frac{\\mathrm{m}}{\\mathrm{s}}\\)\ndifferential (order 1)\n—\nVOI, recorded\nVelocity\n\n\n\nParameters\n\n\n\n\n\n\n\n\n\n\n\n\nParameter\nValue\nDefault\nUnit\nDomain / Sampling\nFlags\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n—\n\\(\\frac{\\mathrm{N}}{\\mathrm{m}}\\)\n—\n—\nSpring stiffness\n\n\n\\(m\\)\n1.0\n—\n\\(\\mathrm{kg}\\)\n—\n—\nMass",
     "crumbs": [
       "Setup",
       "1.1 Mathematical Framework",
-      "Dynamical Systems — A Spring-Mass Example"
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
     ]
   },
   {
-    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#initial-conditions",
-    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#initial-conditions",
-    "title": "Dynamical Systems — A Spring-Mass Example",
-    "section": "1.3 Initial Conditions",
-    "text": "1.3 Initial Conditions\nTo actually run the system we must pick a starting point \\((x_0, v_0)\\) — the initial condition.\n\nThink of it as placing the mass at position \\(x_0\\) and releasing it from rest (\\(v_0 = 0\\)).\n\nThe initial condition determines which trajectory the system follows, but not the overall dynamics — that is governed by the parameters.\n\nsystem.state_variables['x']['initial_value'] = 2.0\nresult = SimulationExperiment(dynamics=system).run()\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n\n\nimport sys, os\nsys.path.insert(0, os.path.abspath('..'))  # make notebooks/ importable\nfrom spring_animation import animate_spring\nimport numpy as np\n\nFIG_DIR = os.path.join(\"..\", \"..\", \"img\", \"figures\", \"spring\")\nos.makedirs(FIG_DIR, exist_ok=True)\n\ndef save_animation_video(ani, stem, fps=30):\n    output_stem = os.path.join(FIG_DIR, stem)\n    # Static thumbnail: draw first real frame (frame index 0)\n    ani._init_draw()   # sets up blit state\n    ani._func(0)       # calls update(0) → places spring + mass at initial position\n    ani._fig.savefig(f\"{output_stem}_thumb.png\", bbox_inches=\"tight\")\n    ani.save(f\"{output_stem}.gif\", writer=\"pillow\", fps=fps)\n\nx_ts = np.asarray(result.data.sel({\"variable\": \"x\"})).ravel()\n\nani = animate_spring(\n    [x_ts],\n    orientation=\"horizontal\",\n    anchor_pos=-3.0,\n    coil_amplitude=0.15,\n    mass_sizes=0.3,\n    labels=[\"$x$\"],\n    titles=[\"Spring oscillator\"],\n    n_periods=1,\n)\nsave_animation_video(ani, 'spring_single', fps=30)\n\n\n\n1.3.1 Varying initial conditions\nSame spring (\\(k\\) and \\(m\\) fixed), three different release positions \\(x_0\\).\nNotice: bigger stretch → larger amplitude, same frequency. The frequency \\(\\omega = \\sqrt{k/m}\\) depends only on the parameters, not on where you start.\n\nimport numpy as np\nfrom spring_animation import animate_spring\n\n# --- 3 initial conditions, same k and m ---\ninit_xs = [-1.0, -2.0, -3.0]\n\nresults_multi = []\nfor x0 in init_xs:\n    system.state_variables['x']['initial_value'] = x0\n    results_multi.append(SimulationExperiment(dynamics=system).run())\n\nts_arrays = [np.asarray(r.data.sel({\"variable\": \"x\"})).ravel() for r in results_multi]\n\nani = animate_spring(\n    ts_arrays,\n    labels=[f'$x_0={x0}$' for x0 in init_xs],\n    titles=[f'$x_0 = {x0}$' for x0 in init_xs],\n    mass_sizes=0.4,\n    orientation=\"vertical\",\n    anchor_pos=3.5,\n    n_periods=1,\n)\nsave_animation_video(ani, 'spring_ics', fps=30)\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================",
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#run-a-simulation-experiment",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#run-a-simulation-experiment",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.3 Run a Simulation Experiment",
+    "text": "1.3 Run a Simulation Experiment\nTVBO separates the model from the experiment. A Dynamics object describes the equations; a SimulationExperiment says how to run them.\n\ndef run_dynamics(dynamics, duration=900.0, step_size=1.0):\n    experiment = SimulationExperiment(dynamics=dynamics)\n    experiment.integration.duration = duration\n    experiment.integration.step_size = step_size\n    return experiment.run()\n\n\ndef run_spring(x0=2.0, v0=0.0, k=0.0001, m=1.0, duration=900.0, step_size=1.0):\n    return run_dynamics(make_spring(x0=x0, v0=v0, k=k, m=m), duration=duration, step_size=step_size)\n\n\ndef series(result, variable):\n    return result.integration.data.sel(variable=variable).squeeze(drop=True)\n\n\ndef plot_series(result, variable=\"x\", ax=None, label=None, **kwargs):\n    if ax is None:\n        _, ax = plt.subplots(figsize=(6, 3.2))\n    data = series(result, variable)\n    ax.plot(data.coords[\"time\"].to_numpy(), data.to_numpy(), label=label or variable, **kwargs)\n    return ax\n\n\nresult = run_spring()\nresult.integration.data\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 900.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n&lt;xarray.DataArray (time: 900, variable: 2)&gt; Size: 14kB\narray([[ 1.99990000e+00, -2.00000000e-04],\n       [ 1.99960001e+00, -3.99980000e-04],\n       [ 1.99910004e+00, -5.99920002e-04],\n       ...,\n       [-1.80554324e+00, -8.60245663e-03],\n       [-1.81405542e+00, -8.42147219e-03],\n       [-1.82238619e+00, -8.23964557e-03]], shape=(900, 2))\nCoordinates:\n  * time      (time) float64 7kB 1.0 2.0 3.0 4.0 5.0 ... 897.0 898.0 899.0 900.0\n  * variable  (variable) &lt;U1 8B 'x' 'v'xarray.DataArraytime: 900variable: 22.0 -0.0002 2.0 -0.0004 1.999 ... -1.814 -0.008421 -1.822 -0.00824array([[ 1.99990000e+00, -2.00000000e-04],\n       [ 1.99960001e+00, -3.99980000e-04],\n       [ 1.99910004e+00, -5.99920002e-04],\n       ...,\n       [-1.80554324e+00, -8.60245663e-03],\n       [-1.81405542e+00, -8.42147219e-03],\n       [-1.82238619e+00, -8.23964557e-03]], shape=(900, 2))Coordinates: (2)time(time)float641.0 2.0 3.0 ... 898.0 899.0 900.0array([  1.,   2.,   3., ..., 898., 899., 900.], shape=(900,))variable(variable)&lt;U1'x' 'v'array(['x', 'v'], dtype='&lt;U1')\n\n\nThe result mirrors the experiment structure. The main simulation output is result.integration.data, an xarray DataArray with named coordinates such as time and variable. This matches the TVBO results documentation: use named dimensions instead of positional array indexing.\n\nfig, ax = plt.subplots(figsize=(6, 3.2))\nplot_series(result, \"x\", ax=ax, label=\"$x(t)$\", color=\"C0\")\nax.axhline(0.0, color=\"0.4\", lw=0.8, ls=\"--\")\nax.set(xlabel=\"Time\", ylabel=\"Displacement $x$\", title=\"Spring displacement over time\")\nax.legend(handlelength=1)\nfig.tight_layout()\nfig",
     "crumbs": [
       "Setup",
       "1.1 Mathematical Framework",
-      "Dynamical Systems — A Spring-Mass Example"
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
     ]
   },
   {
-    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#phase-space",
-    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#phase-space",
-    "title": "Dynamical Systems — A Spring-Mass Example",
-    "section": "1.4 Phase Space",
-    "text": "1.4 Phase Space\nYou just watched three separate time series. Phase space is a more compact way to show all of them at once: instead of plotting \\(x\\) vs. time, we plot \\(x\\) (position) vs. \\(v\\) (velocity) for every moment simultaneously.\n\nEach closed curve is one trajectory — the system endlessly traces the same loop (energy is conserved).\nLarger loops correspond to larger initial displacements \\(x_0\\) (more energy).\nThe arrows (vector field) show the direction of motion everywhere, independent of any particular trajectory.\n\n\nimport matplotlib.pyplot as plt\n\nfig, ax = plt.subplots()\n\nfor init_x in [0.5, 1.0, 1.5, 2.0]:\n    system.state_variables['x']['initial_value'] = init_x\n    system.plot(kind='phase', ax=ax, cmap='grey_r')\n\nsystem.plot(kind='vectorfield', ax=ax, alpha=0.3)\nax.set_xlabel(\"x (position)\")\nax.set_ylabel(\"v (velocity)\")\nfig.savefig(os.path.join(FIG_DIR, 'phase_space.png'), dpi=500, bbox_inches='tight')",
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#initial-conditions-same-flow-different-trajectories",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#initial-conditions-same-flow-different-trajectories",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.4 Initial Conditions: Same Flow, Different Trajectories",
+    "text": "1.4 Initial Conditions: Same Flow, Different Trajectories\nInitial conditions pick the starting point in state space. They do not change the vector field. This distinction matters later for neural models: changing a state variable’s initial value is not the same as changing a physiological parameter.\nFor the undamped spring, larger initial displacement gives a larger-amplitude orbit, but the frequency remains\n\\[\n\\omega = \\sqrt{\\frac{k}{m}}.\n\\]\n\nfig, ax = plt.subplots(figsize=(6, 3.2))\nfor x0, color in zip([-1.0, -2.0, -3.0], [\"C0\", \"C1\", \"C2\"]):\n    ic_result = run_spring(x0=x0, duration=900.0, step_size=1.0)\n    plot_series(ic_result, \"x\", ax=ax, label=rf\"$x_0={x0}$\", color=color)\n\nax.axhline(0.0, color=\"0.4\", lw=0.8, ls=\"--\")\nax.set(xlabel=\"Time\", ylabel=\"Displacement $x$\", title=\"Initial conditions select trajectories\")\nax.legend(handlelength=1)\nfig.tight_layout()\nfig\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 900.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 900.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 900.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTVBO also supports sampled initial conditions through Distribution objects and trial-based explorations. That is the scalable version used for phase portraits and uncertainty-style simulations in the TVBO initial-conditions guide.",
     "crumbs": [
       "Setup",
       "1.1 Mathematical Framework",
-      "Dynamical Systems — A Spring-Mass Example"
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
     ]
   },
   {
-    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#parameters-1",
-    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#parameters-1",
-    "title": "Dynamical Systems — A Spring-Mass Example",
-    "section": "1.5 Parameters",
-    "text": "1.5 Parameters\nParameters are the knobs of the system. Here we vary the mass \\(m\\) while keeping the spring constant \\(k\\) fixed.\nThe oscillation frequency is:\n\\[\\omega = \\sqrt{\\frac{k}{m}}\\]\nFor the animations below, we start from a stretched state (\\(x_0 &lt; 0\\), below equilibrium) so the first motion is an upward snap-back, which is usually more intuitive to interpret visually.\n\n\n\n\n\n\n\n\n\\(m\\)\n\\(\\omega\\)\nintuition\n\n\n\n\nsmall\nhigh\nlight mass → spring accelerates it quickly → fast oscillation\n\n\nlarge\nlow\nheavy mass → same spring force has less effect → slow oscillation\n\n\n\n\nAnalogy: a stiff guitar string vibrates faster with less tension (more “resistance” slows it down). Heavier mass = more inertia = slower response to the restoring force.\n\nThe box size below encodes mass visually: bigger box = heavier mass.\n\nimport numpy as np\nfrom spring_animation import animate_spring\n\n# --- Same x0 and k, 3 different masses m ---\n# Heavier mass → lower frequency (ω = sqrt(k/m))\n# Box size scales as m^(1/3) so volume ∝ mass\nm_values = [0.5, 1.0, 2.0]\nx0_fixed = -2.0\nk_fixed  = system.parameters['k']['value']\n\nresults_m = []\nfor m in m_values:\n    system.state_variables['x']['initial_value'] = x0_fixed\n    system.state_variables['v']['initial_value'] = 0.0\n    system.parameters['m']['value'] = m\n    results_m.append(SimulationExperiment(dynamics=system).run())\nsystem.parameters['m']['value'] = 1.0  # restore default\n\nts_m   = [np.asarray(r.data.sel({\"variable\": \"x\"})).ravel() for r in results_m]\nsizes  = [0.4 * (m ** (1/3)) for m in m_values]          # cube-root: volume ∝ m\ntitles = [rf'$m={m},\\, \\omega={(k_fixed/m)**0.5:.4f}$' for m in m_values]\n\nani = animate_spring(\n    ts_m,\n    labels=[f'$m={m}$' for m in m_values],\n    titles=titles,\n    mass_sizes=sizes,\n    orientation=\"vertical\",\n    anchor_pos=3.5,\n    n_periods=1,\n)\nsave_animation_video(ani, 'spring_mass', fps=30)\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================",
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#phase-space-the-geometry-of-the-flow",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#phase-space-the-geometry-of-the-flow",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.5 Phase Space: The Geometry of the Flow",
+    "text": "1.5 Phase Space: The Geometry of the Flow\nA time series shows one coordinate as a function of time. A phase portrait shows the full state \\((x, v)\\). This is the geometry-first view emphasized in nonlinear dynamics and in phase-plane neuroscience.\nFor the undamped spring, the trajectories are closed loops because energy is conserved. The vector field is the same for every trajectory; only the initial condition changes.\n\nfig, ax = plt.subplots(figsize=(5.2, 4.8))\nmake_spring().plot(kind=\"vectorfield\", ax=ax, alpha=0.25)\n\nfor x0, color in zip([0.5, 1.0, 1.5, 2.0], [\"C0\", \"C1\", \"C2\", \"C3\"]):\n    phase_result = run_spring(x0=x0, duration=900.0, step_size=1.0)\n    x = series(phase_result, \"x\")\n    v = series(phase_result, \"v\")\n    ax.plot(x.to_numpy(), v.to_numpy(), color=color, lw=1.4, label=rf\"$x_0={x0}$\")\n    ax.scatter(x.isel(time=0).to_numpy(), v.isel(time=0).to_numpy(), color=color, s=24, zorder=3)\n\nax.set(xlabel=\"Position $x$\", ylabel=\"Velocity $v$\", title=\"Phase space\")\nax.legend(handlelength=1, fontsize=8)\nfig.tight_layout()\nfig\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 900.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 900.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 900.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 900.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================",
     "crumbs": [
       "Setup",
       "1.1 Mathematical Framework",
-      "Dynamical Systems — A Spring-Mass Example"
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
     ]
   },
   {
-    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#from-toy-models-to-better-realism",
-    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#from-toy-models-to-better-realism",
-    "title": "Dynamical Systems — A Spring-Mass Example",
-    "section": "1.6 From Toy Models to Better Realism",
-    "text": "1.6 From Toy Models to Better Realism\nThe same framework lets us add more realistic assumptions. For example, we can include:\n\ndamping (energy loss / friction)\na constant load term (gravity-like bias)\n\nThis changes both the transient behaviour (oscillations decay) and the equilibrium level.\n\nfrom tvbo.datamodel.schema import Parameter\n\n# Copy System\nrealistic = system.copy()\n\n# Change State-Equation\nrealistic.state_variables[\"v\"][\"equation\"][\"rhs\"] = \"-(k/m) * x - (c/m) * v + g_eff\"\n\n# Add Parameters\nrealistic.parameters[\"c\"] = Parameter(name=\"c\", value=0.006)\nrealistic.parameters[\"g_eff\"] = Parameter(name=\"g_eff\", value=0.00015)\n\nr_ideal = SimulationExperiment(dynamics=system).run()\nr_real = SimulationExperiment(dynamics=realistic).run()\n\n# x_eq = m * g_eff / k  (where the damped system settles)\ng_eff = realistic.parameters[\"g_eff\"][\"value\"]\nk = realistic.parameters[\"k\"][\"value\"]\nm = realistic.parameters[\"m\"][\"value\"]\nx_eq_real = m * g_eff / k\n\nani = animate_spring(\n    [r_ideal.data.sel({\"variable\": \"x\"}), r_real.data.sel({\"variable\": \"x\"})],\n    labels=[\"toy model\", \"damped + load\"],\n    titles=[\"Toy model\", \"Damped + load\"],\n    equilibrium=[0.0, x_eq_real],\n    mass_sizes=0.4,\n    orientation=\"vertical\",\n    anchor_pos=3.5,\n    n_periods=3,\n)\nsave_animation_video(ani, \"spring_realism\", fps=30)\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1000.0 ms, dt: 0.01220703125 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================",
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#parameters-changing-the-system-itself",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#parameters-changing-the-system-itself",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.6 Parameters: Changing the System Itself",
+    "text": "1.6 Parameters: Changing the System Itself\nParameters are different from initial conditions. Initial conditions choose where a trajectory begins; parameters reshape the vector field.\nHere we vary the mass \\(m\\) while keeping \\(k\\) and \\(x_0\\) fixed. Heavier mass means more inertia, so the oscillation is slower.\n\nfig, ax = plt.subplots(figsize=(6, 3.2))\nk_fixed = 0.0001\n\nfor mass, color in zip([0.5, 1.0, 2.0], [\"C0\", \"C1\", \"C2\"]):\n    mass_result = run_spring(x0=-2.0, k=k_fixed, m=mass, duration=1200.0, step_size=1.0)\n    omega = np.sqrt(k_fixed / mass)\n    plot_series(mass_result, \"x\", ax=ax, label=rf\"$m={mass}$, $\\omega={omega:.4f}$\", color=color)\n\nax.axhline(0.0, color=\"0.4\", lw=0.8, ls=\"--\")\nax.set(xlabel=\"Time\", ylabel=\"Displacement $x$\", title=\"Parameter changes reshape the dynamics\")\nax.legend(handlelength=1, fontsize=8)\nfig.tight_layout()\nfig\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1200.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1200.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1200.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFor larger parameter sweeps, the TVBO docs generalize this pattern with Exploration and ExplorationAxis, so the sweep becomes part of the experiment specification rather than a manual Python loop.\n\nfrom tvbo.datamodel.schema import Exploration, ExplorationAxis\n\nexperiment = SimulationExperiment(dynamics=make_spring(x0=-2.0))\nexperiment.explorations[\"mass_sweep\"] = Exploration(\n    name=\"mass_sweep\",\n    space=ExplorationAxis(parameter=\"m\", explored_values=[0.5, 1.0, 2.0]),\n)\nmass_result = experiment.run(\"tvboptim\")\nmass_result.explorations[\"mass_sweep\"].plot(overlay=True)",
     "crumbs": [
       "Setup",
       "1.1 Mathematical Framework",
-      "Dynamical Systems — A Spring-Mass Example"
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#toward-realism-damping-and-load",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#toward-realism-damping-and-load",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.7 Toward Realism: Damping and Load",
+    "text": "1.7 Toward Realism: Damping and Load\nThe ideal spring never loses energy. Real systems usually do. We can extend the same TVBO model by adding a damping term and a constant load:\n\\[\n\\dot{x} = v, \\qquad\n\\dot{v} = -\\frac{k}{m}x - \\frac{c}{m}v + g_{\\mathrm{eff}}.\n\\]\nThe damping term changes the transient. The load shifts the equilibrium from \\(x = 0\\) to\n\\[\nx^* = \\frac{m g_{\\mathrm{eff}}}{k}.\n\\]\n\ndef make_damped_loaded_spring(x0=2.0, v0=0.0, k=0.0001, m=1.0, c=0.006, g_eff=0.00015):\n    system = make_spring(x0=x0, v0=v0, k=k, m=m)\n    system.description = \"Spring-mass oscillator with damping and a constant load.\"\n    system.state_variables[\"v\"][\"equation\"][\"rhs\"] = \"-(k/m) * x - (c/m) * v + g_eff\"\n    system.parameters[\"c\"] = Parameter(name=\"c\", description=\"Damping coefficient\", value=c)\n    system.parameters[\"g_eff\"] = Parameter(name=\"g_eff\", description=\"Constant effective load\", value=g_eff)\n    return system\n\n\nideal = make_spring(x0=2.0)\nrealistic = make_damped_loaded_spring(x0=2.0)\n\nideal_result = run_dynamics(ideal, duration=1800.0, step_size=1.0)\nrealistic_result = run_dynamics(realistic, duration=1800.0, step_size=1.0)\n\nx_eq_real = realistic.parameters[\"m\"].value * realistic.parameters[\"g_eff\"].value / realistic.parameters[\"k\"].value\n\nfig, (ax_time, ax_phase) = plt.subplots(1, 2, figsize=(10, 3.6))\n\nplot_series(ideal_result, \"x\", ax=ax_time, label=\"ideal\", color=\"C0\")\nplot_series(realistic_result, \"x\", ax=ax_time, label=\"damped + load\", color=\"C3\")\nax_time.axhline(0.0, color=\"C0\", lw=0.8, ls=\"--\", alpha=0.6)\nax_time.axhline(x_eq_real, color=\"C3\", lw=0.8, ls=\"--\", alpha=0.6)\nax_time.set(xlabel=\"Time\", ylabel=\"Displacement $x$\", title=\"Time domain\")\nax_time.legend(handlelength=1)\n\nfor label, sim_result, color in [(\"ideal\", ideal_result, \"C0\"), (\"damped + load\", realistic_result, \"C3\")]:\n    x = series(sim_result, \"x\")\n    v = series(sim_result, \"v\")\n    ax_phase.plot(x.to_numpy(), v.to_numpy(), color=color, lw=1.4, label=label)\n\nax_phase.scatter([0.0, x_eq_real], [0.0, 0.0], color=[\"C0\", \"C3\"], s=28, zorder=3)\nax_phase.set(xlabel=\"Position $x$\", ylabel=\"Velocity $v$\", title=\"Phase-space geometry\")\nax_phase.legend(handlelength=1)\n\nfig.tight_layout()\nfig\n\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1800.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================\n\n============================================================\nSTEP 1: Running simulation...\n============================================================\n  Simulation period: 1800.0 ms, dt: 1.0 ms\n  Transient period: 0.0 ms\n  Simulation complete.\n\n============================================================\nExperiment complete.\n============================================================",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#connection-to-tvbo-documentation",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#connection-to-tvbo-documentation",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.8 Connection to TVBO Documentation",
+    "text": "1.8 Connection to TVBO Documentation\nThe spring example is intentionally simple, but each piece maps directly to the main TVBO documentation topics.\n\n\n\n\n\n\n\n\nConcept in this notebook\nTVBO object or guide\nWhy it matters later\n\n\n\n\nEquations and parameters\nDynamics, DefineDynamicalSystem\nNeural mass and oscillator models use the same schema.\n\n\nRun configuration\nSimulationExperiment\nThe experiment combines dynamics, integration, networks, observations, algorithms, and continuations.\n\n\nNamed output\nExperimentResult.integration.data\nResults are xarray objects, so analysis should use named dimensions like time, variable, and node.\n\n\nInitial conditions\nInitialConditions\nDefaults, node overrides, sampled distributions, and transient warm-up resolve the initial state.\n\n\nParameter sweeps\nExploration\nParameter scans become declarative experiment metadata.\n\n\nPhase portraits\nBifurcationTutorial\nGeometry explains stability, oscillations, and bifurcations.\n\n\nDamping and load\nModel specification\nMore realistic assumptions are added by changing equations and parameters, not by changing the execution workflow.",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#from-spring-mass-to-neural-mass-models",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#from-spring-mass-to-neural-mass-models",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.9 From Spring-Mass to Neural Mass Models",
+    "text": "1.9 From Spring-Mass to Neural Mass Models\nThe next workshop section moves from a physical toy system to neural mass models. The TVBO database already stores many such models with the same structure: state variables, parameters, equations, and metadata.\n\nneural_mass_models = Dynamics.list_db(model_type=\"neural_mass\")\nneural_mass_models[:8]\n\n['CakanObermayer',\n 'Epileptor3DStefanescuMcDonald',\n 'GastSchmidtKnosche_SD',\n 'GastSchmidtKnosche_SF',\n 'Hopfield',\n 'JansenRit',\n 'JansenRit1995',\n 'LarterBreakspear']\n\n\n\njansen_rit = Dynamics.from_db(\"JansenRit\")\nprint(\"state variables:\", list(jansen_rit.state_variables))\nprint(\"first parameters:\", list(jansen_rit.parameters)[:8])\n\nstate variables: ['y0', 'y1', 'y2', 'y3', 'y4', 'y5']\nfirst parameters: ['A', 'B', 'J', 'a_1', 'a_2', 'a_3', 'a_4', 'a']\n\n\nThis is the key bridge: the spring has \\((x, v)\\), while a neural mass model has variables such as membrane potentials, firing-rate transforms, or synaptic gating variables. But the TVBO workflow remains the same:\n\nChoose or define Dynamics.\nPut it in a SimulationExperiment.\nRun the experiment.\nAnalyze result.integration.data and any observations.",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
+    ]
+  },
+  {
+    "objectID": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#what-comes-next-in-the-workshop",
+    "href": "notebooks/1_1_MathematicalFramework/DynamicalSystems.html#what-comes-next-in-the-workshop",
+    "title": "Dynamical Systems with TVBO: A Spring-Mass Example",
+    "section": "1.10 What Comes Next in the Workshop",
+    "text": "1.10 What Comes Next in the Workshop\nThe spring notebook stops at a single deterministic system. The later slides add the missing terms from the workshop equation.\n\n\n\n\n\n\n\n\nNext concept\nTVBO object\nRole\n\n\n\n\nBrain regions and structural connectivity\nNetwork\nAdds nodes, edges, weights, delays, and positions.\n\n\nInter-regional influence\nCoupling\nTurns source-node activity into input for target-node dynamics.\n\n\nExternal stimulation or perturbations\nEvent\nAdds time-dependent input \\(I_i(t)\\).\n\n\nMeasurement models\nobservations\nTransforms hidden state into BOLD, FC, PSD, or custom outputs.\n\n\nNoise\nnoise terms and stochastic integrators\nAdds fluctuations via \\(g(S_i, \\theta^g)dW_i\\).\n\n\nRegime changes\nContinuation\nTracks fixed points, stability changes, and oscillatory branches.\n\n\n\nThis is why phase space and stability are introduced early. They are not only mathematical background; they are the language used later to interpret excitability, oscillations, bifurcations, and transitions in neural population models.",
+    "crumbs": [
+      "Setup",
+      "1.1 Mathematical Framework",
+      "Dynamical Systems with TVBO: A Spring-Mass Example"
     ]
   },
   {
@@ -503,42 +551,49 @@
     "href": "slides.html#mathematical-framework",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Mathematical framework",
-    "text": "Mathematical framework\n\\[\ndS_i = \\left[f_d(S_i, \\theta^d, C_i, I_i) \\right]dt + g(S_i, \\theta^g)\\, dW_i\n\\]\n\nState Evolution\n\n\\(S_i\\) - state variables at node \\(i\\)\n\\(f_d\\) - dynamics function with parameters \\(\\theta^d\\)\n\\(C_i\\) - coupling input from connected nodes\n\\(I_i\\) - external input (stimulation, driving signals)\n\\(g\\) - noise diffusion coefficient with parameters \\(\\theta^g\\)\n\\(dW_i\\) - Wiener process (stochastic fluctuations)"
+    "text": "Mathematical framework\n\n\n\\[\ndS_i = \\left[f_d(S_i, \\theta^d, C_i, I_i) \\right]dt + g(S_i, \\theta^g)\\, dW_i\n\\]\n\n\n\n\nState Evolution\n\n\\(S_i\\) - state variables at node \\(i\\)\n\\(f_d\\) - dynamics function with parameters \\(\\theta^d\\)\n\\(C_i\\) - coupling input from connected nodes\n\\(I_i\\) - external input (stimulation, driving signals)\n\\(g\\) - noise diffusion coefficient with parameters \\(\\theta^g\\)\n\\(dW_i\\) - Wiener process (stochastic fluctuations)"
   },
   {
     "objectID": "slides.html#dynamical-systems",
     "href": "slides.html#dynamical-systems",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Dynamical Systems",
-    "text": "Dynamical Systems\n\n\nA mass \\(m\\) on a spring with stiffness \\(k\\).  Perpetual oscillation at \\(\\omega = \\sqrt{k/m}\\).\nState Equations: \\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k}{m}*x\n\\]\nState Variables\n\n\n\nVariable\nInitial Value\nUnit\nDescription\n\n\n\n\n\\(x\\)\n2.0\n\\(\\mathrm{m}\\)\nDisplacement from equilibrium\n\n\n\\(v\\)\n0.0\n\\(\\frac{\\mathrm{m}}{\\mathrm{s}}\\)\nVelocity\n\n\n\nParameters\n\n\n\n\n\n\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n\\(\\frac{\\mathrm{N}}{\\mathrm{m}}\\)\nSpring stiffness constant\n\n\n\\(m\\)\n1.0\n\\(\\mathrm{kg}\\)\nMass of the oscillating body"
+    "text": "Dynamical Systems\n\n\nA mass \\(m\\) on a spring with stiffness \\(k\\).  Perpetual oscillation at \\(\\omega = \\sqrt{k/m}\\).\nState Equations: \\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k}{m}*x\n\\]\nState Variables\n\n\n\nVariable\nInitial Value\nUnit\nDescription\n\n\n\n\n\\(x\\)\n2.0\n\\(\\mathrm{m}\\)\nDisplacement from equilibrium\n\n\n\\(v\\)\n0.0\n\\(\\frac{\\mathrm{m}}{\\mathrm{s}}\\)\nVelocity\n\n\n\nParameters\n\n\n\n\n\n\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n\\(\\frac{\\mathrm{N}}{\\mathrm{m}}\\)\nSpring stiffness constant\n\n\n\\(m\\)\n1.0\n\\(\\mathrm{kg}\\)\nMass of the oscillating body\n\n\n\n\n\n\nVideo"
   },
   {
     "objectID": "slides.html#initial-conditions",
     "href": "slides.html#initial-conditions",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Initial Conditions",
-    "text": "Initial Conditions\n\n\nA mass \\(m\\) on a spring with stiffness \\(k\\).  Perpetual oscillation at \\(\\omega = \\sqrt{k/m}\\).\nState Equations: \\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k}{m}*x\n\\]\nState Variables\n\n\n\nVariable\nInitial Value\nUnit\nDescription\n\n\n\n\n\\(x\\)\n2.0\n\\(\\mathrm{m}\\)\nDisplacement from equilibrium\n\n\n\\(v\\)\n0.0\n\\(\\frac{\\mathrm{m}}{\\mathrm{s}}\\)\nVelocity\n\n\n\nParameters\n\n\n\n\n\n\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n\\(\\frac{\\mathrm{N}}{\\mathrm{m}}\\)\nSpring stiffness constant\n\n\n\\(m\\)\n1.0\n\\(\\mathrm{kg}\\)\nMass of the oscillating body"
+    "text": "Initial Conditions\n\n\nSame spring-mass system as before.\nWhat changes?\n\nInitial displacement only: \\(x_0 \\in \\{-1,-2,-3\\}\\)\nVelocity stays fixed at \\(v_0 = 0\\)\nParameters stay fixed: \\(k=10^{-4},\\; m=1\\)\n\nWhat do we see?\n\nSame frequency in all cases\nLarger initial stretch gives larger amplitude\nClosed motion stays perfectly periodic\n\n\n\n\nVideo"
   },
   {
     "objectID": "slides.html#phase-space",
     "href": "slides.html#phase-space",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Phase Space",
-    "text": "Phase Space"
+    "text": "Phase Space\n\n\nSame spring-mass system. Only the representation changes.\nWhat changes?\n\nPlot state as \\((x,v)\\) instead of \\(x(t)\\)\nUse several initial conditions\nAdd the vector field of the dynamics\n\nWhat do we see?\n\nClosed trajectories around equilibrium\nConservative dynamics with no damping\nGeometry of the flow instead of time evolution\n\n\n\n\nVideo"
   },
   {
     "objectID": "slides.html#parameters-mass",
     "href": "slides.html#parameters-mass",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Parameters — Mass",
-    "text": "Parameters — Mass"
+    "text": "Parameters — Mass\n\n\nSame equations and same initial condition. Only the mass changes.\nWhat changes?\n\n\\(m \\in \\{0.5, 1.0, 2.0\\}\\)\n\\(x_0=-2\\), \\(v_0=0\\) stay fixed\n\\(k\\) stays fixed\n\nWhat do we see?\n\nFrequency follows \\(\\omega = \\sqrt{k/m}\\)\nHeavier masses oscillate more slowly\nBox size encodes the mass value visually\n\n\n\n\nVideo"
   },
   {
     "objectID": "slides.html#towards-realism-damping-load",
     "href": "slides.html#towards-realism-damping-load",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Towards Realism — Damping & Load",
-    "text": "Towards Realism — Damping & Load"
+    "text": "Towards Realism — Damping & Load\n\n\nNow we modify the toy model toward a more realistic oscillator.\nWhat changes?\n\\[\n\\dot{v} = -\\frac{k}{m}x - \\frac{c}{m}v + g_{\\mathrm{eff}}\n\\]\n\nAdd damping: \\(c=0.006\\)\nAdd constant load: \\(g_{\\mathrm{eff}}=0.00015\\)\n\nWhat do we see?\n\nOscillations decay over time\nEquilibrium shifts away from zero\nCompare ideal toy model vs damped + load\n\n\n\n\nVideo"
+  },
+  {
+    "objectID": "slides.html#phase-space-damped-spring",
+    "href": "slides.html#phase-space-damped-spring",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Phase Space: Damped Spring",
+    "text": "Phase Space: Damped Spring\n\n\nVideo"
   },
   {
     "objectID": "slides.html#mean-field-models-neural-masses",
@@ -546,6 +601,13 @@
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Mean field models & Neural Masses",
     "text": "Mean field models & Neural Masses\n\n\nPopulation rate: \\(r(t) = \\langle \\#\\text{spikes}\\rangle / (N\\,\\Delta t)\\)\nJansen-Rit (3 populations): PC = \\(y_1 - y_2\\), the EEG-like PSP at pyramidal cells"
+  },
+  {
+    "objectID": "slides.html#eeg-like-activity-with-the-jansen-rit-model",
+    "href": "slides.html#eeg-like-activity-with-the-jansen-rit-model",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "EEG-Like Activity with the Jansen-Rit-Model",
+    "text": "EEG-Like Activity with the Jansen-Rit-Model\n\n\nJansenRit1995 Lumped-parameter cortical column model with three neural populations: pyramidal cells, excitatory interneurons, and inhibitory interneurons. Each population is modeled by a PSP block (2nd-order linear filter) and a sigmoidal potential-to-firing-rate transformation.\nDerived Variables \\[\nv_{pyr} = y_{1} - y_{2}\n\\]\nState Equations \\[\n\\dot{y_{0}} = y_{3}\n\\] \\[\n\\dot{y_{3}} = - y_{0}*a^{2} - 2*a*y_{3} + A*a*\\operatorname{Sigm}{\\left(y_{1} - y_{2} \\right)}\n\\] \\[\n\\dot{y_{1}} = y_{4}\n\\] \\[\n\\dot{y_{4}} = - y_{1}*a^{2} - 2*a*y_{4} + A*a*\\left(p + C_{2}*\\operatorname{Sigm}{\\left(C_{1}*y_{0} \\right)} + K*c_{intercolumn}\\right)\n\\] \\[\n\\dot{y_{2}} = y_{5}\n\\] \\[\n\\dot{y_{5}} = - y_{2}*b^{2} - 2*b*y_{5} + B*C_{4}*b*\\operatorname{Sigm}{\\left(C_{3}*y_{0} \\right)}\n\\]\nwith \\[\n\\operatorname{Sigm}{\\left(v \\right)} = \\frac{2*e_{0}}{1 + e^{r*\\left(v_{0} - v\\right)}}\n\\]\nState Variables\n\n\n\nVariable\nInitial Value\nUnit\nDescription\n\n\n\n\n\\(y_{0}\\)\n0.1\n\\(\\mathrm{mV}\\)\n\n\n\n\\(y_{3}\\)\n0.1\n\\(\\frac{\\mathrm{mV}}{\\mathrm{s}}\\)\n\n\n\n\\(y_{1}\\)\n0.1\n\\(\\mathrm{mV}\\)\n\n\n\n\\(y_{4}\\)\n0.1\n\\(\\frac{\\mathrm{mV}}{\\mathrm{s}}\\)\n\n\n\n\\(y_{2}\\)\n0.1\n\\(\\mathrm{mV}\\)\n\n\n\n\\(y_{5}\\)\n0.1\n\\(\\frac{\\mathrm{mV}}{\\mathrm{s}}\\)\n\n\n\n\nParameters\n\n\n\n\n\n\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(A\\)\n3.25\n\\(\\mathrm{mV}\\)\nMaximum amplitude of excitatory PSP (EPSP)\n\n\n\\(B\\)\n22\n\\(\\mathrm{mV}\\)\nMaximum amplitude of inhibitory PSP (IPSP)\n\n\n\\(C\\)\n135\n—\nLumped connectivity constant (C = C1)\n\n\n\\(a\\)\n100\n\\(\\mathrm{s}^{-1}\\)\nReciprocal of EPSP time constant\n\n\n\\(b\\)\n50\n\\(\\mathrm{s}^{-1}\\)\nReciprocal of IPSP time constant\n\n\n\\(v_{0}\\)\n6\n\\(\\mathrm{mV}\\)\nPSP for 50% firing rate (sigmoid midpoint)\n\n\n\\(e_{0}\\)\n2.5\n\\(\\mathrm{s}^{-1}\\)\nHalf of maximum firing rate\n\n\n\\(r\\)\n0.56\n\\(\\mathrm{mV}^{-1}\\)\nSteepness of sigmoid transformation\n\n\n\\(p\\)\n220\n\\(\\mathrm{s}^{-1}\\)\nMean external input (afferent pulse density)\n\n\n\\(K\\)\n0\n—\nPer-node coupling strength scaling (K[i] scales coupling received by node i)\n\n\n\nDerived Parameters\n\\[\nC_{1} = C\n\\] \\[\nC_{2} = 0.8*C\n\\] \\[\nC_{3} = 0.25*C\n\\] \\[\nC_{4} = 0.25*C\n\\]"
   },
   {
     "objectID": "slides.html#network-dynamics",
@@ -559,14 +621,14 @@
     "href": "slides.html#uncoupled-system",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Uncoupled system",
-    "text": "Uncoupled system"
+    "text": "Uncoupled system\n\n\nKuramoto (1975)\nPhase oscillator model. Each node evolves with its own natural frequency \\(\\omega\\); coupling \\(I\\) is added by the network.\nState Equations \\[\\dot{\\theta} = \\omega\\]\nState Variables\n\n\n\nVariable\nInitial value\nUnit\n\n\n\n\n\\(\\theta\\)\n\\(\\sim\\mathcal{U}(0,2\\pi)\\)\n—\n\n\n\nDerived Variables \\[activity = \\sin(\\theta)\\]\nParameters\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(\\omega\\)\n1.0\n—\nNatural frequency\n\n\n\nSimulation settings\n\n\n\nDuration\n100 s\n\n\nStep size\n0.01 s\n\n\nIntegrator\nHeun\n\n\nNodes\n3 (V1, V2, MT)\n\n\nCoupling \\(K\\)\n0.0 (uncoupled)"
   },
   {
     "objectID": "slides.html#coupled-system",
     "href": "slides.html#coupled-system",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Coupled system",
-    "text": "Coupled system"
+    "text": "Coupled system\n\n\nKuramoto (1975) — same model as before, now with coupling enabled.\nState Equations \\[\\dot{\\theta} = I + \\omega\\]\nCoupling: \\(I\\)\n\\[\nI = \\frac{K \\sum_{j=0}^{-1 + N} - {g}_{i,j} \\sin{\\left(\\theta_{i} - \\theta_{j} \\right)}}{3}\n\\]\nReceives \\(\\theta\\) from connected regions.\nPre-synaptic: \\(c_{\\text{pre}} = \\sin(\\theta_j - \\theta_i)\\)\nPost-synaptic: \\(c_{\\text{post}} = \\dfrac{K \\cdot gx}{3}\\)\nCoupling parameters\n\n\n\nParameter\nValue\nDescription\n\n\n\n\n\\(K\\)\n0.4\nGlobal coupling strength\n\n\n\nNetwork\n\n\n\nEdge\nWeight\n\n\n\n\nV1 → V2\n0.7\n\n\nV2 → MT\n0.4\n\n\nV1 → MT\n0.2\n\n\n\nSimulation settings\n\n\n\nDuration\n100 s\n\n\nStep size\n0.01 s\n\n\nIntegrator\nHeun"
   },
   {
     "objectID": "slides.html#coupled-brain-network",
@@ -601,14 +663,21 @@
     "href": "slides.html#applications-in-basic-research",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Applications in basic research",
-    "text": "Applications in basic research\n\n\n\n\n(Schirner, Deco, and Ritter 2023)\n\n\n\n\n\n\n\n(Koller, Schirner, and Ritter 2024)"
+    "text": "Applications in basic research\n\n\n\n\n\nVideo\n(Schirner, Deco, and Ritter 2023)\n\n\n\n\n\n\nVideo\n(Koller, Schirner, and Ritter 2024)"
   },
   {
     "objectID": "slides.html#clinical-applications",
     "href": "slides.html#clinical-applications",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Clinical applications",
-    "text": "Clinical applications\n\nTODO: translational use-cases\nTODO: virtual epileptic / Alzheimer / stroke patient examples"
+    "text": "Clinical applications"
+  },
+  {
+    "objectID": "slides.html#virtual-dbs",
+    "href": "slides.html#virtual-dbs",
+    "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
+    "section": "Virtual DBS",
+    "text": "Virtual DBS\n\n\nTODO: translational use-cases\nTODO: virtual epileptic / Alzheimer / stroke patient examples"
   },
   {
     "objectID": "slides.html#how-to-analyse-a-brain-system",
@@ -867,7 +936,7 @@
     "href": "slides.html#references",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "References",
-    "text": "References\n\n\nBergstra, James, and Yoshua Bengio. 2012. “Random Search for Hyper-Parameter Optimization.” Journal of Machine Learning Research 13 (null): 281–305. https://dl.acm.org/doi/abs/10.5555/2188385.2188395.\n\n\nJansen, Ben H., and Vincent G. Rit. 1995. “Electroencephalogram and Visual Evoked Potential Generation in a Mathematical Model of Coupled Cortical Columns.” Biological Cybernetics 73 (4): 357–66. https://doi.org/10.1007/bf00199471.\n\n\nKoller, Dominik P., Michael Schirner, and Petra Ritter. 2024. “Human Connectome Topology Directs Cortical Traveling Waves and Shapes Frequency Gradients.” Nature Communications 15 (1). https://doi.org/10.1038/s41467-024-47860-x.\n\n\nPille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. “Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.” bioRxiv, November. https://doi.org/10.1101/2025.11.18.689003.\n\n\nSchirner, Michael, Gustavo Deco, and Petra Ritter. 2023. “Learning How Network Structure Shapes Decision-Making for Bio-Inspired Computing.” Nature Communications 14 (1). https://doi.org/10.1038/s41467-023-38626-y.\n\n\nStefanovski, Leon, Paul Triebkorn, Andreas Spiegler, Margarita-Arimatea Diaz-Cortes, Ana Solodkin, Viktor Jirsa, Anthony Randal McIntosh, and Petra Ritter. 2019. “Linking Molecular Pathways and Large-Scale Computational Modeling to Assess Candidate Disease Mechanisms and Pharmacodynamics in Alzheimer’s Disease.” Edited by Anke Meyer-Baese Li Su. Frontiers in Computational Neuroscience 13 (August). https://doi.org/10.3389/fncom.2019.00054."
+    "text": "References\n\n\nBergstra, James, and Yoshua Bengio. 2012. “Random Search for Hyper-Parameter Optimization.” Journal of Machine Learning Research 13 (null): 281–305. https://dl.acm.org/doi/abs/10.5555/2188385.2188395.\n\n\nJansen, Ben H., and Vincent G. Rit. 1995. “Electroencephalogram and Visual Evoked Potential Generation in a Mathematical Model of Coupled Cortical Columns.” Biological Cybernetics 73 (4): 357–66. https://doi.org/10.1007/bf00199471.\n\n\nKoller, Dominik P., Michael Schirner, and Petra Ritter. 2024. “Human Connectome Topology Directs Cortical Traveling Waves and Shapes Frequency Gradients.” Nature Communications 15 (1). https://doi.org/10.1038/s41467-024-47860-x.\n\n\nKuramoto, Yoshiki. 1975. “Self-Entrainment of a Population of Coupled Non-Linear Oscillators.” In Lecture Notes in Physics, 420–22. Springer-Verlag. https://doi.org/10.1007/bfb0013365.\n\n\nPille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. “Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.” bioRxiv, November. https://doi.org/10.1101/2025.11.18.689003.\n\n\nSchirner, Michael, Gustavo Deco, and Petra Ritter. 2023. “Learning How Network Structure Shapes Decision-Making for Bio-Inspired Computing.” Nature Communications 14 (1). https://doi.org/10.1038/s41467-023-38626-y.\n\n\nStefanovski, Leon, Paul Triebkorn, Andreas Spiegler, Margarita-Arimatea Diaz-Cortes, Ana Solodkin, Viktor Jirsa, Anthony Randal McIntosh, and Petra Ritter. 2019. “Linking Molecular Pathways and Large-Scale Computational Modeling to Assess Candidate Disease Mechanisms and Pharmacodynamics in Alzheimer’s Disease.” Edited by Anke Meyer-Baese Li Su. Frontiers in Computational Neuroscience 13 (August). https://doi.org/10.3389/fncom.2019.00054."
   },
   {
     "objectID": "index.html",
@@ -882,6 +951,13 @@
     "title": "Brain Simulation Workshop",
     "section": "About",
     "text": "About\nTrack 4 of the FAIR Brain Data Science Bootcamp 2026 — a joint event by EBRAINS and INCF, hosted at Karolinska Institutet, Widerströmska huset (Tomtebodavägen 18, Stockholm, Sweden).\nThe bootcamp brings together hands-on training across brain atlasing, electrophysiology, data sharing, and computational modeling within the EBRAINS research infrastructure. Track 4 focuses on personalized whole-brain network modeling with The Virtual Brain, combining individualized model definition, simulation, and analysis with ontology-driven model specification (TVB-O) and gradient-based optimization (TVB-Optim) (Martin et al. 2025; Pille et al. 2025).\n\n\n\n\nTVB foundations\nWhole-brain network modeling concepts, coupled ODE/SDE systems, neural masses, and basic and clinical applications.\n\n\n\n\n\n\nFAIR model building\nUse TVB-O to describe parameters, state variables, equations, coupling, integration, observations, and execution metadata.\n\n\n\n\n\n\nNetwork simulation\nLoad connectomes, assemble delayed coupling, run single-node and whole-brain simulations, and sweep global coupling regimes.\n\n\n\n\n\n\nRegime maps\nRead phase planes, stability, bifurcations, and numerical continuation diagrams to choose biologically plausible operating points.\n\n\n\n\n\n\nParameter inference\nCompare grid, random, CMA-ES, gradient, and Bayesian strategies for fitting homogeneous and regional model parameters.\n\n\n\n\n\n\nTranslation and stimulation\nBuild Alzheimer and biomarker-driven use cases, simulate visual and TMS inputs, and carry the workflow into Day 2 research questions."
+  },
+  {
+    "objectID": "index.html#program",
+    "href": "index.html#program",
+    "title": "Brain Simulation Workshop",
+    "section": "Program",
+    "text": "Program\n\n\n\n\n01\n\nSetup\nInstall uv, tvb, tvbo, and tvboptim. Verify the environment before day one.\n\n\n\n\n\n\n\n02\n\nAgenda\nTwo-day program: lectures, hands-on sessions, and a mini hackathon.\n\n\n\n\n\n\n\n03\n\nSlides\nRevealJS slides used in the live sessions.\n\n\n\n\n\n\n\n04\n\nNotebooks\nHands-on Jupyter notebooks: introduction, FAIR models, dynamics, optimization, and stimulation."
   },
   {
     "objectID": "index.html#quick-start",

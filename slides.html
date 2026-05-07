@@ -398,10 +398,15 @@ Plotting the Brain</p>
 </section>
 <section id="mathematical-framework" class="slide level2">
 <h2>Mathematical framework</h2>
+<div class="rows">
+<div class="row" style="height:10%;justify-content:center">
 <p><span class="math display">\[
 dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 \]</span></p>
-<div class="fragment">
+</div>
+<div class="row" style="height:90%;">
+<div class="columns">
+<div class="column r-fit-text" style="width:60%;">
 <p><strong>State Evolution</strong></p>
 <ul>
 <li><span class="math inline">\(S_i\)</span> - state variables at node <span class="math inline">\(i\)</span></li>
@@ -411,12 +416,24 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <li><span class="math inline">\(g\)</span> - noise diffusion coefficient with parameters <span class="math inline">\(\theta^g\)</span></li>
 <li><span class="math inline">\(dW_i\)</span> - Wiener process (stochastic fluctuations)</li>
 </ul>
+</div><div class="column" style="width:40%;">
+<div id="56c86162" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="29">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="slides_files/figure-revealjs/cell-2-output-1.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</div>
 </div>
 </section>
 <section id="dynamical-systems" class="slide level2">
 <h2>Dynamical Systems</h2>
 <div class="columns">
-<div class="column" style="font-size: 0.55em;">
+<div class="column" style="width:30%; font-size: 0.62em;">
 <p>A mass <span class="math inline">\(m\)</span> on a spring with stiffness <span class="math inline">\(k\)</span>. <br> Perpetual oscillation at <span class="math inline">\(\omega = \sqrt{k/m}\)</span>.</p>
 <p><strong>State Equations:</strong> <span class="math display">\[
 \dot{x} = v
@@ -479,139 +496,122 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 </tr>
 </tbody>
 </table>
-</div><div class="column">
-<div class="r-stack">
+</div><div class="column" style="width:70%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png" class="quarto-figure quarto-figure-center"></p>
+<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_single.mp4" class="quarto-figure quarto-figure-center" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png" data-autoplay="false" height="430"><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_single.mp4">Video</a></video></p>
 </figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_single.gif" class="fragment quarto-figure quarto-figure-center"></p>
-</figure>
-</div>
 </div>
 </div></div>
 </section>
 <section id="initial-conditions" class="slide level2" data-background-color="#ffffff">
 <h2>Initial Conditions</h2>
 <div class="columns">
-<div class="column" style="font-size: 0.55em;">
-<p>A mass <span class="math inline">\(m\)</span> on a spring with stiffness <span class="math inline">\(k\)</span>. <br> Perpetual oscillation at <span class="math inline">\(\omega = \sqrt{k/m}\)</span>.</p>
-<p><strong>State Equations:</strong> <span class="math display">\[
-\dot{x} = v
-\]</span> <span class="math display">\[
-\dot{v} = - \frac{k}{m}*x
-\]</span></p>
-<p><strong>State Variables</strong></p>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th><strong>Variable</strong></th>
-<th><strong>Initial Value</strong></th>
-<th><strong>Unit</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(x\)</span></td>
-<td>2.0</td>
-<td><span class="math inline">\(\mathrm{m}\)</span></td>
-<td>Displacement from equilibrium</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(v\)</span></td>
-<td>0.0</td>
-<td><span class="math inline">\(\frac{\mathrm{m}}{\mathrm{s}}\)</span></td>
-<td>Velocity</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Parameters</strong></p>
-<table class="caption-top">
-<colgroup>
-<col style="width: 28%">
-<col style="width: 20%">
-<col style="width: 18%">
-<col style="width: 32%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Parameter</strong></th>
-<th><strong>Value</strong></th>
-<th><strong>Unit</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(k\)</span></td>
-<td>0.0001</td>
-<td><span class="math inline">\(\frac{\mathrm{N}}{\mathrm{m}}\)</span></td>
-<td>Spring stiffness constant</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(m\)</span></td>
-<td>1.0</td>
-<td><span class="math inline">\(\mathrm{kg}\)</span></td>
-<td>Mass of the oscillating body</td>
-</tr>
-</tbody>
-</table>
-</div><div class="column">
-<div class="r-stack">
+<div class="column" style="width:30%; font-size: 0.62em;">
+<p>Same spring-mass system as before.</p>
+<p><strong>What changes?</strong></p>
+<ul>
+<li>Initial displacement only: <span class="math inline">\(x_0 \in \{-1,-2,-3\}\)</span></li>
+<li>Velocity stays fixed at <span class="math inline">\(v_0 = 0\)</span></li>
+<li>Parameters stay fixed: <span class="math inline">\(k=10^{-4},\; m=1\)</span></li>
+</ul>
+<p><strong>What do we see?</strong></p>
+<ul>
+<li>Same frequency in all cases</li>
+<li>Larger initial stretch gives larger amplitude</li>
+<li>Closed motion stays perfectly periodic</li>
+</ul>
+</div><div class="column" style="width:70%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png" class="quarto-figure quarto-figure-center"></p>
+<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.mp4" class="quarto-figure quarto-figure-center" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png" data-autoplay="false" height="430"><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.mp4">Video</a></video></p>
 </figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.gif" class="fragment quarto-figure quarto-figure-center"></p>
-</figure>
-</div>
 </div>
 </div></div>
 </section>
 <section id="phase-space" class="slide level2" data-background-color="#ffffff">
 <h2>Phase Space</h2>
+<div class="columns">
+<div class="column" style="width:30%; font-size: 0.62em;">
+<p>Same spring-mass system. Only the representation changes.</p>
+<p><strong>What changes?</strong></p>
+<ul>
+<li>Plot state as <span class="math inline">\((x,v)\)</span> instead of <span class="math inline">\(x(t)\)</span></li>
+<li>Use several initial conditions</li>
+<li>Add the vector field of the dynamics</li>
+</ul>
+<p><strong>What do we see?</strong></p>
+<ul>
+<li>Closed trajectories around equilibrium</li>
+<li>Conservative dynamics with no damping</li>
+<li>Geometry of the flow instead of time evolution</li>
+</ul>
+</div><div class="column" style="width:70%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_space.png" class="quarto-figure quarto-figure-center" height="580"></p>
+<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.mp4" class="quarto-figure quarto-figure-center" height="430" controls=""><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.mp4">Video</a></video></p>
 </figure>
 </div>
+</div></div>
 </section>
 <section id="parameters-mass" class="slide level2" data-background-color="#ffffff">
 <h2>Parameters — Mass</h2>
-<div class="r-stack">
+<div class="columns">
+<div class="column" style="width:30%; font-size: 0.62em;">
+<p>Same equations and same initial condition. Only the mass changes.</p>
+<p><strong>What changes?</strong></p>
+<ul>
+<li><span class="math inline">\(m \in \{0.5, 1.0, 2.0\}\)</span></li>
+<li><span class="math inline">\(x_0=-2\)</span>, <span class="math inline">\(v_0=0\)</span> stay fixed</li>
+<li><span class="math inline">\(k\)</span> stays fixed</li>
+</ul>
+<p><strong>What do we see?</strong></p>
+<ul>
+<li>Frequency follows <span class="math inline">\(\omega = \sqrt{k/m}\)</span></li>
+<li>Heavier masses oscillate more slowly</li>
+<li>Box size encodes the mass value visually</li>
+</ul>
+</div><div class="column" style="width:70%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" class="quarto-figure quarto-figure-center" height="580"></p>
+<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.mp4" class="quarto-figure quarto-figure-center" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" data-autoplay="false" height="430"><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.mp4">Video</a></video></p>
 </figure>
 </div>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.gif" class="fragment quarto-figure quarto-figure-center" height="580"></p>
-</figure>
-</div>
-</div>
+</div></div>
 </section>
 <section id="towards-realism-damping-load" class="slide level2" data-background-color="#ffffff">
 <h2>Towards Realism — Damping &amp; Load</h2>
-<div class="r-stack">
+<div class="columns">
+<div class="column" style="width:30%; font-size: 0.62em;">
+<p>Now we modify the toy model toward a more realistic oscillator.</p>
+<p><strong>What changes?</strong></p>
+<p><span class="math display">\[
+\dot{v} = -\frac{k}{m}x - \frac{c}{m}v + g_{\mathrm{eff}}
+\]</span></p>
+<ul>
+<li>Add damping: <span class="math inline">\(c=0.006\)</span></li>
+<li>Add constant load: <span class="math inline">\(g_{\mathrm{eff}}=0.00015\)</span></li>
+</ul>
+<p><strong>What do we see?</strong></p>
+<ul>
+<li>Oscillations decay over time</li>
+<li>Equilibrium shifts away from zero</li>
+<li>Compare ideal toy model vs damped + load</li>
+</ul>
+</div><div class="column" style="width:70%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png" class="quarto-figure quarto-figure-center" height="580"></p>
+<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.mp4" class="quarto-figure quarto-figure-center" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png" data-autoplay="false" height="430"><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.mp4">Video</a></video></p>
 </figure>
 </div>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.gif" class="fragment quarto-figure quarto-figure-center" height="580"></p>
-</figure>
-</div>
-</div>
+</div></div>
+</section>
+<section id="phase-space-damped-spring" class="slide level2">
+<h2>Phase Space: Damped Spring</h2>
+<div class="columns">
+<div class="column">
+<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.mp4" controls=""><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.mp4">Video</a></video></p>
+</div></div>
 </section></section>
 <section>
 <section id="mean-field-models" class="title-slide slide level1 center" data-background-video="img/videos/birds.mp4" data-background-video-loop="true" data-background-video-muted="true">
@@ -626,18 +626,327 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <li>Jansen-Rit (3 populations): PC = <span class="math inline">\(y_1 - y_2\)</span>, the EEG-like PSP at pyramidal cells</li>
 </ul>
 </section>
+<section id="eeg-like-activity-with-the-jansen-rit-model" class="slide level2">
+<h2>EEG-Like Activity with the Jansen-Rit-Model</h2>
+<div class="columns">
+<div class="column" style="width:50%; font-size: 0.45em; height: 660px; overflow-y: scroll;">
+<p><strong>JansenRit1995</strong> Lumped-parameter cortical column model with three neural populations: pyramidal cells, excitatory interneurons, and inhibitory interneurons. Each population is modeled by a PSP block (2nd-order linear filter) and a sigmoidal potential-to-firing-rate transformation.</p>
+<p><strong>Derived Variables</strong> <span class="math display">\[
+v_{pyr} = y_{1} - y_{2}
+\]</span></p>
+<p><strong>State Equations</strong> <span class="math display">\[
+\dot{y_{0}} = y_{3}
+\]</span> <span class="math display">\[
+\dot{y_{3}} = - y_{0}*a^{2} - 2*a*y_{3} + A*a*\operatorname{Sigm}{\left(y_{1} - y_{2} \right)}
+\]</span> <span class="math display">\[
+\dot{y_{1}} = y_{4}
+\]</span> <span class="math display">\[
+\dot{y_{4}} = - y_{1}*a^{2} - 2*a*y_{4} + A*a*\left(p + C_{2}*\operatorname{Sigm}{\left(C_{1}*y_{0} \right)} + K*c_{intercolumn}\right)
+\]</span> <span class="math display">\[
+\dot{y_{2}} = y_{5}
+\]</span> <span class="math display">\[
+\dot{y_{5}} = - y_{2}*b^{2} - 2*b*y_{5} + B*C_{4}*b*\operatorname{Sigm}{\left(C_{3}*y_{0} \right)}
+\]</span></p>
+<p>with <span class="math display">\[
+\operatorname{Sigm}{\left(v \right)} = \frac{2*e_{0}}{1 + e^{r*\left(v_{0} - v\right)}}
+\]</span></p>
+<p><em>State Variables</em></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><strong>Variable</strong></th>
+<th><strong>Initial Value</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(y_{0}\)</span></td>
+<td>0.1</td>
+<td><span class="math inline">\(\mathrm{mV}\)</span></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(y_{3}\)</span></td>
+<td>0.1</td>
+<td><span class="math inline">\(\frac{\mathrm{mV}}{\mathrm{s}}\)</span></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(y_{1}\)</span></td>
+<td>0.1</td>
+<td><span class="math inline">\(\mathrm{mV}\)</span></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(y_{4}\)</span></td>
+<td>0.1</td>
+<td><span class="math inline">\(\frac{\mathrm{mV}}{\mathrm{s}}\)</span></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(y_{2}\)</span></td>
+<td>0.1</td>
+<td><span class="math inline">\(\mathrm{mV}\)</span></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(y_{5}\)</span></td>
+<td>0.1</td>
+<td><span class="math inline">\(\frac{\mathrm{mV}}{\mathrm{s}}\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><em>Parameters</em></p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 20%">
+<col style="width: 18%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Parameter</strong></th>
+<th><strong>Value</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(A\)</span></td>
+<td>3.25</td>
+<td><span class="math inline">\(\mathrm{mV}\)</span></td>
+<td>Maximum amplitude of excitatory PSP (EPSP)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(B\)</span></td>
+<td>22</td>
+<td><span class="math inline">\(\mathrm{mV}\)</span></td>
+<td>Maximum amplitude of inhibitory PSP (IPSP)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(C\)</span></td>
+<td>135</td>
+<td>—</td>
+<td>Lumped connectivity constant (C = C1)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(a\)</span></td>
+<td>100</td>
+<td><span class="math inline">\(\mathrm{s}^{-1}\)</span></td>
+<td>Reciprocal of EPSP time constant</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(b\)</span></td>
+<td>50</td>
+<td><span class="math inline">\(\mathrm{s}^{-1}\)</span></td>
+<td>Reciprocal of IPSP time constant</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(v_{0}\)</span></td>
+<td>6</td>
+<td><span class="math inline">\(\mathrm{mV}\)</span></td>
+<td>PSP for 50% firing rate (sigmoid midpoint)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(e_{0}\)</span></td>
+<td>2.5</td>
+<td><span class="math inline">\(\mathrm{s}^{-1}\)</span></td>
+<td>Half of maximum firing rate</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(r\)</span></td>
+<td>0.56</td>
+<td><span class="math inline">\(\mathrm{mV}^{-1}\)</span></td>
+<td>Steepness of sigmoid transformation</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(p\)</span></td>
+<td>220</td>
+<td><span class="math inline">\(\mathrm{s}^{-1}\)</span></td>
+<td>Mean external input (afferent pulse density)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(K\)</span></td>
+<td>0</td>
+<td>—</td>
+<td>Per-node coupling strength scaling (K[i] scales coupling received by node i)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Derived Parameters</strong></p>
+<p><span class="math display">\[
+C_{1} = C
+\]</span> <span class="math display">\[
+C_{2} = 0.8*C
+\]</span> <span class="math display">\[
+C_{3} = 0.25*C
+\]</span> <span class="math display">\[
+C_{4} = 0.25*C
+\]</span></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="img/figures/jansen1995/fig-jr-singlenode.png"></p>
+</div></div>
+</section>
 <section id="network-dynamics" class="slide level2">
 <h2>Network dynamics</h2>
 
-<img data-src="slides_files/figure-revealjs/cell-2-output-1.png" class="r-stretch"></section>
+<img data-src="slides_files/figure-revealjs/cell-3-output-1.png" class="r-stretch"></section>
 <section id="uncoupled-system" class="slide level2">
 <h2>Uncoupled system</h2>
-
-<img data-src="img/videos/NetworkDynamics/uncoupled_kuramoto.gif" class="r-stretch"></section>
-<section id="coupled-system" class="slide level2">
+<div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
+<div style="flex:0 0 28%; box-sizing:border-box; overflow-y:scroll; height:100%; font-size:0.48em; padding-right:6px;">
+<p><strong><span class="citation" data-cites="Kuramoto1975">Kuramoto (<a href="#/references" role="doc-biblioref" onclick="">1975</a>)</span></strong></p>
+<p>Phase oscillator model. Each node evolves with its own natural frequency <span class="math inline">\(\omega\)</span>; coupling <span class="math inline">\(I\)</span> is added by the network.</p>
+<p><strong>State Equations</strong> <span class="math display">\[\dot{\theta} = \omega\]</span></p>
+<p><em>State Variables</em></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Initial value</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\theta\)</span></td>
+<td><span class="math inline">\(\sim\mathcal{U}(0,2\pi)\)</span></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Derived Variables</strong> <span class="math display">\[activity = \sin(\theta)\]</span></p>
+<p><em>Parameters</em></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+<th>Unit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\omega\)</span></td>
+<td>1.0</td>
+<td>—</td>
+<td>Natural frequency</td>
+</tr>
+</tbody>
+</table>
+<p><em>Simulation settings</em></p>
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>Duration</td>
+<td>100 s</td>
+</tr>
+<tr class="even">
+<td>Step size</td>
+<td>0.01 s</td>
+</tr>
+<tr class="odd">
+<td>Integrator</td>
+<td>Heun</td>
+</tr>
+<tr class="even">
+<td>Nodes</td>
+<td>3 (V1, V2, MT)</td>
+</tr>
+<tr class="odd">
+<td>Coupling <span class="math inline">\(K\)</span></td>
+<td>0.0 (uncoupled)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="flex:1; box-sizing:border-box; padding-left:8px;">
+<p><img data-src="img/videos/NetworkDynamics/uncoupled_kuramoto.gif" style="width:100.0%"></p>
+</div>
+</div>
+</section>
+<section id="coupled-system" class="slide level2 nostretch">
 <h2>Coupled system</h2>
-
-<img data-src="img/videos/NetworkDynamics/coupled_kuramoto.gif" class="r-stretch"></section>
+<div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
+<div style="flex:0 0 28%; box-sizing:border-box; overflow-y:scroll; height:100%; font-size:0.48em; padding-right:6px;">
+<p><strong><span class="citation" data-cites="Kuramoto1975">Kuramoto (<a href="#/references" role="doc-biblioref" onclick="">1975</a>)</span></strong> — same model as before, now with coupling enabled.</p>
+<p><strong>State Equations</strong> <span class="math display">\[\dot{\theta} = I + \omega\]</span></p>
+<p><strong>Coupling: <span class="math inline">\(I\)</span></strong></p>
+<p><span class="math display">\[
+I = \frac{K \sum_{j=0}^{-1 + N} - {g}_{i,j} \sin{\left(\theta_{i} - \theta_{j} \right)}}{3}
+\]</span></p>
+<p>Receives <span class="math inline">\(\theta\)</span> from connected regions.</p>
+<p><strong>Pre-synaptic:</strong> <span class="math inline">\(c_{\text{pre}} = \sin(\theta_j - \theta_i)\)</span></p>
+<p><strong>Post-synaptic:</strong> <span class="math inline">\(c_{\text{post}} = \dfrac{K \cdot gx}{3}\)</span></p>
+<p><em>Coupling parameters</em></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(K\)</span></td>
+<td>0.4</td>
+<td>Global coupling strength</td>
+</tr>
+</tbody>
+</table>
+<p><em>Network</em></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Edge</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>V1 → V2</td>
+<td>0.7</td>
+</tr>
+<tr class="even">
+<td>V2 → MT</td>
+<td>0.4</td>
+</tr>
+<tr class="odd">
+<td>V1 → MT</td>
+<td>0.2</td>
+</tr>
+</tbody>
+</table>
+<p><em>Simulation settings</em></p>
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>Duration</td>
+<td>100 s</td>
+</tr>
+<tr class="even">
+<td>Step size</td>
+<td>0.01 s</td>
+</tr>
+<tr class="odd">
+<td>Integrator</td>
+<td>Heun</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="flex:1; box-sizing:border-box; padding-left:8px;">
+<p><img data-src="img/videos/NetworkDynamics/coupled_kuramoto.gif" style="width:100.0%"></p>
+</div>
+</div>
+</section>
 <section id="coupled-brain-network" class="slide level2">
 <h2>Coupled Brain Network</h2>
 <!-- - TODO: nodes, coupling, delays, noise
@@ -898,17 +1207,19 @@ C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij
 <section id="applications-in-basic-research" class="slide level2">
 <h2>Applications in basic research</h2>
 <div class="columns">
+<div class="column">
+<p><img data-src="img/figures/applications/Schirner2023Title.png"></p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/applications/Schirner2023Title.png"></p>
+<p><video data-src="img/videos/Schirner2023videosnippet.mp4" style="width:100.0%" autoplay="" loop="" muted="" controls=""><a href="img/videos/Schirner2023videosnippet.mp4">Video</a></video></p>
 <figcaption><span class="citation" data-cites="Schirner2023">(<a href="#/references" role="doc-biblioref" onclick="">Schirner, Deco, and Ritter 2023</a>)</span></figcaption>
 </figure>
+</div>
 </div><div class="column">
-
-</div><div class="column">
+<p><img data-src="img/figures/applications/Koller2024Title.png"></p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/applications/Koller2024Title.png"></p>
+<p><video data-src="img/videos/travelling_waves.mp4" style="width:100.0%" autoplay="" loop="" muted="" controls=""><a href="img/videos/travelling_waves.mp4">Video</a></video></p>
 <figcaption><span class="citation" data-cites="Koller2024">(<a href="#/references" role="doc-biblioref" onclick="">Koller, Schirner, and Ritter 2024</a>)</span></figcaption>
 </figure>
 </div>
@@ -916,7 +1227,11 @@ C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij
 </section>
 <section id="clinical-applications" class="slide level2">
 <h2>Clinical applications</h2>
-<ul>
+</section>
+<section id="virtual-dbs" class="slide level2">
+<h2>Virtual DBS</h2>
+
+<img data-src="img/figures/applications/clinical/fig-dbspy-overview_white.png" class="r-stretch"><ul>
 <li>TODO: translational use-cases</li>
 <li>TODO: virtual epileptic / Alzheimer / stroke patient examples</li>
 </ul>
@@ -934,7 +1249,7 @@ C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij
 <section id="how-to-analyse-a-brain-system" class="slide level2">
 <h2>How to analyse a brain system</h2>
 
-<img data-src="img/bifurcation_overview.png" class="quarto-figure quarto-figure-center r-stretch" style="width:96.0%"><div class="columns">
+<img data-src="img/figures/bifurcation/fig-bifurcation-overview.png" class="quarto-figure quarto-figure-center r-stretch" style="width:96.0%"><div class="columns">
 <div class="column smaller" style="width:33%;">
 <p><strong>Time series</strong> <span class="math inline">\(x(t)\)</span> at fixed <span class="math inline">\((a, x_0)\)</span></p>
 </div><div class="column smaller" style="width:33%;">
@@ -964,7 +1279,10 @@ x(t) = x_0\,e^{a t}
 \quad\Rightarrow\quad x_{eq} = 0
 \]</span></p>
 </div><div class="column" style="width:50%;">
-<p><img data-src="img/figures/bifurcation/fig-linear_system_a1_and_a_minus1.png"></p>
+<div class="r-stack">
+<p><img data-src="img/figures/bifurcation/fig-stability.png" class="fragment"></p>
+<p><img data-src="img/figures/bifurcation/fig-stability-perturbation.png" class="fragment"></p>
+</div>
 </div></div>
 </section>
 <section id="d-portraits" class="slide level2">
@@ -997,7 +1315,7 @@ x(t) = x_0\,e^{a t}
 \qquad r_{\mathrm{cycle}} = \sqrt a
 \]</span></p>
 
-<img data-src="img/hopf_birth.gif" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><div class="smaller">
+<img data-src="img/figures/bifurcation/fig-bifurcation-hopf-birth.gif" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><div class="smaller">
 <p>fixed point loses stability <span class="math inline">\(\Rightarrow\)</span> stable oscillation appears</p>
 </div>
 </section>
@@ -1930,6 +2248,9 @@ Jansen, Ben H., and Vincent G. Rit. 1995. <span>“Electroencephalogram and Visu
 </div>
 <div id="ref-Koller2024" class="csl-entry" role="listitem">
 Koller, Dominik P., Michael Schirner, and Petra Ritter. 2024. <span>“Human Connectome Topology Directs Cortical Traveling Waves and Shapes Frequency Gradients.”</span> <em>Nature Communications</em> 15 (1). <a href="https://doi.org/10.1038/s41467-024-47860-x">https://doi.org/10.1038/s41467-024-47860-x</a>.
+</div>
+<div id="ref-Kuramoto1975" class="csl-entry" role="listitem">
+Kuramoto, Yoshiki. 1975. <span>“Self-Entrainment of a Population of Coupled Non-Linear Oscillators.”</span> In <em>Lecture Notes in Physics</em>, 420–22. Springer-Verlag. <a href="https://doi.org/10.1007/bfb0013365">https://doi.org/10.1007/bfb0013365</a>.
 </div>
 <div id="ref-Pille2025" class="csl-entry" role="listitem">
 Pille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. <span>“Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.”</span> <em>bioRxiv</em>, November. <a href="https://doi.org/10.1101/2025.11.18.689003">https://doi.org/10.1101/2025.11.18.689003</a>.
