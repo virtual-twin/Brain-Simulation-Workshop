@@ -74,11 +74,12 @@ sys.path.insert(0, os.path.abspath('..'))  # make notebooks/ importable
 from spring_animation import animate_spring
 import numpy as np
 
-FIG_DIR = os.path.join("..", "..", "img", "figures", "spring")
+FIG_DIR = os.path.join("..", "..", "img", "figures", "dynamical_systems")
+FIG_PREFIX = "fig-dynamical_systems_springs"
 os.makedirs(FIG_DIR, exist_ok=True)
 
 def save_animation_video(ani, stem, fps=30):
-    output_stem = os.path.join(FIG_DIR, stem)
+    output_stem = os.path.join(FIG_DIR, f"{FIG_PREFIX}_{stem}")
     # Static thumbnail: draw first real frame (frame index 0)
     ani._init_draw()   # sets up blit state
     ani._func(0)       # calls update(0) → places spring + mass at initial position
@@ -97,10 +98,10 @@ ani = animate_spring(
     titles=["Spring oscillator"],
     n_periods=1,
 )
-save_animation_video(ani, 'spring_single', fps=30)
+save_animation_video(ani, 'single', fps=30)
 ```
 
-![](../../img/figures/spring/spring_single.gif)
+![](../../img/figures/dynamical_systems/fig-dynamical_systems_springs_single.gif)
 
 ### Varying initial conditions
 
@@ -132,10 +133,10 @@ ani = animate_spring(
     anchor_pos=3.5,
     n_periods=1,
 )
-save_animation_video(ani, 'spring_ics', fps=30)
+save_animation_video(ani, 'ics', fps=30)
 ```
 
-![](../../img/figures/spring/spring_ics.gif)
+![](../../img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.gif)
 
 ## Phase Space
 
@@ -157,7 +158,7 @@ for init_x in [0.5, 1.0, 1.5, 2.0]:
 system.plot(kind='vectorfield', ax=ax, alpha=0.3)
 ax.set_xlabel("x (position)")
 ax.set_ylabel("v (velocity)")
-fig.savefig(os.path.join(FIG_DIR, 'phase_space.png'), dpi=500, bbox_inches='tight')
+fig.savefig(os.path.join(FIG_DIR, f'{FIG_PREFIX}_phase_space.png'), dpi=500, bbox_inches='tight')
 ```
 
 ## Parameters
@@ -211,10 +212,10 @@ ani = animate_spring(
     anchor_pos=3.5,
     n_periods=1,
 )
-save_animation_video(ani, 'spring_mass', fps=30)
+save_animation_video(ani, 'mass', fps=30)
 ```
 
-![](../../img/figures/spring/spring_mass.gif)
+![](../../img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.gif)
 
 
 ## From Toy Models to Better Realism
@@ -258,8 +259,8 @@ ani = animate_spring(
     anchor_pos=3.5,
     n_periods=3,
 )
-save_animation_video(ani, "spring_realism", fps=30)
+save_animation_video(ani, "realism", fps=30)
 
 ```
 
-![](../../img/figures/spring/spring_realism.gif)
+![](../../img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.gif)
