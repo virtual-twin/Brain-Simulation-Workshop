@@ -24,4 +24,4 @@ stimulation parameters shape the network response.
 
 ---
 
-*Part of [Day 1](day1.qmd)*
+*See the [workshop agenda](../agenda/agenda.qmd).*
