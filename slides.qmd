@@ -500,6 +500,81 @@ $$
 </div>
 ```
 
+## Model Specification with TVB-O
+
+:::: {.columns}
+
+
+::: {.column width=35%}
+
+**Metadata Schema**
+```yaml
+id: 21
+model: Dynamics
+dynamics:
+  name: Dynamics
+  parameters:
+    a:
+      name: a
+      value: 1.0
+  state_variables:
+    x:
+      name: x
+      equation:
+        rhs: a*x
+      initial_value: 1.0
+integration:
+  method: Heun
+  time_scale: ms
+  duration: 4.0
+  step_size: 0.01
+explorations:
+  name: a_sweep
+  space:
+  - parameter: a
+    explored_values:
+    - 1.0
+    - 0.0
+    - -1.0
+```
+:::
+
+::: {.column width=65%}
+
+**Python API**
+```python
+from tvbo import DynamicalSystem, SimulationExperiment
+from tvbo.datamodel.schema import Exploration, ExplorationAxis
+
+bsplot.style.use("tvbo")
+
+g = DynamicalSystem(
+    state_variables={"x": {
+                          "equation": {"rhs": "a*x"},
+                          "initial_value": 1.0}},
+    parameters={"a": {"value": 1.0}},
+)
+
+exp = SimulationExperiment(dynamics=g)
+
+exp.explorations = Exploration(
+    name="a_sweep",
+    space=ExplorationAxis(
+      parameter="a",
+      explored_values=[1.0, 0, -1.0]
+      ),
+)
+
+exp.integration.duration = 4.0
+exp.integration.step_size = 0.01
+
+res = exp.run("tvboptim")
+```
+:::
+
+
+::::
+
 ## Applications in basic research
 
 - TODO: representative findings
@@ -573,9 +648,7 @@ $$
 
 ## 2D portraits
 
-- TODO: Add Timeseries to Phase Planes
-
-![](img/phase_portraits_2d.png){fig-align="center" width="82%"}
+![](img/figures/bifurcation/fig-bifurcation-phase-portraits-animation.gif){fig-align="center" width="82%"}
 
 ::: {.smaller}
 **Same local rule:** arrows define the flow; trajectories reveal attraction, repulsion, rotation and separatrices.

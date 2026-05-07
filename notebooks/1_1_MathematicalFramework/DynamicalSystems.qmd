@@ -33,6 +33,7 @@ from tvbo import SimulationExperiment
 bsplot.style.use('tvbo')
 
 system = DynamicalSystem(
+    name="SpringMass",
     state_variables=[
         {
             "name": "x",
