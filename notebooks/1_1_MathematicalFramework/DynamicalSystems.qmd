@@ -1,266 +1,332 @@
 ---
 jupyter: python3
-title: "Dynamical Systems — A Spring-Mass Example"
+title: "Dynamical Systems with TVBO: A Spring-Mass Example"
 ---
+
 ```{python}
+# | label: setup
 # | collapse: true
 import bsplot
-from IPython.display import Markdown, HTML
+import matplotlib.pyplot as plt
+import numpy as np
+from IPython.display import Markdown
+
+from tvbo import Dynamics, SimulationExperiment
+from tvbo.datamodel.schema import Parameter
+
+bsplot.style.use("tvbo")
 ```
 
 # Dynamical Systems
 
-Before we simulate large-scale brain networks, we need a common language to *describe* and *run* dynamical systems. This notebook introduces that language using the most familiar dynamical system there is: **a mass on a spring**.
+This notebook is the static companion to the workshop slides. The slides show the same concepts visually; here we make them explicit in TVBO code.
 
-Every concept introduced here — state variables, parameters, initial conditions, phase space — carries over directly to neural mass models and whole-brain simulations.
+The workshop starts from the generic state-evolution equation
 
-## The Spring Equation
+$$
+dS_i = \left[f_d(S_i, \theta^d, C_i, I_i)\right]dt + g(S_i, \theta^g)\,dW_i.
+$$
 
-A mass $m$ attached to a spring with stiffness $k$ satisfies Newton's second law:
+This notebook first removes everything except the deterministic local dynamics: one node, no coupling, no external input, and no noise. That leaves the core object that appears everywhere in TVBO: a dynamical system with state variables, parameters, initial conditions, and equations of motion.
 
-$$m\,\ddot{x} = -k\,x$$
+## Learning Path
 
-Rewriting as a first-order system (the standard form for any ODE solver):
+1. Define a system as a TVBO `Dynamics` object.
+2. Run it through a `SimulationExperiment`.
+3. Read results with named xarray dimensions.
+4. Compare initial conditions as different trajectories in the same flow.
+5. Use phase space to see the geometry of the dynamics.
+6. Vary parameters and inspect how the behavior changes.
+7. Add damping and load terms to move from a toy model toward realism.
+8. Connect this toy example to neural mass models, networks, events, observations, and bifurcations.
 
-$$\dot{x} = v \qquad \dot{v} = -\frac{k}{m}\,x$$
+The didactic arc follows the standard dynamical-systems progression: state space and flows, fixed points and stability, parameter-dependent behavior, and then richer systems. That is the same conceptual route used in Strogatz-style nonlinear dynamics and in Izhikevich-style phase-plane neuroscience, but the examples below use TVBO objects throughout.
 
-This is a **`DynamicalSystem`**: a set of **state variables** $(x, v)$ with equations of motion, and **parameters** $(k, m)$ that control the behaviour. Below we define it using the TVBO framework.
+## From a Second-Order Equation to TVBO
+
+A mass $m$ attached to a spring with stiffness $k$ satisfies
+
+$$
+m\ddot{x} = -kx.
+$$
+
+Numerical ODE solvers work with first-order systems, so we introduce velocity $v = \dot{x}$:
+
+$$
+\dot{x} = v, \qquad \dot{v} = -\frac{k}{m}x.
+$$
+
+In TVBO, these become state variables and parameters. State variables evolve over time. Parameters are fixed during one simulation unless we explicitly explore them.
 
 ```{python}
-from tvbo import Dynamics as DynamicalSystem
-from tvbo import SimulationExperiment
-
-bsplot.style.use('tvbo')
-
-system = DynamicalSystem(
-    name="SpringMass",
-    state_variables=[
-        {
-            "name": "x",
-            "equation": {"rhs": "v"},
-            "initial_value": 2.0,
+def make_spring(x0=2.0, v0=0.0, k=0.0001, m=1.0):
+    return Dynamics(
+        name="SpringMass",
+        description="Undamped spring-mass oscillator in first-order form.",
+        state_variables={
+            "x": {
+                "description": "Displacement from equilibrium",
+                "unit": "m",
+                "equation": {"rhs": "v"},
+                "initial_value": x0,
+            },
+            "v": {
+                "description": "Velocity",
+                "unit": "m/ms",
+                "equation": {"rhs": "-(k/m) * x"},
+                "initial_value": v0,
+            },
         },
-        {
-            "name": "v",
-            "equation": {"rhs": "-(k/m) * x"},
-            "initial_value": 0.0,
+        parameters={
+            "k": {
+                "description": "Spring stiffness",
+                "unit": "kg/ms^2",
+                "value": k,
+            },
+            "m": {
+                "description": "Mass",
+                "unit": "kg",
+                "value": m,
+            },
         },
-    ],
-    parameters=[
-        {"name": "k", "value": 0.0001},
-        {"name": "m", "value": 1.0},
-    ],
+    )
+
+
+spring = make_spring()
+Markdown(spring.render("markdown"))
+```
+
+## Run a Simulation Experiment
+
+TVBO separates the model from the experiment. A `Dynamics` object describes the equations; a `SimulationExperiment` says how to run them.
+
+```{python}
+def run_dynamics(dynamics, duration=900.0, step_size=1.0):
+    experiment = SimulationExperiment(dynamics=dynamics)
+    experiment.integration.duration = duration
+    experiment.integration.step_size = step_size
+    return experiment.run()
+
+
+def run_spring(x0=2.0, v0=0.0, k=0.0001, m=1.0, duration=900.0, step_size=1.0):
+    return run_dynamics(make_spring(x0=x0, v0=v0, k=k, m=m), duration=duration, step_size=step_size)
+
+
+def series(result, variable):
+    return result.integration.data.sel(variable=variable).squeeze(drop=True)
+
+
+def plot_series(result, variable="x", ax=None, label=None, **kwargs):
+    if ax is None:
+        _, ax = plt.subplots(figsize=(6, 3.2))
+    data = series(result, variable)
+    ax.plot(data.coords["time"].to_numpy(), data.to_numpy(), label=label or variable, **kwargs)
+    return ax
+
+
+result = run_spring()
+result.integration.data
+```
+
+The result mirrors the experiment structure. The main simulation output is `result.integration.data`, an xarray `DataArray` with named coordinates such as `time` and `variable`. This matches the TVBO results documentation: use named dimensions instead of positional array indexing.
+
+```{python}
+fig, ax = plt.subplots(figsize=(6, 3.2))
+plot_series(result, "x", ax=ax, label="$x(t)$", color="C0")
+ax.axhline(0.0, color="0.4", lw=0.8, ls="--")
+ax.set(xlabel="Time", ylabel="Displacement $x$", title="Spring displacement over time")
+ax.legend(handlelength=1)
+fig.tight_layout()
+fig
+```
+
+## Initial Conditions: Same Flow, Different Trajectories
+
+Initial conditions pick the starting point in state space. They do not change the vector field. This distinction matters later for neural models: changing a state variable's initial value is not the same as changing a physiological parameter.
+
+For the undamped spring, larger initial displacement gives a larger-amplitude orbit, but the frequency remains
+
+$$
+\omega = \sqrt{\frac{k}{m}}.
+$$
+
+```{python}
+fig, ax = plt.subplots(figsize=(6, 3.2))
+for x0, color in zip([-1.0, -2.0, -3.0], ["C0", "C1", "C2"]):
+    ic_result = run_spring(x0=x0, duration=900.0, step_size=1.0)
+    plot_series(ic_result, "x", ax=ax, label=rf"$x_0={x0}$", color=color)
+
+ax.axhline(0.0, color="0.4", lw=0.8, ls="--")
+ax.set(xlabel="Time", ylabel="Displacement $x$", title="Initial conditions select trajectories")
+ax.legend(handlelength=1)
+fig.tight_layout()
+fig
+```
+
+TVBO also supports sampled initial conditions through `Distribution` objects and trial-based explorations. That is the scalable version used for phase portraits and uncertainty-style simulations in the TVBO initial-conditions guide.
+
+## Phase Space: The Geometry of the Flow
+
+A time series shows one coordinate as a function of time. A phase portrait shows the full state $(x, v)$. This is the geometry-first view emphasized in nonlinear dynamics and in phase-plane neuroscience.
+
+For the undamped spring, the trajectories are closed loops because energy is conserved. The vector field is the same for every trajectory; only the initial condition changes.
+
+```{python}
+fig, ax = plt.subplots(figsize=(5.2, 4.8))
+make_spring().plot(kind="vectorfield", ax=ax, alpha=0.25)
+
+for x0, color in zip([0.5, 1.0, 1.5, 2.0], ["C0", "C1", "C2", "C3"]):
+    phase_result = run_spring(x0=x0, duration=900.0, step_size=1.0)
+    x = series(phase_result, "x")
+    v = series(phase_result, "v")
+    ax.plot(x.to_numpy(), v.to_numpy(), color=color, lw=1.4, label=rf"$x_0={x0}$")
+    ax.scatter(x.isel(time=0).to_numpy(), v.isel(time=0).to_numpy(), color=color, s=24, zorder=3)
+
+ax.set(xlabel="Position $x$", ylabel="Velocity $v$", title="Phase space")
+ax.legend(handlelength=1, fontsize=8)
+fig.tight_layout()
+fig
+```
+
+## Parameters: Changing the System Itself
+
+Parameters are different from initial conditions. Initial conditions choose where a trajectory begins; parameters reshape the vector field.
+
+Here we vary the mass $m$ while keeping $k$ and $x_0$ fixed. Heavier mass means more inertia, so the oscillation is slower.
+
+```{python}
+fig, ax = plt.subplots(figsize=(6, 3.2))
+k_fixed = 0.0001
+
+for mass, color in zip([0.5, 1.0, 2.0], ["C0", "C1", "C2"]):
+    mass_result = run_spring(x0=-2.0, k=k_fixed, m=mass, duration=1200.0, step_size=1.0)
+    omega = np.sqrt(k_fixed / mass)
+    plot_series(mass_result, "x", ax=ax, label=rf"$m={mass}$, $\omega={omega:.4f}$", color=color)
+
+ax.axhline(0.0, color="0.4", lw=0.8, ls="--")
+ax.set(xlabel="Time", ylabel="Displacement $x$", title="Parameter changes reshape the dynamics")
+ax.legend(handlelength=1, fontsize=8)
+fig.tight_layout()
+fig
+```
+
+For larger parameter sweeps, the TVBO docs generalize this pattern with `Exploration` and `ExplorationAxis`, so the sweep becomes part of the experiment specification rather than a manual Python loop.
+
+```{python}
+# | eval: false
+from tvbo.datamodel.schema import Exploration, ExplorationAxis
+
+experiment = SimulationExperiment(dynamics=make_spring(x0=-2.0))
+experiment.explorations["mass_sweep"] = Exploration(
+    name="mass_sweep",
+    space=ExplorationAxis(parameter="m", explored_values=[0.5, 1.0, 2.0]),
 )
-
-Markdown(system.render('markdown'))
+mass_result = experiment.run("tvboptim")
+mass_result.explorations["mass_sweep"].plot(overlay=True)
 ```
 
-## Initial Conditions
+## Toward Realism: Damping and Load
 
-To actually *run* the system we must pick a **starting point** $(x_0, v_0)$ — the **initial condition**.
+The ideal spring never loses energy. Real systems usually do. We can extend the same TVBO model by adding a damping term and a constant load:
 
-> Think of it as placing the mass at position $x_0$ and releasing it from rest ($v_0 = 0$).
+$$
+\dot{x} = v, \qquad
+\dot{v} = -\frac{k}{m}x - \frac{c}{m}v + g_{\mathrm{eff}}.
+$$
 
-The initial condition determines *which* trajectory the system follows, but not the overall dynamics — that is governed by the parameters.
+The damping term changes the transient. The load shifts the equilibrium from $x = 0$ to
+
+$$
+x^* = \frac{m g_{\mathrm{eff}}}{k}.
+$$
 
 ```{python}
-system.state_variables['x']['initial_value'] = 2.0
-result = SimulationExperiment(dynamics=system).run()
+def make_damped_loaded_spring(x0=2.0, v0=0.0, k=0.0001, m=1.0, c=0.006, g_eff=0.00015):
+    system = make_spring(x0=x0, v0=v0, k=k, m=m)
+    system.description = "Spring-mass oscillator with damping and a constant load."
+    system.state_variables["v"]["equation"]["rhs"] = "-(k/m) * x - (c/m) * v + g_eff"
+    system.parameters["c"] = Parameter(name="c", description="Damping coefficient", value=c)
+    system.parameters["g_eff"] = Parameter(name="g_eff", description="Constant effective load", value=g_eff)
+    return system
+
+
+ideal = make_spring(x0=2.0)
+realistic = make_damped_loaded_spring(x0=2.0)
+
+ideal_result = run_dynamics(ideal, duration=1800.0, step_size=1.0)
+realistic_result = run_dynamics(realistic, duration=1800.0, step_size=1.0)
+
+x_eq_real = realistic.parameters["m"].value * realistic.parameters["g_eff"].value / realistic.parameters["k"].value
+
+fig, (ax_time, ax_phase) = plt.subplots(1, 2, figsize=(10, 3.6))
+
+plot_series(ideal_result, "x", ax=ax_time, label="ideal", color="C0")
+plot_series(realistic_result, "x", ax=ax_time, label="damped + load", color="C3")
+ax_time.axhline(0.0, color="C0", lw=0.8, ls="--", alpha=0.6)
+ax_time.axhline(x_eq_real, color="C3", lw=0.8, ls="--", alpha=0.6)
+ax_time.set(xlabel="Time", ylabel="Displacement $x$", title="Time domain")
+ax_time.legend(handlelength=1)
+
+for label, sim_result, color in [("ideal", ideal_result, "C0"), ("damped + load", realistic_result, "C3")]:
+    x = series(sim_result, "x")
+    v = series(sim_result, "v")
+    ax_phase.plot(x.to_numpy(), v.to_numpy(), color=color, lw=1.4, label=label)
+
+ax_phase.scatter([0.0, x_eq_real], [0.0, 0.0], color=["C0", "C3"], s=28, zorder=3)
+ax_phase.set(xlabel="Position $x$", ylabel="Velocity $v$", title="Phase-space geometry")
+ax_phase.legend(handlelength=1)
+
+fig.tight_layout()
+fig
+```
+
+## Connection to TVBO Documentation
+
+The spring example is intentionally simple, but each piece maps directly to the main TVBO documentation topics.
+
+| Concept in this notebook | TVBO object or guide | Why it matters later |
+|---|---|---|
+| Equations and parameters | `Dynamics`, DefineDynamicalSystem | Neural mass and oscillator models use the same schema. |
+| Run configuration | `SimulationExperiment` | The experiment combines dynamics, integration, networks, observations, algorithms, and continuations. |
+| Named output | `ExperimentResult.integration.data` | Results are xarray objects, so analysis should use named dimensions like `time`, `variable`, and `node`. |
+| Initial conditions | InitialConditions | Defaults, node overrides, sampled distributions, and transient warm-up resolve the initial state. |
+| Parameter sweeps | `Exploration` | Parameter scans become declarative experiment metadata. |
+| Phase portraits | BifurcationTutorial | Geometry explains stability, oscillations, and bifurcations. |
+| Damping and load | Model specification | More realistic assumptions are added by changing equations and parameters, not by changing the execution workflow. |
+
+## From Spring-Mass to Neural Mass Models
+
+The next workshop section moves from a physical toy system to neural mass models. The TVBO database already stores many such models with the same structure: state variables, parameters, equations, and metadata.
+
+```{python}
+neural_mass_models = Dynamics.list_db(model_type="neural_mass")
+neural_mass_models[:8]
 ```
 
 ```{python}
-import sys, os
-sys.path.insert(0, os.path.abspath('..'))  # make notebooks/ importable
-from spring_animation import animate_spring
-import numpy as np
-
-FIG_DIR = os.path.join("..", "..", "img", "figures", "dynamical_systems")
-FIG_PREFIX = "fig-dynamical_systems_springs"
-os.makedirs(FIG_DIR, exist_ok=True)
-
-def save_animation_video(ani, stem, fps=30):
-    output_stem = os.path.join(FIG_DIR, f"{FIG_PREFIX}_{stem}")
-    # Static thumbnail: draw first real frame (frame index 0)
-    ani._init_draw()   # sets up blit state
-    ani._func(0)       # calls update(0) → places spring + mass at initial position
-    ani._fig.savefig(f"{output_stem}_thumb.png", bbox_inches="tight")
-    ani.save(f"{output_stem}.gif", writer="pillow", fps=fps)
-
-x_ts = np.asarray(result.data.sel({"variable": "x"})).ravel()
-
-ani = animate_spring(
-    [x_ts],
-    orientation="horizontal",
-    anchor_pos=-3.0,
-    coil_amplitude=0.15,
-    mass_sizes=0.3,
-    labels=["$x$"],
-    titles=["Spring oscillator"],
-    n_periods=1,
-)
-save_animation_video(ani, 'single', fps=30)
+jansen_rit = Dynamics.from_db("JansenRit")
+print("state variables:", list(jansen_rit.state_variables))
+print("first parameters:", list(jansen_rit.parameters)[:8])
 ```
 
-![](../../img/figures/dynamical_systems/fig-dynamical_systems_springs_single.gif)
+This is the key bridge: the spring has $(x, v)$, while a neural mass model has variables such as membrane potentials, firing-rate transforms, or synaptic gating variables. But the TVBO workflow remains the same:
 
-### Varying initial conditions
+1. Choose or define `Dynamics`.
+2. Put it in a `SimulationExperiment`.
+3. Run the experiment.
+4. Analyze `result.integration.data` and any observations.
 
-Same spring ($k$ and $m$ fixed), three different release positions $x_0$.
+## What Comes Next in the Workshop
 
-Notice: **bigger stretch → larger amplitude, same frequency**.
-The frequency $\omega = \sqrt{k/m}$ depends only on the parameters, not on where you start.
+The spring notebook stops at a single deterministic system. The later slides add the missing terms from the workshop equation.
 
-```{python}
-import numpy as np
-from spring_animation import animate_spring
+| Next concept | TVBO object | Role |
+|---|---|---|
+| Brain regions and structural connectivity | `Network` | Adds nodes, edges, weights, delays, and positions. |
+| Inter-regional influence | `Coupling` | Turns source-node activity into input for target-node dynamics. |
+| External stimulation or perturbations | `Event` | Adds time-dependent input $I_i(t)$. |
+| Measurement models | `observations` | Transforms hidden state into BOLD, FC, PSD, or custom outputs. |
+| Noise | noise terms and stochastic integrators | Adds fluctuations via $g(S_i, \theta^g)dW_i$. |
+| Regime changes | `Continuation` | Tracks fixed points, stability changes, and oscillatory branches. |
 
-# --- 3 initial conditions, same k and m ---
-init_xs = [-1.0, -2.0, -3.0]
-
-results_multi = []
-for x0 in init_xs:
-    system.state_variables['x']['initial_value'] = x0
-    results_multi.append(SimulationExperiment(dynamics=system).run())
-
-ts_arrays = [np.asarray(r.data.sel({"variable": "x"})).ravel() for r in results_multi]
-
-ani = animate_spring(
-    ts_arrays,
-    labels=[f'$x_0={x0}$' for x0 in init_xs],
-    titles=[f'$x_0 = {x0}$' for x0 in init_xs],
-    mass_sizes=0.4,
-    orientation="vertical",
-    anchor_pos=3.5,
-    n_periods=1,
-)
-save_animation_video(ani, 'ics', fps=30)
-```
-
-![](../../img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.gif)
-
-## Phase Space
-
-You just watched three separate time series. **Phase space** is a more compact way to show all of them at once: instead of plotting $x$ vs. time, we plot $x$ (position) vs. $v$ (velocity) for every moment simultaneously.
-
-- Each **closed curve** is one trajectory — the system endlessly traces the same loop (energy is conserved).
-- Larger loops correspond to larger initial displacements $x_0$ (more energy).
-- The **arrows** (vector field) show the direction of motion everywhere, independent of any particular trajectory.
-
-```{python}
-import matplotlib.pyplot as plt
-
-fig, ax = plt.subplots()
-
-for init_x in [0.5, 1.0, 1.5, 2.0]:
-    system.state_variables['x']['initial_value'] = init_x
-    system.plot(kind='phase', ax=ax, cmap='grey_r')
-
-system.plot(kind='vectorfield', ax=ax, alpha=0.3)
-ax.set_xlabel("x (position)")
-ax.set_ylabel("v (velocity)")
-fig.savefig(os.path.join(FIG_DIR, f'{FIG_PREFIX}_phase_space.png'), dpi=500, bbox_inches='tight')
-```
-
-## Parameters
-
-Parameters are the *knobs* of the system. Here we vary the **mass** $m$ while keeping the spring constant $k$ fixed.
-
-The oscillation frequency is:
-
-$$\omega = \sqrt{\frac{k}{m}}$$
-
-For the animations below, we start from a stretched state ($x_0 < 0$, below equilibrium) so the first motion is an upward snap-back, which is usually more intuitive to interpret visually.
-
-| $m$ | $\omega$ | intuition |
-|-----|----------|----------|
-| small | high | light mass → spring accelerates it quickly → fast oscillation |
-| large | low | heavy mass → same spring force has less effect → slow oscillation |
-
-> **Analogy:** a stiff guitar string vibrates faster with less tension (more "resistance" slows it down). Heavier mass = more inertia = slower response to the restoring force.
-
-The box size below encodes mass visually: **bigger box = heavier mass**.
-
-```{python}
-import numpy as np
-from spring_animation import animate_spring
-
-# --- Same x0 and k, 3 different masses m ---
-# Heavier mass → lower frequency (ω = sqrt(k/m))
-# Box size scales as m^(1/3) so volume ∝ mass
-m_values = [0.5, 1.0, 2.0]
-x0_fixed = -2.0
-k_fixed  = system.parameters['k']['value']
-
-results_m = []
-for m in m_values:
-    system.state_variables['x']['initial_value'] = x0_fixed
-    system.state_variables['v']['initial_value'] = 0.0
-    system.parameters['m']['value'] = m
-    results_m.append(SimulationExperiment(dynamics=system).run())
-system.parameters['m']['value'] = 1.0  # restore default
-
-ts_m   = [np.asarray(r.data.sel({"variable": "x"})).ravel() for r in results_m]
-sizes  = [0.4 * (m ** (1/3)) for m in m_values]          # cube-root: volume ∝ m
-titles = [rf'$m={m},\, \omega={(k_fixed/m)**0.5:.4f}$' for m in m_values]
-
-ani = animate_spring(
-    ts_m,
-    labels=[f'$m={m}$' for m in m_values],
-    titles=titles,
-    mass_sizes=sizes,
-    orientation="vertical",
-    anchor_pos=3.5,
-    n_periods=1,
-)
-save_animation_video(ani, 'mass', fps=30)
-```
-
-![](../../img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.gif)
-
-
-## From Toy Models to Better Realism
-
-The same framework lets us add more realistic assumptions. For example, we can include:
-
-- damping (energy loss / friction)
-- a constant load term (gravity-like bias)
-
-This changes both the transient behaviour (oscillations decay) and the equilibrium level.
-
-```{python}
-from tvbo.datamodel.schema import Parameter
-
-# Copy System
-realistic = system.copy()
-
-# Change State-Equation
-realistic.state_variables["v"]["equation"]["rhs"] = "-(k/m) * x - (c/m) * v + g_eff"
-
-# Add Parameters
-realistic.parameters["c"] = Parameter(name="c", value=0.006)
-realistic.parameters["g_eff"] = Parameter(name="g_eff", value=0.00015)
-
-r_ideal = SimulationExperiment(dynamics=system).run()
-r_real = SimulationExperiment(dynamics=realistic).run()
-
-# x_eq = m * g_eff / k  (where the damped system settles)
-g_eff = realistic.parameters["g_eff"]["value"]
-k = realistic.parameters["k"]["value"]
-m = realistic.parameters["m"]["value"]
-x_eq_real = m * g_eff / k
-
-ani = animate_spring(
-    [r_ideal.data.sel({"variable": "x"}), r_real.data.sel({"variable": "x"})],
-    labels=["toy model", "damped + load"],
-    titles=["Toy model", "Damped + load"],
-    equilibrium=[0.0, x_eq_real],
-    mass_sizes=0.4,
-    orientation="vertical",
-    anchor_pos=3.5,
-    n_periods=3,
-)
-save_animation_video(ani, "realism", fps=30)
-
-```
-
-![](../../img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.gif)
+This is why phase space and stability are introduced early. They are not only mathematical background; they are the language used later to interpret excitability, oscillations, bifurcations, and transitions in neural population models.

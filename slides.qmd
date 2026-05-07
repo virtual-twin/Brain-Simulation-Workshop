@@ -18,7 +18,7 @@ format:
     slide-number: true
     scrollable: true
     auto-stretch: true
-    auto-play-media: true
+    auto-play-media: false
     chalkboard: true
     incremental: false
     toc: false
@@ -212,12 +212,8 @@ $$
 
 ::: {.column}
 
-::: {.r-stack}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_single.mp4){fig-align="center" width="100%" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png" data-autoplay="false"}
 
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png){fig-align="center"}
-
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_single.gif){.fragment fig-align="center"}
-:::
 :::
 
 ::::
@@ -257,11 +253,8 @@ $$
 
 ::: {.column}
 
-::: {.r-stack}
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png){fig-align="center"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.mp4){fig-align="center" width="100%" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png" data-autoplay="false"}
 
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.gif){.fragment fig-align="center" }
-:::
 :::
 
 ::::
@@ -272,20 +265,12 @@ $$
 
 ## Parameters — Mass {background-color="#ffffff"}
 
-::: {.r-stack}
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png){fig-align="center" height="580px"}
-
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.gif){.fragment fig-align="center" height="580px"}
-:::
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.mp4){fig-align="center" height="580px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" data-autoplay="false"}
 
 
 ## Towards Realism — Damping & Load {background-color="#ffffff"}
 
-::: {.r-stack}
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png){fig-align="center" height="580px"}
-
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.gif){.fragment fig-align="center" height="580px"}
-:::
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.mp4){fig-align="center" height="580px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png" data-autoplay="false"}
 
 # Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
 
@@ -802,7 +787,7 @@ res = exp.run("tvboptim")
 
 ![](img/figures/applications/Schirner2023Title.png)
 
-![[@Schirner2023]](img/videos/Schirner2023videosnippet.mp4){width="100%" loop="" muted=""}
+![[@Schirner2023]](img/videos/Schirner2023videosnippet.mp4){width="100%" autoplay="" loop="" muted=""}
 
 :::
 
@@ -810,7 +795,7 @@ res = exp.run("tvboptim")
 
 ![](img/figures/applications/Koller2024Title.png)
 
-![[@Koller2024]](img/videos/travelling_waves.mp4){width="100%" loop="" muted=""}
+![[@Koller2024]](img/videos/travelling_waves.mp4){width="100%" autoplay="" loop="" muted=""}
 
 :::
 
