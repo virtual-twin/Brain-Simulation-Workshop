@@ -223,6 +223,10 @@ window.Quarto = {
     <a class="dropdown-item" href="../../notebooks/04b_parameter_fitting.html">
  <span class="dropdown-text">4.2 Parameter fitting</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../notebooks/4_inference_demos.html">
+ <span class="dropdown-text">4.3 Inference demos</span></a>
+  </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
     <a class="dropdown-item" href="../../notebooks/5_stimulation.html">
@@ -354,6 +358,12 @@ window.Quarto = {
  <span class="menu-text">Use-case B — homogeneous vs.&nbsp;heterogeneous parameter fitting</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/4_inference_demos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inference demos — figures for §4</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -448,7 +458,7 @@ window.Quarto = {
 </header>
 
 
-<div id="34244ce8" class="cell" data-collapse="true" data-execution_count="1">
+<div id="8184c8f8" class="cell" data-collapse="true" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> bsplot</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Markdown, HTML</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -463,7 +473,7 @@ window.Quarto = {
 <p>Rewriting as a first-order system (the standard form for any ODE solver):</p>
 <p><span class="math display">\[\dot{x} = v \qquad \dot{v} = -\frac{k}{m}\,x\]</span></p>
 <p>This is a <strong><code>DynamicalSystem</code></strong>: a set of <strong>state variables</strong> <span class="math inline">\((x, v)\)</span> with equations of motion, and <strong>parameters</strong> <span class="math inline">\((k, m)\)</span> that control the behaviour. Below we define it using the TVBO framework.</p>
-<div id="eeb01a87" class="cell" data-execution_count="2">
+<div id="1465b2af" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> Dynamics <span class="im">as</span> DynamicalSystem</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> SimulationExperiment</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -564,7 +574,7 @@ window.Quarto = {
 <p>Think of it as placing the mass at position <span class="math inline">\(x_0\)</span> and releasing it from rest (<span class="math inline">\(v_0 = 0\)</span>).</p>
 </blockquote>
 <p>The initial condition determines <em>which</em> trajectory the system follows, but not the overall dynamics — that is governed by the parameters.</p>
-<div id="7b724e97" class="cell" data-execution_count="3">
+<div id="041f8a15" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>system.state_variables[<span class="st">'x'</span>][<span class="st">'initial_value'</span>] <span class="op">=</span> <span class="fl">2.0</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> SimulationExperiment(dynamics<span class="op">=</span>system).run()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -581,7 +591,7 @@ Experiment complete.
 ============================================================</code></pre>
 </div>
 </div>
-<div id="be46a126" class="cell" data-execution_count="4">
+<div id="2b16edd1" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys, os</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sys.path.insert(<span class="dv">0</span>, os.path.abspath(<span class="st">'..'</span>))  <span class="co"># make notebooks/ importable</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spring_animation <span class="im">import</span> animate_spring</span>
@@ -617,7 +627,7 @@ Experiment complete.
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="varying-initial-conditions"><span class="header-section-number">1.3.1</span> Varying initial conditions</h3>
 <p>Same spring (<span class="math inline">\(k\)</span> and <span class="math inline">\(m\)</span> fixed), three different release positions <span class="math inline">\(x_0\)</span>.</p>
 <p>Notice: <strong>bigger stretch → larger amplitude, same frequency</strong>. The frequency <span class="math inline">\(\omega = \sqrt{k/m}\)</span> depends only on the parameters, not on where you start.</p>
-<div id="a8581ba8" class="cell" data-execution_count="5">
+<div id="27506877" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spring_animation <span class="im">import</span> animate_spring</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -688,7 +698,7 @@ Experiment complete.
 <li>Larger loops correspond to larger initial displacements <span class="math inline">\(x_0\)</span> (more energy).</li>
 <li>The <strong>arrows</strong> (vector field) show the direction of motion everywhere, independent of any particular trajectory.</li>
 </ul>
-<div id="542c6846" class="cell" data-execution_count="6">
+<div id="116e0e70" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -746,7 +756,7 @@ Experiment complete.
 <p><strong>Analogy:</strong> a stiff guitar string vibrates faster with less tension (more “resistance” slows it down). Heavier mass = more inertia = slower response to the restoring force.</p>
 </blockquote>
 <p>The box size below encodes mass visually: <strong>bigger box = heavier mass</strong>.</p>
-<div id="b3ee9268" class="cell" data-execution_count="7">
+<div id="97e2efa7" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spring_animation <span class="im">import</span> animate_spring</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -825,7 +835,7 @@ Experiment complete.
 <li>a constant load term (gravity-like bias)</li>
 </ul>
 <p>This changes both the transient behaviour (oscillations decay) and the equilibrium level.</p>
-<div id="f78b0f39" class="cell" data-execution_count="8">
+<div id="c8bdda36" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo.datamodel.schema <span class="im">import</span> Parameter</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy System</span></span>

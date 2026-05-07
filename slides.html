@@ -232,9 +232,6 @@
   </head><body class="quarto-light"><a class="home-btn" href="index.html" title="Back to workshop home">
     <i class="fa fa-home"></i>
   </a>
-  <script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-  <script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-  <link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <script src="mathjax-config.js"></script>
@@ -315,42 +312,81 @@ Plotting the Brain</p>
 </section>
 <section id="basic-ideas-and-history" class="slide level2">
 <h2>Basic ideas and history</h2>
-<div class="rows">
-<div class="row" height="60%">
+<div class="basic-ideas-rows">
+<div class="basic-ideas-row" style="--row-height: 70%;">
 <div class="columns">
 <div class="column" style="width:25%;">
-<p><img data-src="img/figures/basic_idea_imaging_workflow1.png" style="width:100.0%"></p>
+<p><img data-src="img/figures/basic_idea_imaging_workflow1.png"></p>
 </div><div class="column fragment" style="width:25%;">
-<p><img data-src="img/figures/basic_idea_imaging_workflow2.png" style="width:100.0%"></p>
+<p><img data-src="img/figures/basic_idea_imaging_workflow2.png"></p>
 </div><div class="column fragment" style="width:25%;">
-<p><img data-src="img/figures/basic_idea_imaging_workflow3.png" style="width:100.0%"></p>
+<p><img data-src="img/figures/basic_idea_imaging_workflow3.png"></p>
 </div><div class="column fragment" style="width:25%;">
-<p><img data-src="img/figures/basic_idea_imaging_workflow4.png" style="width:100.0%"></p>
+<p><img data-src="img/figures/basic_idea_imaging_workflow4.png"></p>
 </div></div>
 </div>
-<div class="row fragment" height="40%">
+<div class="basic-ideas-row fragment" style="--row-height: 90%;">
 <div class="columns">
-<div class="column" style="width:70%;">
-<div class="cell" data-reveal="true" data-layout-align="center">
+<div class="column">
+<p><img data-src="img/state_evolution_node.png"></p>
+</div><div class="column">
+<div class="cell" data-fig-width="5" data-fig-height="1.6" data-layout-align="center">
 <div class="cell-output-display">
 <div>
 <p></p><figure class=""><p></p>
 <div>
-<pre class="mermaid mermaid-js">flowchart LR
-    S(["State:  $$ S(t) $$"]):::box --&gt; F["Evolution Function:  $$ f(S, θ)$$"]:::fn --&gt; dS(["Next State:  $$ dS/dt $$ "]):::box
-    theta(["Parameters:  $$\theta$$"]):::param --&gt; F
-
-    classDef box  fill:#d6e4f0,stroke:#6880af,stroke-width:2px,color:#1a1a2e,rx:8,ry:8
-    classDef fn   fill:#6880af,stroke:#3a5080,stroke-width:2px,color:#ffffff,font-weight:bold,rx:4,ry:4
-    classDef param fill:#f0dfd6,stroke:#af8068,stroke-width:2px,color:#1a1a2e,rx:8,ry:8
-</pre>
+<svg width="480" height="154" viewbox="0.00 0.00 360.00 73.81" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none; display: block; margin: auto auto auto auto">
+<g id="graph0" class="graph" transform="scale(0.753116 0.753116) rotate(0) translate(4 94)">
+<title>G</title>
+<!-- S -->
+<g id="node1" class="node">
+<title>S</title>
+<path fill="#d6e4f0" stroke="#6880af" stroke-width="2" d="M90.08,-90C90.08,-90 39.04,-90 39.04,-90 33.04,-90 27.04,-84 27.04,-78 27.04,-78 27.04,-66 27.04,-66 27.04,-60 33.04,-54 39.04,-54 39.04,-54 90.08,-54 90.08,-54 96.08,-54 102.08,-60 102.08,-66 102.08,-66 102.08,-78 102.08,-78 102.08,-84 96.08,-90 90.08,-90"></path>
+<text text-anchor="middle" x="64.56" y="-67.8" font-family="Helvetica,sans-Serif" font-size="14.00">State: S(t)</text>
+</g>
+<!-- F -->
+<g id="node2" class="node">
+<title>F</title>
+<path fill="#6880af" stroke="#3a5080" stroke-width="2" d="M315.21,-63C315.21,-63 166.08,-63 166.08,-63 160.08,-63 154.08,-57 154.08,-51 154.08,-51 154.08,-39 154.08,-39 154.08,-33 160.08,-27 166.08,-27 166.08,-27 315.21,-27 315.21,-27 321.21,-27 327.21,-33 327.21,-39 327.21,-39 327.21,-51 327.21,-51 327.21,-57 321.21,-63 315.21,-63"></path>
+<text text-anchor="middle" x="240.65" y="-40.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="white">Evolution Function: f(S, θ)</text>
+</g>
+<!-- S&#45;&gt;F -->
+<g id="edge1" class="edge">
+<title>S-&gt;F</title>
+<path fill="none" stroke="black" stroke-width="1.2" d="M102.48,-66.27C115.63,-64.23 131.11,-61.83 146.83,-59.39"></path>
+<polygon fill="black" stroke="black" stroke-width="1.2" points="147.53,-61.77 154.07,-58.27 146.77,-56.92 147.53,-61.77"></polygon>
+</g>
+<!-- dS -->
+<g id="node3" class="node">
+<title>dS</title>
+<path fill="#d6e4f0" stroke="#6880af" stroke-width="2" d="M457.93,-63C457.93,-63 364.26,-63 364.26,-63 358.26,-63 352.26,-57 352.26,-51 352.26,-51 352.26,-39 352.26,-39 352.26,-33 358.26,-27 364.26,-27 364.26,-27 457.93,-27 457.93,-27 463.93,-27 469.93,-33 469.93,-39 469.93,-39 469.93,-51 469.93,-51 469.93,-57 463.93,-63 457.93,-63"></path>
+<text text-anchor="middle" x="411.1" y="-40.8" font-family="Helvetica,sans-Serif" font-size="14.00">Next State: dS/dt</text>
+</g>
+<!-- F&#45;&gt;dS -->
+<g id="edge3" class="edge">
+<title>F-&gt;dS</title>
+<path fill="none" stroke="black" stroke-width="1.2" d="M327.35,-45C333.18,-45 339,-45 344.7,-45"></path>
+<polygon fill="black" stroke="black" stroke-width="1.2" points="344.84,-47.45 351.84,-45 344.84,-42.55 344.84,-47.45"></polygon>
+</g>
+<!-- theta -->
+<g id="node4" class="node">
+<title>theta</title>
+<ellipse fill="#f0dfd6" stroke="#af8068" stroke-width="2" cx="64.56" cy="-18" rx="64.61" ry="18"></ellipse>
+<text text-anchor="middle" x="64.56" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00">Parameters: θ</text>
+</g>
+<!-- theta&#45;&gt;F -->
+<g id="edge2" class="edge">
+<title>theta-&gt;F</title>
+<path fill="none" stroke="black" stroke-width="1.2" d="M121.6,-26.69C129.75,-27.96 138.33,-29.29 146.98,-30.63"></path>
+<polygon fill="black" stroke="black" stroke-width="1.2" points="146.63,-33.05 153.92,-31.71 147.38,-28.21 146.63,-33.05"></polygon>
+</g>
+</g>
+</svg>
 </div>
 <p></p></figure><p></p>
 </div>
 </div>
 </div>
-</div><div class="column" style="width:30%;">
-<p><img data-src="img/state_evolution_node.png" height="150"></p>
 </div></div>
 </div>
 </div>
@@ -943,41 +979,146 @@ F(x, a)=0,
 <h2>Models as computational hypotheses</h2>
 <p>A brain network model is a <strong>hypothesis with knobs</strong>. Picking knob values is how we test the hypothesis against data.</p>
 <div class="fragment">
-<p><span class="math display">\[
-\theta \;\longrightarrow\; \text{simulator} \;\longrightarrow\; \hat{y}(\theta) \;\longrightarrow\; \mathcal{L}\big(\hat{y}(\theta),\, y_{\text{obs}}\big)
-\]</span></p>
+<div class="cell" data-fig-width="5" data-fig-height="1.6" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<svg width="480" height="154" viewbox="0.00 0.00 360.00 89.16" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none; display: block; margin: auto auto auto auto">
+<g id="graph0" class="graph" transform="scale(0.909776 0.909776) rotate(0) translate(4 94)">
+<title>G</title>
+<!-- theta -->
+<g id="node1" class="node">
+<title>theta</title>
+<ellipse fill="#e3f2fd" stroke="#1565c0" stroke-width="2" cx="27" cy="-72" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="27" y="-67.8" font-family="Helvetica,sans-Serif" font-size="14.00">θ</text>
+</g>
+<!-- sim -->
+<g id="node2" class="node">
+<title>sim</title>
+<path fill="#fff3e0" stroke="#ef6c00" stroke-width="2" d="M205.09,-90C205.09,-90 90.97,-90 90.97,-90 84.97,-90 78.97,-84 78.97,-78 78.97,-78 78.97,-66 78.97,-66 78.97,-60 84.97,-54 90.97,-54 90.97,-54 205.09,-54 205.09,-54 211.09,-54 217.09,-60 217.09,-66 217.09,-66 217.09,-78 217.09,-78 217.09,-84 211.09,-90 205.09,-90"></path>
+<text text-anchor="middle" x="148.03" y="-67.8" font-family="Helvetica,sans-Serif" font-size="14.00">brain network model</text>
+</g>
+<!-- theta&#45;&gt;sim -->
+<g id="edge1" class="edge">
+<title>theta-&gt;sim</title>
+<path fill="none" stroke="black" stroke-width="1.2" d="M54.12,-72C59.43,-72 65.27,-72 71.35,-72"></path>
+<polygon fill="black" stroke="black" stroke-width="1.2" points="71.58,-74.45 78.58,-72 71.58,-69.55 71.58,-74.45"></polygon>
+</g>
+<!-- yhat -->
+<g id="node3" class="node">
+<title>yhat</title>
+<ellipse fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2" cx="269.06" cy="-72" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="269.06" y="-67.8" font-family="Helvetica,sans-Serif" font-size="14.00">ŷ(θ)</text>
+</g>
+<!-- sim&#45;&gt;yhat -->
+<g id="edge2" class="edge">
+<title>sim-&gt;yhat</title>
+<path fill="none" stroke="black" stroke-width="1.2" d="M217.24,-72C223.24,-72 229.12,-72 234.62,-72"></path>
+<polygon fill="black" stroke="black" stroke-width="1.2" points="234.88,-74.45 241.88,-72 234.88,-69.55 234.88,-74.45"></polygon>
+</g>
+<!-- loss -->
+<g id="node5" class="node">
+<title>loss</title>
+<path fill="#ffebee" stroke="#c62828" stroke-width="2" d="M382,-51C382,-51 376.48,-57 376.48,-57 373.71,-60 366.87,-63 362.8,-63 362.8,-63 345.97,-63 345.97,-63 341.89,-63 335.05,-60 332.29,-57 332.29,-57 326.76,-51 326.76,-51 324,-48 324,-42 326.76,-39 326.76,-39 332.29,-33 332.29,-33 335.05,-30 341.89,-27 345.97,-27 345.97,-27 362.8,-27 362.8,-27 366.87,-27 373.71,-30 376.48,-33 376.48,-33 382,-39 382,-39 384.76,-42 384.76,-48 382,-51"></path>
+<text text-anchor="middle" x="354.38" y="-40.8" font-family="Helvetica,sans-Serif" font-size="14.00">𝓛(θ)</text>
+</g>
+<!-- yhat&#45;&gt;loss -->
+<g id="edge3" class="edge">
+<title>yhat-&gt;loss</title>
+<path fill="none" stroke="black" stroke-width="1.2" d="M293.71,-64.34C302.38,-61.53 312.33,-58.3 321.59,-55.3"></path>
+<polygon fill="black" stroke="black" stroke-width="1.2" points="322.6,-57.55 328.51,-53.06 321.09,-52.89 322.6,-57.55"></polygon>
+</g>
+<!-- yobs -->
+<g id="node4" class="node">
+<title>yobs</title>
+<ellipse fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2" cx="269.06" cy="-18" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="269.06" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00">y</text>
+</g>
+<!-- yobs&#45;&gt;loss -->
+<g id="edge4" class="edge">
+<title>yobs-&gt;loss</title>
+<path fill="none" stroke="black" stroke-width="1.2" d="M293.71,-25.66C302.38,-28.47 312.33,-31.7 321.59,-34.7"></path>
+<polygon fill="black" stroke="black" stroke-width="1.2" points="321.09,-37.11 328.51,-36.94 322.6,-32.45 321.09,-37.11"></polygon>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
 <ul>
-<li><span class="math inline">\(\theta\)</span>: model parameters (the knobs)</li>
-<li><span class="math inline">\(\hat{y}(\theta)\)</span>: simulated observable (FC, power spectrum, BOLD …)</li>
-<li><span class="math inline">\(y_{\text{obs}}\)</span>: empirical observable</li>
-<li><span class="math inline">\(\mathcal{L}\)</span>: loss / discrepancy</li>
+<li class="fragment"><span class="math inline">\(\theta\)</span>: model parameters (the knobs)</li>
+<li class="fragment"><span class="math inline">\(\hat{y}(\theta)\)</span>: simulated observable (FC, power spectrum, BOLD …)</li>
+<li class="fragment"><span class="math inline">\(y_{\text{obs}}\)</span>: empirical observable / data</li>
+<li class="fragment"><span class="math inline">\(\mathcal{L}\)</span>: loss / discrepancy</li>
 </ul>
+</section>
+<section id="what-is-inference-for-brain-models" class="slide level2">
+<h2>What is inference for brain models?</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="fragment">
+<p><strong>Inference:</strong> which <span class="math inline">\(\theta\)</span> are consistent with the data?</p>
 </div>
 <div class="fragment">
-<p><em>Inference <span class="math inline">\(:=\)</span> which <span class="math inline">\(\theta\)</span> are consistent with the data?</em></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-4/gradient_trajectory.gif" style="width:75.0%"></p>
+<figcaption>Gradient descent finds a local minimum</figcaption>
+</figure>
 </div>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="fragment">
+<p>What do we need to do?</p>
+</div>
+<ol type="1">
+<li class="fragment">Define a loss function <span class="math inline">\(\mathcal{L}(\theta)\)</span></li>
+<li class="fragment">Test many <span class="math inline">\(\theta\)</span> configurations on <span class="math inline">\(\mathcal{L}(\theta)\)</span> to find the “best”</li>
+</ol>
+</div></div>
 </section>
 <section id="why-inference-is-hard-for-brain-models" class="slide level2">
-<h2>Why inference is hard for brain models</h2>
+<h2>Why inference is hard for brain models?</h2>
 <ul>
 <li class="fragment"><strong>Expensive simulator</strong>: seconds to minutes per run</li>
 <li class="fragment"><strong>High-dimensional</strong>: when parameters become regional (<span class="math inline">\(\times N\)</span> nodes)</li>
 <li class="fragment"><strong>Non-smooth dynamics</strong>: chaos, stochasticity, stiffness</li>
 <li class="fragment"><strong>Bumpy observables</strong>: FC, FCD, PSD are summary statistics</li>
+<li class="fragment"><strong>Parameter degeneracy</strong>: many parameter combinations fit about equally well</li>
 </ul>
 <div class="fragment">
 <p>Every method is a <strong>bet</strong> about which of these difficulties dominates.</p>
 </div>
 </section>
-<section id="the-shape-of-the-problem" class="slide level2">
-<h2>The shape of the problem</h2>
+<section id="what-makes-inference-for-brain-models-easier" class="slide level2">
+<h2>What makes inference for brain models easier?</h2>
+<ul>
+<li class="fragment"><strong>Faster simulator:</strong> Parallelization and Accelerators (GPUs, TPUs, etc.)</li>
+<li class="fragment"><strong>Differentiability:</strong> Gradient-based optimization</li>
+<li class="fragment"><strong>Good Workflows:</strong> Building complexity gradually</li>
+</ul>
+<div class="fragment">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="./img/section-4/tvboptim.png" class="quarto-figure quarto-figure-center" style="height:40.0%"></p>
+</figure>
+</div>
+</div>
+</section>
+<section id="the-example-problem-fmri-functional-connectivity" class="slide level2">
+<h2>The example problem: fMRI functional connectivity</h2>
 <div class="columns">
 <div class="column" style="width:64%;">
 <div class="fragment">
-<p>Running example for this block: <strong>fit global coupling <span class="math inline">\(G\)</span> and recurrence <span class="math inline">\(w\)</span> so simulated FC matches empirical FC</strong> in a Reduced Wong-Wang model on the Desikan-Killiany parcellation.</p>
+<p><strong>Find global coupling <span class="math inline">\(G\)</span> and recurrence <span class="math inline">\(w\)</span> so simulated FC matches empirical FC</strong> in a Reduced Wong-Wang model on the Desikan-Killiany parcellation.</p>
 </div>
 <div class="fragment">
-<p>Optimization over a parameter landscape <span class="math inline">\(\mathcal{L}(\theta) = \mathrm{RMSE}(\hat{FC}(\theta),\, FC_{\text{obs}})\)</span>.</p>
+<p>Optimization over a parameter landscape:<br>
+<span class="math inline">\(\mathcal{L}(\theta) = \mathrm{RMSE}(\hat{FC}(\theta),\, FC_{\text{obs}})\)</span>.</p>
 </div>
 <div class="fragment">
 <ul>
@@ -1021,82 +1162,102 @@ F(x, a)=0,
 <span id="cb4-18"><a></a>    <span class="cf">return</span> rmse(observation(state), fc_target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="parallelism-vmap-and-pmap-under-the-hood" class="slide level2">
-<h2>Parallelism — <code>vmap</code> and <code>pmap</code> under the hood</h2>
-<ul>
-<li class="fragment"><code>Space(state, mode="product" | "zip")</code> with <code>Axes</code>declares which parameters vary together</li>
-<li class="fragment"><code>ParallelExecution(loss, space, n_pmap=8, n_vmap=8)</code> <code>vmap</code>s across the batch axis and <code>pmap</code>s across devices</li>
-<li class="fragment">One simulator, batched over parameter sets, fused into a single XLA pass — <strong>no manual batching</strong></li>
-</ul>
+<section id="parallelism-jax.vmap-and-jax.pmap-under-the-hood" class="slide level2">
+<h2>Parallelism: <code>jax.vmap</code> and <code>jax.pmap</code> under the hood</h2>
 <div class="fragment">
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Explore a 32x32 = 1024 grid space of w and G</span></span>
-<span id="cb5-2"><a></a>state.coupling.G <span class="op">=</span> GridAxis(<span class="fl">0.001</span>, <span class="fl">0.7</span>, <span class="dv">32</span>)</span>
-<span id="cb5-3"><a></a>state.dynamics.w <span class="op">=</span> GridAxis(<span class="fl">0.001</span>, <span class="fl">0.7</span>, <span class="dv">32</span>)</span>
+<div class="sourceCode" id="cb5" data-code-line-numbers="1|2-3|4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Explore a 10x10 = 100 grid over (theta_1, theta_2)</span></span>
+<span id="cb5-2"><a></a>state.coupling.theta_1 <span class="op">=</span> GridAxis(<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="dv">10</span>)</span>
+<span id="cb5-3"><a></a>state.dynamics.theta_2 <span class="op">=</span> GridAxis(<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="dv">10</span>)</span>
 <span id="cb5-4"><a></a>losses <span class="op">=</span> ParallelExecution(loss, Space(state, mode<span class="op">=</span><span class="st">"product"</span>), n_pmap<span class="op">=</span><span class="dv">8</span>).run()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="fragment">
-<p>Random search, Sobol designs, and CMA-ES populations all become <strong>one batched forward pass</strong>. A “1024-point sweep” is roughly <em>one</em> simulation’s wall time on a GPU.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-4/parallelism_grid.png" class="quarto-figure quarto-figure-center" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+<div class="fragment" style="margin-top:-1.2em">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-4/gpu_perf.png" class="quarto-figure quarto-figure-center" style="margin:0;width:70.0%"></p>
+</figure>
+</div>
 </div>
 </section>
 <section id="grid-search-map-the-whole-landscape" class="slide level2">
-<h2>Grid search — map the whole landscape</h2>
+<h2>Grid search: map the whole landscape</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
 <ul>
-<li>Same idea as the bifurcation diagrams from §3</li>
-<li>Wins when: <span class="math inline">\(\le 2\)</span>–<span class="math inline">\(3\)</span> parameters, you want to <em>see</em> the landscape</li>
-<li>Cost grows as <span class="math inline">\(N^d\)</span> — unusable beyond a handful of dimensions</li>
+<li class="fragment">Same idea as the bifurcation diagrams from §3</li>
+<li class="fragment">Wins when: <span class="math inline">\(\le 2\)</span>–<span class="math inline">\(3\)</span> parameters, you want to <em>see</em> the landscape</li>
+<li class="fragment">Cost grows as <span class="math inline">\(N^d\)</span> — unusable beyond a handful of dimensions</li>
 </ul>
+<div class="fragment">
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="co"># Explore a 32x32 grid space of w and G</span></span>
 <span id="cb6-2"><a></a>grid_state.dynamics.w <span class="op">=</span> GridAxis(<span class="fl">0.001</span>, <span class="fl">0.7</span>, <span class="dv">32</span>)</span>
 <span id="cb6-3"><a></a>grid_state.coupling.G <span class="op">=</span> GridAxis(<span class="fl">0.001</span>, <span class="fl">0.7</span>, <span class="dv">32</span>)</span>
 <span id="cb6-4"><a></a>grid <span class="op">=</span> Space(grid_state, mode<span class="op">=</span><span class="st">"product"</span>)</span>
 <span id="cb6-5"><a></a>losses <span class="op">=</span> ParallelExecution(loss, grid, n_pmap<span class="op">=</span><span class="dv">8</span>).run()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div><div class="column" style="width:45%;">
+<div class="fragment">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/section-4/loss_surface_1d.png" class="quarto-figure quarto-figure-center"></p>
+<p><img data-src="img/section-4/loss_surface_2d_only.png" class="quarto-figure quarto-figure-center"></p>
 </figure>
+</div>
 </div>
 </div></div>
 </section>
 <section id="random-search-the-surprising-upgrade" class="slide level2">
-<h2>Random search — the surprising upgrade</h2>
+<h2>Random search: the surprising upgrade</h2>
+<div class="r-stack" style="align-items: flex-start; justify-content: center;">
+<div class="fragment fade-out" data-fragment-index="5">
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:40%;">
+<div class="fragment" data-fragment-index="1">
 <p>In more than 2–3 dimensions, <strong>random search beats grid</strong> for the same budget.</p>
-<div class="fragment">
-<p><strong>Why?</strong> Real loss surfaces have <strong>low effective dimensionality</strong> — most parameters barely matter. Grid spends its budget evenly across all axes; random samples <em>every axis at every trial</em> <span class="citation" data-cites="bergstra2012">(<a href="#/references" role="doc-biblioref" onclick="">Bergstra and Bengio 2012</a>)</span>.</p>
 </div>
-<div class="fragment">
-<p><strong>Take-away.</strong> If you don’t know which parameters matter, <em>don’t grid</em>.</p>
+<div class="fragment" data-fragment-index="3">
+<p><strong>Why?</strong> Real loss surfaces have <strong>low effective dimensionality</strong>, most parameters barely matter. Grid spends its budget evenly across all axes; random samples <em>every axis at every trial</em> <span class="citation" data-cites="bergstra2012">(<a href="#/references" role="doc-biblioref" onclick="">Bergstra and Bengio 2012</a>)</span>.</p>
 </div>
-</div><div class="column" style="width:50%;">
+</div><div class="column" style="width:60%;">
+<div class="fragment" data-fragment-index="2">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="img/section-4/grid_vs_random_bergstra.png"></p>
 <figcaption>Grid vs.&nbsp;Random search, taken from <span class="citation" data-cites="bergstra2012">(<a href="#/references" role="doc-biblioref" onclick="">Bergstra and Bengio 2012</a>)</span> figure 1</figcaption>
 </figure>
 </div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="co"># Explore a 100 samples space of w and G</span></span>
-<span id="cb7-2"><a></a>grid_state.dynamics.w <span class="op">=</span> UniformAxis(<span class="fl">0.001</span>, <span class="fl">0.7</span>, <span class="dv">100</span>)</span>
-<span id="cb7-3"><a></a>grid_state.coupling.G <span class="op">=</span> UniformAxis(<span class="fl">0.001</span>, <span class="fl">0.7</span>, <span class="dv">100</span>)</span>
-<span id="cb7-4"><a></a>grid <span class="op">=</span> Space(grid_state, mode<span class="op">=</span><span class="st">"zip"</span>, key<span class="op">=</span>jax.random.key(<span class="dv">42</span>))</span>
-<span id="cb7-5"><a></a>losses <span class="op">=</span> ParallelExecution(loss, grid, n_pmap<span class="op">=</span><span class="dv">8</span>).run()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/section-4/random_search.png" class="fragment quarto-figure quarto-figure-center"></p>
-</figure>
+</div>
+<div class="fragment" data-fragment-index="4">
+<div class="sourceCode" id="cb7" data-code-line-numbers="2-3|"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="co"># Explore a 100 samples space of w and G</span></span>
+<span id="cb7-2"><a></a>random_state.dynamics.w <span class="op">=</span> UniformAxis(<span class="fl">0.001</span>, <span class="fl">0.7</span>, <span class="dv">100</span>)</span>
+<span id="cb7-3"><a></a>random_state.coupling.G <span class="op">=</span> UniformAxis(<span class="fl">0.001</span>, <span class="fl">0.7</span>, <span class="dv">100</span>)</span>
+<span id="cb7-4"><a></a>samples <span class="op">=</span> Space(random_state, mode<span class="op">=</span><span class="st">"zip"</span>, key<span class="op">=</span>jax.random.key(<span class="dv">42</span>))</span>
+<span id="cb7-5"><a></a>losses <span class="op">=</span> ParallelExecution(loss, samples, n_pmap<span class="op">=</span><span class="dv">8</span>).run()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div></div>
+</div>
+<div class="fragment" data-fragment-index="5">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-4/random_search.png" style="width:65.0%"></p>
+<figcaption>Random search onto 2D loss surface. 1/10th the evaluation budget compared to grid search.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="quasi-random-sobol-sensitivity-for-free" class="slide level2">
-<h2>Quasi-random Sobol — sensitivity for free</h2>
+<h2>Quasi-random Sobol: Sensitivity for free</h2>
 <div class="columns">
-<div class="column" style="width:55%;">
+<div class="column" style="width:60%;">
 <ul>
 <li class="fragment"><strong>Sobol</strong> / <strong>Latin Hypercube</strong> sequences: low-discrepancy, drop-in replacement for the uniform sampler</li>
-<li class="fragment">Same design powers <strong>variance-based sensitivity analysis</strong> — Saltelli + Sobol indices quantify <em>which knobs the loss actually depends on</em></li>
+<li class="fragment">Same design powers <strong>variance-based sensitivity analysis:</strong> Saltelli + Sobol indices quantify <em>which knobs the loss actually depends on</em></li>
 </ul>
 <div class="fragment">
 <div class="sourceCode" id="cb8" data-code-line-numbers="|1-4|6-9|10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>problem <span class="op">=</span> {<span class="st">"num_vars"</span>: <span class="dv">3</span>,</span>
@@ -1110,147 +1271,94 @@ F(x, a)=0,
 <span id="cb8-9"><a></a>losses <span class="op">=</span> ParallelExecution(loss, Space(state, mode<span class="op">=</span><span class="st">"zip"</span>)).run()</span>
 <span id="cb8-10"><a></a>Si <span class="op">=</span> sobol_analyze.analyze(problem, np.array(losses))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div><div class="column" style="width:45%;">
+</div><div class="column" style="width:40%;">
 <div class="fragment">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/section-4/sensitivity_sobol.png" class="quarto-figure quarto-figure-center"></p>
+<p><img data-src="img/section-4/sensitivity_sobol.png" class="quarto-figure quarto-figure-center" style="width:120.0%"></p>
 </figure>
 </div>
 </div>
-<div class="fragment">
-<p><span class="math inline">\(S_T(\sigma) \approx 0\)</span>, <span class="math inline">\(S_T(G) \approx 0.93\)</span>, <span class="math inline">\(S_T(w) \approx 0.49\)</span> — the FC loss lives on an effective <strong>2D subspace</strong>.</p>
-</div>
-</div></div>
-</section>
-<section id="reading-sobol-indices-honestly" class="slide level2">
-<h2>Reading Sobol indices honestly</h2>
-<div class="columns">
-<div class="column" style="width:55%;">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>param</th>
-<th style="text-align: right;"><span class="math inline">\(S_1\)</span></th>
-<th style="text-align: right;"><span class="math inline">\(S_T\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>G</strong></td>
-<td style="text-align: right;">0.47</td>
-<td style="text-align: right;">0.93</td>
-</tr>
-<tr class="even">
-<td><strong>w</strong></td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">0.49</td>
-</tr>
-<tr class="odd">
-<td>sigma</td>
-<td style="text-align: right;">≈ 0</td>
-<td style="text-align: right;">≈ 0</td>
-</tr>
-</tbody>
-</table>
+<div style="margin-bottom:-0.6em">
 <ul>
-<li class="fragment"><span class="math inline">\(S_1\)</span>: parameter <strong>alone</strong> · <span class="math inline">\(S_T\)</span>: alone + all interactions</li>
-<li class="fragment"><span class="math inline">\(S_T \gg S_1\)</span> for <span class="math inline">\(w\)</span> → <span class="math inline">\(w\)</span> matters <strong>only with <span class="math inline">\(G\)</span></strong></li>
-<li class="fragment"><span class="math inline">\(S_2(G\times w) = 0.46\)</span> → the curved valley <strong>is</strong> that interaction</li>
+<li class="fragment"><span class="math inline">\(S_T(\sigma) \approx 0\)</span></li>
+<li class="fragment"><span class="math inline">\(S_T(G) \approx 0.93\)</span></li>
+<li class="fragment"><span class="math inline">\(S_T(w) \approx 0.49\)</span></li>
+<li class="fragment"><span class="math inline">\(S_2(G\times w) = 0.46\)</span></li>
 </ul>
-<div class="fragment">
-<p><strong>Take-away:</strong> Drop <span class="math inline">\(\sigma\)</span>; fit <span class="math inline">\((G, w)\)</span> <strong>jointly</strong></p>
 </div>
-</div><div class="column" style="width:45%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/section-4/sensitivity_sobol.png" class="quarto-figure quarto-figure-center"></p>
-</figure>
+<div class="fragment" style="margin-top:-0.4em">
+<p><strong>Take-away:</strong> the FC loss lives on an effective <strong>2D subspace</strong>.</p>
 </div>
 </div></div>
 </section>
-<section id="evolutionary-cma-es-adaptive-no-gradients" class="slide level2">
-<h2>Evolutionary / CMA-ES — adaptive, no gradients</h2>
+<section id="evolutionary-approaches-adaptive-no-gradients" class="slide level2">
+<h2>Evolutionary Approaches: adaptive, no gradients</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <ul>
 <li class="fragment">Maintain a <strong>population</strong>, update a <strong>mean</strong> and <strong>covariance</strong> to bias future samples</li>
-<li class="fragment">Naturally parallel — every generation is one <code>DataAxis</code> evaluation</li>
+<li class="fragment">Naturally parallel: every generation is one <code>DataAxis</code> evaluation</li>
 <li class="fragment"><strong>No gradients needed</strong> → works on noisy / discontinuous losses</li>
 <li class="fragment">Wins when: ~10–50 parameters</li>
 </ul>
 <div class="fragment">
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>es <span class="op">=</span> cma.CMAEvolutionStrategy([<span class="fl">0.05</span>, <span class="fl">0.6</span>], <span class="fl">0.15</span>,</span>
+<div class="sourceCode" id="cb9" data-code-line-numbers="|1-4|5-8|9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>es <span class="op">=</span> cma.CMAEvolutionStrategy([<span class="fl">0.05</span>, <span class="fl">0.6</span>], <span class="fl">0.15</span>,</span>
 <span id="cb9-2"><a></a>  {<span class="st">"popsize"</span>: <span class="dv">16</span>})</span>
 <span id="cb9-3"><a></a><span class="cf">while</span> <span class="kw">not</span> es.stop():</span>
 <span id="cb9-4"><a></a>    pop <span class="op">=</span> np.array(es.ask())</span>
-<span id="cb9-5"><a></a>    s <span class="op">=</span> copy.deepcopy(state)</span>
-<span id="cb9-6"><a></a>    s.coupling.G <span class="op">=</span> DataAxis(pop[:, <span class="dv">0</span>])</span>
-<span id="cb9-7"><a></a>    s.dynamics.w <span class="op">=</span> DataAxis(pop[:, <span class="dv">1</span>])</span>
-<span id="cb9-8"><a></a>    fits <span class="op">=</span> ParallelExecution(</span>
-<span id="cb9-9"><a></a>        loss, Space(s, mode<span class="op">=</span><span class="st">"zip"</span>)).run()</span>
-<span id="cb9-10"><a></a>    es.tell(pop.tolist(), np.array(fits).tolist())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-5"><a></a>    s.coupling.G <span class="op">=</span> DataAxis(pop[:, <span class="dv">0</span>])</span>
+<span id="cb9-6"><a></a>    s.dynamics.w <span class="op">=</span> DataAxis(pop[:, <span class="dv">1</span>])</span>
+<span id="cb9-7"><a></a>    losses <span class="op">=</span> ParallelExecution(</span>
+<span id="cb9-8"><a></a>        loss, Space(s, mode<span class="op">=</span><span class="st">"zip"</span>)).run()</span>
+<span id="cb9-9"><a></a>    es.tell(pop.tolist(), np.array(losses).tolist())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="column" style="width:40%;">
+<div class="fragment">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="img/section-4/cma_es_evolution.gif"></p>
-<figcaption>CMA-ES on (G, w). White dots: population of 16 candidates per generation. Red ×: distribution mean. Red ellipse: 2-σ covariance. The ellipse rotates onto the valley — CMA-ES learns the local geometry without computing a single gradient.</figcaption>
+<figcaption>CMA-ES on (G, w). <strong>Dots:</strong> population of 16 candidates per generation. <strong>Red ×:</strong> distribution mean. <strong>Red ellipse:</strong> 2-σ covariance. The ellipse rotates onto the valley.</figcaption>
 </figure>
+</div>
 </div>
 </div></div>
 </section>
 <section id="hitting-the-wall-why-sampling-stops-scaling" class="slide level2">
-<h2>Hitting the wall — why sampling stops scaling</h2>
-<p>Everything so far — grid, random / Sobol, CMA-ES — <strong>searches by sampling</strong> the simulator.</p>
-<ul>
-<li class="fragment"><strong>Grid:</strong> <span class="math inline">\(N^d\)</span> points → tops out at 2–3 parameters</li>
-<li class="fragment"><strong>Random / Sobol:</strong> <span class="math inline">\(10^2\)</span>–<span class="math inline">\(10^3\)</span> samples → effective up to <span class="math inline">\(\sim 20\)</span></li>
-<li class="fragment"><strong>CMA-ES:</strong> <span class="math inline">\(10^3\)</span>–<span class="math inline">\(10^4\)</span> sims → effective up to <span class="math inline">\(\sim 50\)</span></li>
-</ul>
+<h2>Hitting the wall: why sampling stops scaling</h2>
+<p>Everything so far - grid, random / Sobol, Genetic algorithms - <strong>searches by sampling</strong> the simulator.</p>
 <div class="fragment">
-<p>But a brain network model with <strong>regional</strong> parameters has <span class="math inline">\(d \sim 10^3\)</span>–<span class="math inline">\(10^4\)</span> knobs (e.g.&nbsp;one <span class="math inline">\(w_i\)</span> per Desikan-Killiany region, plus per-region noise, plus …). No sampling budget reaches that regime.</p>
-</div>
-<div class="fragment">
-<p><strong>Gradient descent</strong> does — <em>if</em> we can compute <span class="math inline">\(\nabla_\theta \mathcal{L}\)</span> cheaply.</p>
-</div>
-</section>
-<section id="finite-differences-and-forward-mode-ad" class="slide level2">
-<h2>Finite differences and forward-mode AD</h2>
-<p><strong>Finite differences.</strong> Wiggle each knob, re-simulate, measure the change.</p>
-<p><span class="math display">\[
-\frac{\partial \mathcal{L}}{\partial \theta_i} \approx \frac{\mathcal{L}(\theta + \varepsilon e_i) - \mathcal{L}(\theta)}{\varepsilon}
-\qquad\Rightarrow\qquad d \text{ sims per gradient step}
-\]</span></p>
-<div class="fragment">
-<p><strong>Forward-mode AD.</strong> Same idea, made exact: propagate one tangent direction per pass. Cost <strong>still grows linearly with <span class="math inline">\(d\)</span></strong> — just without the truncation error.</p>
-</div>
-<div class="fragment">
-<p>1 000 knobs ⇒ 1 000 × simulation cost <strong>per step</strong>. Dead on arrival at regional scale.</p>
-</div>
-</section>
-<section id="reverse-mode-ad-gradients-almost-for-free" class="slide level2">
-<h2>Reverse-mode AD — gradients (almost) for free</h2>
-<div class="columns">
-<div class="column" style="width:45%;">
-<p><strong>Run forward once, run backward once.</strong> The backward pass sweeps the computation graph in reverse, accumulating <span class="math inline">\(\partial\mathcal{L}/\partial\theta_i\)</span> for <em>every</em> <span class="math inline">\(i\)</span> at the same time.</p>
-<p><span class="math display">\[
-\text{cost}\!\left(\nabla_\theta \mathcal{L}\right) \approx 3\text{–}30 \times \text{cost}(\mathcal{L})
-\]</span></p>
-<div class="fragment">
-<p>In JAX: <code>jax.grad(loss)</code>. This is what made per-region fits tractable.</p>
-</div>
-</div><div class="column" style="width:55%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/section-4/ad_perf.png"></p>
-<figcaption>Gradient cost in tvboptim, normalized by one simulation. Reverse-mode (blue) is flat at <span class="math inline">\(\sim 20\times\)</span> across <span class="math inline">\(d \in [1, 10^4]\)</span>. Forward-mode (yellow) scales linearly with <span class="math inline">\(d\)</span> — same trap as finite differences.</figcaption>
+<p><img data-src="img/section-4/method_ceiling.png" class="quarto-figure quarto-figure-center" style="width:80.0%"></p>
 </figure>
 </div>
+</div>
+<div class="fragment">
+<p>But a brain network model with <strong>regional</strong> parameters has <span class="math inline">\(d \sim 10^2\)</span>–<span class="math inline">\(10^4\)</span> knobs (e.g.&nbsp;one <span class="math inline">\(w_i\)</span> per Desikan-Killiany region, plus per-region noise, plus …). No sampling budget reaches that regime.</p>
+</div>
+</section>
+<section id="automatic-differentiation-gradients-almost-for-free" class="slide level2">
+<h2>Automatic differentiation: Gradients (almost) for free</h2>
+<p><strong>Run forward once, run backward once.</strong> Reverse-mode AD sweeps the computation graph in reverse, accumulating <span class="math inline">\(\partial\mathcal{L}/\partial\theta_i\)</span> for <em>every</em> <span class="math inline">\(i\)</span> at the same time → <span class="math inline">\(\text{cost}(\nabla_\theta \mathcal{L}) \approx 3\text{–}30 \times \text{cost}(\mathcal{L})\)</span>.</p>
+<div class="fragment">
+<div class="columns">
+<div class="column" style="width:65%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-4/ad_perf.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div><div class="column" style="width:35%;">
+<p><span style="font-size:0.7em; display:block; margin-top:30%;"><em>Gradient cost in tvboptim, normalized by one simulation. Reverse-mode (blue) is flat at <span class="math inline">\(\sim 20\times\)</span> across <span class="math inline">\(d \in [1, 10^4]\)</span>, independent of dimension.</em></span></p>
 </div></div>
+</div>
+<div class="fragment" style="margin-top:-2em">
+<p>In JAX: <code>jax.grad(loss)</code>. One line, gradients with respect to every knob — what made per-region fits tractable.</p>
+</div>
 </section>
 <section id="gradient-descent-the-regime-changer" class="slide level2">
-<h2>Gradient descent — the regime-changer</h2>
+<h2>Gradient descent: The regime-changer</h2>
 <div class="columns">
 <div class="column" style="width:60%;">
 <div class="fragment">
@@ -1259,11 +1367,12 @@ F(x, a)=0,
 \]</span></p>
 </div>
 <ul>
-<li class="fragment">The only method that scales to <strong>regional / per-node</strong> parameter vectors (hundreds–thousands of knobs)</li>
+<li class="fragment">The cheapest way to scale to <strong>regional / per-node</strong> parameter vectors (hundreds–thousands of knobs)</li>
 <li class="fragment">Local: needs a reasonable starting point</li>
+<li class="fragment">Point estimate: Only finds a single good fit</li>
 </ul>
 <div class="fragment">
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>state.dynamics.w <span class="op">=</span> Parameter(state.dynamics.w)</span>
+<div class="sourceCode" id="cb10" data-code-line-numbers="1-2|3|4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>state.dynamics.w <span class="op">=</span> Parameter(state.dynamics.w)</span>
 <span id="cb10-2"><a></a>state.coupling.G <span class="op">=</span> Parameter(state.coupling.G)</span>
 <span id="cb10-3"><a></a>opt <span class="op">=</span> OptaxOptimizer(loss, optax.adam(<span class="fl">0.01</span>))</span>
 <span id="cb10-4"><a></a>fitted, _ <span class="op">=</span> opt.run(state, max_steps<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1282,6 +1391,7 @@ F(x, a)=0,
 <section id="bayesian-inference-when-you-want-a-posterior" class="slide level2">
 <h2>Bayesian inference — when you want a posterior</h2>
 <p>A point estimate <span class="math inline">\(\theta^\star\)</span> tells you <em>one</em> good fit. A posterior tells you <strong>all fits consistent with the data</strong>.</p>
+<div class="fragment">
 <p><span class="math display">\[
 \underbrace{p(\theta \mid y)}_{\text{posterior}}
 \;\propto\;
@@ -1289,129 +1399,165 @@ F(x, a)=0,
 \;\cdot\;
 \underbrace{p(\theta)}_{\text{prior}}
 \]</span></p>
-<div class="fragment">
-<p>For the running example: gradient descent picked <em>one</em> point in the curved valley. The valley is <em>real</em> — the data don’t distinguish those fits. A posterior makes the degeneracy <strong>visible and quantifiable</strong>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-4/bayes_shrinkage.png" class="quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
 </div>
-<div class="fragment">
-<p>You get: uncertainty over predictions, identifiability diagnostics, model comparison, and a principled way to <strong>fold in prior knowledge</strong>.</p>
 </div>
 </section>
 <section id="priors-encode-what-you-already-know" class="slide level2">
 <h2>Priors encode what you (already) know</h2>
 <p>A prior <span class="math inline">\(p(\theta)\)</span> is a probabilistic statement about parameters <strong>before</strong> you see this dataset. Three regimes:</p>
 <ul>
-<li class="fragment"><strong>Flat / uninformative</strong> — <code>Uniform</code> over a physiological range. <em>“I know the bounds, nothing else.”</em> Posterior is dominated by data.</li>
-<li class="fragment"><strong>Weakly informative</strong> — <code>Normal</code> around a literature value with generous spread. Regularizes, prevents pathological fits.</li>
-<li class="fragment"><strong>Strongly informative</strong> — derived from independent measurements: anatomy, tau / amyloid PET maps, receptor density, EEG power. <em>“This patient’s region has elevated tau”</em> → prior on local excitation <strong>per region</strong>.</li>
+<li class="fragment"><img data-src="img/section-4/prior_uniform.png" style="vertical-align:middle;height:1.4em"> <strong>Flat / uninformative:</strong> <code>Uniform</code> over a physiological range. <em>“I know the bounds, nothing else.”</em> Posterior is dominated by data.</li>
+<li class="fragment"><img data-src="img/section-4/prior_weak.png" style="vertical-align:middle;height:1.4em"> <strong>Weakly informative:</strong> <code>Normal</code> around a literature value with generous spread. Regularizes, prevents pathological fits.</li>
+<li class="fragment"><img data-src="img/section-4/prior_strong.png" style="vertical-align:middle;height:1.4em"> <strong>Strongly informative:</strong> derived from independent measurements: anatomy, tau / amyloid PET maps, receptor density, EEG power. <em>“This patient’s region has elevated tau”</em> → prior on local excitation <strong>per region</strong>.</li>
 </ul>
 <div class="fragment">
 <p><strong>Same simulator, same data, different priors → different posteriors.</strong> The prior is where domain knowledge enters the inference, <em>cleanly</em> and <em>auditably</em>.</p>
 </div>
 </section>
-<section id="building-the-model-in-numpyro" class="slide level2">
-<h2>Building the model in NumPyro</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">import</span> numpyro</span>
-<span id="cb11-2"><a></a><span class="im">from</span> numpyro <span class="im">import</span> distributions <span class="im">as</span> dist</span>
-<span id="cb11-3"><a></a><span class="im">from</span> numpyro.infer <span class="im">import</span> MCMC, NUTS</span>
-<span id="cb11-4"><a></a></span>
-<span id="cb11-5"><a></a><span class="kw">def</span> fc_model(state_template, G_prior, w_prior, obs_sigma<span class="op">=</span><span class="fl">0.05</span>):</span>
-<span id="cb11-6"><a></a>    G <span class="op">=</span> numpyro.sample(<span class="st">"G"</span>, G_prior)             <span class="co"># prior on coupling</span></span>
-<span id="cb11-7"><a></a>    w <span class="op">=</span> numpyro.sample(<span class="st">"w"</span>, w_prior)             <span class="co"># prior on recurrence</span></span>
-<span id="cb11-8"><a></a></span>
-<span id="cb11-9"><a></a>    s <span class="op">=</span> copy.deepcopy(state_template)            <span class="co"># plug params into state</span></span>
-<span id="cb11-10"><a></a>    s.coupling.instant.G <span class="op">=</span> G</span>
-<span id="cb11-11"><a></a>    s.dynamics.w         <span class="op">=</span> w</span>
-<span id="cb11-12"><a></a>    fc_sim <span class="op">=</span> observation(s)                      <span class="co"># ← same simulator as before</span></span>
-<span id="cb11-13"><a></a></span>
-<span id="cb11-14"><a></a>    numpyro.sample(<span class="st">"obs"</span>,                        <span class="co"># Gaussian likelihood</span></span>
-<span id="cb11-15"><a></a>                   dist.Normal(fc_sim[triu], obs_sigma),</span>
-<span id="cb11-16"><a></a>                   obs<span class="op">=</span>fc_target[triu])</span>
-<span id="cb11-17"><a></a></span>
-<span id="cb11-18"><a></a>mcmc <span class="op">=</span> MCMC(NUTS(fc_model), num_warmup<span class="op">=</span><span class="dv">200</span>, num_samples<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb11-19"><a></a>mcmc.run(jax.random.key(<span class="dv">0</span>), state, dist.Uniform(<span class="fl">0.001</span>, <span class="fl">0.7</span>), dist.Uniform(<span class="fl">0.001</span>, <span class="fl">0.7</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="hmc-vs-svi-same-model-two-budgets" class="slide level2 smaller">
+<h2>HMC vs SVI: same model, two budgets</h2>
 <div class="fragment">
-<p><strong>The simulator is unchanged.</strong> <code>observation(s)</code> is the same function the grid scan, random search, CMA-ES and gradient descent all called. Bayesian inference adds <strong>priors + likelihood</strong>, nothing else.</p>
+<p>Same <code>model</code>, same wide priors (<span class="math inline">\(G, w \sim \mathcal{U}(0.001, 0.7)\)</span>). Different inference algorithm.</p>
 </div>
-</section>
-<section id="hmc-posterior-over-g-w" class="slide level2">
-<h2>HMC — posterior over (G, w)</h2>
+<div class="fragment">
 <div class="columns">
-<div class="column r-fit-text" style="width:40%;">
-<p>Uniform priors on both knobs (<span class="math inline">\(G, w \sim \mathcal{U}(0.001, 0.7)\)</span>).</p>
-<div class="fragment">
-<ul>
-<li>Samples <strong>concentrate on one section of the curved valley</strong> — where likelihood × prior peaks</li>
-<li>The cluster is elongated along the local ridge → the <span class="math inline">\((G, w)\)</span> correlation is recovered, not assumed</li>
-</ul>
-</div>
-<div class="fragment">
-<p>This is what gradient descent <strong>couldn’t tell you</strong>: the local iso-loss geometry of the data’s verdict on <span class="math inline">\(\theta\)</span>.</p>
-</div>
-<div class="fragment">
-<p><strong>Cost: ~4 h</strong> for 300 post-warmup samples · 1 chain. Asymptotically exact, simulator-bound.</p>
-</div>
-</div><div class="column" style="width:60%;">
+<div class="column" style="width:60%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/section-4/posteriors_compare.png"></p>
-<figcaption>HMC (left) and SVI (right) on the same <code>fc_model</code> and same wide priors. Background: grid-scan loss landscape (faded). Red points: posterior samples; red contours: KDE; histograms: marginals.</figcaption>
+<p><img data-src="img/section-4/posteriors_compare.png" class="quarto-figure quarto-figure-center"></p>
 </figure>
 </div>
+</div><div class="column" style="width:40%;">
+<p><span style="font-size:0.7em; display:block; margin-top:30%;"><em>HMC (left) and SVI (right) on the same <code>model</code>. Background: grid-scan loss landscape. Red points: posterior samples; red contours: KDE; histograms: marginals. HMC bends along the valley; the SVI Gaussian aligns with it locally but cannot curve.</em></span></p>
 </div></div>
-</section>
-<section id="svi-same-model-swap-the-algorithm" class="slide level2">
-<h2>SVI — same model, swap the algorithm</h2>
+</div>
+<div class="fragment" style="margin-top:-1.5em">
 <div class="columns">
-<div class="column" style="width:40%;">
-<p>Same <code>fc_model</code>, same priors — only the inference changes: <code>MCMC(NUTS(...))</code> <span class="math inline">\(\to\)</span> <code>SVI(model, AutoMultivariateNormal(...))</code>.</p>
-<div class="fragment">
+<div class="column smaller" style="width:50%;">
+<p><strong>HMC / NUTS — gold standard.</strong></p>
 <ul>
-<li>Fits a Gaussian <span class="math inline">\(q_\phi(G, w)\)</span> in unconstrained space by gradient descent on the ELBO</li>
-<li>The guide’s covariance <strong>locally aligns</strong> with the ridge → direction recovered</li>
-<li>But a <strong>unimodal Gaussian cannot bend</strong> along the curve — local geometry yes, global valley shape no</li>
+<li>Asymptotically exact samples; recovers the curved ridge</li>
+<li><strong>~4 h</strong> for 300 samples · simulator-bound</li>
 </ul>
-</div>
-<div class="fragment">
-<p><strong>~12 min vs ~4 h.</strong> Same priors, same data, different family of approximation — the gap is the <strong>price of exactness</strong>.</p>
-</div>
-<div class="fragment">
-<p><strong>Take-away.</strong> The model is the contract; the algorithm is a budget decision.</p>
-</div>
-</div><div class="column" style="width:60%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/section-4/posteriors_compare.png"></p>
-<figcaption>SVI’s Gaussian guide (right panel) on the same posterior. Centered on a different section of the ridge than HMC, oriented along the local valley direction — but the curve itself does not bend.</figcaption>
-</figure>
-</div>
+</div><div class="column smaller" style="width:50%;">
+<p><strong>SVI — fast approximation.</strong></p>
+<ul>
+<li>Fits a Gaussian guide <span class="math inline">\(q_\phi(G, w)\)</span> by gradient descent on the ELBO</li>
+<li>Captures <em>local</em> direction of the valley, not its curvature</li>
+<li><strong>~12 min</strong> — 20× faster</li>
+</ul>
 </div></div>
+</div>
 </section>
-<section id="one-model-many-algorithms" class="slide level2">
-<h2>One model, many algorithms</h2>
-<p>Define the simulator + priors once; pick how to approximate the posterior:</p>
-<ul>
-<li><strong>MCMC (HMC / NUTS)</strong> — asymptotically exact samples; uses gradients to navigate the posterior efficiently. Slow but accurate.</li>
-<li><strong>Variational inference (SVI)</strong> — fit a tractable family <span class="math inline">\(q_\phi(\theta)\)</span> to the posterior by gradient descent on the ELBO. Fast, approximate; scales to high-dim regional parameters.</li>
-<li><strong>Simulation-based inference (NPE / NLE)</strong> — train a neural density estimator on simulated <span class="math inline">\((\theta, y)\)</span> pairs. <strong>No gradients through the simulator needed</strong> → works when AD breaks (chaos, black-box code). <em>Amortized</em>: pay the simulation budget once, then query the posterior for any new observation almost instantly.</li>
-<li><strong>Laplace / SWAG</strong> — cheap Gaussian approximation around the optimum.</li>
-</ul>
+<section id="when-gradients-break-simulation-based-inference" class="slide level2">
+<h2>When gradients break: simulation-based inference</h2>
+<p>When the simulator is chaotic or a black box, sample anyway.</p>
 <div class="fragment">
-<p><strong>The model is the contract.</strong> The algorithm is an implementation detail you can swap.</p>
+<div class="cell" data-fig-width="9" data-fig-height="2.2" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<svg width="864" height="211" viewbox="0.00 0.00 723.80 72.49" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none; display: block; margin: auto auto auto auto">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 68.49)">
+<title>SBI</title>
+<!-- prior -->
+<g id="node1" class="node">
+<title>prior</title>
+<ellipse fill="#e3f2fd" stroke="#1565c0" stroke-width="2" cx="32.53" cy="-32.24" rx="32.56" ry="32.49"></ellipse>
+<text text-anchor="middle" x="32.53" y="-36.44" font-family="Helvetica,sans-Serif" font-size="14.00">prior</text>
+<text text-anchor="middle" x="32.53" y="-19.64" font-family="Helvetica,sans-Serif" font-size="14.00">p(θ)</text>
+</g>
+<!-- sim -->
+<g id="node2" class="node">
+<title>sim</title>
+<path fill="#fff3e0" stroke="#ef6c00" stroke-width="2" d="M221.75,-54.85C221.75,-54.85 158.81,-54.85 158.81,-54.85 152.81,-54.85 146.81,-48.85 146.81,-42.85 146.81,-42.85 146.81,-21.64 146.81,-21.64 146.81,-15.64 152.81,-9.64 158.81,-9.64 158.81,-9.64 221.75,-9.64 221.75,-9.64 227.75,-9.64 233.75,-15.64 233.75,-21.64 233.75,-21.64 233.75,-42.85 233.75,-42.85 233.75,-48.85 227.75,-54.85 221.75,-54.85"></path>
+<text text-anchor="middle" x="190.28" y="-36.44" font-family="Helvetica,sans-Serif" font-size="14.00">simulator</text>
+<text text-anchor="middle" x="190.28" y="-19.64" font-family="Helvetica,sans-Serif" font-size="14.00">(black box)</text>
+</g>
+<!-- prior&#45;&gt;sim -->
+<g id="edge1" class="edge">
+<title>prior-&gt;sim</title>
+<path fill="none" stroke="black" stroke-width="1.4" d="M65.43,-32.24C86.54,-32.24 114.67,-32.24 138.79,-32.24"></path>
+<polygon fill="black" stroke="black" stroke-width="1.4" points="138.79,-35.04 146.79,-32.24 138.79,-29.44 138.79,-35.04"></polygon>
+<text text-anchor="middle" x="106.06" y="-36.44" font-family="Times,serif" font-size="14.00"> draw θ</text>
+</g>
+<!-- pairs -->
+<g id="node3" class="node">
+<title>pairs</title>
+<polygon fill="#f1f8e9" stroke="#558b2f" stroke-width="2" points="363.01,-54.85 295.57,-54.85 295.57,-9.64 369.01,-9.64 369.01,-48.85 363.01,-54.85"></polygon>
+<polyline fill="none" stroke="#558b2f" stroke-width="2" points="363.01,-54.85 363.01,-48.85 "></polyline>
+<polyline fill="none" stroke="#558b2f" stroke-width="2" points="369.01,-48.85 363.01,-48.85 "></polyline>
+<text text-anchor="middle" x="332.29" y="-36.44" font-family="Helvetica,sans-Serif" font-size="14.00">(θᵢ, yᵢ)</text>
+<text text-anchor="middle" x="332.29" y="-19.64" font-family="Helvetica,sans-Serif" font-size="14.00">samples</text>
+</g>
+<!-- sim&#45;&gt;pairs -->
+<g id="edge2" class="edge">
+<title>sim-&gt;pairs</title>
+<path fill="none" stroke="black" stroke-width="1.4" d="M233.67,-32.24C250.69,-32.24 270.29,-32.24 287.45,-32.24"></path>
+<polygon fill="black" stroke="black" stroke-width="1.4" points="287.65,-35.04 295.65,-32.24 287.65,-29.44 287.65,-35.04"></polygon>
+<text text-anchor="middle" x="264.6" y="-36.44" font-family="Times,serif" font-size="14.00"> run</text>
+</g>
+<!-- nde -->
+<g id="node4" class="node">
+<title>nde</title>
+<path fill="#ede7f6" stroke="#4527a0" stroke-width="2" d="M531.3,-54.85C531.3,-54.85 449.97,-54.85 449.97,-54.85 443.97,-54.85 437.97,-48.85 437.97,-42.85 437.97,-42.85 437.97,-21.64 437.97,-21.64 437.97,-15.64 443.97,-9.64 449.97,-9.64 449.97,-9.64 531.3,-9.64 531.3,-9.64 537.3,-9.64 543.3,-15.64 543.3,-21.64 543.3,-21.64 543.3,-42.85 543.3,-42.85 543.3,-48.85 537.3,-54.85 531.3,-54.85"></path>
+<text text-anchor="middle" x="490.64" y="-36.44" font-family="Helvetica,sans-Serif" font-size="14.00">neural density</text>
+<text text-anchor="middle" x="490.64" y="-19.64" font-family="Helvetica,sans-Serif" font-size="14.00">estimator</text>
+</g>
+<!-- pairs&#45;&gt;nde -->
+<g id="edge3" class="edge">
+<title>pairs-&gt;nde</title>
+<path fill="none" stroke="black" stroke-width="1.4" d="M369.16,-32.24C387.15,-32.24 409.41,-32.24 429.89,-32.24"></path>
+<polygon fill="black" stroke="black" stroke-width="1.4" points="429.93,-35.04 437.93,-32.24 429.93,-29.44 429.93,-35.04"></polygon>
+<text text-anchor="middle" x="403.48" y="-36.44" font-family="Times,serif" font-size="14.00"> train</text>
+</g>
+<!-- post -->
+<g id="node5" class="node">
+<title>post</title>
+<ellipse fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2" cx="672.45" cy="-32.24" rx="43.2" ry="20.23"></ellipse>
+<text text-anchor="middle" x="672.45" y="-28.04" font-family="Helvetica,sans-Serif" font-size="14.00">p(θ | y)</text>
+</g>
+<!-- nde&#45;&gt;post -->
+<g id="edge4" class="edge">
+<title>nde-&gt;post</title>
+<path fill="none" stroke="black" stroke-width="1.4" d="M543.65,-32.24C567.86,-32.24 596.57,-32.24 620.63,-32.24"></path>
+<polygon fill="black" stroke="black" stroke-width="1.4" points="620.94,-35.04 628.94,-32.24 620.94,-29.44 620.94,-35.04"></polygon>
+<text text-anchor="middle" x="586.16" y="-36.44" font-family="Times,serif" font-size="14.00"> query y</text>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><strong>Amortized</strong>: pay the simulation budget once, query any new <span class="math inline">\(y\)</span> in milliseconds.</p>
+</div>
+<div class="fragment">
+<p>Gradients available → HMC / SVI. Gradients break → SBI.</p>
 </div>
 </section>
 <section id="choosing-a-method-cheat-sheet" class="slide level2">
-<h2>Choosing a method — cheat sheet</h2>
+<h2>Choosing a method: Cheat Sheet</h2>
+<div class="r-fit-text">
 <table class="caption-top">
 <colgroup>
-<col style="width: 14%">
+<col style="width: 11%">
 <col style="width: 29%">
-<col style="width: 29%">
-<col style="width: 26%">
+<col style="width: 30%">
+<col style="width: 27%">
 </colgroup>
 <thead>
 <tr class="header">
 <th><strong>method</strong></th>
-<th style="text-align: right;"><strong>scales to</strong></th>
+<th><strong>scales to</strong></th>
 <th><strong>cost (forward sims)</strong></th>
 <th><strong>what you get</strong></th>
 </tr>
@@ -1419,157 +1565,110 @@ F(x, a)=0,
 <tbody>
 <tr class="odd">
 <td>Grid</td>
-<td style="text-align: right;"><span class="math inline">\(\le 3\)</span> params</td>
+<td><span class="math inline">\(\le 3\)</span> params</td>
 <td><span class="math inline">\(N^d\)</span></td>
 <td>full landscape</td>
 </tr>
 <tr class="even">
 <td>Random / Sobol</td>
-<td style="text-align: right;"><span class="math inline">\(\sim 20\)</span></td>
+<td><span class="math inline">\(\sim 20\)</span></td>
 <td><span class="math inline">\(10^2\)</span>–<span class="math inline">\(10^3\)</span></td>
 <td>landscape sketch</td>
 </tr>
 <tr class="odd">
 <td>CMA-ES / GA</td>
-<td style="text-align: right;"><span class="math inline">\(\sim 50\)</span></td>
+<td><span class="math inline">\(\sim 50\)</span></td>
 <td><span class="math inline">\(10^3\)</span>–<span class="math inline">\(10^4\)</span></td>
 <td>local optimum</td>
 </tr>
 <tr class="even">
 <td>Gradient descent</td>
-<td style="text-align: right;"><span class="math inline">\(10^4\)</span>+ (regional)</td>
-<td><span class="math inline">\(10^2\)</span>–<span class="math inline">\(10^3\)</span></td>
+<td><span class="math inline">\(10^4\)</span>+ (regional)</td>
+<td><span class="math inline">\(10^3\)</span>–<span class="math inline">\(10^5\)</span></td>
 <td>local optimum</td>
 </tr>
 <tr class="odd">
 <td>SVI</td>
-<td style="text-align: right;"><span class="math inline">\(10^4\)</span>+</td>
-<td><span class="math inline">\(10^2\)</span>–<span class="math inline">\(10^3\)</span></td>
+<td><span class="math inline">\(10^4\)</span>+</td>
+<td><span class="math inline">\(10^4\)</span>–<span class="math inline">\(10^6\)</span></td>
 <td>approximate posterior</td>
 </tr>
 <tr class="even">
 <td>HMC / NUTS</td>
-<td style="text-align: right;">scales with <span class="math inline">\(d\)</span> — simulator-bound</td>
-<td><span class="math inline">\(10^4\)</span>–<span class="math inline">\(10^6\)</span></td>
-<td>(near-)exact posterior</td>
+<td><span class="math inline">\(10^4\)</span>+, simulator-bound</td>
+<td><span class="math inline">\(10^5\)</span>–???</td>
+<td>(asymptotically-)exact posterior</td>
 </tr>
 <tr class="odd">
 <td>SBI (NPE / NLE)</td>
-<td style="text-align: right;"><span class="math inline">\(\sim 10^2\)</span>, simulator-bound</td>
+<td><span class="math inline">\(\sim 10^2\)</span>, simulator-bound</td>
 <td><span class="math inline">\(10^4\)</span>–<span class="math inline">\(10^6\)</span> upfront, <strong>amortized</strong></td>
 <td>amortized approximate posterior</td>
 </tr>
 </tbody>
 </table>
-<div class="fragment">
-<p>Cost numbers assume reverse-mode AD makes a gradient step ≈ one forward sim (next slide). <em>Bayesian rows sit at the expensive end</em> — a posterior is worth roughly a thousand point estimates’ worth of compute.</p>
 </div>
-</section>
-<section id="composability-one-simulator-four-uses" class="slide level2">
-<h2>Composability — one simulator, four uses</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 31%">
-<col style="width: 40%">
-<col style="width: 27%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>transform</strong></th>
-<th><strong>what it gives</strong></th>
-<th><strong>enables</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>jit</code></td>
-<td>compiled XLA</td>
-<td>speed</td>
-</tr>
-<tr class="even">
-<td><code>vmap</code></td>
-<td>batching</td>
-<td>random search, CMA-ES</td>
-</tr>
-<tr class="odd">
-<td><code>grad</code></td>
-<td>gradients</td>
-<td>gradient descent, SVI</td>
-</tr>
-<tr class="even">
-<td>probabilistic</td>
-<td>priors + likelihood</td>
-<td>Bayesian inference (HMC, NUTS, SVI — NumPyro / BlackJAX)</td>
-</tr>
-</tbody>
-</table>
 <div class="fragment">
-<p>You write the model <strong>once</strong>.</p>
+<p>Cost numbers assume reverse-mode AD makes a gradient step ≈ one forward sim. <em>Bayesian rows sit at the expensive end</em>, a posterior is worth roughly a thousand point estimates’ worth of compute.</p>
 </div>
 </section>
 <section id="chaos-eats-your-gradient" class="slide level2">
 <h2>Chaos eats your gradient</h2>
-<p>Sensitivity to initial conditions <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\|\nabla_\theta \mathcal{L}\|\)</span> <strong>explodes</strong> with integration length.</p>
+<div class="columns">
+<div class="column" style="width:45%;">
 <div class="fragment">
-<p>Not a bug in autodiff — the dynamics are telling you the loss is non-smooth at fine scales.</p>
+<p>Not a bug in automatic differentiation, the dynamics are telling you the loss is non-smooth at fine scales.</p>
 </div>
 <div class="fragment">
 <p><strong>Mitigations</strong></p>
 <ul>
 <li>integrate over shorter windows</li>
-<li>use <em>smoothed</em> observables (FC, power spectra) instead of raw traces</li>
+<li><em>smooth</em> observables</li>
 <li>multiple shooting</li>
 <li>gradient clipping</li>
 </ul>
 </div>
-</section>
-<section id="other-failure-modes" class="slide level2">
-<h2>Other failure modes</h2>
-<ul>
-<li><strong>Stochasticity</strong> — gradients through <span class="math inline">\(dW\)</span> need the reparameterization trick or score-function estimators</li>
-<li><strong>Bifurcations near the optimum</strong> — genuine discontinuities in the loss as fixed points appear or disappear → gradient descent gets stuck on the wrong side</li>
-<li><strong>Stiffness / long transients</strong> — numerical noise compounds through the unrolled trajectory</li>
-</ul>
+</div><div class="column" style="width:55%;">
 <div class="fragment">
-<p><strong>Take-away.</strong> Gradients are powerful, not universal. Read the landscape (§3) before you trust the slope.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-4/jr_unstable_grad.png"></p>
+<figcaption>Near a bifurcation, the AD gradient (b) diverges from the finite-difference ground truth.</figcaption>
+</figure>
 </div>
-<div class="fragment">
-<p>When gradients are <em>unsalvageable</em>: <strong>simulation-based inference</strong> (NPE / NLE) treats the simulator as a black box — see Bayesian slide.</p>
 </div>
+</div></div>
 </section>
-<section id="the-default-tvboptim-recipe" class="slide level2">
-<h2>The default tvboptim recipe</h2>
+<section id="the-tvb-optim-workflow" class="slide level2">
+<h2>The TVB-Optim workflow</h2>
 <ol type="1">
 <li><strong>Bifurcation map</strong> (§3) → pick a <em>regime</em> of interest</li>
 <li><strong>Coarse random / Sobol search</strong> within that regime → find a basin</li>
 <li><strong>Gradient descent</strong> from the basin → polish to a local optimum</li>
-<li><strong>Bayesian inference</strong> (HMC, SVI, or SBI when gradients break) from the optimum → posterior + uncertainty</li>
+<li><strong>Optional: Bayesian inference</strong> (HMC, SVI, or SBI when gradients break) from the optimum → posterior + uncertainty</li>
 </ol>
-<div class="fragment">
-<p>Each step uses the output of the previous as a <strong>warm start</strong>.</p>
+<div class="fragment" style="margin-top:-1.5em">
+<p>→ each step uses the output of the previous as a <strong>warm start</strong>.</p>
 </div>
 <div class="fragment">
-<p>TODO: pipeline diagram — same loss surface, four overlays</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-4/pipeline_overview.png" class="quarto-figure quarto-figure-center" style="width:105.0%"></p>
+</figure>
+</div>
 </div>
 </section>
-<section id="mini-demo-pipeline-on-the-running-example" class="slide level2">
-<h2>Mini-demo — pipeline on the running example</h2>
-<p>TODO: live (or pre-rendered) walkthrough running the full chain on <span class="math inline">\(G\)</span> vs FC. Lands the synthesis just before the hands-on.</p>
-</section>
-<section id="use-case-a-alzheimers-disease" class="slide level2">
-<h2>Use-case A — Alzheimer’s disease</h2>
+<section id="use-cases" class="slide level2">
+<h2>Use-cases</h2>
+<p><strong>I — fMRI Bold</strong></p>
+<ul>
+<li>Same as toy model, exptent to regional w</li>
+</ul>
+<p><strong>II — Alzheimer’s disease</strong></p>
 <ul>
 <li>TODO: tau PET / amyloid map → <em>prior</em> on regional parameters</li>
 <li>TODO: high-dim (regional) fit → gradient-descent territory</li>
 <li>TODO: healthy vs patient simulation, refs <span class="citation" data-cites="Schirner2023 Stefanovski2019">(<a href="#/references" role="doc-biblioref" onclick="">Schirner, Deco, and Ritter 2023</a>; <a href="#/references" role="doc-biblioref" onclick="">Stefanovski et al. 2019</a>)</span></li>
-</ul>
-</section>
-<section id="use-case-b-homogeneous-vs.-heterogeneous-fitting" class="slide level2">
-<h2>Use-case B — homogeneous vs.&nbsp;heterogeneous fitting</h2>
-<ul>
-<li>TODO: same model, same data — fit one <span class="math inline">\(G\)</span> vs per-region <span class="math inline">\(G_i\)</span></li>
-<li>TODO: low-dim vs high-dim head-to-head → why the toolbox matters</li>
-<li>TODO: TVBase frequency gradient as target <span class="citation" data-cites="Pille2025">(<a href="#/references" role="doc-biblioref" onclick="">Pille et al. 2025</a>)</span></li>
 </ul>
 <!-- section 4 lives in _slides-section-4.qmd to keep diffs scoped and
      reduce merge conflicts when collaborators touch slides.qmd -->
@@ -1588,93 +1687,93 @@ F(x, a)=0,
 <p><img data-src="img/figures/jansen1995/original/fig_11.png"></p>
 </div><div class="column" style="width:40%;">
 <p><strong>Specification</strong></p>
-<div class="sourceCode" id="cb12" data-code-line-numbers="|1-18|19-36|37-54|55-72|73-87"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb12-1"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> </span><span class="dv">6</span></span>
-<span id="cb12-2"><a></a><span class="at">  </span><span class="fu">label</span><span class="kw">:</span><span class="at"> </span><span class="st">"VEP: different columns, with delay</span></span>
-<span id="cb12-3"><a></a><span class="st">          (Fig. 11)"</span></span>
-<span id="cb12-4"><a></a><span class="at">  </span><span class="fu">dynamics</span><span class="kw">:</span></span>
-<span id="cb12-5"><a></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> JansenRit1995_Delayed_VEP</span></span>
-<span id="cb12-6"><a></a><span class="at">    </span><span class="fu">parameters</span><span class="kw">:</span></span>
-<span id="cb12-7"><a></a><span class="at">      </span><span class="fu">A</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">3.25</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> mV</span><span class="kw">}</span></span>
-<span id="cb12-8"><a></a><span class="at">      </span><span class="fu">B</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">22</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> mV</span><span class="kw">}</span></span>
-<span id="cb12-9"><a></a><span class="at">      </span><span class="fu">C</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">135</span><span class="kw">}</span></span>
-<span id="cb12-10"><a></a><span class="at">      </span><span class="fu">a</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span><span class="kw">}</span></span>
-<span id="cb12-11"><a></a><span class="at">      </span><span class="fu">b</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">50</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span><span class="kw">}</span></span>
-<span id="cb12-12"><a></a><span class="at">      </span><span class="fu">v0</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">6</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> mV</span><span class="kw">}</span></span>
-<span id="cb12-13"><a></a><span class="at">      </span><span class="fu">e0</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">2.5</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span><span class="kw">}</span></span>
-<span id="cb12-14"><a></a><span class="at">      </span><span class="fu">r</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.56</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> mV^-1</span><span class="kw">}</span></span>
-<span id="cb12-15"><a></a><span class="at">      </span><span class="fu">p</span><span class="kw">:</span></span>
-<span id="cb12-16"><a></a><span class="at">        </span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">220</span></span>
-<span id="cb12-17"><a></a><span class="at">        </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span></span>
-<span id="cb12-18"><a></a><span class="at">        </span><span class="fu">shape</span><span class="kw">:</span><span class="at"> </span><span class="st">"(n_nodes,)"</span></span>
-<span id="cb12-19"><a></a><span class="at">        </span><span class="fu">distribution</span><span class="kw">:</span><span class="at"> </span><span class="ot">*dist_p_uniform</span></span>
-<span id="cb12-20"><a></a><span class="at">      </span><span class="fu">a_d</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span><span class="kw">}</span></span>
-<span id="cb12-21"><a></a><span class="at">      </span><span class="fu">K</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span><span class="kw">,</span><span class="at"> </span><span class="fu">shape</span><span class="kw">:</span><span class="at"> </span><span class="st">"(n_nodes,)"</span><span class="kw">}</span></span>
-<span id="cb12-22"><a></a><span class="at">    </span><span class="fu">derived_parameters</span><span class="kw">:</span><span class="at"> </span><span class="ot">*jr_derived</span></span>
-<span id="cb12-23"><a></a><span class="at">    </span><span class="fu">functions</span><span class="kw">:</span><span class="at"> </span><span class="ot">*jr_functions</span></span>
-<span id="cb12-24"><a></a><span class="at">    </span><span class="fu">coupling_terms</span><span class="kw">:</span><span class="at"> </span><span class="ot">*jr_coupling</span></span>
-<span id="cb12-25"><a></a><span class="at">    </span><span class="fu">state_variables</span><span class="kw">:</span></span>
-<span id="cb12-26"><a></a><span class="at">      </span><span class="fu">y0</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> y3</span><span class="kw">}}</span></span>
-<span id="cb12-27"><a></a><span class="at">      </span><span class="fu">y3</span><span class="kw">:</span></span>
-<span id="cb12-28"><a></a><span class="at">        </span><span class="fu">equation</span><span class="kw">:</span></span>
-<span id="cb12-29"><a></a><span class="fu">          rhs</span><span class="kw">: </span><span class="ch">&gt;-</span></span>
-<span id="cb12-30"><a></a>            A*a*Sigm(y1 - y2)</span>
-<span id="cb12-31"><a></a>            - 2*a*y3 - a**2*y0</span>
-<span id="cb12-32"><a></a><span class="at">      </span><span class="fu">y1</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> y4</span><span class="kw">}}</span></span>
-<span id="cb12-33"><a></a><span class="at">      </span><span class="fu">y4</span><span class="kw">:</span></span>
-<span id="cb12-34"><a></a><span class="at">        </span><span class="fu">equation</span><span class="kw">:</span></span>
-<span id="cb12-35"><a></a><span class="fu">          rhs</span><span class="kw">: </span><span class="ch">&gt;-</span></span>
-<span id="cb12-36"><a></a>            A*a*(p + P</span>
-<span id="cb12-37"><a></a>            + C2*Sigm(C1*y0) + z0)</span>
-<span id="cb12-38"><a></a>            - 2*a*y4 - a**2*y1</span>
-<span id="cb12-39"><a></a><span class="at">      </span><span class="fu">y2</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> y5</span><span class="kw">}}</span></span>
-<span id="cb12-40"><a></a><span class="at">      </span><span class="fu">y5</span><span class="kw">:</span></span>
-<span id="cb12-41"><a></a><span class="at">        </span><span class="fu">equation</span><span class="kw">:</span></span>
-<span id="cb12-42"><a></a><span class="fu">          rhs</span><span class="kw">: </span><span class="ch">&gt;-</span></span>
-<span id="cb12-43"><a></a>            B*b*(C4*Sigm(C3*y0))</span>
-<span id="cb12-44"><a></a>            - 2*b*y5 - b**2*y2</span>
-<span id="cb12-45"><a></a><span class="at">      </span><span class="fu">z0</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> z1</span><span class="kw">}}</span></span>
-<span id="cb12-46"><a></a><span class="at">      </span><span class="fu">z1</span><span class="kw">:</span></span>
-<span id="cb12-47"><a></a><span class="at">        </span><span class="fu">equation</span><span class="kw">:</span></span>
-<span id="cb12-48"><a></a><span class="fu">          rhs</span><span class="kw">: </span><span class="ch">&gt;-</span></span>
-<span id="cb12-49"><a></a>            A*a_d*K*c_intercolumn</span>
-<span id="cb12-50"><a></a>            - 2*a_d*z1 - a_d**2*z0</span>
-<span id="cb12-51"><a></a><span class="at">    </span><span class="fu">derived_variables</span><span class="kw">:</span></span>
-<span id="cb12-52"><a></a><span class="at">      </span><span class="fu">v_pyr</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> y1 - y2</span><span class="kw">}}</span></span>
-<span id="cb12-53"><a></a><span class="at">    </span><span class="fu">output</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">v_pyr</span><span class="kw">]</span></span>
-<span id="cb12-54"><a></a><span class="at">  </span><span class="fu">network</span><span class="kw">:</span></span>
-<span id="cb12-55"><a></a><span class="at">    </span><span class="fu">number_of_regions</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
-<span id="cb12-56"><a></a><span class="at">    </span><span class="fu">number_of_nodes</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
-<span id="cb12-57"><a></a><span class="at">    </span><span class="fu">conduction_speed</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span><span class="kw">}</span></span>
-<span id="cb12-58"><a></a><span class="at">    </span><span class="fu">nodes</span><span class="kw">:</span></span>
-<span id="cb12-59"><a></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="kw">{</span><span class="fu">id</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span><span class="kw">}</span></span>
-<span id="cb12-60"><a></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
-<span id="cb12-61"><a></a><span class="at">        </span><span class="fu">parameters</span><span class="kw">:</span></span>
-<span id="cb12-62"><a></a><span class="at">          </span><span class="fu">B</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">17.6</span><span class="kw">}</span></span>
-<span id="cb12-63"><a></a><span class="at">          </span><span class="fu">C</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">108</span><span class="kw">}</span></span>
-<span id="cb12-64"><a></a><span class="at">    </span><span class="fu">edges</span><span class="kw">:</span></span>
-<span id="cb12-65"><a></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">source</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
-<span id="cb12-66"><a></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
-<span id="cb12-67"><a></a><span class="at">        </span><span class="fu">directed</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb12-68"><a></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">source</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
-<span id="cb12-69"><a></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
-<span id="cb12-70"><a></a><span class="at">        </span><span class="fu">directed</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb12-71"><a></a><span class="at">    </span><span class="fu">coupling</span><span class="kw">:</span><span class="at"> </span><span class="ot">*sigmoidal_coupling</span></span>
-<span id="cb12-72"><a></a><span class="at">  </span><span class="fu">events</span><span class="kw">:</span><span class="at"> </span><span class="ot">*flash_events</span></span>
-<span id="cb12-73"><a></a><span class="at">  </span><span class="fu">integration</span><span class="kw">:</span><span class="at"> </span><span class="ot">*integration_vep</span></span>
-<span id="cb12-74"><a></a><span class="at">  </span><span class="fu">execution</span><span class="kw">:</span></span>
-<span id="cb12-75"><a></a><span class="at">    </span><span class="fu">random_seed</span><span class="kw">:</span><span class="at"> </span><span class="dv">42</span></span>
-<span id="cb12-76"><a></a><span class="at">  </span><span class="fu">explorations</span><span class="kw">:</span></span>
-<span id="cb12-77"><a></a><span class="at">    </span><span class="fu">VEP_delayed_fig11</span><span class="kw">:</span></span>
-<span id="cb12-78"><a></a><span class="at">      </span><span class="fu">mode</span><span class="kw">:</span><span class="at"> zip</span></span>
-<span id="cb12-79"><a></a><span class="at">      </span><span class="fu">n_trials</span><span class="kw">:</span><span class="at"> </span><span class="dv">40</span></span>
-<span id="cb12-80"><a></a><span class="at">      </span><span class="fu">average</span><span class="kw">:</span><span class="at"> trials</span></span>
-<span id="cb12-81"><a></a><span class="at">      </span><span class="fu">parameters</span><span class="kw">:</span></span>
-<span id="cb12-82"><a></a><span class="at">        </span><span class="fu">K</span><span class="kw">:</span></span>
-<span id="cb12-83"><a></a><span class="at">          </span><span class="fu">element_domains</span><span class="kw">:</span></span>
-<span id="cb12-84"><a></a><span class="at">            </span><span class="kw">-</span><span class="at"> </span><span class="fu">element</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
-<span id="cb12-85"><a></a><span class="at">              </span><span class="fu">explored_values</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">300</span><span class="kw">,</span><span class="at"> </span><span class="dv">100</span><span class="kw">]</span></span>
-<span id="cb12-86"><a></a><span class="at">            </span><span class="kw">-</span><span class="at"> </span><span class="fu">element</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
-<span id="cb12-87"><a></a><span class="at">              </span><span class="fu">explored_values</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">1000</span><span class="kw">,</span><span class="at"> </span><span class="dv">4000</span><span class="kw">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11" data-code-line-numbers="|1-18|19-36|37-54|55-72|73-87"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb11-1"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> </span><span class="dv">6</span></span>
+<span id="cb11-2"><a></a><span class="at">  </span><span class="fu">label</span><span class="kw">:</span><span class="at"> </span><span class="st">"VEP: different columns, with delay</span></span>
+<span id="cb11-3"><a></a><span class="st">          (Fig. 11)"</span></span>
+<span id="cb11-4"><a></a><span class="at">  </span><span class="fu">dynamics</span><span class="kw">:</span></span>
+<span id="cb11-5"><a></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> JansenRit1995_Delayed_VEP</span></span>
+<span id="cb11-6"><a></a><span class="at">    </span><span class="fu">parameters</span><span class="kw">:</span></span>
+<span id="cb11-7"><a></a><span class="at">      </span><span class="fu">A</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">3.25</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> mV</span><span class="kw">}</span></span>
+<span id="cb11-8"><a></a><span class="at">      </span><span class="fu">B</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">22</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> mV</span><span class="kw">}</span></span>
+<span id="cb11-9"><a></a><span class="at">      </span><span class="fu">C</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">135</span><span class="kw">}</span></span>
+<span id="cb11-10"><a></a><span class="at">      </span><span class="fu">a</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span><span class="kw">}</span></span>
+<span id="cb11-11"><a></a><span class="at">      </span><span class="fu">b</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">50</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span><span class="kw">}</span></span>
+<span id="cb11-12"><a></a><span class="at">      </span><span class="fu">v0</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">6</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> mV</span><span class="kw">}</span></span>
+<span id="cb11-13"><a></a><span class="at">      </span><span class="fu">e0</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">2.5</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span><span class="kw">}</span></span>
+<span id="cb11-14"><a></a><span class="at">      </span><span class="fu">r</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.56</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> mV^-1</span><span class="kw">}</span></span>
+<span id="cb11-15"><a></a><span class="at">      </span><span class="fu">p</span><span class="kw">:</span></span>
+<span id="cb11-16"><a></a><span class="at">        </span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">220</span></span>
+<span id="cb11-17"><a></a><span class="at">        </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span></span>
+<span id="cb11-18"><a></a><span class="at">        </span><span class="fu">shape</span><span class="kw">:</span><span class="at"> </span><span class="st">"(n_nodes,)"</span></span>
+<span id="cb11-19"><a></a><span class="at">        </span><span class="fu">distribution</span><span class="kw">:</span><span class="at"> </span><span class="ot">*dist_p_uniform</span></span>
+<span id="cb11-20"><a></a><span class="at">      </span><span class="fu">a_d</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span><span class="kw">,</span><span class="at"> </span><span class="fu">unit</span><span class="kw">:</span><span class="at"> s^-1</span><span class="kw">}</span></span>
+<span id="cb11-21"><a></a><span class="at">      </span><span class="fu">K</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span><span class="kw">,</span><span class="at"> </span><span class="fu">shape</span><span class="kw">:</span><span class="at"> </span><span class="st">"(n_nodes,)"</span><span class="kw">}</span></span>
+<span id="cb11-22"><a></a><span class="at">    </span><span class="fu">derived_parameters</span><span class="kw">:</span><span class="at"> </span><span class="ot">*jr_derived</span></span>
+<span id="cb11-23"><a></a><span class="at">    </span><span class="fu">functions</span><span class="kw">:</span><span class="at"> </span><span class="ot">*jr_functions</span></span>
+<span id="cb11-24"><a></a><span class="at">    </span><span class="fu">coupling_terms</span><span class="kw">:</span><span class="at"> </span><span class="ot">*jr_coupling</span></span>
+<span id="cb11-25"><a></a><span class="at">    </span><span class="fu">state_variables</span><span class="kw">:</span></span>
+<span id="cb11-26"><a></a><span class="at">      </span><span class="fu">y0</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> y3</span><span class="kw">}}</span></span>
+<span id="cb11-27"><a></a><span class="at">      </span><span class="fu">y3</span><span class="kw">:</span></span>
+<span id="cb11-28"><a></a><span class="at">        </span><span class="fu">equation</span><span class="kw">:</span></span>
+<span id="cb11-29"><a></a><span class="fu">          rhs</span><span class="kw">: </span><span class="ch">&gt;-</span></span>
+<span id="cb11-30"><a></a>            A*a*Sigm(y1 - y2)</span>
+<span id="cb11-31"><a></a>            - 2*a*y3 - a**2*y0</span>
+<span id="cb11-32"><a></a><span class="at">      </span><span class="fu">y1</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> y4</span><span class="kw">}}</span></span>
+<span id="cb11-33"><a></a><span class="at">      </span><span class="fu">y4</span><span class="kw">:</span></span>
+<span id="cb11-34"><a></a><span class="at">        </span><span class="fu">equation</span><span class="kw">:</span></span>
+<span id="cb11-35"><a></a><span class="fu">          rhs</span><span class="kw">: </span><span class="ch">&gt;-</span></span>
+<span id="cb11-36"><a></a>            A*a*(p + P</span>
+<span id="cb11-37"><a></a>            + C2*Sigm(C1*y0) + z0)</span>
+<span id="cb11-38"><a></a>            - 2*a*y4 - a**2*y1</span>
+<span id="cb11-39"><a></a><span class="at">      </span><span class="fu">y2</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> y5</span><span class="kw">}}</span></span>
+<span id="cb11-40"><a></a><span class="at">      </span><span class="fu">y5</span><span class="kw">:</span></span>
+<span id="cb11-41"><a></a><span class="at">        </span><span class="fu">equation</span><span class="kw">:</span></span>
+<span id="cb11-42"><a></a><span class="fu">          rhs</span><span class="kw">: </span><span class="ch">&gt;-</span></span>
+<span id="cb11-43"><a></a>            B*b*(C4*Sigm(C3*y0))</span>
+<span id="cb11-44"><a></a>            - 2*b*y5 - b**2*y2</span>
+<span id="cb11-45"><a></a><span class="at">      </span><span class="fu">z0</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> z1</span><span class="kw">}}</span></span>
+<span id="cb11-46"><a></a><span class="at">      </span><span class="fu">z1</span><span class="kw">:</span></span>
+<span id="cb11-47"><a></a><span class="at">        </span><span class="fu">equation</span><span class="kw">:</span></span>
+<span id="cb11-48"><a></a><span class="fu">          rhs</span><span class="kw">: </span><span class="ch">&gt;-</span></span>
+<span id="cb11-49"><a></a>            A*a_d*K*c_intercolumn</span>
+<span id="cb11-50"><a></a>            - 2*a_d*z1 - a_d**2*z0</span>
+<span id="cb11-51"><a></a><span class="at">    </span><span class="fu">derived_variables</span><span class="kw">:</span></span>
+<span id="cb11-52"><a></a><span class="at">      </span><span class="fu">v_pyr</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">equation</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">rhs</span><span class="kw">:</span><span class="at"> y1 - y2</span><span class="kw">}}</span></span>
+<span id="cb11-53"><a></a><span class="at">    </span><span class="fu">output</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">v_pyr</span><span class="kw">]</span></span>
+<span id="cb11-54"><a></a><span class="at">  </span><span class="fu">network</span><span class="kw">:</span></span>
+<span id="cb11-55"><a></a><span class="at">    </span><span class="fu">number_of_regions</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb11-56"><a></a><span class="at">    </span><span class="fu">number_of_nodes</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb11-57"><a></a><span class="at">    </span><span class="fu">conduction_speed</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span><span class="kw">}</span></span>
+<span id="cb11-58"><a></a><span class="at">    </span><span class="fu">nodes</span><span class="kw">:</span></span>
+<span id="cb11-59"><a></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="kw">{</span><span class="fu">id</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span><span class="kw">}</span></span>
+<span id="cb11-60"><a></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb11-61"><a></a><span class="at">        </span><span class="fu">parameters</span><span class="kw">:</span></span>
+<span id="cb11-62"><a></a><span class="at">          </span><span class="fu">B</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">17.6</span><span class="kw">}</span></span>
+<span id="cb11-63"><a></a><span class="at">          </span><span class="fu">C</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="dv">108</span><span class="kw">}</span></span>
+<span id="cb11-64"><a></a><span class="at">    </span><span class="fu">edges</span><span class="kw">:</span></span>
+<span id="cb11-65"><a></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">source</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb11-66"><a></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb11-67"><a></a><span class="at">        </span><span class="fu">directed</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb11-68"><a></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">source</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb11-69"><a></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb11-70"><a></a><span class="at">        </span><span class="fu">directed</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb11-71"><a></a><span class="at">    </span><span class="fu">coupling</span><span class="kw">:</span><span class="at"> </span><span class="ot">*sigmoidal_coupling</span></span>
+<span id="cb11-72"><a></a><span class="at">  </span><span class="fu">events</span><span class="kw">:</span><span class="at"> </span><span class="ot">*flash_events</span></span>
+<span id="cb11-73"><a></a><span class="at">  </span><span class="fu">integration</span><span class="kw">:</span><span class="at"> </span><span class="ot">*integration_vep</span></span>
+<span id="cb11-74"><a></a><span class="at">  </span><span class="fu">execution</span><span class="kw">:</span></span>
+<span id="cb11-75"><a></a><span class="at">    </span><span class="fu">random_seed</span><span class="kw">:</span><span class="at"> </span><span class="dv">42</span></span>
+<span id="cb11-76"><a></a><span class="at">  </span><span class="fu">explorations</span><span class="kw">:</span></span>
+<span id="cb11-77"><a></a><span class="at">    </span><span class="fu">VEP_delayed_fig11</span><span class="kw">:</span></span>
+<span id="cb11-78"><a></a><span class="at">      </span><span class="fu">mode</span><span class="kw">:</span><span class="at"> zip</span></span>
+<span id="cb11-79"><a></a><span class="at">      </span><span class="fu">n_trials</span><span class="kw">:</span><span class="at"> </span><span class="dv">40</span></span>
+<span id="cb11-80"><a></a><span class="at">      </span><span class="fu">average</span><span class="kw">:</span><span class="at"> trials</span></span>
+<span id="cb11-81"><a></a><span class="at">      </span><span class="fu">parameters</span><span class="kw">:</span></span>
+<span id="cb11-82"><a></a><span class="at">        </span><span class="fu">K</span><span class="kw">:</span></span>
+<span id="cb11-83"><a></a><span class="at">          </span><span class="fu">element_domains</span><span class="kw">:</span></span>
+<span id="cb11-84"><a></a><span class="at">            </span><span class="kw">-</span><span class="at"> </span><span class="fu">element</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb11-85"><a></a><span class="at">              </span><span class="fu">explored_values</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">300</span><span class="kw">,</span><span class="at"> </span><span class="dv">100</span><span class="kw">]</span></span>
+<span id="cb11-86"><a></a><span class="at">            </span><span class="kw">-</span><span class="at"> </span><span class="fu">element</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb11-87"><a></a><span class="at">              </span><span class="fu">explored_values</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">1000</span><span class="kw">,</span><span class="at"> </span><span class="dv">4000</span><span class="kw">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column" style="width:30%;">
 <p><strong>Reproduced</strong></p>
 <p><img data-src="img/figures/jansen1995/reproduced/Jansen1995_Fig11.png"></p>
