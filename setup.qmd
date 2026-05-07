@@ -55,6 +55,12 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 
 Restart PowerShell afterwards.
 
+If you get an execution policy error when running scripts later (e.g. activating the venv), allow signed local scripts for your user once:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
 :::
 
 Verify:
@@ -109,9 +115,10 @@ This installs TVBO and the TVB simulator backend used in the workshop.
 
 ### 5. Verify
 
-```python
-from tvbo import Dynamics, SimulationExperiment
-print("Ready!")
+Paste this directly into your activated shell (PowerShell, bash, or zsh):
+
+```bash
+python -c "from tvbo import Dynamics, SimulationExperiment; print('Ready!')"
 ```
 
 ---
