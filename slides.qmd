@@ -87,6 +87,8 @@ Plotting the Brain
 
 ## Basic ideas and history
 
+:::: {.rows}
+::: {.row height=60%}
 :::: {.columns}
 ::: {.column width="25%"}
 ![](img/figures/basic_idea_imaging_workflow1.png){width="100%"}
@@ -105,7 +107,31 @@ Plotting the Brain
 :::
 
 ::::
+:::
 
+::: {.row height=40% .fragment}
+:::: {.columns}
+
+::: {.column width="70%"}
+```{mermaid}
+%%| fig-align: center
+flowchart LR
+    S(["State:  $$ S(t) $$"]):::box --> F["Evolution Function:  $$ f(S, θ)$$"]:::fn --> dS(["Next State:  $$ dS/dt $$ "]):::box
+    theta(["Parameters:  $$\theta$$"]):::param --> F
+
+    classDef box  fill:#d6e4f0,stroke:#6880af,stroke-width:2px,color:#1a1a2e,rx:8,ry:8
+    classDef fn   fill:#6880af,stroke:#3a5080,stroke-width:2px,color:#ffffff,font-weight:bold,rx:4,ry:4
+    classDef param fill:#f0dfd6,stroke:#af8068,stroke-width:2px,color:#1a1a2e,rx:8,ry:8
+```
+:::
+
+::: {.column width="30%"}
+![](img/state_evolution_node.png){height=150px}
+:::
+
+::::
+:::
+::::
 
 
 ## Mathematical framework
@@ -274,24 +300,18 @@ net.plot_overview()
 
 ![](img/videos/NetworkDynamics/coupled_kuramoto.gif)
 
-##
+## Coupled Brain Network
+<!-- - TODO: nodes, coupling, delays, noise
+- TODO: connectome loading
+- TODO: global coupling sweep -->
 
 :::: {.columns}
 
-::: {.column width=30%}
-![](img/fig-network.png)
+::: {.column width=20%}
+![](img/fig-network_visualization_rows.png){height=590px}
 :::
 
-::: {.column width=70%}
-- TODO: nodes, coupling, delays, noise
-- TODO: connectome loading
-- TODO: global coupling sweep
-:::
-
-
-::::
-
-## Coupling
+::: {.column width=80%}
 
 ::: {.fragment fragment-index=2}
 $$
@@ -306,9 +326,18 @@ $$
 - $\tau_{ij}$ - transmission delay (tract length / conduction speed)
 - $f_c^{\text{post}}$ - post-aggregation transformation
 - $\theta^c$ - coupling parameters
+
 :::
 
 :::
+
+::: {.fragment fragment-index=3}
+![](img/coupling_schematic.png){height="250px" fig-align="center"}
+:::
+
+:::
+
+::::
 
 # 2. Defining a FAIR brain network model {background-color="#6880af"}
 
