@@ -25,6 +25,7 @@ render:
     - notebooks/4_optimization.qmd
     - notebooks/04a_alzheimer_usecase.qmd
     - notebooks/04b_parameter_fitting.qmd
+    - notebooks/4_inference_demos.qmd
     - notebooks/5_stimulation.qmd
     - notebooks/05_stimulation.qmd
 
@@ -74,6 +75,8 @@ website:
             text: "  4.1 Alzheimer use case"
           - href: notebooks/04b_parameter_fitting.qmd
             text: "  4.2 Parameter fitting"
+          - href: notebooks/4_inference_demos.qmd
+            text: "  4.3 Inference demos"
           - text: "---"
           - href: notebooks/5_stimulation.qmd
             text: "5. Stimulating the brain"
@@ -106,6 +109,7 @@ website:
           contents:
             - notebooks/04a_alzheimer_usecase.qmd
             - notebooks/04b_parameter_fitting.qmd
+            - notebooks/4_inference_demos.qmd
         - section: "5. Stimulating the brain"
           href: notebooks/5_stimulation.qmd
           contents:
