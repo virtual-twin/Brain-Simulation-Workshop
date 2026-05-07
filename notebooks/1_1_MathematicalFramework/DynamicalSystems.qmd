@@ -73,13 +73,16 @@ sys.path.insert(0, os.path.abspath('..'))  # make notebooks/ importable
 from spring_animation import animate_spring
 import numpy as np
 
+FIG_DIR = os.path.join("..", "..", "img", "figures", "spring")
+os.makedirs(FIG_DIR, exist_ok=True)
 
 def save_animation_video(ani, stem, fps=30):
+    output_stem = os.path.join(FIG_DIR, stem)
     # Static thumbnail: draw first real frame (frame index 0)
     ani._init_draw()   # sets up blit state
     ani._func(0)       # calls update(0) → places spring + mass at initial position
-    ani._fig.savefig(rf"{stem}_thumb.png", bbox_inches="tight")
-    ani.save(rf"{stem}.gif", writer="pillow", fps=fps)
+    ani._fig.savefig(f"{output_stem}_thumb.png", bbox_inches="tight")
+    ani.save(f"{output_stem}.gif", writer="pillow", fps=fps)
 
 x_ts = np.asarray(result.data.sel({"variable": "x"})).ravel()
 
@@ -96,7 +99,7 @@ ani = animate_spring(
 save_animation_video(ani, 'spring_single', fps=30)
 ```
 
-![](spring_single.gif)
+![](../../img/figures/spring/spring_single.gif)
 
 ### Varying initial conditions
 
@@ -131,7 +134,7 @@ ani = animate_spring(
 save_animation_video(ani, 'spring_ics', fps=30)
 ```
 
-![](spring_ics.gif)
+![](../../img/figures/spring/spring_ics.gif)
 
 ## Phase Space
 
@@ -153,7 +156,7 @@ for init_x in [0.5, 1.0, 1.5, 2.0]:
 system.plot(kind='vectorfield', ax=ax, alpha=0.3)
 ax.set_xlabel("x (position)")
 ax.set_ylabel("v (velocity)")
-fig.savefig('phase_space.png', dpi=500, bbox_inches='tight')
+fig.savefig(os.path.join(FIG_DIR, 'phase_space.png'), dpi=500, bbox_inches='tight')
 ```
 
 ## Parameters
@@ -210,7 +213,7 @@ ani = animate_spring(
 save_animation_video(ani, 'spring_mass', fps=30)
 ```
 
-![](spring_mass.gif)
+![](../../img/figures/spring/spring_mass.gif)
 
 
 ## From Toy Models to Better Realism
@@ -258,4 +261,4 @@ save_animation_video(ani, "spring_realism", fps=30)
 
 ```
 
-![](spring_realism.gif)
+![](../../img/figures/spring/spring_realism.gif)
