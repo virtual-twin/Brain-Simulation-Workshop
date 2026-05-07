@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import numpy as np
 
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
@@ -12,6 +13,7 @@ from _bif_common import (
     SADDLE_2D,
     FOCUS_2D,
     CENTRE_2D,
+    _sample_initial_values,
     _simulate_trials_via_experiment,
 )
 from tvbo import Dynamics
@@ -19,12 +21,32 @@ from tvbo import Dynamics
 ACCENT = "#c85030"
 TRAJ_C = "red"
 OUT = os.path.join(IMG, os.path.basename(__file__).replace(".py", ".gif"))
+T_FINAL = 10.0
+DT = 0.01
+N_TRAJ = 5
+SAMPLES_PER_TRAJ = 60
+
+
+def _slower_node_yaml():
+    return NODE_2D.replace("rhs: -2*x1", "rhs: -0.35*x1").replace("rhs: -x2", "rhs: -0.18*x2", 1)
+
+
+def _slower_saddle_yaml():
+    return SADDLE_2D.replace("rhs: x1 - x2", "rhs: 0.10*(x1 - x2)").replace("rhs: -x1 - x2", "rhs: 0.10*(-x1 - x2)")
+
+
+def _slower_focus_yaml():
+    return FOCUS_2D.replace("rhs: -0.3*x1 - x2", "rhs: -0.12*x1 - 0.8*x2").replace("rhs: x1 - 0.3*x2", "rhs: 0.8*x1 - 0.12*x2")
+
+
+def _slower_centre_yaml():
+    return CENTRE_2D.replace("rhs: -x2", "rhs: -0.8*x2").replace("rhs: x1", "rhs: 0.8*x1", 1)
 
 CASES = [
-    ("Stable node", NODE_2D, "node", 5.0, 11),
-    ("Saddle", SADDLE_2D, "saddle", 2.0, 22),
-    ("Stable focus", FOCUS_2D, "focus", 20.0, 33),
-    ("Centre", CENTRE_2D, "centre", 10.0, 44),
+    ("Stable node", _slower_node_yaml(), "node", 11, 0.90),
+    ("Saddle", _slower_saddle_yaml(), "saddle", 22, 0.45),
+    ("Stable focus", _slower_focus_yaml(), "focus", 33, 0.75),
+    ("Centre", _slower_centre_yaml(), "centre", 44, 0.75),
 ]
 
 PP_POS = {"node": (0, 1), "saddle": (0, 2), "focus": (1, 1), "centre": (1, 2)}
@@ -43,9 +65,17 @@ gs = fig.add_gridspec(
 artists = []
 data_by_key = {}
 
-for title, yml, key, dur, seed in CASES:
+for title, yml, key, seed, shrink in CASES:
     dyn = Dynamics.from_string(yml)
-    runs = _simulate_trials_via_experiment(dyn, duration=dur, dt=0.01, n_trials=5, seed=seed)
+    initial_values_list = _sample_initial_values(dyn, n_trials=N_TRAJ, seed=seed, shrink=shrink)
+    runs = _simulate_trials_via_experiment(
+        dyn,
+        duration=T_FINAL,
+        dt=DT,
+        n_trials=N_TRAJ,
+        seed=seed,
+        initial_values_list=initial_values_list,
+    )
     data_by_key[key] = runs
 
     pp_ax = fig.add_subplot(gs[PP_POS[key]])
@@ -58,7 +88,7 @@ for title, yml, key, dur, seed in CASES:
     ts_ax.set_xlabel("$t$", fontsize=8)
     ts_ax.set_ylabel("$x_1$", fontsize=8)
     ts_ax.tick_params(labelsize=7)
-    ts_ax.set_xlim(0, dur)
+    ts_ax.set_xlim(0, T_FINAL)
 
     yvals = [run["series"]["x1"] for run in runs]
     ymin = min(float(y.min()) for y in yvals)
@@ -75,31 +105,14 @@ for title, yml, key, dur, seed in CASES:
         time_lines.append(time_line)
     artists.append((phase_lines, time_lines))
 
-samples_per_trial = 40
-frame_count = len(CASES[0][0:0])
-sample_idx = None
-for runs in data_by_key.values():
-    sample_idx = None
-    break
-sample_idx = None
-sample_idx = None
-sample_idx = None
-sample_idx = None
-sample_idx = None
-sample_idx = None
-sample_idx = None
-sample_idx = None
-sample_idx = None
-sample_idx = None
-
 example_run = next(iter(data_by_key.values()))[0]
-sample_idx = [int(i) for i in plt.np.linspace(1, len(example_run["time"]) - 1, samples_per_trial)]
-total_frames = 5 * samples_per_trial
+sample_idx = np.linspace(1, len(example_run["time"]) - 1, SAMPLES_PER_TRAJ, dtype=int)
+total_frames = N_TRAJ * SAMPLES_PER_TRAJ
 
 
 def _update(frame):
-    active_trial = frame // samples_per_trial
-    active_step = sample_idx[frame % samples_per_trial]
+    active_trial = min(frame // SAMPLES_PER_TRAJ, N_TRAJ - 1)
+    active_step = sample_idx[frame % SAMPLES_PER_TRAJ]
     changed = []
     for (_, _, key, _, _), (phase_lines, time_lines) in zip(CASES, artists):
         runs = data_by_key[key]
