@@ -534,24 +534,51 @@ regimes as $a$ varies
 :::
 :::
 
-## Linear stability
+## Linear Systems
 
+
+:::: {.columns}
+
+::: {.column width="30%" .r-fit-text}
 $$
 \dot x = a\,x \quad\Rightarrow\quad x(t) = x_0\,e^{a t}
 $$
 
-::: {.columns}
-::: {.column width="38%" .smaller}
+- $x(t)$: State variable
+- $x_0$: Initial condition
+- $a$: Parameter
+
+Solution:
+$$
+x(t) = x_0\,e^{a t}
+$$
+
+Equilibrium:
+$$
+\dot{x}(t) = ax(t) = 0?
+$$
+$$
+\quad\Rightarrow\quad x_{eq} = 0
+$$
+
+
+:::
+
+::: {.column width="50%"}
+![](img/linear_stability.png){width="100%"}
+:::
+
+::: {.column width=10%}
+
 - $\lambda=a$: growth rate
 - $a < 0$: decay
 - $a = 0$: marginal
 - $a > 0$: growth
 - **change point:** $\lambda=a=0$
+
 :::
-::: {.column width="62%"}
-![](img/linear_stability.png){width="100%"}
-:::
-:::
+
+::::
 
 ## 2D portraits
 
@@ -565,14 +592,21 @@ $$
 
 ## Regime-change building blocks
 
-- TODO: remove Ptchfork bifurcation.
-- TODO: explain Hopf
+:::: {.columns}
 
-![](img/normal_forms.png){fig-align="center" width="100%"}
+::: {.column .smaller width=20%}
 
-::: {.smaller}
-Top: equilibria as $a$ varies. Bottom: local flow $\dot x=f(x)$ at the dotted parameter slice.
+- Top: equilibria as $a$ varies.
+- Bottom: local flow $\dot x=f(x)$ at the dotted parameter slice.
+
 :::
+
+::: {.column width=80%}
+![](img/normal_forms.png){fig-align="center" width="100%"}
+:::
+
+::::
+
 
 ## Hopf: birth of an oscillation
 
