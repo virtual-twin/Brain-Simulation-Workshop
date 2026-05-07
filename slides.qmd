@@ -968,13 +968,18 @@ $$
 \quad\Rightarrow\quad x_{eq} = 0
 $$
 
-
 :::
 
 ::: {.column width="50%"}
-![](img/figures/bifurcation/fig-linear_system_a1_and_a_minus1.png)
+
+::: {.r-stack }
+
+![](img/figures/bifurcation/fig-stability.png){.fragment}
+
+![](img/figures/bifurcation/fig-stability-perturbation.png){.fragment}
 :::
 
+:::
 
 ::::
 
