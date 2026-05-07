@@ -174,6 +174,84 @@ savefig("loss_surface_2d.png")
 plt.show()
 ```
 
+```{python}
+#| label: fig-loss-2d-only
+#| fig-cap: "Loss landscape over (G, w) — same data as `loss_surface_2d.png` minus the FC panel, for slides that already showed the empirical FC."
+
+fig, ax = plt.subplots(figsize=(5.5, 4.5))
+im = ax.imshow(
+    loss_grid.values,
+    cmap="cividis_r",
+    extent=[G_axis.min(), G_axis.max(), w_axis.min(), w_axis.max()],
+    origin="lower",
+    aspect="auto",
+    interpolation="none",
+)
+plt.colorbar(im, ax=ax, label=r"$\mathcal{L}(\theta)$")
+ax.set_xlabel("global coupling G")
+ax.set_ylabel("excitatory recurrence w")
+ax.set_title("Loss landscape — RWW fit to empirical FC")
+
+plt.tight_layout()
+savefig("loss_surface_2d_only.png")
+plt.show()
+```
+
+## Parallelism — grid in, losses out
+
+Two-panel teaser for the parallelism slide. Schematic on a 10×10 grid
+over abstract $(\theta_1, \theta_2)$ with a synthetic Gaussian loss —
+the point is the *shape of the API* (grid in, losses out), not the
+specific running example.
+
+```{python}
+#| label: fig-parallelism
+#| fig-cap: "Left: a 10×10 grid of $(\\theta_1, \\theta_2)$ samples we ask for. Right: the same grid coloured by the (dummy Gaussian) loss returned from one batched forward pass."
+
+n_par = 10
+theta_axis = np.linspace(-1.0, 1.0, n_par)
+T1, T2 = np.meshgrid(theta_axis, theta_axis)
+
+# dummy Gaussian loss centered slightly off-origin
+center = np.array([0.2, -0.3])
+dummy_loss = 1.0 - np.exp(-((T1 - center[0]) ** 2 + (T2 - center[1]) ** 2) / 0.4)
+
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+fig, (ax_in, ax_out) = plt.subplots(1, 2, figsize=(7.0, 4.6))
+
+def style_axes(ax, title):
+    ax.set_xlim(theta_axis.min() - 0.15, theta_axis.max() + 0.15)
+    ax.set_ylim(theta_axis.min() - 0.15, theta_axis.max() + 0.15)
+    ax.set_aspect("equal")
+    ax.set_xlabel(r"$\theta_1$")
+    ax.set_ylabel(r"$\theta_2$")
+    ax.set_title(title)
+
+marker_size = 200
+
+ax_in.scatter(T1.ravel(), T2.ravel(), s=marker_size,
+              color="lightgray", edgecolors="white", linewidths=0.8)
+style_axes(ax_in, "Input: parameter grid")
+
+sc = ax_out.scatter(T1.ravel(), T2.ravel(), c=dummy_loss.ravel(),
+                    cmap="cividis_r", s=marker_size,
+                    edgecolors="white", linewidths=0.8)
+style_axes(ax_out, "Output: loss from one batched run")
+
+# match the two panel widths by giving each axis its own colorbar slot
+for ax, mappable in [(ax_in, None), (ax_out, sc)]:
+    cax = make_axes_locatable(ax).append_axes("right", size="5%", pad=0.1)
+    if mappable is None:
+        cax.axis("off")
+    else:
+        fig.colorbar(mappable, cax=cax, label=r"$\mathcal{L}$")
+
+plt.tight_layout()
+savefig("parallelism_grid.png")
+plt.show()
+```
+
 ## 1D slice along G
 
 Slice the 2D landscape along `G` at a fixed `w` (the model default
@@ -237,11 +315,11 @@ im = ax.imshow(
     origin="lower",
     aspect="auto",
     interpolation="none",
-    alpha=0.55,
+    alpha=0.5,
 )
 sc = ax.scatter(G_rand, w_rand, c=loss_rand, cmap="cividis_r",
-                s=35, edgecolors="white", linewidths=1.0, zorder=3)
-plt.colorbar(sc, ax=ax, label="loss (RMSE)")
+                s=70, edgecolors="black", linewidths=1.0, zorder=3)
+plt.colorbar(sc, ax=ax, label=r"$\mathcal{L}(\theta)$")
 ax.set_xlabel("global coupling G")
 ax.set_ylabel("excitatory recurrence w")
 ax.set_title(f"Random search — {n_random} samples")
@@ -425,7 +503,7 @@ def draw_generation(ax, gen_idx):
     h = cmaes_history[gen_idx]
     pop, fits = h["pop"], h["fits"]
     ax.scatter(pop[:, 0], pop[:, 1], c=fits, cmap="cividis_r",
-               s=35, edgecolors="white", linewidths=0.8, zorder=5)
+               s=50, edgecolors="black", linewidths=0.8, zorder=5)
     ax.scatter([h["mean"][0]], [h["mean"][1]], color="red", marker="x",
                s=80, linewidths=2.5, zorder=6)
     cov_ellipse(h["mean"], h["C"], h["sigma"], ax,
@@ -479,6 +557,63 @@ gif_path = os.path.join(FIG_DIR, "cma_es_evolution.gif")
 anim.save(gif_path, writer=animation.PillowWriter(fps=1.0), dpi=DPI)
 print(f"saved → {gif_path}")
 plt.close(fig_anim)
+```
+
+## Method ceiling — where sampling stops scaling
+
+Horizontal bars: each method's usable range in parameter dimension $d$.
+The shaded band marks the regional-parameter regime ($d \sim 10^3$–$10^4$)
+that brain network models live in. Only gradient descent crosses it.
+
+```{python}
+cividis = plt.get_cmap("cividis")
+palette = [cividis(x) for x in (0.05, 0.35, 0.6, 0.9)]
+
+methods = [
+    ("Grid",             1, 3,      palette[0]),
+    ("Random / Sobol",   1, 20,     palette[1]),
+    ("CMA-ES",           1, 50,     palette[2]),
+    ("Gradient descent", 1, 10_000, palette[3]),
+]
+
+fig, ax = plt.subplots(figsize=(8.5, 3.))
+
+for i, (name, lo, hi, color) in enumerate(methods):
+    ax.plot([lo, hi], [i, i], color=color, lw=12, solid_capstyle="butt",
+            zorder=2)
+    ax.annotate("", xy=(hi * 1.45, i), xytext=(hi, i),
+                arrowprops=dict(arrowstyle="-|>,head_length=0.9,head_width=0.6",
+                                color=color, lw=0, mutation_scale=22),
+                annotation_clip=False, zorder=3)
+    ax.text(hi * 1.9, i, f"$d \\approx {hi:,}$".replace(",", "{,}"),
+            va="center", ha="left", fontsize=11, color=color)
+
+# regional brain-model band
+band_color = cividis(0.75)
+ax.axvspan(1_00, 15_000, color=band_color, alpha=0.18, zorder=0)
+ax.text(1_000, len(methods) - 1.65,
+        "regional brain models\n($d \\sim 10^3$–$10^4$)",
+        ha="center", va="center", fontsize=10, color="black",
+        fontweight="bold", clip_on=False)
+
+ax.set_xscale("log")
+ax.set_xlim(1, 30_000)
+ax.set_ylim(-0.7, len(methods) - 0.3)
+ax.set_yticks(range(len(methods)))
+ax.set_yticklabels([m[0] for m in methods])
+ax.invert_yaxis()
+ax.set_xlabel("parameter dimension $d$")
+# ax.set_title("Sampling methods hit a wall — gradient descent doesn't",
+            #  pad=18)
+
+for spine in ("top", "right", "left"):
+    ax.spines[spine].set_visible(False)
+ax.tick_params(axis="y", length=0)
+ax.grid(axis="x", which="both", ls=":", alpha=0.5)
+
+plt.tight_layout()
+savefig("method_ceiling.png")
+plt.show()
 ```
 
 ## Gradient descent trajectory
@@ -561,7 +696,7 @@ if frame_indices[-1] != n_steps_total - 1:
 
 def draw_grad_landscape(ax):
     ax.clear()
-    ax.imshow(
+    im = ax.imshow(
         loss_grid.values,
         cmap="cividis_r",
         extent=[G_axis.min(), G_axis.max(), w_axis.min(), w_axis.max()],
@@ -571,6 +706,10 @@ def draw_grad_landscape(ax):
     ax.set_ylim(w_axis.min(), w_axis.max())
     ax.set_xlabel("global coupling G")
     ax.set_ylabel("excitatory recurrence w")
+    return im
+
+_grad_im = draw_grad_landscape(ax_grad_anim)
+fig_grad_anim.colorbar(_grad_im, ax=ax_grad_anim, label=r"$\mathcal{L}(\theta)$")
 
 def grad_init():
     draw_grad_landscape(ax_grad_anim)
@@ -582,9 +721,12 @@ def grad_update(frame_idx):
     ax_grad_anim.plot(G_route[: i + 1], w_route[: i + 1],
                       color="white", linewidth=1.5, alpha=0.9, zorder=4)
     ax_grad_anim.scatter([G_route[0]], [w_route[0]], color="white", s=110,
-                         edgecolors="black", linewidths=2, zorder=6)
-    ax_grad_anim.scatter([G_route[i]], [w_route[i]], color="red", marker="x",
-                         s=80, linewidths=2.5, zorder=7)
+                         edgecolors="black", linewidths=2, zorder=6,
+                         label=r"start $\theta$")
+    ax_grad_anim.scatter([G_route[i]], [w_route[i]], color="white", marker="X",
+                         s=110, edgecolors="black", linewidths=1.5, zorder=7,
+                         label=r"optimized $\theta$")
+    ax_grad_anim.legend(loc="upper right", framealpha=0.9)
     ax_grad_anim.set_title(f"Adam   step {i + 1}/{n_steps_total}")
     return []
 
@@ -594,9 +736,85 @@ grad_anim = animation.FuncAnimation(
 )
 
 grad_gif_path = os.path.join(FIG_DIR, "gradient_trajectory.gif")
-grad_anim.save(grad_gif_path, writer=animation.PillowWriter(fps=8), dpi=DPI)
+grad_anim.save(grad_gif_path, writer=animation.PillowWriter(fps=4), dpi=DPI)
 print(f"saved → {grad_gif_path}")
 plt.close(fig_grad_anim)
+```
+
+## Prior pictograms — uniform / weakly / strongly informative
+
+Tiny inline pictograms used as bullet decorations on the priors slide.
+Each is a square, axes-off, single-color sketch of one prior shape over
+the same range.
+
+```{python}
+from scipy.stats import norm as _norm, uniform as _uniform
+
+theta_p = np.linspace(0.0, 1.0, 400)
+pico_color = plt.get_cmap("cividis")(0.55)
+
+prior_shapes = {
+    "prior_uniform.png": _uniform.pdf(theta_p, loc=0.1, scale=0.8),
+    "prior_weak.png":    _norm.pdf(theta_p, loc=0.5, scale=0.18),
+    "prior_strong.png":  _norm.pdf(theta_p, loc=0.65, scale=0.05),
+}
+
+for name, y in prior_shapes.items():
+    fig, ax = plt.subplots(figsize=(1.2, 0.8))
+    ax.fill_between(theta_p, y, color=pico_color, alpha=0.4)
+    ax.plot(theta_p, y, color=pico_color, lw=2)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, max(y.max() * 1.15, 1.5))
+    ax.set_xticks([])
+    ax.set_yticks([])
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    fig.savefig(os.path.join(FIG_DIR, name), dpi=DPI,
+                bbox_inches="tight", transparent=True)
+    plt.close(fig)
+print(f"saved → {list(prior_shapes)}")
+```
+
+## Bayesian shrinkage cartoon — prior, likelihood, posterior
+
+A generic textbook visual to introduce Bayes on the slide: a wide prior
+times a peaked likelihood gives a tighter posterior. No connection to
+the running example.
+
+```{python}
+from scipy.stats import norm
+
+theta = np.linspace(-4, 6, 400)
+
+prior      = norm.pdf(theta, loc=1.0, scale=2.5)
+likelihood = norm.pdf(theta, loc=2.2, scale=0.7)
+unnorm     = prior * likelihood
+posterior  = unnorm / np.trapezoid(unnorm, theta)
+
+cividis = plt.get_cmap("cividis")
+c_prior, c_like, c_post = cividis(0.15), cividis(0.55), cividis(0.9)
+
+fig, ax = plt.subplots(figsize=(8.0, 3.8))
+
+ax.fill_between(theta, prior,      color=c_prior, alpha=0.25)
+# ax.fill_between(theta, likelihood, color=c_like,  alpha=0.25)
+ax.fill_between(theta, posterior,  color=c_post,  alpha=0.35)
+
+ax.plot(theta, prior,      color=c_prior, lw=2.5, label="prior  $p(\\theta)$")
+# ax.plot(theta, likelihood, color=c_like,  lw=2.5, label="likelihood  $p(y \\mid \\theta)$")
+ax.plot(theta, posterior,  color=c_post,  lw=3.0, label="posterior  $p(\\theta \\mid y)$")
+
+ax.set_xlabel(r"$\theta$", fontsize=16)
+ax.set_yticks([])
+ax.set_xlim(theta.min(), theta.max())
+for spine in ("top", "right", "left"):
+    ax.spines[spine].set_visible(False)
+ax.legend(frameon=False, loc="upper right")
+# ax.set_title("Posterior = prior × likelihood (up to normalization)")
+
+plt.tight_layout()
+savefig("bayes_shrinkage.png")
+plt.show()
 ```
 
 ## Bayesian inference — HMC over (G, w)
@@ -747,14 +965,136 @@ def plot_posterior_panel(fig, gs_outer, samples, title):
         a.set_xticks([]); a.set_yticks([])
         for sp in a.spines.values():
             sp.set_visible(False)
-    ax_top.set_title(title)
+    ax_top.set_title(title, fontsize=18)
 
 fig = plt.figure(figsize=(13, 5.6))
 outer = fig.add_gridspec(1, 2, wspace=0.18)
 plot_posterior_panel(fig, outer[0, 0], samples_wide,
-                     "HMC (NUTS)  ·  ~4 h")
+                     "HMC (NUTS) ~4 h")
 plot_posterior_panel(fig, outer[0, 1], samples_svi,
-                     "SVI (MV-Normal guide)  ·  ~12 min")
+                     "SVI (MV-Normal guide) ~12 min")
 savefig("posteriors_compare.png")
+plt.show()
+```
+
+## Pipeline overview cartoon
+
+A 4-panel cartoon for the "default tvboptim recipe" slide: bifurcation
+diagram → coarse-search loss landscape → gradient descent (global → regional)
+→ Bayesian posterior. All synthetic, all cividis.
+
+```{python}
+from matplotlib.patches import FancyArrowPatch
+
+cmap = plt.get_cmap("cividis")
+c_main, c_unstable, c_accent = cmap(0.85), "#888888", cmap(0.25)
+
+PIPELINE_FS = {"title": 15, "label": 13, "annot": 12}
+fig, axes = plt.subplots(1, 4, figsize=(14.5, 3.6))
+
+# --- Panel 1: S-shaped saddle-node bifurcation diagram --------------------
+ax = axes[0]
+y_curve = np.linspace(-1.3, 1.3, 500)
+x_curve = 0.55 * (y_curve ** 3 - y_curve)
+y_fold_lo = -1.0 / np.sqrt(3)   # right fold (lower branch ends here)
+y_fold_hi = +1.0 / np.sqrt(3)   # left fold (upper branch starts here)
+m_lower = y_curve <= y_fold_lo
+m_mid   = (y_curve > y_fold_lo) & (y_curve < y_fold_hi)
+m_upper = y_curve >= y_fold_hi
+ax.plot(x_curve[m_lower], y_curve[m_lower], color=c_main,     lw=2.5)
+ax.plot(x_curve[m_mid],   y_curve[m_mid],   color=c_unstable, lw=2.0, ls=":")
+ax.plot(x_curve[m_upper], y_curve[m_upper], color=c_main,     lw=2.5)
+x_sn_right = 0.55 * (y_fold_lo ** 3 - y_fold_lo)
+x_sn_left  = 0.55 * (y_fold_hi ** 3 - y_fold_hi)
+ax.scatter([x_sn_right, x_sn_left], [y_fold_lo, y_fold_hi],
+           s=130, color=c_accent, zorder=3, edgecolor="white", linewidth=1.5)
+ax.axvline(0.0, color=c_unstable, lw=1.8, ls="--", alpha=0.85)
+ax.text(-0.15, 1.45, "picked\nregime", ha="center", va="top",
+        fontsize=PIPELINE_FS["annot"], color=c_unstable)
+ax.set_xlim(-0.55, 0.55)
+ax.set_ylim(-1.5, 1.5)
+ax.set_xlabel(r"control parameter", fontsize=PIPELINE_FS["label"])
+ax.set_ylabel(r"state $S$", fontsize=PIPELINE_FS["label"])
+ax.set_xticks([]); ax.set_yticks([])
+ax.set_title("1. Bifurcation map\n(pick a regime)", fontsize=PIPELINE_FS["title"])
+
+# --- Panel 2: Ridged loss landscape with random samples -------------------
+ax = axes[1]
+gx, gy = np.meshgrid(np.linspace(0, 1, 300), np.linspace(0, 1, 300))
+ridge = 0.5 + 0.25 * np.sin(2.5 * gx + 0.5)
+# narrow ridge along the curve, with a localized minimum at (x_min, ridge(x_min))
+x_min = 0.65
+y_min = 0.5 + 0.25 * np.sin(2.5 * x_min + 0.5)
+ridge_well = (gy - ridge) ** 2 * 8.0
+basin      = -0.6 * np.exp(-(((gx - x_min) ** 2 + (gy - y_min) ** 2) / 0.015))
+loss2 = ridge_well + 0.04 * (gx - 0.5) ** 2 + basin
+ax.imshow(loss2, origin="lower", extent=[0, 1, 0, 1],
+          cmap="cividis_r", aspect="auto")
+rng = np.random.default_rng(7)
+pts = rng.uniform(size=(40, 2))
+ax.scatter(pts[:, 0], pts[:, 1], s=50, color="white",
+           edgecolor=c_accent, linewidth=1.0, zorder=3)
+# mark the "best" sample near the basin
+ax.scatter([x_min + 0.02], [y_min - 0.015], s=180, marker="*",
+           color=c_accent, edgecolor="black", linewidth=1.4, zorder=4)
+ax.set_xlabel(r"$\theta_1$", fontsize=PIPELINE_FS["label"])
+ax.set_ylabel(r"$\theta_2$", fontsize=PIPELINE_FS["label"])
+ax.set_xticks([]); ax.set_yticks([])
+ax.set_title("2. Coarse search\n(random / Sobol)", fontsize=PIPELINE_FS["title"])
+
+# --- Panel 3: Global → regional --------------------------------------------
+ax = axes[2]
+ax.set_xlim(0, 1); ax.set_ylim(0, 1)
+ax.axis("off")
+# top: one fat bar labeled "w"
+ax.add_patch(plt.Rectangle((0.15, 0.72), 0.7, 0.12,
+                           color=c_main, alpha=0.85))
+ax.text(0.5, 0.92, r"global  $\theta$", ha="center",
+        fontsize=PIPELINE_FS["label"])
+# arrow
+arr = FancyArrowPatch((0.5, 0.68), (0.5, 0.55),
+                      arrowstyle="-|>", mutation_scale=18,
+                      color="black", lw=1.5)
+ax.add_patch(arr)
+# bottom: many short bars of varying height
+n_reg = 24
+xs = np.linspace(0.1, 0.9, n_reg)
+heights = 0.05 + 0.30 * rng.beta(2, 2, n_reg)
+for x, h in zip(xs, heights):
+    ax.add_patch(plt.Rectangle((x - 0.014, 0.10), 0.028, h,
+                               color=c_accent, alpha=0.9))
+ax.text(0.5, 0.46, r"per-region  $\theta_i$", ha="center",
+        fontsize=PIPELINE_FS["label"])
+ax.set_title("3. Gradient descent\n(scale to regional)",
+             fontsize=PIPELINE_FS["title"])
+
+# --- Panel 4: Posterior (banana cloud + iso-density contours) -------------
+from scipy.stats import gaussian_kde
+ax = axes[3]
+ax.imshow(loss2, origin="lower", extent=[0, 1, 0, 1],
+          cmap="cividis_r", aspect="auto", alpha=0.45)
+# samples along the ridge
+t = rng.normal(loc=0.55, scale=0.12, size=600).clip(0.15, 0.95)
+ridge_t = 0.5 + 0.25 * np.sin(2.5 * t + 0.5)
+samples_y = ridge_t + rng.normal(scale=0.04, size=t.size)
+ax.scatter(t, samples_y, s=8, color=c_accent, alpha=0.55, edgecolor="none")
+
+# KDE iso-density contours
+kde = gaussian_kde(np.vstack([t, samples_y]), bw_method=0.18)
+gx_p, gy_p = np.meshgrid(np.linspace(0, 1, 200), np.linspace(0, 1, 200))
+density = kde(np.vstack([gx_p.ravel(), gy_p.ravel()])).reshape(gx_p.shape)
+levels = np.quantile(density, [0.55, 0.78, 0.92])
+ax.contour(gx_p, gy_p, density, levels=levels, colors=c_accent,
+           linewidths=1.4, alpha=0.95)
+
+ax.set_xlabel(r"$\theta_1$", fontsize=PIPELINE_FS["label"])
+ax.set_ylabel(r"$\theta_2$", fontsize=PIPELINE_FS["label"])
+ax.set_xticks([]); ax.set_yticks([])
+ax.set_xlim(0, 1); ax.set_ylim(0, 1)
+ax.set_title("4. Bayesian inference\n(posterior + uncertainty)",
+             fontsize=PIPELINE_FS["title"])
+
+plt.tight_layout()
+savefig("pipeline_overview.png")
 plt.show()
 ```

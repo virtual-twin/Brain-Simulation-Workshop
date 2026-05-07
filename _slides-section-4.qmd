@@ -7,47 +7,104 @@ A brain network model is a **hypothesis with knobs**.
 Picking knob values is how we test the hypothesis against data.
 
 ::: {.fragment}
-$$
-\theta \;\longrightarrow\; \text{simulator} \;\longrightarrow\; \hat{y}(\theta) \;\longrightarrow\; \mathcal{L}\big(\hat{y}(\theta),\, y_{\text{obs}}\big)
-$$
+```{dot}
+//| fig-align: center
+//| fig-width: 5
+//| fig-height: 1.6
+digraph G {
+    rankdir=LR;
+    bgcolor="transparent";
+    size="5,1.6!";
+    ratio=compress;
+    nodesep=0.25;
+    ranksep=0.35;
+    node [fontname="Helvetica", fontsize=14, fontcolor="black", style="filled,rounded", penwidth=2, margin="0.08,0.04"];
+    edge [penwidth=1.2, arrowsize=0.7];
 
+    theta [label="θ",         shape=ellipse, fillcolor="#e3f2fd", color="#1565c0"];
+    sim   [label="brain network model", shape=box,     fillcolor="#fff3e0", color="#ef6c00"];
+    yhat  [label="ŷ(θ)",      shape=ellipse, fillcolor="#f3e5f5", color="#6a1b9a"];
+    yobs  [label="y",         shape=ellipse, fillcolor="#f3e5f5", color="#6a1b9a"];
+    loss  [label="𝓛(θ)",         shape=hexagon, fillcolor="#ffebee", color="#c62828"];
+
+    theta -> sim;
+    sim   -> yhat;
+    yhat  -> loss;
+    yobs  -> loss;
+}
+```
+:::
+
+::: {.incremental}
 - $\theta$: model parameters (the knobs)
 - $\hat{y}(\theta)$: simulated observable (FC, power spectrum, BOLD …)
-- $y_{\text{obs}}$: empirical observable
+- $y_{\text{obs}}$: empirical observable / data
 - $\mathcal{L}$: loss / discrepancy
 :::
 
-::: {.fragment}
-*Inference $:=$ which $\theta$ are consistent with the data?*
-:::
 
-## Why inference is hard for brain models
+## What is inference for brain models?
+
+:::: {.columns}
+::: {.column width="60%"}
+::: {.fragment}
+**Inference:** which $\theta$ are consistent with the data?
+:::
+::: {.fragment}
+![Gradient descent finds a local minimum](img/section-4/gradient_trajectory.gif){fig-align="center" width=75%}
+:::
+:::
+::: {.column width="40%"}
+::: {.fragment}
+What do we need to do?
+:::
+::: {.incremental}
+1. Define a loss function $\mathcal{L}(\theta)$
+2. Test many $\theta$ configurations on $\mathcal{L}(\theta)$ to find the "best"
+:::
+:::
+::::
+
+## Why inference is hard for brain models?
 
 ::: {.incremental}
 - **Expensive simulator**: seconds to minutes per run
 - **High-dimensional**: when parameters become regional ($\times N$ nodes)
 - **Non-smooth dynamics**: chaos, stochasticity, stiffness
 - **Bumpy observables**: FC, FCD, PSD are summary statistics
+- **Parameter degeneracy**: many parameter combinations fit about equally well
 :::
 
 ::: {.fragment}
 Every method is a **bet** about which of these difficulties dominates.
 :::
 
-## The shape of the problem
+## What makes inference for brain models easier?
+
+::: {.incremental}
+- **Faster simulator:** Parallelization and Accelerators (GPUs, TPUs, etc.)
+- **Differentiability:** Gradient-based optimization 
+- **Good Workflows:** Building complexity gradually
+:::
+
+::: {.fragment}
+![](./img/section-4/tvboptim.png){fig-align="center" height="40%"}
+:::
+
+## The example problem: fMRI functional connectivity
 
 :::: {.columns}
 ::: {.column width="64%"}
 
 ::: {.fragment}
-Running example for this block:
-**fit global coupling $G$ and recurrence $w$ so simulated FC matches
+**Find global coupling $G$ and recurrence $w$ so simulated FC matches
 empirical FC** in a Reduced Wong-Wang model on the Desikan-Killiany
 parcellation.
 :::
 
 ::: {.fragment}
-Optimization over a parameter landscape $\mathcal{L}(\theta) = \mathrm{RMSE}(\hat{FC}(\theta),\, FC_{\text{obs}})$.
+Optimization over a parameter landscape:\
+$\mathcal{L}(\theta) = \mathrm{RMSE}(\hat{FC}(\theta),\, FC_{\text{obs}})$.
 :::
 
 ::: {.fragment}
@@ -92,35 +149,35 @@ def loss(state):
 ```
 :::
 
-## Parallelism — `vmap` and `pmap` under the hood
-
-::: {.incremental}
-- `Space(state, mode="product" | "zip")` with `Axes`declares which parameters vary together
-- `ParallelExecution(loss, space, n_pmap=8, n_vmap=8)` `vmap`s across the batch axis and `pmap`s across devices
-- One simulator, batched over parameter sets, fused into a single XLA pass — **no manual batching**
-:::
+## Parallelism: `jax.vmap` and `jax.pmap` under the hood
 
 ::: {.fragment}
-```python
-# Explore a 32x32 = 1024 grid space of w and G
-state.coupling.G = GridAxis(0.001, 0.7, 32)
-state.dynamics.w = GridAxis(0.001, 0.7, 32)
+```{.python code-line-numbers="1|2-3|4"}
+# Explore a 10x10 = 100 grid over (theta_1, theta_2)
+state.coupling.theta_1 = GridAxis(-1.0, 1.0, 10)
+state.dynamics.theta_2 = GridAxis(-1.0, 1.0, 10)
 losses = ParallelExecution(loss, Space(state, mode="product"), n_pmap=8).run()
 ```
 :::
-
 ::: {.fragment}
-Random search, Sobol designs, and CMA-ES populations all become **one batched forward pass**. A "1024-point sweep" is roughly *one* simulation's wall time on a GPU.
+![](img/section-4/parallelism_grid.png){fig-align="center" width="50%"}
+:::
+::: {.fragment style="margin-top:-1.2em"}
+![](img/section-4/gpu_perf.png){fig-align="center" width="70%" style="margin:0"}
 :::
 
-## Grid search — map the whole landscape
+
+## Grid search: map the whole landscape
 
 :::: {.columns}
 ::: {.column width="55%"}
+::: {.incremental}
 - Same idea as the bifurcation diagrams from §3
 - Wins when: $\le 2$–$3$ parameters, you want to *see* the landscape
 - Cost grows as $N^d$ — unusable beyond a handful of dimensions
+:::
 
+::: {.fragment}
 ```python
 # Explore a 32x32 grid space of w and G
 grid_state.dynamics.w = GridAxis(0.001, 0.7, 32)
@@ -129,50 +186,59 @@ grid = Space(grid_state, mode="product")
 losses = ParallelExecution(loss, grid, n_pmap=8).run()
 ```
 :::
+:::
 ::: {.column width="45%"}
-![](img/section-4/loss_surface_1d.png){fig-align="center"}
+::: {.fragment}
+![](img/section-4/loss_surface_2d_only.png){fig-align="center"}
+:::
 :::
 ::::
 
-## Random search — the surprising upgrade
+## Random search: the surprising upgrade
 
+::: {.r-stack style="align-items: flex-start; justify-content: center;"}
+::: {.fragment .fade-out fragment-index=5}
 :::: {.columns}
-::: {.column width="50%"}
+::: {.column width="40%"}
+::: {.fragment fragment-index=1}
 In more than 2–3 dimensions, **random search beats grid** for the same budget.
+:::
 
-::: {.fragment}
-**Why?** Real loss surfaces have **low effective dimensionality** — most
+::: {.fragment fragment-index=3}
+**Why?** Real loss surfaces have **low effective dimensionality**, most
 parameters barely matter. Grid spends its budget evenly across all axes;
 random samples *every axis at every trial* [@bergstra2012].
 :::
-
-::: {.fragment}
-**Take-away.** If you don't know which parameters matter, *don't grid*.
 :::
-:::
-::: {.column width="50%"}
+::: {.column width="60%"}
+::: {.fragment fragment-index=2}
 ![Grid vs. Random search, taken from [@bergstra2012] figure 1](img/section-4/grid_vs_random_bergstra.png){fig-align="center"}
-
-```python
+:::
+::: {.fragment fragment-index=4}
+```{.python code-line-numbers="2-3|"}
 # Explore a 100 samples space of w and G
-grid_state.dynamics.w = UniformAxis(0.001, 0.7, 100)
-grid_state.coupling.G = UniformAxis(0.001, 0.7, 100)
-grid = Space(grid_state, mode="zip", key=jax.random.key(42))
-losses = ParallelExecution(loss, grid, n_pmap=8).run()
+random_state.dynamics.w = UniformAxis(0.001, 0.7, 100)
+random_state.coupling.G = UniformAxis(0.001, 0.7, 100)
+samples = Space(random_state, mode="zip", key=jax.random.key(42))
+losses = ParallelExecution(loss, samples, n_pmap=8).run()
 ```
-
-![](img/section-4/random_search.png){fig-align="center" .fragment}
+:::
 :::
 ::::
+:::
 
-## Quasi-random Sobol — sensitivity for free
+::: {.fragment fragment-index=5}
+![Random search onto 2D loss surface. 1/10th the evaluation budget compared to grid search.](img/section-4/random_search.png){fig-align="center" width="65%"}
+:::
+:::
+## Quasi-random Sobol: Sensitivity for free
 
 :::: {.columns}
-::: {.column width="55%"}
+::: {.column width="60%"}
 ::: {.incremental}
 - **Sobol** / **Latin Hypercube** sequences: low-discrepancy, drop-in
   replacement for the uniform sampler
-- Same design powers **variance-based sensitivity analysis** —
+- Same design powers **variance-based sensitivity analysis:**
   Saltelli + Sobol indices quantify *which knobs the loss actually depends on*
 :::
 
@@ -191,132 +257,92 @@ Si = sobol_analyze.analyze(problem, np.array(losses))
 ```
 :::
 :::
-::: {.column width="45%"}
+::: {.column width="40%"}
 ::: {.fragment}
-![](img/section-4/sensitivity_sobol.png){fig-align="center"}
+![](img/section-4/sensitivity_sobol.png){fig-align="center" width="120%"}
 :::
-::: {.fragment}
-$S_T(\sigma) \approx 0$, $S_T(G) \approx 0.93$, $S_T(w) \approx 0.49$ —
+::: {.incremental style="margin-bottom:-0.6em"}
+* $S_T(\sigma) \approx 0$
+* $S_T(G) \approx 0.93$
+* $S_T(w) \approx 0.49$
+- $S_2(G\times w) = 0.46$
+:::
+::: {.fragment style="margin-top:-0.4em"}
+**Take-away:**
 the FC loss lives on an effective **2D subspace**.
 :::
 :::
 ::::
 
-## Reading Sobol indices honestly
-
-:::: {.columns}
-::: {.column width="55%"}
-| param | $S_1$ | $S_T$ |
-|------|------:|------:|
-| **G** | 0.47 | 0.93 |
-| **w** | 0.03 | 0.49 |
-| sigma | ≈ 0  | ≈ 0  |
-
-::: {.incremental}
-- $S_1$: parameter **alone** · $S_T$: alone + all interactions
-- $S_T \gg S_1$ for $w$ → $w$ matters **only with $G$**
-- $S_2(G\times w) = 0.46$ → the curved valley **is** that interaction
-:::
-
-::: {.fragment}
-**Take-away:** Drop $\sigma$; fit $(G, w)$ **jointly**
-:::
-:::
-::: {.column width="45%"}
-![](img/section-4/sensitivity_sobol.png){fig-align="center"}
-
-:::
-::::
-
-## Evolutionary / CMA-ES — adaptive, no gradients
+## Evolutionary Approaches: adaptive, no gradients
 
 :::: {.columns}
 ::: {.column width="60%"}
 ::: {.incremental}
 - Maintain a **population**, update a **mean** and **covariance** to bias
   future samples
-- Naturally parallel — every generation is one `DataAxis` evaluation
+- Naturally parallel: every generation is one `DataAxis` evaluation
 - **No gradients needed** → works on noisy / discontinuous losses
 - Wins when: ~10–50 parameters
 :::
 
 ::: {.fragment}
-```python
+```{.python code-line-numbers="|1-4|5-8|9"}
 es = cma.CMAEvolutionStrategy([0.05, 0.6], 0.15,
   {"popsize": 16})
 while not es.stop():
     pop = np.array(es.ask())
-    s = copy.deepcopy(state)
     s.coupling.G = DataAxis(pop[:, 0])
     s.dynamics.w = DataAxis(pop[:, 1])
-    fits = ParallelExecution(
+    losses = ParallelExecution(
         loss, Space(s, mode="zip")).run()
-    es.tell(pop.tolist(), np.array(fits).tolist())
+    es.tell(pop.tolist(), np.array(losses).tolist())
 ```
 :::
 :::
 ::: {.column width="40%"}
-![CMA-ES on (G, w). White dots: population of 16 candidates per generation. Red ×: distribution mean. Red ellipse: 2-σ covariance. The ellipse rotates onto the valley — CMA-ES learns the local geometry without computing a single gradient.](img/section-4/cma_es_evolution.gif){fig-align="center"}
+::: {.fragment}
+![CMA-ES on (G, w). **Dots:** population of 16 candidates per generation. **Red ×:** distribution mean. **Red ellipse:** 2-σ covariance. The ellipse rotates onto the valley.](img/section-4/cma_es_evolution.gif){fig-align="center"}
+:::
 :::
 ::::
 
-## Hitting the wall — why sampling stops scaling
+## Hitting the wall: why sampling stops scaling
 
-Everything so far — grid, random / Sobol, CMA-ES — **searches by sampling** the simulator.
+Everything so far - grid, random / Sobol, Genetic algorithms - **searches by sampling** the simulator.
 
-::: {.incremental}
-- **Grid:** $N^d$ points → tops out at 2–3 parameters
-- **Random / Sobol:** $10^2$–$10^3$ samples → effective up to $\sim 20$
-- **CMA-ES:** $10^3$–$10^4$ sims → effective up to $\sim 50$
+::: {.fragment}
+![](img/section-4/method_ceiling.png){fig-align="center" width="80%"}
 :::
 
 ::: {.fragment}
-But a brain network model with **regional** parameters has $d \sim 10^3$–$10^4$ knobs
+But a brain network model with **regional** parameters has $d \sim 10^2$–$10^4$ knobs
 (e.g. one $w_i$ per Desikan-Killiany region, plus per-region noise, plus …).
 No sampling budget reaches that regime.
 :::
 
-::: {.fragment}
-**Gradient descent** does — *if* we can compute $\nabla_\theta \mathcal{L}$ cheaply.
-:::
+## Automatic differentiation: Gradients (almost) for free
 
-## Finite differences and forward-mode AD
-
-**Finite differences.** Wiggle each knob, re-simulate, measure the change.
-
-$$
-\frac{\partial \mathcal{L}}{\partial \theta_i} \approx \frac{\mathcal{L}(\theta + \varepsilon e_i) - \mathcal{L}(\theta)}{\varepsilon}
-\qquad\Rightarrow\qquad d \text{ sims per gradient step}
-$$
+**Run forward once, run backward once.** Reverse-mode AD sweeps the
+computation graph in reverse, accumulating $\partial\mathcal{L}/\partial\theta_i$ for *every* $i$ at the same time → $\text{cost}(\nabla_\theta \mathcal{L}) \approx 3\text{–}30 \times \text{cost}(\mathcal{L})$.
 
 ::: {.fragment}
-**Forward-mode AD.** Same idea, made exact: propagate one tangent direction per pass. Cost **still grows linearly with $d$** — just without the truncation error.
-:::
-
-::: {.fragment}
-1 000 knobs ⇒ 1 000 × simulation cost **per step**. Dead on arrival at regional scale.
-:::
-
-## Reverse-mode AD — gradients (almost) for free
-
 :::: {.columns}
-::: {.column width="45%"}
-**Run forward once, run backward once.** The backward pass sweeps the computation graph in reverse, accumulating $\partial\mathcal{L}/\partial\theta_i$ for *every* $i$ at the same time.
-
-$$
-\text{cost}\!\left(\nabla_\theta \mathcal{L}\right) \approx 3\text{–}30 \times \text{cost}(\mathcal{L})
-$$
-
-::: {.fragment}
-In JAX: `jax.grad(loss)`. This is what made per-region fits tractable.
+::: {.column width="65%"}
+![](img/section-4/ad_perf.png){fig-align="center"}
 :::
-:::
-::: {.column width="55%"}
-![Gradient cost in tvboptim, normalized by one simulation. Reverse-mode (blue) is flat at $\sim 20\times$ across $d \in [1, 10^4]$. Forward-mode (yellow) scales linearly with $d$ — same trap as finite differences.](img/section-4/ad_perf.png){fig-align="center"}
+::: {.column width="35%"}
+[*Gradient cost in tvboptim, normalized by one simulation. Reverse-mode (blue) is flat at $\sim 20\times$ across $d \in [1, 10^4]$, independent of dimension.*]{style="font-size:0.7em; display:block; margin-top:30%;"}
 :::
 ::::
+:::
 
-## Gradient descent — the regime-changer
+::: {.fragment style="margin-top:-2em"}
+In JAX: `jax.grad(loss)`. One line, gradients with respect to every
+knob — what made per-region fits tractable.
+:::
+
+## Gradient descent: The regime-changer
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -328,13 +354,14 @@ $$
 :::
 
 ::: {.incremental}
-- The only method that scales to **regional / per-node** parameter vectors
+- The cheapest way to scale to **regional / per-node** parameter vectors
   (hundreds–thousands of knobs)
 - Local: needs a reasonable starting point
+- Point estimate: Only finds a single good fit 
 :::
 
 ::: {.fragment}
-```python
+```{.python code-line-numbers="1-2|3|4"}
 state.dynamics.w = Parameter(state.dynamics.w)
 state.coupling.G = Parameter(state.coupling.G)
 opt = OptaxOptimizer(loss, optax.adam(0.01))
@@ -354,6 +381,7 @@ fitted, _ = opt.run(state, max_steps=200)
 A point estimate $\theta^\star$ tells you *one* good fit.
 A posterior tells you **all fits consistent with the data**.
 
+::: {.fragment}
 $$
 \underbrace{p(\theta \mid y)}_{\text{posterior}}
 \;\propto\;
@@ -362,15 +390,7 @@ $$
 \underbrace{p(\theta)}_{\text{prior}}
 $$
 
-::: {.fragment}
-For the running example: gradient descent picked *one* point in the
-curved valley. The valley is *real* — the data don't distinguish those
-fits. A posterior makes the degeneracy **visible and quantifiable**.
-:::
-
-::: {.fragment}
-You get: uncertainty over predictions, identifiability diagnostics,
-model comparison, and a principled way to **fold in prior knowledge**.
+![](img/section-4/bayes_shrinkage.png){fig-align="center" width="70%"}
 :::
 
 ## Priors encode what you (already) know
@@ -379,11 +399,11 @@ A prior $p(\theta)$ is a probabilistic statement about parameters
 **before** you see this dataset. Three regimes:
 
 ::: {.incremental}
-- **Flat / uninformative** — `Uniform` over a physiological range.
+- ![](img/section-4/prior_uniform.png){height="1.4em" style="vertical-align:middle"} **Flat / uninformative:** `Uniform` over a physiological range.
   *"I know the bounds, nothing else."* Posterior is dominated by data.
-- **Weakly informative** — `Normal` around a literature value with
+- ![](img/section-4/prior_weak.png){height="1.4em" style="vertical-align:middle"} **Weakly informative:** `Normal` around a literature value with
   generous spread. Regularizes, prevents pathological fits.
-- **Strongly informative** — derived from independent measurements:
+- ![](img/section-4/prior_strong.png){height="1.4em" style="vertical-align:middle"} **Strongly informative:** derived from independent measurements:
   anatomy, tau / amyloid PET maps, receptor density, EEG power.
   *"This patient's region has elevated tau"* → prior on local
   excitation **per region**.
@@ -395,153 +415,107 @@ The prior is where domain knowledge enters the inference, *cleanly* and
 *auditably*.
 :::
 
-## Building the model in NumPyro
-
-```python
-import numpyro
-from numpyro import distributions as dist
-from numpyro.infer import MCMC, NUTS
-
-def fc_model(state_template, G_prior, w_prior, obs_sigma=0.05):
-    G = numpyro.sample("G", G_prior)             # prior on coupling
-    w = numpyro.sample("w", w_prior)             # prior on recurrence
-
-    s = copy.deepcopy(state_template)            # plug params into state
-    s.coupling.instant.G = G
-    s.dynamics.w         = w
-    fc_sim = observation(s)                      # ← same simulator as before
-
-    numpyro.sample("obs",                        # Gaussian likelihood
-                   dist.Normal(fc_sim[triu], obs_sigma),
-                   obs=fc_target[triu])
-
-mcmc = MCMC(NUTS(fc_model), num_warmup=200, num_samples=300)
-mcmc.run(jax.random.key(0), state, dist.Uniform(0.001, 0.7), dist.Uniform(0.001, 0.7))
-```
+## HMC vs SVI: same model, two budgets {.smaller}
 
 ::: {.fragment}
-**The simulator is unchanged.** `observation(s)` is the same function
-the grid scan, random search, CMA-ES and gradient descent all called.
-Bayesian inference adds **priors + likelihood**, nothing else.
+Same `model`, same wide priors ($G, w \sim \mathcal{U}(0.001, 0.7)$).
+Different inference algorithm.
 :::
 
-## HMC — posterior over (G, w)
-
+::: {.fragment}
 :::: {.columns}
-::: {.column .r-fit-text width="40%"}
-Uniform priors on both knobs ($G, w \sim \mathcal{U}(0.001, 0.7)$).
-
-::: {.fragment}
-- Samples **concentrate on one section of the curved valley** —
-  where likelihood × prior peaks
-- The cluster is elongated along the local ridge → the $(G, w)$
-  correlation is recovered, not assumed
-:::
-
-::: {.fragment}
-This is what gradient descent **couldn't tell you**: the local
-iso-loss geometry of the data's verdict on $\theta$.
-:::
-
-::: {.fragment}
-**Cost: ~4 h** for 300 post-warmup samples · 1 chain.
-Asymptotically exact, simulator-bound.
-:::
-:::
 ::: {.column width="60%"}
-![HMC (left) and SVI (right) on the same `fc_model` and same wide priors. Background: grid-scan loss landscape (faded). Red points: posterior samples; red contours: KDE; histograms: marginals.](img/section-4/posteriors_compare.png){fig-align="center"}
+![](img/section-4/posteriors_compare.png){fig-align="center"}
 :::
-::::
-
-## SVI — same model, swap the algorithm
-
-:::: {.columns}
 ::: {.column width="40%"}
-Same `fc_model`, same priors — only the inference changes:
-`MCMC(NUTS(...))` $\to$ `SVI(model, AutoMultivariateNormal(...))`.
-
-::: {.fragment}
-- Fits a Gaussian $q_\phi(G, w)$ in unconstrained space by gradient
-  descent on the ELBO
-- The guide's covariance **locally aligns** with the ridge → direction
-  recovered
-- But a **unimodal Gaussian cannot bend** along the curve — local
-  geometry yes, global valley shape no
-:::
-
-::: {.fragment}
-**~12 min vs ~4 h.** Same priors, same data, different family of
-approximation — the gap is the **price of exactness**.
-:::
-
-::: {.fragment}
-**Take-away.** The model is the contract; the algorithm is a budget
-decision.
-:::
-:::
-::: {.column width="60%"}
-![SVI's Gaussian guide (right panel) on the same posterior. Centered on a different section of the ridge than HMC, oriented along the local valley direction — but the curve itself does not bend.](img/section-4/posteriors_compare.png){fig-align="center"}
+[*HMC (left) and SVI (right) on the same `model`. Background: grid-scan loss landscape. Red points: posterior samples; red contours: KDE; histograms: marginals. HMC bends along the valley; the SVI Gaussian aligns with it locally but cannot curve.*]{style="font-size:0.7em; display:block; margin-top:30%;"}
 :::
 ::::
-
-## One model, many algorithms
-
-Define the simulator + priors once; pick how to approximate the posterior:
-
-- **MCMC (HMC / NUTS)** — asymptotically exact samples; uses gradients
-  to navigate the posterior efficiently. Slow but accurate.
-- **Variational inference (SVI)** — fit a tractable family $q_\phi(\theta)$
-  to the posterior by gradient descent on the ELBO. Fast, approximate;
-  scales to high-dim regional parameters.
-- **Simulation-based inference (NPE / NLE)** — train a neural density
-  estimator on simulated $(\theta, y)$ pairs. **No gradients through the
-  simulator needed** → works when AD breaks (chaos, black-box code).
-  *Amortized*: pay the simulation budget once, then query the posterior
-  for any new observation almost instantly.
-- **Laplace / SWAG** — cheap Gaussian approximation around the optimum.
-
-::: {.fragment}
-**The model is the contract.** The algorithm is an implementation
-detail you can swap.
 :::
 
-## Choosing a method — cheat sheet
+::: {.fragment style="margin-top:-1.5em"}
+:::: {.columns}
+::: {.column width="50%" .smaller}
+**HMC / NUTS — gold standard.**
 
+- Asymptotically exact samples; recovers the curved ridge
+- **~4 h** for 300 samples · simulator-bound
+:::
+::: {.column width="50%" .smaller}
+**SVI — fast approximation.**
+
+- Fits a Gaussian guide $q_\phi(G, w)$ by gradient descent on the ELBO
+- Captures *local* direction of the valley, not its curvature
+- **~12 min** — 20× faster
+:::
+::::
+:::
+
+## When gradients break: simulation-based inference
+
+When the simulator is chaotic or a black box, sample anyway.
+
+::: {.fragment}
+```{dot}
+//| fig-align: center
+//| fig-width: 9
+//| fig-height: 2.2
+digraph SBI {
+    rankdir=LR;
+    bgcolor="transparent";
+    nodesep=0.35;
+    ranksep=0.55;
+    node [fontname="Helvetica", fontsize=14, style="filled,rounded",
+          penwidth=2, margin="0.12,0.08"];
+    edge [penwidth=1.4, arrowsize=0.8];
+
+    prior [label="prior\np(θ)",            shape=ellipse, fillcolor="#e3f2fd", color="#1565c0"];
+    sim   [label="simulator\n(black box)", shape=box,     fillcolor="#fff3e0", color="#ef6c00"];
+    pairs [label="(θᵢ, yᵢ)\nsamples",      shape=note,    fillcolor="#f1f8e9", color="#558b2f"];
+    nde   [label="neural density\nestimator",       shape=box,     fillcolor="#ede7f6", color="#4527a0"];
+    post  [label="p(θ | y)",               shape=ellipse, fillcolor="#f3e5f5", color="#6a1b9a"];
+
+    prior -> sim   [label=" draw θ"];
+    sim   -> pairs [label=" run"];
+    pairs -> nde   [label=" train"];
+    nde   -> post  [label=" query y"];
+}
+```
+:::
+
+::: {.fragment}
+**Amortized**: pay the simulation budget once, query any new $y$ in milliseconds.
+:::
+
+::: {.fragment}
+Gradients available → HMC / SVI. Gradients break → SBI.
+:::
+
+## Choosing a method: Cheat Sheet
+
+::: {.r-fit-text}
 | **method**       | **scales to**                      | **cost (forward sims)**            | **what you get**                |
-|------------------|-----------------------------------:|------------------------------------|---------------------------------|
+|--------------|-----------------------------------|------------------------------------|---------------------------------|
 | Grid             | $\le 3$ params                     | $N^d$                              | full landscape                  |
 | Random / Sobol   | $\sim 20$                          | $10^2$–$10^3$                      | landscape sketch                |
 | CMA-ES / GA      | $\sim 50$                          | $10^3$–$10^4$                      | local optimum                   |
-| Gradient descent | $10^4$+ (regional)                 | $10^2$–$10^3$                      | local optimum                   |
-| SVI              | $10^4$+                            | $10^2$–$10^3$                      | approximate posterior           |
-| HMC / NUTS       | scales with $d$ — simulator-bound  | $10^4$–$10^6$                      | (near-)exact posterior          |
+| Gradient descent | $10^4$+ (regional)                 | $10^3$–$10^5$                      | local optimum                   |
+| SVI              | $10^4$+                            | $10^4$–$10^6$                      | approximate posterior           |
+| HMC / NUTS       | $10^4$+, simulator-bound          | $10^5$–???                      | (asymptotically-)exact posterior          |
 | SBI (NPE / NLE)  | $\sim 10^2$, simulator-bound       | $10^4$–$10^6$ upfront, **amortized** | amortized approximate posterior |
-
-::: {.fragment}
-Cost numbers assume reverse-mode AD makes a gradient step ≈ one forward sim (next slide).
-*Bayesian rows sit at the expensive end* — a posterior is worth roughly a thousand point estimates' worth of compute.
 :::
 
-## Composability — one simulator, four uses
-
-| **transform** | **what it gives** | **enables** |
-|---------------|-------------------|-------------|
-| `jit`         | compiled XLA      | speed |
-| `vmap`        | batching          | random search, CMA-ES |
-| `grad`        | gradients         | gradient descent, SVI |
-| probabilistic | priors + likelihood | Bayesian inference (HMC, NUTS, SVI — NumPyro / BlackJAX) |
-
 ::: {.fragment}
-You write the model **once**.
+Cost numbers assume reverse-mode AD makes a gradient step ≈ one forward sim.
+*Bayesian rows sit at the expensive end*, a posterior is worth roughly a thousand point estimates' worth of compute.
 :::
 
 ## Chaos eats your gradient
 
-Sensitivity to initial conditions $\Rightarrow$ $\|\nabla_\theta \mathcal{L}\|$
-**explodes** with integration length.
-
+:::: {.columns}
+::: {.column width="45%"}
 ::: {.fragment}
-Not a bug in autodiff — the dynamics are telling you the loss is non-smooth
+Not a bug in automatic differentiation, the dynamics are telling you the loss is non-smooth
 at fine scales.
 :::
 
@@ -549,59 +523,43 @@ at fine scales.
 **Mitigations**
 
 - integrate over shorter windows
-- use *smoothed* observables (FC, power spectra) instead of raw traces
+- *smooth* observables
 - multiple shooting
 - gradient clipping
 :::
-
-## Other failure modes
-
-- **Stochasticity** — gradients through $dW$ need the reparameterization
-  trick or score-function estimators
-- **Bifurcations near the optimum** — genuine discontinuities in the loss
-  as fixed points appear or disappear → gradient descent gets stuck on the
-  wrong side
-- **Stiffness / long transients** — numerical noise compounds through the
-  unrolled trajectory
-
-::: {.fragment}
-**Take-away.** Gradients are powerful, not universal. Read the landscape
-(§3) before you trust the slope.
 :::
-
+::: {.column width="55%"}
 ::: {.fragment}
-When gradients are *unsalvageable*: **simulation-based inference**
-(NPE / NLE) treats the simulator as a black box — see Bayesian slide.
+![Near a bifurcation, the AD gradient (b) diverges from the finite-difference ground truth.](img/section-4/jr_unstable_grad.png){fig-align="center"}
 :::
+:::
+::::
 
-## The default tvboptim recipe
+
+## The TVB-Optim workflow
 
 1. **Bifurcation map** (§3) → pick a *regime* of interest
 2. **Coarse random / Sobol search** within that regime → find a basin
 3. **Gradient descent** from the basin → polish to a local optimum
-4. **Bayesian inference** (HMC, SVI, or SBI when gradients break) from the optimum → posterior + uncertainty
+4. **Optional: Bayesian inference** (HMC, SVI, or SBI when gradients break) from the optimum → posterior + uncertainty
 
-::: {.fragment}
-Each step uses the output of the previous as a **warm start**.
+::: {.fragment style="margin-top:-1.5em"}
+→ each step uses the output of the previous as a **warm start**.
 :::
 
 ::: {.fragment}
-TODO: pipeline diagram — same loss surface, four overlays
+![](img/section-4/pipeline_overview.png){fig-align="center" width="105%"}
 :::
 
-## Mini-demo — pipeline on the running example
+## Use-cases
 
-TODO: live (or pre-rendered) walkthrough running the full chain on $G$ vs FC.
-Lands the synthesis just before the hands-on.
+**I — fMRI Bold**
 
-## Use-case A — Alzheimer's disease
+- Same as toy model, exptent to regional w 
+
+**II — Alzheimer's disease**
 
 - TODO: tau PET / amyloid map → *prior* on regional parameters
 - TODO: high-dim (regional) fit → gradient-descent territory
 - TODO: healthy vs patient simulation, refs [@Schirner2023; @Stefanovski2019]
 
-## Use-case B — homogeneous vs. heterogeneous fitting
-
-- TODO: same model, same data — fit one $G$ vs per-region $G_i$
-- TODO: low-dim vs high-dim head-to-head → why the toolbox matters
-- TODO: TVBase frequency gradient as target [@Pille2025]
