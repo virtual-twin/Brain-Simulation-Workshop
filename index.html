@@ -6,12 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Leon Stefanovski">
-<meta name="author" content="Marius Pille">
-<meta name="author" content="Leon Martin">
-<meta name="dcterms.date" content="2026-05-12">
 
-<title>Towards translational and mechanistic whole-brain simulations with The Virtual Brain – Brainsimulation Workshop</title>
+<title>Brain Simulation Workshop – Brainsimulation Workshop</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -128,6 +124,8 @@ div.csl-indent {
 }</script>
 
 
+<link rel="stylesheet" href="_brand.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -243,19 +241,17 @@ div.csl-indent {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.ipynb" download="index.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></div>
+    
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Towards translational and mechanistic whole-brain simulations with The Virtual Brain</h1>
-<p class="subtitle lead">Workshop</p>
+<h1 class="title">Brain Simulation Workshop</h1>
 </div>
 
 
-<div class="quarto-title-meta-author column-page-left">
+<div class="quarto-title-meta-author column-page">
   <div class="quarto-title-meta-heading">Authors</div>
   <div class="quarto-title-meta-heading">Affiliations</div>
   
@@ -285,15 +281,9 @@ div.csl-indent {
       </div>
   </div>
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta column-page">
 
       
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 12, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -303,39 +293,92 @@ div.csl-indent {
 </header>
 
 
-<p>Track 4 workshop of the <strong>FAIR Brain Data Science Bootcamp</strong>, 12–13 May 2026, Charité University Medicine Berlin and Berlin Institute of Health.</p>
-<section id="about" class="level2">
-<h2 class="anchored" data-anchor-id="about">About</h2>
-<p>In this workshop, participants learn core concepts and methods for personalized whole-brain network modeling using The Virtual Brain (TVB). The workflow combines individualized model definition, simulation, and analysis with ontology-driven model specification (<a href="https://virtual-twin.github.io/tvbo">TVB-O</a>) and gradient-based optimization tooling (<a href="https://virtual-twin.github.io/tvboptim">TVB-Optim</a>) <span class="citation" data-cites="Martin2025 Pille2025">(<a href="#ref-Martin2025" role="doc-biblioref">Martin et al. 2025</a>; <a href="#ref-Pille2025" role="doc-biblioref">Pille et al. 2025</a>)</span>.</p>
-</section>
-<section id="getting-started" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started">Getting started</h2>
-<p>The Python environment is managed with <a href="https://docs.astral.sh/uv/">uv</a>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install uv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Tools used:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install tvb</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install tvbo</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install tvboptim</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The full source code lives at <a href="https://github.com/virtual-twin/tvb-ontology-optim-workshop" class="uri">https://github.com/virtual-twin/tvb-ontology-optim-workshop</a>.</p>
-</section>
-<section id="quick-links" class="level2">
-<h2 class="anchored" data-anchor-id="quick-links">Quick links</h2>
-<div class="grid">
-<section id="agenda" class="level3 g-col-12 g-col-md-4">
-<h3 class="anchored" data-anchor-id="agenda"><a href="./agenda/agenda.html">Agenda</a></h3>
-<p>Two-day program with sessions, breaks, and references.</p>
-</section>
-<section id="slides" class="level3 g-col-12 g-col-md-4">
-<h3 class="anchored" data-anchor-id="slides"><a href="./slides.html">Slides</a></h3>
-<p>RevealJS workshop slides used in the live sessions.</p>
-</section>
-<section id="notebooks" class="level3 g-col-12 g-col-md-4">
-<h3 class="anchored" data-anchor-id="notebooks"><a href="./notebooks/02a_mean_field_models.html">Notebooks</a></h3>
-<p>Hands-on Jupyter notebooks for each session.</p>
-</section>
+<div class="workshop-hero" aria-labelledby="workshop-hero-title">
+<iframe class="workshop-hero__visual" src="brain-network-background.html" title="Animated brain network visualization" aria-hidden="true" tabindex="-1">
+</iframe>
+<div class="workshop-hero__overlay" aria-hidden="true">
+
+</div>
+<div class="workshop-hero__inner">
+<div class="workshop-kicker">
+<p><a href="https://ebrains.eu/news-and-events/events/2026/fair-brain-data-science-bootcamp-2026">FAIR Brain Data Science Bootcamp</a> · Track 4</p>
+</div>
+<section id="workshop-hero-title" class="level1">
+<h1>Mechanistic Whole-Brain Simulation Workshop</h1>
+<div class="workshop-hero__lead">
+<p>Personalized brain network modeling with The Virtual Brain, ontology-driven model specification, and gradient-based optimization.</p>
+</div>
+<div class="workshop-hero__meta d-flex flex-wrap gap-2 mt-4" aria-label="Workshop details">
+<p><span class="workshop-hero__pill badge rounded-pill">12-13 May 2026</span> <span class="workshop-hero__pill badge rounded-pill">Karolinska Institutet, Stockholm</span> <span class="workshop-hero__pill badge rounded-pill">Widerströmska huset</span></p>
+</div>
+<div class="workshop-actions d-flex flex-wrap gap-3 mt-4">
+<p><a href="./setup.html" class="btn btn-light btn-lg">Start Setup</a> <a href="./slides.html" class="btn btn-outline-light btn-lg">Open Slides</a> <a href="./agenda/agenda.html" class="btn btn-outline-light btn-lg">View Agenda</a> <a href="./notebooks/1_introduction.html" class="btn btn-outline-light btn-lg">Notebooks</a></p>
 </div>
 </section>
-<section id="references" class="level2 unnumbered">
+</div>
+</div>
+<section id="about" class="level2 container-lg mb-5">
+<h2 class="anchored" data-anchor-id="about">About</h2>
+<p>Track 4 of the <strong>FAIR Brain Data Science Bootcamp 2026</strong> — a joint event by <a href="https://ebrains.eu/news-and-events/events/2026/fair-brain-data-science-bootcamp-2026">EBRAINS</a> and <a href="https://www.incf.org/incf-brain-data-science-bootcamp-2026">INCF</a>, hosted at <strong>Karolinska Institutet</strong>, Widerströmska huset (<a href="https://maps.app.goo.gl/">Tomtebodavägen 18</a>, Stockholm, Sweden).</p>
+<p>The bootcamp brings together hands-on training across brain atlasing, electrophysiology, data sharing, and computational modeling within the EBRAINS research infrastructure. Track 4 focuses on personalized whole-brain network modeling with <a href="https://thevirtualbrain.org">The Virtual Brain</a>, combining individualized model definition, simulation, and analysis with ontology-driven model specification (<a href="https://virtual-twin.github.io/tvbo">TVB-O</a>) and gradient-based optimization (<a href="https://virtual-twin.github.io/tvboptim">TVB-Optim</a>) <span class="citation" data-cites="Martin2025 Pille2025">(<a href="#ref-Martin2025" role="doc-biblioref">Martin et al. 2025</a>; <a href="#ref-Pille2025" role="doc-biblioref">Pille et al. 2025</a>)</span>.</p>
+<div class="row g-4 mt-1">
+<div class="col-12 col-md-6 col-xl-4">
+<div class="card h-100 shadow-sm">
+<section id="tvb-foundations" class="level3 card-body">
+<h3 class="anchored" data-anchor-id="tvb-foundations">TVB foundations</h3>
+<p>Whole-brain network modeling concepts, coupled ODE/SDE systems, neural masses, and basic and clinical applications.</p>
+</section>
+</div>
+</div>
+<div class="col-12 col-md-6 col-xl-4">
+<div class="card h-100 shadow-sm">
+<section id="fair-model-building" class="level3 card-body">
+<h3 class="anchored" data-anchor-id="fair-model-building">FAIR model building</h3>
+<p>Use TVB-O to describe parameters, state variables, equations, coupling, integration, observations, and execution metadata.</p>
+</section>
+</div>
+</div>
+<div class="col-12 col-md-6 col-xl-4">
+<div class="card h-100 shadow-sm">
+<section id="network-simulation" class="level3 card-body">
+<h3 class="anchored" data-anchor-id="network-simulation">Network simulation</h3>
+<p>Load connectomes, assemble delayed coupling, run single-node and whole-brain simulations, and sweep global coupling regimes.</p>
+</section>
+</div>
+</div>
+<div class="col-12 col-md-6 col-xl-4">
+<div class="card h-100 shadow-sm">
+<section id="regime-maps" class="level3 card-body">
+<h3 class="anchored" data-anchor-id="regime-maps">Regime maps</h3>
+<p>Read phase planes, stability, bifurcations, and numerical continuation diagrams to choose biologically plausible operating points.</p>
+</section>
+</div>
+</div>
+<div class="col-12 col-md-6 col-xl-4">
+<div class="card h-100 shadow-sm">
+<section id="parameter-inference" class="level3 card-body">
+<h3 class="anchored" data-anchor-id="parameter-inference">Parameter inference</h3>
+<p>Compare grid, random, CMA-ES, gradient, and Bayesian strategies for fitting homogeneous and regional model parameters.</p>
+</section>
+</div>
+</div>
+<div class="col-12 col-md-6 col-xl-4">
+<div class="card h-100 shadow-sm">
+<section id="translation-and-stimulation" class="level3 card-body">
+<h3 class="anchored" data-anchor-id="translation-and-stimulation">Translation and stimulation</h3>
+<p>Build Alzheimer and biomarker-driven use cases, simulate visual and TMS inputs, and carry the workflow into Day 2 research questions.</p>
+</section>
+</div>
+</div>
+</div>
+</section>
+<section id="quick-start" class="level2 container-lg mb-5">
+<h2 class="anchored" data-anchor-id="quick-start">Quick start</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install uv</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install tvb tvbo tvboptim</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Source code: <a href="https://github.com/virtual-twin/Brain-Simulation-Workshop" class="uri">https://github.com/virtual-twin/Brain-Simulation-Workshop</a>.</p>
+</section>
+<section id="references" class="level2 unnumbered container-lg mb-5">
 <h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-Martin2025" class="csl-entry" role="listitem">
@@ -345,9 +388,9 @@ Martin, Leon, Konstantin Buelau, Marius Pille, Rico Andre Schmitt, Christoph Hue
 Pille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. <span>“Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.”</span> <em>bioRxiv</em>, November. <a href="https://doi.org/10.1101/2025.11.18.689003">https://doi.org/10.1101/2025.11.18.689003</a>.
 </div>
 </div>
-
-
 </section>
+
+
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -422,7 +465,7 @@ Pille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirne
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/github\.com\/virtual-twin\/Brain-Simulation-Workshop");
+        var filterRegex = new RegExp("https:\/\/virtual-twin\.github\.io\/Brain-Simulation-Workshop");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -766,7 +809,7 @@ Pille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirne
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/virtual-twin/tvb-ontology-optim-workshop">
+    <a class="nav-link" href="https://github.com/virtual-twin/Brain-Simulation-Workshop">
       <i class="bi bi-github" role="img">
 </i> 
     </a>

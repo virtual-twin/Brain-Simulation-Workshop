@@ -1,1 +1,1 @@
-Sitemap: https://github.com/virtual-twin/Brain-Simulation-Workshop/sitemap.xml
+Sitemap: https://virtual-twin.github.io/Brain-Simulation-Workshop/sitemap.xml

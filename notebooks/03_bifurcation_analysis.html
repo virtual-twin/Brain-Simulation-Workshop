@@ -135,6 +135,8 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="../_brand.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -457,7 +459,7 @@ window.Quarto = {
 <li>Read a brain-relevant bifurcation diagram (Generic2dOscillator) and connect it to network-level regimes.</li>
 </ul>
 <p>Bifurcation analysis tells us <em>how the qualitative behaviour of a model changes when we move a parameter</em>. In TVBO every example below is just <strong>inline YAML + plotting</strong> — no Fortran files, no scratch directories.</p>
-<div id="e24b0fac" class="cell" data-execution_count="1">
+<div id="70816ef3" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -473,7 +475,7 @@ window.Quarto = {
 \dot x = a\,x, \qquad x(0) = x_0, \qquad x(t) = x_0\,e^{a t}.
 \]</span></p>
 <p>For <span class="math inline">\(a &lt; 0\)</span> the origin is a <strong>stable</strong> fixed point, for <span class="math inline">\(a &gt; 0\)</span> it is <strong>unstable</strong>, and <span class="math inline">\(a = 0\)</span> is the prototype of a <strong>bifurcation</strong>.</p>
-<div id="2d8a0b91" class="cell" data-execution_count="2">
+<div id="bc939127" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>LIN <span class="op">=</span> <span class="st">"""</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">name: LinearScalar</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">parameters:</span></span>
@@ -514,7 +516,7 @@ window.Quarto = {
 <h2 data-number="3" class="anchored" data-anchor-id="d-phase-portraits-node-saddle-focus-centre"><span class="header-section-number">3</span> 2. 2D phase portraits — node, saddle, focus, centre</h2>
 <p>For <span class="math inline">\(\dot{\vec x} = A\vec x\)</span> in 2D, the eigenvalues of <span class="math inline">\(A\)</span> classify the origin. TVBO’s <code>kind="phaseplane"</code> overlays the vector field with both nullclines and the detected fixed points.</p>
 <p>Each system below is a complete, copy-pastable YAML. We feed it directly to <code>Dynamics.from_string</code> — no helper functions, no string interpolation.</p>
-<div id="5889d9d5" class="cell" data-execution_count="3">
+<div id="28dd4a1b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SADDLE <span class="op">=</span> <span class="st">"""</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">name: Saddle</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">state_variables:</span></span>
@@ -637,7 +639,7 @@ window.Quarto = {
 <section id="saddle-node-dot-x-a---x2" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="saddle-node-dot-x-a---x2">Saddle-node — <span class="math inline">\(\dot x = a - x^2\)</span></h3>
 <p>Two equilibria collide and annihilate at <span class="math inline">\(a = 0\)</span>. Beyond the fold <em>no attractor</em> survives. This is the prototype for <strong>regime shifts</strong>.</p>
-<div id="e6a4748d" class="cell" data-execution_count="4">
+<div id="dddcfe75" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SADDLE_NODE <span class="op">=</span> <span class="st">"""</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">name: SaddleNode</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">parameters:</span></span>
@@ -677,8 +679,8 @@ window.Quarto = {
 <span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>plt.gca().<span class="bu">set</span>(xlim<span class="op">=</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>), ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>))<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Detected IPython. Loading juliacall extension. See https://juliapy.github.io/PythonCall.jl/stable/compat/#IPython
-CT: 1.052880 seconds (3.34 M allocations: 167.342 MiB, 3.67% gc time, 99.92% compilation time)
-CT: 0.000467 seconds (7.60 k allocations: 318.734 KiB)</code></pre>
+CT: 0.951093 seconds (3.34 M allocations: 167.296 MiB, 99.87% compilation time)
+CT: 0.000389 seconds (7.60 k allocations: 318.734 KiB)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -692,7 +694,7 @@ CT: 0.000467 seconds (7.60 k allocations: 318.734 KiB)</code></pre>
 <section id="pitchfork-dot-x-a-x---x3" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="pitchfork-dot-x-a-x---x3">Pitchfork — <span class="math inline">\(\dot x = a x - x^3\)</span></h3>
 <p>Symmetry breaking: the trivial branch loses stability at <span class="math inline">\(a = 0\)</span> and a pair of asymmetric branches <span class="math inline">\(\pm\sqrt a\)</span> emerges.</p>
-<div id="2a0770fe" class="cell" data-execution_count="5">
+<div id="2223868a" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>PITCHFORK <span class="op">=</span> <span class="st">"""</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">name: Pitchfork</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">parameters:</span></span>
@@ -731,8 +733,8 @@ CT: 0.000467 seconds (7.60 k allocations: 318.734 KiB)</code></pre>
 <span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>exp_pf.run(<span class="st">"bifurcationkit.jl"</span>).continuations[<span class="st">"pitchfork_cont"</span>].plot(VOI<span class="op">=</span><span class="st">"x"</span>)</span>
 <span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>plt.gca().<span class="bu">set</span>(xlim<span class="op">=</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>), ylim<span class="op">=</span>(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>))<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>CT: 0.432019 seconds (808.13 k allocations: 39.327 MiB, 99.90% compilation time)
-CT: 0.000236 seconds (4.43 k allocations: 189.656 KiB)</code></pre>
+<pre><code>CT: 0.414195 seconds (808.13 k allocations: 39.327 MiB, 99.89% compilation time)
+CT: 0.000198 seconds (4.43 k allocations: 189.656 KiB)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -746,7 +748,7 @@ CT: 0.000236 seconds (4.43 k allocations: 189.656 KiB)</code></pre>
 <section id="hysteresis-dot-x-a-x---x3" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="hysteresis-dot-x-a-x---x3">Hysteresis — <span class="math inline">\(\dot x = a + x - x^3\)</span></h3>
 <p>A small constant tilt unfolds the pitchfork into <strong>two</strong> saddle-nodes framing a bistable region. Sweeping <span class="math inline">\(a\)</span> up then down traces a memory loop.</p>
-<div id="7238281f" class="cell" data-execution_count="6">
+<div id="3ca4f5c8" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>HYSTERESIS <span class="op">=</span> <span class="st">"""</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="st">name: Hysteresis</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="st">parameters:</span></span>
@@ -785,8 +787,8 @@ CT: 0.000236 seconds (4.43 k allocations: 189.656 KiB)</code></pre>
 <span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>exp_hy.run(<span class="st">"bifurcationkit.jl"</span>).continuations[<span class="st">"hysteresis_cont"</span>].plot(VOI<span class="op">=</span><span class="st">"x"</span>)</span>
 <span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>plt.gca().<span class="bu">set</span>(xlim<span class="op">=</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>))<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>CT: 0.437342 seconds (806.00 k allocations: 39.502 MiB, 99.91% compilation time)
-CT: 0.000507 seconds (10.88 k allocations: 451.875 KiB)</code></pre>
+<pre><code>CT: 0.407751 seconds (806.00 k allocations: 39.502 MiB, 99.91% compilation time)
+CT: 0.000543 seconds (10.88 k allocations: 451.875 KiB)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -796,7 +798,7 @@ CT: 0.000507 seconds (10.88 k allocations: 451.875 KiB)</code></pre>
 </div>
 </div>
 </div>
-<div id="6b1fe94d" class="cell" data-execution_count="7">
+<div id="aec3592a" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sweep(a_start, a_end, n<span class="op">=</span><span class="dv">4000</span>, x0<span class="op">=</span><span class="fl">1.0</span>, dt<span class="op">=</span><span class="fl">0.05</span>):</span>
@@ -834,7 +836,7 @@ CT: 0.000507 seconds (10.88 k allocations: 451.875 KiB)</code></pre>
 \dot x_1 = (a - x_1^2 - x_2^2)\,x_1 - w\,x_2, \qquad
 \dot x_2 = (a - x_1^2 - x_2^2)\,x_2 + w\,x_1.
 \]</span></p>
-<div id="10f83672" class="cell" data-execution_count="8">
+<div id="2e4e63c2" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>HOPF <span class="op">=</span> <span class="vs">r"""</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="vs">name: HopfNF</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="vs">parameters:</span></span>
@@ -887,14 +889,14 @@ CT: 0.000507 seconds (10.88 k allocations: 451.875 KiB)</code></pre>
 <span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>exp_hopf <span class="op">=</span> SimulationExperiment(dynamics<span class="op">=</span>dyn, continuations<span class="op">=</span>[cont])</span>
 <span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>hopf <span class="op">=</span> exp_hopf.run(<span class="st">"bifurcationkit.jl"</span>).continuations[<span class="st">"hopf_in_a"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>CT: 0.441436 seconds (883.62 k allocations: 42.973 MiB, 99.91% compilation time)
-CT: 0.000152 seconds (2.14 k allocations: 191.859 KiB)
-CT: 3.463870 seconds (3.80 M allocations: 546.510 MiB, 10.58% gc time, 82.30% compilation time)
-CT: 0.251196 seconds (226.88 k allocations: 390.487 MiB, 4.29% gc time)</code></pre>
+<pre><code>CT: 0.429044 seconds (883.62 k allocations: 42.973 MiB, 99.92% compilation time)
+CT: 0.000215 seconds (2.14 k allocations: 191.859 KiB)
+CT: 3.760304 seconds (3.80 M allocations: 546.509 MiB, 10.36% gc time, 77.83% compilation time)
+CT: 0.142350 seconds (226.88 k allocations: 390.487 MiB, 9.14% gc time)</code></pre>
 </div>
 </div>
 <p>The 2D bifurcation diagram (<code>MIN</code>/<code>MAX</code> envelope of the limit cycle):</p>
-<div id="76818af5" class="cell" data-execution_count="9">
+<div id="1f713991" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hopf.plot(VOI<span class="op">=</span><span class="st">"x1"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -905,7 +907,7 @@ CT: 0.251196 seconds (226.88 k allocations: 390.487 MiB, 4.29% gc time)</code></
 </div>
 </div>
 <p>The 3D view shows the equilibrium spine, the Hopf point, and the limit-cycle <strong>tube</strong> whose radius grows like <span class="math inline">\(\sqrt a\)</span>:</p>
-<div id="ed641b0b" class="cell" data-execution_count="10">
+<div id="46d16e3f" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>hopf.plot_3d(VOI<span class="op">=</span><span class="st">"x1"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -926,7 +928,7 @@ CT: 0.251196 seconds (226.88 k allocations: 390.487 MiB, 4.29% gc time)</code></
 <section id="brain-relevant-generic2doscillator" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="brain-relevant-generic2doscillator"><span class="header-section-number">7</span> 6. Brain-relevant: Generic2dOscillator</h2>
 <p>The same <code>Continuation</code> API drives a TVB neural-mass model. We sweep the external input <span class="math inline">\(I\)</span> and let TVBO continue periodic orbits from every detected Hopf point.</p>
-<div id="cd281936" class="cell" data-execution_count="11">
+<div id="4abdd092" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Dynamics.from_ontology(<span class="st">"Generic2dOscillator"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>cont <span class="op">=</span> Continuation.from_string(<span class="st">"""</span></span>
@@ -950,12 +952,12 @@ CT: 0.251196 seconds (226.88 k allocations: 390.487 MiB, 4.29% gc time)</code></
 <span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>g2d <span class="op">=</span> exp_g2d.run(<span class="st">"bifurcationkit.jl"</span>).continuations[<span class="st">"g2d_in_I"</span>]</span>
 <span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>g2d.plot(VOI<span class="op">=</span><span class="st">"V"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>CT: 0.481507 seconds (907.12 k allocations: 44.919 MiB, 99.54% compilation time)
-CT: 0.004770 seconds (16.19 k allocations: 1.187 MiB, 82.75% compilation time)
-CT: 7.863721 seconds (7.54 M allocations: 7.533 GiB, 15.38% gc time, 36.50% compilation time)
-CT: 198.659356 seconds (4.44 M allocations: 7.412 GiB, 0.75% gc time)
-CT: 1189.297705 seconds (4.80 M allocations: 7.762 GiB, 0.25% gc time, 0.01% compilation time)
-CT: 647.007164 seconds (4.42 M allocations: 7.367 GiB, 0.36% gc time)</code></pre>
+<pre><code>CT: 0.449166 seconds (907.12 k allocations: 44.923 MiB, 99.47% compilation time)
+CT: 0.005091 seconds (16.19 k allocations: 1.187 MiB, 80.75% compilation time)
+CT: 6.488865 seconds (7.54 M allocations: 7.533 GiB, 22.09% gc time, 46.82% compilation time)
+CT: 3.011921 seconds (4.44 M allocations: 7.412 GiB, 24.84% gc time)
+CT: 3.457935 seconds (4.80 M allocations: 7.762 GiB, 23.08% gc time, 2.29% compilation time)
+CT: 2.823437 seconds (4.42 M allocations: 7.367 GiB, 26.43% gc time)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -965,7 +967,7 @@ CT: 647.007164 seconds (4.42 M allocations: 7.367 GiB, 0.36% gc time)</code></pr
 </div>
 </div>
 </div>
-<div id="7846f003" class="cell" data-execution_count="12">
+<div id="19d85827" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>g2d.plot_3d(VOI<span class="op">=</span><span class="st">"V"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1060,7 +1062,7 @@ CT: 647.007164 seconds (4.42 M allocations: 7.367 GiB, 0.36% gc time)</code></pr
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/github\.com\/virtual-twin\/Brain-Simulation-Workshop");
+        var filterRegex = new RegExp("https:\/\/virtual-twin\.github\.io\/Brain-Simulation-Workshop");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1416,7 +1418,7 @@ CT: 647.007164 seconds (4.42 M allocations: 7.367 GiB, 0.36% gc time)</code></pr
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/virtual-twin/tvb-ontology-optim-workshop">
+    <a class="nav-link" href="https://github.com/virtual-twin/Brain-Simulation-Workshop">
       <i class="bi bi-github" role="img">
 </i> 
     </a>

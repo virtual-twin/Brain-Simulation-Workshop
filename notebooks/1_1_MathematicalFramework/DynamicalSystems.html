@@ -135,6 +135,8 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="../../_brand.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -446,7 +448,7 @@ window.Quarto = {
 </header>
 
 
-<div id="812cabda" class="cell" data-collapse="true" data-execution_count="1">
+<div id="34244ce8" class="cell" data-collapse="true" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> bsplot</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Markdown, HTML</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -461,34 +463,35 @@ window.Quarto = {
 <p>Rewriting as a first-order system (the standard form for any ODE solver):</p>
 <p><span class="math display">\[\dot{x} = v \qquad \dot{v} = -\frac{k}{m}\,x\]</span></p>
 <p>This is a <strong><code>DynamicalSystem</code></strong>: a set of <strong>state variables</strong> <span class="math inline">\((x, v)\)</span> with equations of motion, and <strong>parameters</strong> <span class="math inline">\((k, m)\)</span> that control the behaviour. Below we define it using the TVBO framework.</p>
-<div id="06b7d614" class="cell" data-execution_count="2">
+<div id="eeb01a87" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> Dynamics <span class="im">as</span> DynamicalSystem</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> SimulationExperiment</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>bsplot.style.use(<span class="st">'tvbo'</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>system <span class="op">=</span> DynamicalSystem(</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    state_variables<span class="op">=</span>[</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        {</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">"name"</span>: <span class="st">"x"</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">"equation"</span>: {<span class="st">"rhs"</span>: <span class="st">"v"</span>},</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"initial_value"</span>: <span class="fl">2.0</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        },</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        {</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            <span class="st">"name"</span>: <span class="st">"v"</span>,</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            <span class="st">"equation"</span>: {<span class="st">"rhs"</span>: <span class="st">"-(k/m) * x"</span>},</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">"initial_value"</span>: <span class="fl">0.0</span>,</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        },</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>[</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"name"</span>: <span class="st">"k"</span>, <span class="st">"value"</span>: <span class="fl">0.0001</span>},</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"name"</span>: <span class="st">"m"</span>, <span class="st">"value"</span>: <span class="fl">1.0</span>},</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>Markdown(system.render(<span class="st">'markdown'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section id="dynamics" class="level2 cell-output cell-output-display cell-output-markdown" data-execution_count="2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="dynamics"><span class="header-section-number">1.2</span> Dynamics</h2>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"SpringMass"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    state_variables<span class="op">=</span>[</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">"name"</span>: <span class="st">"x"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"equation"</span>: {<span class="st">"rhs"</span>: <span class="st">"v"</span>},</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">"initial_value"</span>: <span class="fl">2.0</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            <span class="st">"name"</span>: <span class="st">"v"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">"equation"</span>: {<span class="st">"rhs"</span>: <span class="st">"-(k/m) * x"</span>},</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">"initial_value"</span>: <span class="fl">0.0</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>[</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"name"</span>: <span class="st">"k"</span>, <span class="st">"value"</span>: <span class="fl">0.0001</span>},</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"name"</span>: <span class="st">"m"</span>, <span class="st">"value"</span>: <span class="fl">1.0</span>},</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>Markdown(system.render(<span class="st">'markdown'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="springmass" class="level2 cell-output cell-output-display cell-output-markdown" data-execution_count="2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="springmass"><span class="header-section-number">1.2</span> SpringMass</h2>
 <section id="state-equations" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="state-equations"><span class="header-section-number">1.2.1</span> State Equations</h3>
 <p><span class="math display">\[
@@ -497,8 +500,35 @@ window.Quarto = {
 \dot{v} = - \frac{k*x}{m}
 \]</span></p>
 </section>
-<section id="parameters" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="parameters"><span class="header-section-number">1.2.2</span> Parameters</h3>
+<section id="state-variables" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="state-variables"><span class="header-section-number">1.2.2</span> State Variables</h3>
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th><strong>Variable</strong></th>
+<th><strong>Initial Value</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(x\)</span></td>
+<td>2.0</td>
+<td>—</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(v\)</span></td>
+<td>0.0</td>
+<td>—</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="parameters" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="parameters"><span class="header-section-number">1.2.3</span> Parameters</h3>
 <table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
@@ -513,13 +543,13 @@ window.Quarto = {
 <td><span class="math inline">\(k\)</span></td>
 <td>0.0001</td>
 <td>—</td>
-<td>None</td>
+<td></td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(m\)</span></td>
 <td>1.0</td>
 <td>—</td>
-<td>None</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -534,7 +564,7 @@ window.Quarto = {
 <p>Think of it as placing the mass at position <span class="math inline">\(x_0\)</span> and releasing it from rest (<span class="math inline">\(v_0 = 0\)</span>).</p>
 </blockquote>
 <p>The initial condition determines <em>which</em> trajectory the system follows, but not the overall dynamics — that is governed by the parameters.</p>
-<div id="0be15c90" class="cell" data-execution_count="3">
+<div id="7b724e97" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>system.state_variables[<span class="st">'x'</span>][<span class="st">'initial_value'</span>] <span class="op">=</span> <span class="fl">2.0</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> SimulationExperiment(dynamics<span class="op">=</span>system).run()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -551,40 +581,43 @@ Experiment complete.
 ============================================================</code></pre>
 </div>
 </div>
-<div id="98c15524" class="cell" data-execution_count="4">
+<div id="be46a126" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys, os</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sys.path.insert(<span class="dv">0</span>, os.path.abspath(<span class="st">'..'</span>))  <span class="co"># make notebooks/ importable</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spring_animation <span class="im">import</span> animate_spring</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_animation_video(ani, stem, fps<span class="op">=</span><span class="dv">30</span>):</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Static thumbnail: draw first real frame (frame index 0)</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    ani._init_draw()   <span class="co"># sets up blit state</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    ani._func(<span class="dv">0</span>)       <span class="co"># calls update(0) → places spring + mass at initial position</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    ani._fig.savefig(<span class="vs">rf"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="vs">_thumb</span><span class="dv">.</span><span class="vs">png"</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    ani.save(<span class="vs">rf"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="dv">.</span><span class="vs">gif"</span>, writer<span class="op">=</span><span class="st">"pillow"</span>, fps<span class="op">=</span>fps)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>x_ts <span class="op">=</span> np.asarray(result.data.sel({<span class="st">"variable"</span>: <span class="st">"x"</span>})).ravel()</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> animate_spring(</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    [x_ts],</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    orientation<span class="op">=</span><span class="st">"horizontal"</span>,</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    anchor_pos<span class="op">=-</span><span class="fl">3.0</span>,</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    coil_amplitude<span class="op">=</span><span class="fl">0.15</span>,</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    mass_sizes<span class="op">=</span><span class="fl">0.3</span>,</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[<span class="st">"$x$"</span>],</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    titles<span class="op">=</span>[<span class="st">"Spring oscillator"</span>],</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    n_periods<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>save_animation_video(ani, <span class="st">'spring_single'</span>, fps<span class="op">=</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>FIG_DIR <span class="op">=</span> os.path.join(<span class="st">".."</span>, <span class="st">".."</span>, <span class="st">"img"</span>, <span class="st">"figures"</span>, <span class="st">"spring"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>os.makedirs(FIG_DIR, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_animation_video(ani, stem, fps<span class="op">=</span><span class="dv">30</span>):</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    output_stem <span class="op">=</span> os.path.join(FIG_DIR, stem)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Static thumbnail: draw first real frame (frame index 0)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    ani._init_draw()   <span class="co"># sets up blit state</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    ani._func(<span class="dv">0</span>)       <span class="co"># calls update(0) → places spring + mass at initial position</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    ani._fig.savefig(<span class="ss">f"</span><span class="sc">{</span>output_stem<span class="sc">}</span><span class="ss">_thumb.png"</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    ani.save(<span class="ss">f"</span><span class="sc">{</span>output_stem<span class="sc">}</span><span class="ss">.gif"</span>, writer<span class="op">=</span><span class="st">"pillow"</span>, fps<span class="op">=</span>fps)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>x_ts <span class="op">=</span> np.asarray(result.data.sel({<span class="st">"variable"</span>: <span class="st">"x"</span>})).ravel()</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> animate_spring(</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    [x_ts],</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    orientation<span class="op">=</span><span class="st">"horizontal"</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    anchor_pos<span class="op">=-</span><span class="fl">3.0</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    coil_amplitude<span class="op">=</span><span class="fl">0.15</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    mass_sizes<span class="op">=</span><span class="fl">0.3</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[<span class="st">"$x$"</span>],</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    titles<span class="op">=</span>[<span class="st">"Spring oscillator"</span>],</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    n_periods<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>save_animation_video(ani, <span class="st">'spring_single'</span>, fps<span class="op">=</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><img src="spring_single.gif" class="img-fluid"></p>
+<p><img src="../../img/figures/spring/spring_single.gif" class="img-fluid"></p>
 <section id="varying-initial-conditions" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="varying-initial-conditions"><span class="header-section-number">1.3.1</span> Varying initial conditions</h3>
 <p>Same spring (<span class="math inline">\(k\)</span> and <span class="math inline">\(m\)</span> fixed), three different release positions <span class="math inline">\(x_0\)</span>.</p>
 <p>Notice: <strong>bigger stretch → larger amplitude, same frequency</strong>. The frequency <span class="math inline">\(\omega = \sqrt{k/m}\)</span> depends only on the parameters, not on where you start.</p>
-<div id="a6e9c045" class="cell" data-execution_count="5">
+<div id="a8581ba8" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spring_animation <span class="im">import</span> animate_spring</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -644,7 +677,7 @@ Experiment complete.
 ============================================================</code></pre>
 </div>
 </div>
-<p><img src="spring_ics.gif" class="img-fluid"></p>
+<p><img src="../../img/figures/spring/spring_ics.gif" class="img-fluid"></p>
 </section>
 </section>
 <section id="phase-space" class="level2" data-number="1.4">
@@ -655,7 +688,7 @@ Experiment complete.
 <li>Larger loops correspond to larger initial displacements <span class="math inline">\(x_0\)</span> (more energy).</li>
 <li>The <strong>arrows</strong> (vector field) show the direction of motion everywhere, independent of any particular trajectory.</li>
 </ul>
-<div id="b9fbad8d" class="cell" data-execution_count="6">
+<div id="542c6846" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -667,7 +700,7 @@ Experiment complete.
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>system.plot(kind<span class="op">=</span><span class="st">'vectorfield'</span>, ax<span class="op">=</span>ax, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"x (position)"</span>)</span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"v (velocity)"</span>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'phase_space.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>fig.savefig(os.path.join(FIG_DIR, <span class="st">'phase_space.png'</span>), dpi<span class="op">=</span><span class="dv">500</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -713,7 +746,7 @@ Experiment complete.
 <p><strong>Analogy:</strong> a stiff guitar string vibrates faster with less tension (more “resistance” slows it down). Heavier mass = more inertia = slower response to the restoring force.</p>
 </blockquote>
 <p>The box size below encodes mass visually: <strong>bigger box = heavier mass</strong>.</p>
-<div id="c670a2c8" class="cell" data-execution_count="7">
+<div id="b3ee9268" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spring_animation <span class="im">import</span> animate_spring</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -782,7 +815,7 @@ Experiment complete.
 ============================================================</code></pre>
 </div>
 </div>
-<p><img src="spring_mass.gif" class="img-fluid"></p>
+<p><img src="../../img/figures/spring/spring_mass.gif" class="img-fluid"></p>
 </section>
 <section id="from-toy-models-to-better-realism" class="level2" data-number="1.6">
 <h2 data-number="1.6" class="anchored" data-anchor-id="from-toy-models-to-better-realism"><span class="header-section-number">1.6</span> From Toy Models to Better Realism</h2>
@@ -792,7 +825,7 @@ Experiment complete.
 <li>a constant load term (gravity-like bias)</li>
 </ul>
 <p>This changes both the transient behaviour (oscillations decay) and the equilibrium level.</p>
-<div id="56723af6" class="cell" data-execution_count="8">
+<div id="f78b0f39" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo.datamodel.schema <span class="im">import</span> Parameter</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy System</span></span>
@@ -850,7 +883,7 @@ Experiment complete.
 ============================================================</code></pre>
 </div>
 </div>
-<p><img src="spring_realism.gif" class="img-fluid"></p>
+<p><img src="../../img/figures/spring/spring_realism.gif" class="img-fluid"></p>
 
 
 </section>
@@ -929,7 +962,7 @@ Experiment complete.
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/github\.com\/virtual-twin\/Brain-Simulation-Workshop");
+        var filterRegex = new RegExp("https:\/\/virtual-twin\.github\.io\/Brain-Simulation-Workshop");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1285,7 +1318,7 @@ Experiment complete.
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/virtual-twin/tvb-ontology-optim-workshop">
+    <a class="nav-link" href="https://github.com/virtual-twin/Brain-Simulation-Workshop">
       <i class="bi bi-github" role="img">
 </i> 
     </a>

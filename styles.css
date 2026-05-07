@@ -1,0 +1,122 @@
+body.workshop-home-page {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+body.workshop-home-page .quarto-title-block,
+body.workshop-home-page #title-block-header {
+  display: none;
+}
+
+body.workshop-home-page main.content,
+body.workshop-home-page #quarto-content {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.workshop-hero {
+  position: relative;
+  max-width: 1120px;
+  margin: 2rem auto 3rem;
+  min-height: 34rem;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: linear-gradient(90deg, #18233f 0%, var(--c-primary) 100%);
+}
+
+.workshop-hero__visual {
+  position: absolute;
+  inset: 0 -14% 0 44%;
+  width: 70%;
+  height: 100%;
+  border: 0;
+  z-index: 0;
+  pointer-events: none;
+  transform: translateX(10%) scale(1.2);
+  transform-origin: center right;
+}
+
+.workshop-hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(24, 35, 63, 0.94) 0%,
+    rgba(24, 35, 63, 0.48) 40%,
+    rgba(24, 35, 63, 0.08) 72%,
+    rgba(24, 35, 63, 0.00) 100%
+  );
+}
+
+.workshop-hero__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem;
+  color: #fff;
+}
+
+.workshop-kicker {
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workshop-kicker a {
+  color: inherit;
+  text-decoration-color: rgba(255, 255, 255, 0.45);
+}
+
+.workshop-hero h1 {
+  max-width: 760px;
+  margin: 0;
+  color: #fff;
+  font-size: 4rem;
+  line-height: 1.05;
+}
+
+.workshop-hero__lead {
+  max-width: 640px;
+  margin-top: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.18rem;
+  line-height: 1.6;
+}
+
+.workshop-hero__pill {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.container-lg {
+  max-width: 1120px;
+}
+
+@media (max-width: 860px) {
+  .workshop-hero {
+    min-height: 30rem;
+  }
+
+  .workshop-hero h1 {
+    font-size: 2.6rem;
+  }
+
+  .workshop-hero__inner {
+    padding: 3rem 1.25rem;
+  }
+
+  .workshop-hero__visual {
+    inset: 0 -24% 0 30%;
+    width: 82%;
+    transform: translateX(12%) scale(1.08);
+  }
+}

@@ -133,6 +133,8 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="_brand.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -263,6 +265,7 @@ window.Quarto = {
   <li><a href="#numerical-continuation" id="toc-numerical-continuation" class="nav-link" data-scroll-target="#numerical-continuation">Numerical continuation</a></li>
   <li><a href="#generic2doscillator-regimes-over-input-i" id="toc-generic2doscillator-regimes-over-input-i" class="nav-link" data-scroll-target="#generic2doscillator-regimes-over-input-i">Generic2dOscillator: regimes over input I</a></li>
   <li><a href="#bifurcation-analysis-hands-on" id="toc-bifurcation-analysis-hands-on" class="nav-link" data-scroll-target="#bifurcation-analysis-hands-on">3.1 Bifurcation analysis: hands-on</a></li>
+  <li><a href="#tvb-simulation-infused-with-bifurcation-analysis" id="toc-tvb-simulation-infused-with-bifurcation-analysis" class="nav-link" data-scroll-target="#tvb-simulation-infused-with-bifurcation-analysis">TVB simulation infused with bifurcation analysis</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/edit/main/script.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="script.ipynb" download="script.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
@@ -425,6 +428,12 @@ F(x,a)=0
 <li>What signal would I observe if I simulated the system at a chosen point in the diagram?</li>
 </ol>
 <p>The practical goal is to run the same <code>Continuation</code> schema on the Generic2dOscillator, sweep <span class="math inline">\(I\)</span>, continue fixed points and periodic orbits, then read the output as a map of resting, oscillatory and transition regimes.</p>
+</section>
+<section id="tvb-simulation-infused-with-bifurcation-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="tvb-simulation-infused-with-bifurcation-analysis">TVB simulation infused with bifurcation analysis</h2>
+<p>This final dynamical slide ties the bifurcation diagram to a real brain-network simulation. The Generic2dOscillator runs on the Desikan-Killiany connectome via TVBO and the tvboptim backend. The animation shows three synchronized views. The two left panels are the Desikan-Killiany regions projected onto axial (top) and sagittal views: each circle is a brain region, sized by structural in-strength and colored by its instantaneous membrane potential <span class="math inline">\(V(t)\)</span>. The right panel is the bifurcation diagram in <span class="math inline">\(I\)</span>. Each node is also drawn there at its current effective input and current voltage <span class="math inline">\((I_{\mathrm{eff},i}, V_i(t))\)</span>, using the same color scale.</p>
+<p>The point is that a network simulation is not just a collection of time series. At every moment, each node occupies a position in the regime map. Nodes with low effective input sit near resting fixed-point regions and stay near zero on the brain views. Nodes whose effective input crosses the oscillatory window move into the part of the diagram where periodic orbits exist, and the corresponding region on the brain lights up red and blue as it oscillates. Coupling makes the nodes move through this map together. The last part of the animation holds the drive fixed so the audience can see where the network states settle. The bifurcation diagram becomes a coordinate system for reading the network dynamics, and the brain panels show that this coordinate system maps onto anatomy.</p>
+<p>The speaker line is: the bifurcation diagram is the atlas, and the brain network simulation is a moving path through that atlas.</p>
 
 
 </section>
@@ -503,7 +512,7 @@ F(x,a)=0
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/github\.com\/virtual-twin\/Brain-Simulation-Workshop");
+        var filterRegex = new RegExp("https:\/\/virtual-twin\.github\.io\/Brain-Simulation-Workshop");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -847,7 +856,7 @@ F(x,a)=0
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/virtual-twin/tvb-ontology-optim-workshop">
+    <a class="nav-link" href="https://github.com/virtual-twin/Brain-Simulation-Workshop">
       <i class="bi bi-github" role="img">
 </i> 
     </a>
