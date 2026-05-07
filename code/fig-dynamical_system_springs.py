@@ -61,13 +61,20 @@ def x_series(result) -> np.ndarray:
 
 
 def save_animation(ani, stem: str, fps: int = 30) -> None:
-    out_stem = FIG_DIR / f"{PREFIX}_{stem}"
+    out_thumb = FIG_DIR / f"{PREFIX}_{stem}_thumb.png"
+    out_mp4 = FIG_DIR / f"{PREFIX}_{stem}.mp4"
     ani._init_draw()
     ani._func(0)
-    ani._fig.savefig(f"{out_stem}_thumb.png", dpi=300, bbox_inches="tight")
-    ani.save(f"{out_stem}.gif", writer="pillow", fps=fps)
-    print(f"Saved -> {out_stem}_thumb.png")
-    print(f"Saved -> {out_stem}.gif")
+    ani._fig.savefig(out_thumb, dpi=300, bbox_inches="tight")
+    ani.save(
+        str(out_mp4),
+        writer="ffmpeg",
+        fps=fps,
+        dpi=150,
+        extra_args=["-vcodec", "libx264", "-pix_fmt", "yuv420p"],
+    )
+    print(f"Saved -> {out_thumb}")
+    print(f"Saved -> {out_mp4}")
 
 
 def generate_single() -> None:
