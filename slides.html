@@ -329,7 +329,11 @@ Plotting the Brain</p>
 <div class="row fragment" height="30%">
 <div class="columns">
 <div class="column">
-<p><img data-src="img/state_evolution_node.png"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/state_evolution_node.png" class="quarto-figure quarto-figure-center" height="150"></p>
+</figure>
+</div>
 </div><div class="column">
 <div class="cell" data-fig-width="5" data-fig-height="1.6" data-layout-align="center">
 <div class="cell-output-display">
@@ -479,12 +483,12 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <div class="r-stack">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/spring/spring_single_thumb.png" class="quarto-figure quarto-figure-center"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png" class="quarto-figure quarto-figure-center"></p>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/spring/spring_single.gif" class="fragment quarto-figure quarto-figure-center"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_single.gif" class="fragment quarto-figure quarto-figure-center"></p>
 </figure>
 </div>
 </div>
@@ -493,24 +497,79 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <section id="initial-conditions" class="slide level2" data-background-color="#ffffff">
 <h2>Initial Conditions</h2>
 <div class="columns">
-<div class="column" style="width:20%;">
-<div style="font-size: 0.8em;">
-<p><span class="math display">\[
+<div class="column" style="font-size: 0.55em;">
+<p>A mass <span class="math inline">\(m\)</span> on a spring with stiffness <span class="math inline">\(k\)</span>. <br> Perpetual oscillation at <span class="math inline">\(\omega = \sqrt{k/m}\)</span>.</p>
+<p><strong>State Equations:</strong> <span class="math display">\[
 \dot{x} = v
 \]</span> <span class="math display">\[
 \dot{v} = - \frac{k}{m}*x
 \]</span></p>
-</div>
-</div><div class="column" style="width:80%;">
+<p><strong>State Variables</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><strong>Variable</strong></th>
+<th><strong>Initial Value</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(x\)</span></td>
+<td>2.0</td>
+<td><span class="math inline">\(\mathrm{m}\)</span></td>
+<td>Displacement from equilibrium</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(v\)</span></td>
+<td>0.0</td>
+<td><span class="math inline">\(\frac{\mathrm{m}}{\mathrm{s}}\)</span></td>
+<td>Velocity</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Parameters</strong></p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 20%">
+<col style="width: 18%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Parameter</strong></th>
+<th><strong>Value</strong></th>
+<th><strong>Unit</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(k\)</span></td>
+<td>0.0001</td>
+<td><span class="math inline">\(\frac{\mathrm{N}}{\mathrm{m}}\)</span></td>
+<td>Spring stiffness constant</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(m\)</span></td>
+<td>1.0</td>
+<td><span class="math inline">\(\mathrm{kg}\)</span></td>
+<td>Mass of the oscillating body</td>
+</tr>
+</tbody>
+</table>
+</div><div class="column">
 <div class="r-stack">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/spring/spring_ics_thumb.png" class="quarto-figure quarto-figure-center"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png" class="quarto-figure quarto-figure-center"></p>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/spring/spring_ics.gif" class="fragment quarto-figure quarto-figure-center"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.gif" class="fragment quarto-figure quarto-figure-center"></p>
 </figure>
 </div>
 </div>
@@ -520,7 +579,7 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <h2>Phase Space</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/spring/phase_space.png" class="quarto-figure quarto-figure-center" height="580"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_space.png" class="quarto-figure quarto-figure-center" height="580"></p>
 </figure>
 </div>
 </section>
@@ -529,12 +588,12 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <div class="r-stack">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/spring/spring_mass_thumb.png" class="quarto-figure quarto-figure-center" height="580"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" class="quarto-figure quarto-figure-center" height="580"></p>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/spring/spring_mass.gif" class="fragment quarto-figure quarto-figure-center" height="580"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.gif" class="fragment quarto-figure quarto-figure-center" height="580"></p>
 </figure>
 </div>
 </div>
@@ -544,12 +603,12 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <div class="r-stack">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/spring/spring_realism_thumb.png" class="quarto-figure quarto-figure-center" height="580"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png" class="quarto-figure quarto-figure-center" height="580"></p>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="img/figures/spring/spring_realism.gif" class="fragment quarto-figure quarto-figure-center" height="580"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.gif" class="fragment quarto-figure quarto-figure-center" height="580"></p>
 </figure>
 </div>
 </div>
@@ -839,15 +898,21 @@ C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij
 <section id="applications-in-basic-research" class="slide level2">
 <h2>Applications in basic research</h2>
 <div class="columns">
-<div class="column">
-
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/figures/applications/Schirner2023Title.png"></p>
+<figcaption><span class="citation" data-cites="Schirner2023">(<a href="#/references" role="doc-biblioref" onclick="">Schirner, Deco, and Ritter 2023</a>)</span></figcaption>
+</figure>
 </div><div class="column">
 
+</div><div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/figures/applications/Koller2024Title.png"></p>
+<figcaption><span class="citation" data-cites="Koller2024">(<a href="#/references" role="doc-biblioref" onclick="">Koller, Schirner, and Ritter 2024</a>)</span></figcaption>
+</figure>
+</div>
 </div></div>
-<ul>
-<li>TODO: representative findings</li>
-<li>TODO: links to <span class="citation" data-cites="Schirner2023 Koller2024 Kashyap2025">(<a href="#/references" role="doc-biblioref" onclick="">Schirner, Deco, and Ritter 2023</a>; <a href="#/references" role="doc-biblioref" onclick="">Koller, Schirner, and Ritter 2024</a>; <a href="#/references" role="doc-biblioref" onclick="">Kashyap et al. 2025</a>)</span></li>
-</ul>
 </section>
 <section id="clinical-applications" class="slide level2">
 <h2>Clinical applications</h2>
@@ -1862,9 +1927,6 @@ Bergstra, James, and Yoshua Bengio. 2012. <span>“Random Search for Hyper-Param
 </div>
 <div id="ref-Jansen1995" class="csl-entry" role="listitem">
 Jansen, Ben H., and Vincent G. Rit. 1995. <span>“Electroencephalogram and Visual Evoked Potential Generation in a Mathematical Model of Coupled Cortical Columns.”</span> <em>Biological Cybernetics</em> 73 (4): 357–66. <a href="https://doi.org/10.1007/bf00199471">https://doi.org/10.1007/bf00199471</a>.
-</div>
-<div id="ref-Kashyap2025" class="csl-entry" role="listitem">
-Kashyap, Amrit, Eloy Geenjaar, Patrik Bey, Kiret Dhindsa, Katharina Glomb, Sergey Plis, Shella Keilholz, and Petra Ritter. 2025. <span>“Using an Ordinary Differential Equation Model to Separate Rest and Task Signals in fMRI.”</span> <em>Nature Communications</em> 16 (1). <a href="https://doi.org/10.1038/s41467-025-62491-6">https://doi.org/10.1038/s41467-025-62491-6</a>.
 </div>
 <div id="ref-Koller2024" class="csl-entry" role="listitem">
 Koller, Dominik P., Michael Schirner, and Petra Ritter. 2024. <span>“Human Connectome Topology Directs Cortical Traveling Waves and Shapes Frequency Gradients.”</span> <em>Nature Communications</em> 15 (1). <a href="https://doi.org/10.1038/s41467-024-47860-x">https://doi.org/10.1038/s41467-024-47860-x</a>.

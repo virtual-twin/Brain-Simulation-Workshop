@@ -496,7 +496,7 @@
     "href": "slides.html#basic-ideas-and-history",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Basic ideas and history",
-    "text": "Basic ideas and history\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nG\n\n\nS\n\nState: S(t)\n\n\n\nF\n\nEvolution Function: f(S, θ)\n\n\n\nS-&gt;F\n\n\n\n\n\ndS\n\nNext State: dS/dt\n\n\n\nF-&gt;dS\n\n\n\n\n\ntheta\n\nParameters: θ\n\n\n\ntheta-&gt;F"
+    "text": "Basic ideas and history\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nG\n\n\nS\n\nState: S(t)\n\n\n\nF\n\nEvolution Function: f(S, θ)\n\n\n\nS-&gt;F\n\n\n\n\n\ndS\n\nNext State: dS/dt\n\n\n\nF-&gt;dS\n\n\n\n\n\ntheta\n\nParameters: θ\n\n\n\ntheta-&gt;F"
   },
   {
     "objectID": "slides.html#mathematical-framework",
@@ -517,7 +517,7 @@
     "href": "slides.html#initial-conditions",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Initial Conditions",
-    "text": "Initial Conditions\n\n\n\n\\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k}{m}*x\n\\]"
+    "text": "Initial Conditions\n\n\nA mass \\(m\\) on a spring with stiffness \\(k\\).  Perpetual oscillation at \\(\\omega = \\sqrt{k/m}\\).\nState Equations: \\[\n\\dot{x} = v\n\\] \\[\n\\dot{v} = - \\frac{k}{m}*x\n\\]\nState Variables\n\n\n\nVariable\nInitial Value\nUnit\nDescription\n\n\n\n\n\\(x\\)\n2.0\n\\(\\mathrm{m}\\)\nDisplacement from equilibrium\n\n\n\\(v\\)\n0.0\n\\(\\frac{\\mathrm{m}}{\\mathrm{s}}\\)\nVelocity\n\n\n\nParameters\n\n\n\n\n\n\n\n\n\nParameter\nValue\nUnit\nDescription\n\n\n\n\n\\(k\\)\n0.0001\n\\(\\frac{\\mathrm{N}}{\\mathrm{m}}\\)\nSpring stiffness constant\n\n\n\\(m\\)\n1.0\n\\(\\mathrm{kg}\\)\nMass of the oscillating body"
   },
   {
     "objectID": "slides.html#phase-space",
@@ -601,7 +601,7 @@
     "href": "slides.html#applications-in-basic-research",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "Applications in basic research",
-    "text": "Applications in basic research\n\n\n\n\n\n\n\nTODO: representative findings\nTODO: links to (Schirner, Deco, and Ritter 2023; Koller, Schirner, and Ritter 2024; Kashyap et al. 2025)"
+    "text": "Applications in basic research\n\n\n\n\n(Schirner, Deco, and Ritter 2023)\n\n\n\n\n\n\n\n(Koller, Schirner, and Ritter 2024)"
   },
   {
     "objectID": "slides.html#clinical-applications",
@@ -867,7 +867,7 @@
     "href": "slides.html#references",
     "title": "Towards translational and mechanistic whole-brain simulations with The Virtual Brain",
     "section": "References",
-    "text": "References\n\n\nBergstra, James, and Yoshua Bengio. 2012. “Random Search for Hyper-Parameter Optimization.” Journal of Machine Learning Research 13 (null): 281–305. https://dl.acm.org/doi/abs/10.5555/2188385.2188395.\n\n\nJansen, Ben H., and Vincent G. Rit. 1995. “Electroencephalogram and Visual Evoked Potential Generation in a Mathematical Model of Coupled Cortical Columns.” Biological Cybernetics 73 (4): 357–66. https://doi.org/10.1007/bf00199471.\n\n\nKashyap, Amrit, Eloy Geenjaar, Patrik Bey, Kiret Dhindsa, Katharina Glomb, Sergey Plis, Shella Keilholz, and Petra Ritter. 2025. “Using an Ordinary Differential Equation Model to Separate Rest and Task Signals in fMRI.” Nature Communications 16 (1). https://doi.org/10.1038/s41467-025-62491-6.\n\n\nKoller, Dominik P., Michael Schirner, and Petra Ritter. 2024. “Human Connectome Topology Directs Cortical Traveling Waves and Shapes Frequency Gradients.” Nature Communications 15 (1). https://doi.org/10.1038/s41467-024-47860-x.\n\n\nPille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. “Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.” bioRxiv, November. https://doi.org/10.1101/2025.11.18.689003.\n\n\nSchirner, Michael, Gustavo Deco, and Petra Ritter. 2023. “Learning How Network Structure Shapes Decision-Making for Bio-Inspired Computing.” Nature Communications 14 (1). https://doi.org/10.1038/s41467-023-38626-y.\n\n\nStefanovski, Leon, Paul Triebkorn, Andreas Spiegler, Margarita-Arimatea Diaz-Cortes, Ana Solodkin, Viktor Jirsa, Anthony Randal McIntosh, and Petra Ritter. 2019. “Linking Molecular Pathways and Large-Scale Computational Modeling to Assess Candidate Disease Mechanisms and Pharmacodynamics in Alzheimer’s Disease.” Edited by Anke Meyer-Baese Li Su. Frontiers in Computational Neuroscience 13 (August). https://doi.org/10.3389/fncom.2019.00054."
+    "text": "References\n\n\nBergstra, James, and Yoshua Bengio. 2012. “Random Search for Hyper-Parameter Optimization.” Journal of Machine Learning Research 13 (null): 281–305. https://dl.acm.org/doi/abs/10.5555/2188385.2188395.\n\n\nJansen, Ben H., and Vincent G. Rit. 1995. “Electroencephalogram and Visual Evoked Potential Generation in a Mathematical Model of Coupled Cortical Columns.” Biological Cybernetics 73 (4): 357–66. https://doi.org/10.1007/bf00199471.\n\n\nKoller, Dominik P., Michael Schirner, and Petra Ritter. 2024. “Human Connectome Topology Directs Cortical Traveling Waves and Shapes Frequency Gradients.” Nature Communications 15 (1). https://doi.org/10.1038/s41467-024-47860-x.\n\n\nPille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. “Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.” bioRxiv, November. https://doi.org/10.1101/2025.11.18.689003.\n\n\nSchirner, Michael, Gustavo Deco, and Petra Ritter. 2023. “Learning How Network Structure Shapes Decision-Making for Bio-Inspired Computing.” Nature Communications 14 (1). https://doi.org/10.1038/s41467-023-38626-y.\n\n\nStefanovski, Leon, Paul Triebkorn, Andreas Spiegler, Margarita-Arimatea Diaz-Cortes, Ana Solodkin, Viktor Jirsa, Anthony Randal McIntosh, and Petra Ritter. 2019. “Linking Molecular Pathways and Large-Scale Computational Modeling to Assess Candidate Disease Mechanisms and Pharmacodynamics in Alzheimer’s Disease.” Edited by Anke Meyer-Baese Li Su. Frontiers in Computational Neuroscience 13 (August). https://doi.org/10.3389/fncom.2019.00054."
   },
   {
     "objectID": "index.html",

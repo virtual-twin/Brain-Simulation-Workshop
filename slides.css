@@ -37,3 +37,57 @@
     overflow-y: auto !important;
     overflow-x: auto !important;
 }
+
+.reveal .slide > div.rows {
+  display: flex;
+  flex-direction: column;
+  gap: min(4vh, 1.5em);
+  height: calc(100% - 2.6em);
+  min-height: 0;
+}
+
+.reveal .slide > div.rows > div.row {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.reveal .slide > div.rows > div.row > div.columns {
+  height: 100%;
+  align-items: center;
+}
+
+.reveal .slide > div.rows > div.row > div.columns > div.column {
+  min-height: 0;
+}
+
+.reveal .slide > div.rows > div.row img,
+.reveal .slide > div.rows > div.row svg,
+.reveal .slide > div.rows > div.row figure,
+.reveal .slide > div.rows > div.row .cell-output-display,
+.reveal .slide > div.rows > div.row p {
+  max-height: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.reveal .slide > div.rows > div.row[height="5%"] { flex-grow: 5; }
+.reveal .slide > div.rows > div.row[height="10%"] { flex-grow: 10; }
+.reveal .slide > div.rows > div.row[height="15%"] { flex-grow: 15; }
+.reveal .slide > div.rows > div.row[height="20%"] { flex-grow: 20; }
+.reveal .slide > div.rows > div.row[height="25%"] { flex-grow: 25; }
+.reveal .slide > div.rows > div.row[height="30%"] { flex-grow: 30; }
+.reveal .slide > div.rows > div.row[height="35%"] { flex-grow: 35; }
+.reveal .slide > div.rows > div.row[height="40%"] { flex-grow: 40; }
+.reveal .slide > div.rows > div.row[height="45%"] { flex-grow: 45; }
+.reveal .slide > div.rows > div.row[height="50%"] { flex-grow: 50; }
+.reveal .slide > div.rows > div.row[height="55%"] { flex-grow: 55; }
+.reveal .slide > div.rows > div.row[height="60%"] { flex-grow: 60; }
+.reveal .slide > div.rows > div.row[height="65%"] { flex-grow: 65; }
+.reveal .slide > div.rows > div.row[height="70%"] { flex-grow: 70; }
+.reveal .slide > div.rows > div.row[height="75%"] { flex-grow: 75; }
+.reveal .slide > div.rows > div.row[height="80%"] { flex-grow: 80; }
+.reveal .slide > div.rows > div.row[height="85%"] { flex-grow: 85; }
+.reveal .slide > div.rows > div.row[height="90%"] { flex-grow: 90; }
+.reveal .slide > div.rows > div.row[height="95%"] { flex-grow: 95; }
+.reveal .slide > div.rows > div.row[height="100%"] { flex-grow: 100; }
