@@ -18,7 +18,7 @@ format:
     slide-number: true
     scrollable: true
     auto-stretch: true
-    auto-play-media: false
+    auto-play-media: true
     chalkboard: true
     incremental: false
     toc: false
@@ -157,12 +157,21 @@ digraph G {
 
 ## Mathematical framework
 
+:::: {.rows}
+
+::: {.row style="height:10%;justify-content:center"}
+
 $$
 dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 $$
 
+:::
 
-::: {.fragment}
+::: {.row style="height:90%;"}
+
+:::: {.columns}
+
+::: {.column .r-fit-text width=60%}
 
 **State Evolution**
 
@@ -172,15 +181,32 @@ $$
 - $I_i$ - external input (stimulation, driving signals)
 - $g$ - noise diffusion coefficient with parameters $\theta^g$
 - $dW_i$ - Wiener process (stochastic fluctuations)
+
 :::
 
+::: {.column width=40%}
+
+```{python}
+# | fig-align: center
+from tvbo import Dynamics, SimulationExperiment
+kur = Dynamics.from_db('Kuramoto')
+kur.run().plot()
+```
+
+:::
+
+::::
+
+:::
+
+::::
 
 ## Dynamical Systems
 
 
 :::: {.columns}
 
-::: {.column style="font-size: 0.55em;"}
+::: {.column style="width:30%; font-size: 0.62em;"}
 
 A mass $m$ on a spring with stiffness $k$. <br/>
 Perpetual oscillation at $\omega = \sqrt{k/m}$.
@@ -210,9 +236,9 @@ $$
 
 :::
 
-::: {.column}
+::: {.column style="width:70%;"}
 
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_single.mp4){fig-align="center" width="100%" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png" data-autoplay="false"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_single.mp4){fig-align="center" height="430px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png" data-autoplay="false"}
 
 :::
 
@@ -223,37 +249,27 @@ $$
 
 :::: {.columns}
 
-::: {.column style="font-size: 0.55em;"}
 
-A mass $m$ on a spring with stiffness $k$. <br/>
-Perpetual oscillation at $\omega = \sqrt{k/m}$.
+::: {.column style="width:30%; font-size: 0.62em;"}
 
-**State Equations:**
-$$
-\dot{x} = v
-$$
-$$
-\dot{v} = - \frac{k}{m}*x
-$$
+Same spring-mass system as before.
 
-**State Variables**
+**What changes?**
 
-| **Variable** | **Initial Value** | **Unit** | **Description** |
-|--------------|-------------------|----------|-----------------|
-| $x$ | 2.0 | $\mathrm{m}$ | Displacement from equilibrium |
-| $v$ | 0.0 | $\frac{\mathrm{m}}{\mathrm{s}}$ | Velocity |
+- Initial displacement only: $x_0 \in \{-1,-2,-3\}$
+- Velocity stays fixed at $v_0 = 0$
+- Parameters stay fixed: $k=10^{-4},\; m=1$
 
-**Parameters**
+**What do we see?**
 
-| **Parameter** | **Value** | **Unit** | **Description** |
-|---------------|-----------|----------|-----------------|
-| $k$ | 0.0001 | $\frac{\mathrm{N}}{\mathrm{m}}$ | Spring stiffness constant |
-| $m$ | 1.0 | $\mathrm{kg}$ | Mass of the oscillating body |
+- Same frequency in all cases
+- Larger initial stretch gives larger amplitude
+- Closed motion stays perfectly periodic
 :::
 
-::: {.column}
+::: {.column style="width:70%;"}
 
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.mp4){fig-align="center" width="100%" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png" data-autoplay="false"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.mp4){fig-align="center" height="430px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png" data-autoplay="false"}
 
 :::
 
@@ -261,16 +277,108 @@ $$
 
 ## Phase Space {background-color="#ffffff"}
 
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_space.png){fig-align="center" height="580px"}
+:::: {.columns}
+
+::: {.column style="width:30%; font-size: 0.62em;"}
+
+Same spring-mass system. Only the representation changes.
+
+**What changes?**
+
+- Plot state as $(x,v)$ instead of $x(t)$
+- Use several initial conditions
+- Add the vector field of the dynamics
+
+**What do we see?**
+
+- Closed trajectories around equilibrium
+- Conservative dynamics with no damping
+- Geometry of the flow instead of time evolution
+
+:::
+
+::: {.column style="width:70%;"}
+
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.mp4){fig-align="center" height="430px"}
+
+:::
+
+::::
 
 ## Parameters — Mass {background-color="#ffffff"}
 
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.mp4){fig-align="center" height="580px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" data-autoplay="false"}
+:::: {.columns}
+
+::: {.column style="width:30%; font-size: 0.62em;"}
+
+Same equations and same initial condition. Only the mass changes.
+
+**What changes?**
+
+- $m \in \{0.5, 1.0, 2.0\}$
+- $x_0=-2$, $v_0=0$ stay fixed
+- $k$ stays fixed
+
+**What do we see?**
+
+- Frequency follows $\omega = \sqrt{k/m}$
+- Heavier masses oscillate more slowly
+- Box size encodes the mass value visually
+
+:::
+
+::: {.column style="width:70%;"}
+
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.mp4){fig-align="center" height="430px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" data-autoplay="false"}
+
+:::
+
+::::
 
 
 ## Towards Realism — Damping & Load {background-color="#ffffff"}
 
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.mp4){fig-align="center" height="580px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png" data-autoplay="false"}
+:::: {.columns}
+
+::: {.column style="width:30%; font-size: 0.62em;"}
+
+Now we modify the toy model toward a more realistic oscillator.
+
+**What changes?**
+
+$$
+\dot{v} = -\frac{k}{m}x - \frac{c}{m}v + g_{\mathrm{eff}}
+$$
+
+- Add damping: $c=0.006$
+- Add constant load: $g_{\mathrm{eff}}=0.00015$
+
+**What do we see?**
+
+- Oscillations decay over time
+- Equilibrium shifts away from zero
+- Compare ideal toy model vs damped + load
+
+:::
+
+::: {.column style="width:70%;"}
+
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.mp4){fig-align="center" height="430px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png" data-autoplay="false"}
+
+:::
+
+::::
+
+## Phase Space: Damped Spring
+
+:::: {.columns}
+
+::: {.column}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.mp4)
+:::
+
+::::
+
 
 # Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
 
@@ -286,7 +394,7 @@ $$
 
 :::: {.columns}
 
-::: {.column width="65%" style="font-size: 0.45em; height: 660px; overflow-y: scroll;"}
+::: {.column style="width:50%; font-size: 0.45em; height: 660px; overflow-y: scroll;"}
 
 **JansenRit1995**
 Lumped-parameter cortical column model with three neural populations: pyramidal cells, excitatory interneurons, and inhibitory interneurons. Each population is modeled by a PSP block (2nd-order linear filter) and a sigmoidal potential-to-firing-rate transformation.
@@ -367,7 +475,7 @@ $$
 :::
 
 ::: {.column width="50%"}
-![](img/figures/jansen1995/fig-jr-singlenode.png){width="100%"}
+![](img/figures/jansen1995/fig-jr-singlenode.png)
 :::
 
 ::::
@@ -803,6 +911,9 @@ res = exp.run("tvboptim")
 
 ## Clinical applications
 
+## Virtual DBS
+![](img/figures/applications/clinical/fig-dbspy-overview_white.png)
+
 - TODO: translational use-cases
 - TODO: virtual epileptic / Alzheimer / stroke patient examples
 
@@ -813,7 +924,7 @@ res = exp.run("tvboptim")
 
 ## How to analyse a brain system
 
-![](img/bifurcation_overview.png){fig-align="center" width="96%"}
+![](img/figures/bifurcation/fig-bifurcation-overview.png){fig-align="center" width="96%"}
 
 ::: {.columns}
 ::: {.column width="33%" .smaller}
@@ -900,7 +1011,7 @@ $$
 \qquad r_{\mathrm{cycle}} = \sqrt a
 $$
 
-![](img/hopf_birth.gif){fig-align="center" width="100%"}
+![](img/figures/bifurcation/fig-bifurcation-hopf-birth.gif){fig-align="center" width="100%"}
 
 ::: {.smaller}
 fixed point loses stability $\Rightarrow$ stable oscillation appears
