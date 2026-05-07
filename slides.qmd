@@ -87,47 +87,68 @@ Plotting the Brain
 
 ## Basic ideas and history
 
-:::: {.rows}
-::: {.row height=60%}
+:::: {.basic-ideas-rows}
+
+::: {.basic-ideas-row style="--row-height: 70%;"}
+
 :::: {.columns}
+
 ::: {.column width="25%"}
-![](img/figures/basic_idea_imaging_workflow1.png){width="100%"}
+![](img/figures/basic_idea_imaging_workflow1.png)
 :::
 
 ::: {.column width="25%" .fragment}
-![](img/figures/basic_idea_imaging_workflow2.png){width="100%"}
+![](img/figures/basic_idea_imaging_workflow2.png)
 :::
 
 ::: {.column width="25%" .fragment}
-![](img/figures/basic_idea_imaging_workflow3.png){width="100%"}
+![](img/figures/basic_idea_imaging_workflow3.png)
 :::
 
 ::: {.column width="25%" .fragment}
-![](img/figures/basic_idea_imaging_workflow4.png){width="100%"}
+![](img/figures/basic_idea_imaging_workflow4.png)
 :::
 
 ::::
+
 :::
 
-::: {.row height=40% .fragment}
+::: {.basic-ideas-row .fragment style="--row-height: 30%;"}
+
 :::: {.columns}
 
-::: {.column width="70%"}
-```{mermaid}
-%%| fig-align: center
-flowchart LR
-    S(["State:  $$ S(t) $$"]):::box --> F["Evolution Function:  $$ f(S, θ)$$"]:::fn --> dS(["Next State:  $$ dS/dt $$ "]):::box
-    theta(["Parameters:  $$\theta$$"]):::param --> F
+::: {.column}
+![](img/state_evolution_node.png)
+:::
 
-    classDef box  fill:#d6e4f0,stroke:#6880af,stroke-width:2px,color:#1a1a2e,rx:8,ry:8
-    classDef fn   fill:#6880af,stroke:#3a5080,stroke-width:2px,color:#ffffff,font-weight:bold,rx:4,ry:4
-    classDef param fill:#f0dfd6,stroke:#af8068,stroke-width:2px,color:#1a1a2e,rx:8,ry:8
+::: {.column}
+```{dot}
+//| fig-align: center
+//| fig-width: 5
+//| fig-height: 1.6
+digraph G {
+  rankdir=LR;
+  bgcolor="transparent";
+  size="5,1.6!";
+  ratio=compress;
+  nodesep=0.25;
+  ranksep=0.35;
+  node [fontname="Helvetica", fontsize=14, fontcolor="black", style="filled,rounded", penwidth=2, margin="0.08,0.04"];
+  edge [penwidth=1.2, arrowsize=0.7];
+
+  S     [label="State: S(t)", shape=box,     fillcolor="#d6e4f0", color="#6880af"];
+  F     [label="Evolution Function: f(S, θ)", shape=box, fillcolor="#6880af", color="#3a5080", fontcolor="white"];
+  dS    [label="Next State: dS/dt", shape=box, fillcolor="#d6e4f0", color="#6880af"];
+  theta [label="Parameters: θ", shape=ellipse, fillcolor="#f0dfd6", color="#af8068"];
+
+  S     -> F;
+  theta -> F;
+  F     -> dS;
+}
 ```
 :::
 
-::: {.column width="30%"}
-![](img/state_evolution_node.png){height=150px}
-:::
+
 
 ::::
 :::

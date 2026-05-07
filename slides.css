@@ -37,3 +37,41 @@
     overflow-y: auto !important;
     overflow-x: auto !important;
 }
+
+.reveal .basic-ideas-rows {
+  display: grid;
+  grid-template-rows: var(--row-layout);
+  height: 610px;
+  gap: 18px;
+  min-height: 0;
+}
+
+.reveal .basic-ideas-row {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.reveal .basic-ideas-row > .columns {
+  height: 100%;
+  align-items: center;
+}
+
+.reveal .basic-ideas-row > .columns > .column {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reveal .basic-ideas-row img,
+.reveal .basic-ideas-row figure,
+.reveal .basic-ideas-row .cell-output-display,
+.reveal .basic-ideas-row .cell-output-display p {
+  max-height: 100%;
+  margin: 0;
+}
+
+.reveal .basic-ideas-row img {
+  width: auto;
+  object-fit: contain;
+}
