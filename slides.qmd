@@ -193,9 +193,9 @@ $$
 
 ::: {.r-stack}
 
-![](notebooks/1_1_MathematicalFramework/spring_single_thumb.png){fig-align="center"}
+![](img/figures/spring/spring_single_thumb.png){fig-align="center"}
 
-![](notebooks/1_1_MathematicalFramework/spring_single.gif){.fragment fig-align="center"}
+![](img/figures/spring/spring_single.gif){.fragment fig-align="center"}
 :::
 :::
 
@@ -220,9 +220,9 @@ $$
 :::
 ::: {.column width="80%"}
 ::: {.r-stack}
-![](notebooks/1_1_MathematicalFramework/spring_ics_thumb.png){fig-align="center"}
+![](img/figures/spring/spring_ics_thumb.png){fig-align="center"}
 
-![](notebooks/1_1_MathematicalFramework/spring_ics.gif){.fragment fig-align="center" }
+![](img/figures/spring/spring_ics.gif){.fragment fig-align="center" }
 :::
 :::
 
@@ -230,23 +230,23 @@ $$
 
 ## Phase Space {background-color="#ffffff"}
 
-![](notebooks/1_1_MathematicalFramework/phase_space.png){fig-align="center" height="580px"}
+![](img/figures/spring/phase_space.png){fig-align="center" height="580px"}
 
 ## Parameters — Mass {background-color="#ffffff"}
 
 ::: {.r-stack}
-![](notebooks/1_1_MathematicalFramework/spring_mass_thumb.png){fig-align="center" height="580px"}
+![](img/figures/spring/spring_mass_thumb.png){fig-align="center" height="580px"}
 
-![](notebooks/1_1_MathematicalFramework/spring_mass.gif){.fragment fig-align="center" height="580px"}
+![](img/figures/spring/spring_mass.gif){.fragment fig-align="center" height="580px"}
 :::
 
 
 ## Towards Realism — Damping & Load {background-color="#ffffff"}
 
 ::: {.r-stack}
-![](notebooks/1_1_MathematicalFramework/spring_realism_thumb.png){fig-align="center" height="580px"}
+![](img/figures/spring/spring_realism_thumb.png){fig-align="center" height="580px"}
 
-![](notebooks/1_1_MathematicalFramework/spring_realism.gif){.fragment fig-align="center" height="580px"}
+![](img/figures/spring/spring_realism.gif){.fragment fig-align="center" height="580px"}
 :::
 
 # Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
