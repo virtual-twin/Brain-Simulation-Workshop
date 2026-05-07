@@ -214,9 +214,9 @@ $$
 
 ::: {.r-stack}
 
-![](img/figures/spring/spring_single_thumb.png){fig-align="center"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png){fig-align="center"}
 
-![](img/figures/spring/spring_single.gif){.fragment fig-align="center"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_single.gif){.fragment fig-align="center"}
 :::
 :::
 
@@ -258,9 +258,9 @@ $$
 ::: {.column}
 
 ::: {.r-stack}
-![](img/figures/spring/spring_ics_thumb.png){fig-align="center"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png){fig-align="center"}
 
-![](img/figures/spring/spring_ics.gif){.fragment fig-align="center" }
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.gif){.fragment fig-align="center" }
 :::
 :::
 
@@ -268,23 +268,23 @@ $$
 
 ## Phase Space {background-color="#ffffff"}
 
-![](img/figures/spring/phase_space.png){fig-align="center" height="580px"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_space.png){fig-align="center" height="580px"}
 
 ## Parameters — Mass {background-color="#ffffff"}
 
 ::: {.r-stack}
-![](img/figures/spring/spring_mass_thumb.png){fig-align="center" height="580px"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png){fig-align="center" height="580px"}
 
-![](img/figures/spring/spring_mass.gif){.fragment fig-align="center" height="580px"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.gif){.fragment fig-align="center" height="580px"}
 :::
 
 
 ## Towards Realism — Damping & Load {background-color="#ffffff"}
 
 ::: {.r-stack}
-![](img/figures/spring/spring_realism_thumb.png){fig-align="center" height="580px"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png){fig-align="center" height="580px"}
 
-![](img/figures/spring/spring_realism.gif){.fragment fig-align="center" height="580px"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.gif){.fragment fig-align="center" height="580px"}
 :::
 
 # Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
@@ -296,6 +296,97 @@ $$
 
 - Population rate: $r(t) = \langle \#\text{spikes}\rangle / (N\,\Delta t)$
 - Jansen-Rit (3 populations): PC = $y_1 - y_2$, the EEG-like PSP at pyramidal cells
+
+## EEG-Like Activity with the Jansen-Rit-Model
+
+:::: {.columns}
+
+::: {.column width="65%" style="font-size: 0.45em; height: 660px; overflow-y: scroll;"}
+
+**JansenRit1995**
+Lumped-parameter cortical column model with three neural populations: pyramidal cells, excitatory interneurons, and inhibitory interneurons. Each population is modeled by a PSP block (2nd-order linear filter) and a sigmoidal potential-to-firing-rate transformation.
+
+**Derived Variables**
+$$
+v_{pyr} = y_{1} - y_{2}
+$$
+
+**State Equations**
+$$
+\dot{y_{0}} = y_{3}
+$$
+$$
+\dot{y_{3}} = - y_{0}*a^{2} - 2*a*y_{3} + A*a*\operatorname{Sigm}{\left(y_{1} - y_{2} \right)}
+$$
+$$
+\dot{y_{1}} = y_{4}
+$$
+$$
+\dot{y_{4}} = - y_{1}*a^{2} - 2*a*y_{4} + A*a*\left(p + C_{2}*\operatorname{Sigm}{\left(C_{1}*y_{0} \right)} + K*c_{intercolumn}\right)
+$$
+$$
+\dot{y_{2}} = y_{5}
+$$
+$$
+\dot{y_{5}} = - y_{2}*b^{2} - 2*b*y_{5} + B*C_{4}*b*\operatorname{Sigm}{\left(C_{3}*y_{0} \right)}
+$$
+
+with
+$$
+\operatorname{Sigm}{\left(v \right)} = \frac{2*e_{0}}{1 + e^{r*\left(v_{0} - v\right)}}
+$$
+
+*State Variables*
+
+| **Variable** | **Initial Value** | **Unit** | **Description** |
+|--------------|-------------------|----------|-----------------|
+| $y_{0}$ | 0.1 | $\mathrm{mV}$ |  |
+| $y_{3}$ | 0.1 | $\frac{\mathrm{mV}}{\mathrm{s}}$ |  |
+| $y_{1}$ | 0.1 | $\mathrm{mV}$ |  |
+| $y_{4}$ | 0.1 | $\frac{\mathrm{mV}}{\mathrm{s}}$ |  |
+| $y_{2}$ | 0.1 | $\mathrm{mV}$ |  |
+| $y_{5}$ | 0.1 | $\frac{\mathrm{mV}}{\mathrm{s}}$ |  |
+
+*Parameters*
+
+| **Parameter** | **Value** | **Unit** | **Description** |
+|---------------|-----------|----------|-----------------|
+| $A$ | 3.25 | $\mathrm{mV}$ | Maximum amplitude of excitatory PSP (EPSP) |
+| $B$ | 22 | $\mathrm{mV}$ | Maximum amplitude of inhibitory PSP (IPSP) |
+| $C$ | 135 | — | Lumped connectivity constant (C = C1) |
+| $a$ | 100 | $\mathrm{s}^{-1}$ | Reciprocal of EPSP time constant |
+| $b$ | 50 | $\mathrm{s}^{-1}$ | Reciprocal of IPSP time constant |
+| $v_{0}$ | 6 | $\mathrm{mV}$ | PSP for 50% firing rate (sigmoid midpoint) |
+| $e_{0}$ | 2.5 | $\mathrm{s}^{-1}$ | Half of maximum firing rate |
+| $r$ | 0.56 | $\mathrm{mV}^{-1}$ | Steepness of sigmoid transformation |
+| $p$ | 220 | $\mathrm{s}^{-1}$ | Mean external input (afferent pulse density) |
+| $K$ | 0 | — | Per-node coupling strength scaling (K[i] scales coupling received by node i) |
+
+
+**Derived Parameters**
+
+$$
+C_{1} = C
+$$
+$$
+C_{2} = 0.8*C
+$$
+$$
+C_{3} = 0.25*C
+$$
+$$
+C_{4} = 0.25*C
+$$
+
+
+:::
+
+::: {.column width="50%"}
+![](img/figures/jansen1995/fig-jr-singlenode.png){width="100%"}
+:::
+
+::::
+
 
 ## Network dynamics
 
@@ -330,13 +421,103 @@ edges:
 net.plot_overview()
 ```
 
+
 ## Uncoupled system
 
-![](img/videos/NetworkDynamics/uncoupled_kuramoto.gif)
+<div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
+<div style="flex:0 0 28%; box-sizing:border-box; overflow-y:scroll; height:100%; font-size:0.48em; padding-right:6px;">
 
-## Coupled system
+**@Kuramoto1975**
 
-![](img/videos/NetworkDynamics/coupled_kuramoto.gif)
+Phase oscillator model. Each node evolves with its own natural frequency $\omega$; coupling $I$ is added by the network.
+
+**State Equations**
+$$\dot{\theta} = \omega$$
+
+*State Variables*
+
+| Variable | Initial value | Unit |
+|---|---|---|
+| $\theta$ | $\sim\mathcal{U}(0,2\pi)$ | — |
+
+**Derived Variables**
+$$activity = \sin(\theta)$$
+
+*Parameters*
+
+| Parameter | Value | Unit | Description |
+|---|---|---|---|
+| $\omega$ | 1.0 | — | Natural frequency |
+
+*Simulation settings*
+
+| | |
+|---|---|
+| Duration | 100 s |
+| Step size | 0.01 s |
+| Integrator | Heun |
+| Nodes | 3 (V1, V2, MT) |
+| Coupling $K$ | 0.0 (uncoupled) |
+
+</div>
+<div style="flex:1; box-sizing:border-box; padding-left:8px;">
+
+![](img/videos/NetworkDynamics/uncoupled_kuramoto.gif){width="100%"}
+
+</div>
+</div>
+
+## Coupled system {.nostretch}
+
+<div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
+<div style="flex:0 0 28%; box-sizing:border-box; overflow-y:scroll; height:100%; font-size:0.48em; padding-right:6px;">
+
+**@Kuramoto1975** — same model as before, now with coupling enabled.
+
+**State Equations**
+$$\dot{\theta} = I + \omega$$
+
+**Coupling: $I$**
+
+$$
+I = \frac{K \sum_{j=0}^{-1 + N} - {g}_{i,j} \sin{\left(\theta_{i} - \theta_{j} \right)}}{3}
+$$
+
+Receives $\theta$ from connected regions.
+
+**Pre-synaptic:** $c_{\text{pre}} = \sin(\theta_j - \theta_i)$
+
+**Post-synaptic:** $c_{\text{post}} = \dfrac{K \cdot gx}{3}$
+
+*Coupling parameters*
+
+| Parameter | Value | Description |
+|---|---|---|
+| $K$ | 0.4 | Global coupling strength |
+
+*Network*
+
+| Edge | Weight |
+|---|---|
+| V1 → V2 | 0.7 |
+| V2 → MT | 0.4 |
+| V1 → MT | 0.2 |
+
+*Simulation settings*
+
+| | |
+|---|---|
+| Duration | 100 s |
+| Step size | 0.01 s |
+| Integrator | Heun |
+
+</div>
+<div style="flex:1; box-sizing:border-box; padding-left:8px;">
+
+![](img/videos/NetworkDynamics/coupled_kuramoto.gif){width="100%"}
+
+</div>
+</div>
 
 ## Coupled Brain Network
 <!-- - TODO: nodes, coupling, delays, noise
@@ -616,14 +797,21 @@ res = exp.run("tvboptim")
 ## Applications in basic research
 
 :::: {.columns}
-![[@Schirner2023]](img/figures/applications/Schirner2023Title.png)
 
 ::: {.column}
+
+![](img/figures/applications/Schirner2023Title.png)
+
+![[@Schirner2023]](img/videos/Schirner2023videosnippet.mp4){width="100%" loop="" muted=""}
 
 :::
 
 ::: {.column}
-![[@Koller2024]](img/figures/applications/Koller2024Title.png)
+
+![](img/figures/applications/Koller2024Title.png)
+
+![[@Koller2024]](img/videos/travelling_waves.mp4){width="100%" loop="" muted=""}
+
 :::
 
 ::::
