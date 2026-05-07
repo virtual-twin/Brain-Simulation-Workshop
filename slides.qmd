@@ -87,9 +87,9 @@ Plotting the Brain
 
 ## Basic ideas and history
 
-:::: {.basic-ideas-rows}
+:::: {.rows}
 
-::: {.basic-ideas-row style="--row-height: 70%;"}
+::: {.row height="70%"}
 
 :::: {.columns}
 
@@ -113,12 +113,13 @@ Plotting the Brain
 
 :::
 
-::: {.basic-ideas-row .fragment style="--row-height: 30%;"}
+::: {.row height="30%" .fragment}
 
 :::: {.columns}
 
 ::: {.column}
-![](img/state_evolution_node.png)
+![](img/state_evolution_node.png){height=150px fig-align=center}
+
 :::
 
 ::: {.column}
@@ -147,11 +148,10 @@ digraph G {
 }
 ```
 :::
-
-
-
 ::::
+
 :::
+
 ::::
 
 
@@ -226,20 +226,37 @@ $$
 
 
 :::: {.columns}
-::: {.column width="20%"}
 
-::: {style="font-size: 0.8em;"}
+::: {.column style="font-size: 0.55em;"}
 
+A mass $m$ on a spring with stiffness $k$. <br/>
+Perpetual oscillation at $\omega = \sqrt{k/m}$.
+
+**State Equations:**
 $$
 \dot{x} = v
 $$
 $$
 \dot{v} = - \frac{k}{m}*x
 $$
+
+**State Variables**
+
+| **Variable** | **Initial Value** | **Unit** | **Description** |
+|--------------|-------------------|----------|-----------------|
+| $x$ | 2.0 | $\mathrm{m}$ | Displacement from equilibrium |
+| $v$ | 0.0 | $\frac{\mathrm{m}}{\mathrm{s}}$ | Velocity |
+
+**Parameters**
+
+| **Parameter** | **Value** | **Unit** | **Description** |
+|---------------|-----------|----------|-----------------|
+| $k$ | 0.0001 | $\frac{\mathrm{N}}{\mathrm{m}}$ | Spring stiffness constant |
+| $m$ | 1.0 | $\mathrm{kg}$ | Mass of the oscillating body |
 :::
 
-:::
-::: {.column width="80%"}
+::: {.column}
+
 ::: {.r-stack}
 ![](img/figures/spring/spring_ics_thumb.png){fig-align="center"}
 
@@ -598,8 +615,18 @@ res = exp.run("tvboptim")
 
 ## Applications in basic research
 
-- TODO: representative findings
-- TODO: links to [@Schirner2023; @Koller2024; @Kashyap2025]
+:::: {.columns}
+![[@Schirner2023]](img/figures/applications/Schirner2023Title.png)
+
+::: {.column}
+
+:::
+
+::: {.column}
+![[@Koller2024]](img/figures/applications/Koller2024Title.png)
+:::
+
+::::
 
 ## Clinical applications
 
