@@ -6,8 +6,15 @@ import bsplot
 import numpy as np
 from tvbo import DynamicalSystem, SimulationExperiment
 from tvbo.datamodel.schema import Event, Exploration, ExplorationAxis
+import os
+from matplotlib.ticker import FormatStrFormatter
+
 
 bsplot.style.use("tvbo")
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.abspath(os.path.join(ROOT, "..", "img", 'figures', 'bifurcation'))
+
 
 g = DynamicalSystem(
     state_variables={"x": {"equation": {"rhs": "a*x"}, "initial_value": 1.0}},
@@ -33,9 +40,13 @@ ax.axhline(0, color="red", ls="--", lw=0.7)
 ax.set_title("")
 
 ax.annotate("$a<0$:Stable\n$a>0$:Unstable", xy=(2.5, 2.7), xytext=(3, 3))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+ax.xaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 
 fig.set_figheight(3.5)
 fig.set_figwidth(4.5)
+
+fig.savefig(os.path.join(OUT, "fig-stability.png"), dpi=300, bbox_inches="tight")
 
 # %%
 
@@ -67,7 +78,12 @@ ax.axvline(exp.events["perturbation"].parameters['onset'].value, color="blue", l
 ax.set_title("")
 
 ax.annotate("$a<0$:Stable\n$a>0$:Unstable", xy=(2.5, 2.7), xytext=(3, 3))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+ax.xaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+
+inset = ax.inset_axes([0.4, 0.7, 0.3, 0.3])
+exp.events["perturbation"].plot(ax=inset)
 
 fig.set_figheight(3.5)
 fig.set_figwidth(4.5)
-fig
+fig.savefig(os.path.join(OUT, "fig-stability-perturbation.png"), dpi=300, bbox_inches="tight")

@@ -129,6 +129,62 @@ and carry the workflow into Day 2 research questions.
 :::
 
 ::: {.container-lg .mb-5}
+## Program
+
+::: {.row .g-4 .mt-1}
+::: {.col-12 .col-md-6 .col-xl-3}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+[01]{.text-primary .fw-bold .small}
+
+#### [Setup](setup.qmd)
+
+Install `uv`, `tvb`, `tvbo`, and `tvboptim`. Verify the environment before
+day one.
+:::
+:::
+:::
+
+::: {.col-12 .col-md-6 .col-xl-3}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+[02]{.text-primary .fw-bold .small}
+
+#### [Agenda](agenda/agenda.qmd)
+
+Two-day program: lectures, hands-on sessions, and a mini hackathon.
+:::
+:::
+:::
+
+::: {.col-12 .col-md-6 .col-xl-3}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+[03]{.text-primary .fw-bold .small}
+
+#### [Slides](slides.qmd)
+
+RevealJS slides used in the live sessions.
+:::
+:::
+:::
+
+::: {.col-12 .col-md-6 .col-xl-3}
+::: {.card .h-100 .shadow-sm}
+::: {.card-body}
+[04]{.text-primary .fw-bold .small}
+
+#### [Notebooks](notebooks/1_introduction.qmd)
+
+Hands-on Jupyter notebooks: introduction, FAIR models, dynamics, optimization,
+and stimulation.
+:::
+:::
+:::
+:::
+:::
+
+::: {.container-lg .mb-5}
 ## Quick start
 
 ```bash
