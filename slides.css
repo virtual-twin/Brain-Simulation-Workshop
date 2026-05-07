@@ -29,3 +29,11 @@
   color: rgba(255, 255, 255, 0.82);
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65);
 }
+
+
+.reveal pre.sourceCode code {
+    display: block;
+    max-height: 550px !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+}
