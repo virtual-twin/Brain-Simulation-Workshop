@@ -87,6 +87,8 @@ Plotting the Brain
 
 ## Basic ideas and history
 
+:::: {.rows}
+::: {.row height=60%}
 :::: {.columns}
 ::: {.column width="25%"}
 ![](img/figures/basic_idea_imaging_workflow1.png){width="100%"}
@@ -105,7 +107,31 @@ Plotting the Brain
 :::
 
 ::::
+:::
 
+::: {.row height=40% .fragment}
+:::: {.columns}
+
+::: {.column width="70%"}
+```{mermaid}
+%%| fig-align: center
+flowchart LR
+    S(["State:  $$ S(t) $$"]):::box --> F["Evolution Function:  $$ f(S, θ)$$"]:::fn --> dS(["Next State:  $$ dS/dt $$ "]):::box
+    theta(["Parameters:  $$\theta$$"]):::param --> F
+
+    classDef box  fill:#d6e4f0,stroke:#6880af,stroke-width:2px,color:#1a1a2e,rx:8,ry:8
+    classDef fn   fill:#6880af,stroke:#3a5080,stroke-width:2px,color:#ffffff,font-weight:bold,rx:4,ry:4
+    classDef param fill:#f0dfd6,stroke:#af8068,stroke-width:2px,color:#1a1a2e,rx:8,ry:8
+```
+:::
+
+::: {.column width="30%"}
+![](img/state_evolution_node.png){height=150px}
+:::
+
+::::
+:::
+::::
 
 
 ## Mathematical framework
@@ -167,9 +193,9 @@ $$
 
 ::: {.r-stack}
 
-![](notebooks/1_1_MathematicalFramework/spring_single_thumb.png){fig-align="center"}
+![](img/figures/spring/spring_single_thumb.png){fig-align="center"}
 
-![](notebooks/1_1_MathematicalFramework/spring_single.gif){.fragment fig-align="center"}
+![](img/figures/spring/spring_single.gif){.fragment fig-align="center"}
 :::
 :::
 
@@ -194,9 +220,9 @@ $$
 :::
 ::: {.column width="80%"}
 ::: {.r-stack}
-![](notebooks/1_1_MathematicalFramework/spring_ics_thumb.png){fig-align="center"}
+![](img/figures/spring/spring_ics_thumb.png){fig-align="center"}
 
-![](notebooks/1_1_MathematicalFramework/spring_ics.gif){.fragment fig-align="center" }
+![](img/figures/spring/spring_ics.gif){.fragment fig-align="center" }
 :::
 :::
 
@@ -204,23 +230,23 @@ $$
 
 ## Phase Space {background-color="#ffffff"}
 
-![](notebooks/1_1_MathematicalFramework/phase_space.png){fig-align="center" height="580px"}
+![](img/figures/spring/phase_space.png){fig-align="center" height="580px"}
 
 ## Parameters — Mass {background-color="#ffffff"}
 
 ::: {.r-stack}
-![](notebooks/1_1_MathematicalFramework/spring_mass_thumb.png){fig-align="center" height="580px"}
+![](img/figures/spring/spring_mass_thumb.png){fig-align="center" height="580px"}
 
-![](notebooks/1_1_MathematicalFramework/spring_mass.gif){.fragment fig-align="center" height="580px"}
+![](img/figures/spring/spring_mass.gif){.fragment fig-align="center" height="580px"}
 :::
 
 
 ## Towards Realism — Damping & Load {background-color="#ffffff"}
 
 ::: {.r-stack}
-![](notebooks/1_1_MathematicalFramework/spring_realism_thumb.png){fig-align="center" height="580px"}
+![](img/figures/spring/spring_realism_thumb.png){fig-align="center" height="580px"}
 
-![](notebooks/1_1_MathematicalFramework/spring_realism.gif){.fragment fig-align="center" height="580px"}
+![](img/figures/spring/spring_realism.gif){.fragment fig-align="center" height="580px"}
 :::
 
 # Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
@@ -274,24 +300,18 @@ net.plot_overview()
 
 ![](img/videos/NetworkDynamics/coupled_kuramoto.gif)
 
-##
+## Coupled Brain Network
+<!-- - TODO: nodes, coupling, delays, noise
+- TODO: connectome loading
+- TODO: global coupling sweep -->
 
 :::: {.columns}
 
-::: {.column width=30%}
-![](img/fig-network.png)
+::: {.column width=20%}
+![](img/fig-network_visualization_rows.png){height=590px}
 :::
 
-::: {.column width=70%}
-- TODO: nodes, coupling, delays, noise
-- TODO: connectome loading
-- TODO: global coupling sweep
-:::
-
-
-::::
-
-## Coupling
+::: {.column width=80%}
 
 ::: {.fragment fragment-index=2}
 $$
@@ -306,9 +326,18 @@ $$
 - $\tau_{ij}$ - transmission delay (tract length / conduction speed)
 - $f_c^{\text{post}}$ - post-aggregation transformation
 - $\theta^c$ - coupling parameters
+
 :::
 
 :::
+
+::: {.fragment fragment-index=3}
+![](img/coupling_schematic.png){height="250px" fig-align="center"}
+:::
+
+:::
+
+::::
 
 # 2. Defining a FAIR brain network model {background-color="#6880af"}
 
@@ -505,24 +534,42 @@ regimes as $a$ varies
 :::
 :::
 
-## Linear stability
+## Linear Systems
 
+
+:::: {.columns}
+
+::: {.column width="50%" .r-fit-text}
 $$
 \dot x = a\,x \quad\Rightarrow\quad x(t) = x_0\,e^{a t}
 $$
 
-::: {.columns}
-::: {.column width="38%" .smaller}
-- $\lambda=a$: growth rate
-- $a < 0$: decay
-- $a = 0$: marginal
-- $a > 0$: growth
-- **change point:** $\lambda=a=0$
+- $x(t)$: State variable
+- $x_0$: Initial condition
+- $a$: Parameter
+
+Solution:
+$$
+x(t) = x_0\,e^{a t}
+$$
+
+Equilibrium:
+$$
+\dot{x}(t) = ax(t) = 0?
+$$
+$$
+\quad\Rightarrow\quad x_{eq} = 0
+$$
+
+
 :::
-::: {.column width="62%"}
-![](img/linear_stability.png){width="100%"}
+
+::: {.column width="50%"}
+![](img/figures/bifurcation/fig-linear_system_a1_and_a_minus1.png)
 :::
-:::
+
+
+::::
 
 ## 2D portraits
 
@@ -536,14 +583,21 @@ $$
 
 ## Regime-change building blocks
 
-- TODO: remove Ptchfork bifurcation.
-- TODO: explain Hopf
+:::: {.columns}
 
-![](img/normal_forms.png){fig-align="center" width="100%"}
+::: {.column .smaller width=20%}
 
-::: {.smaller}
-Top: equilibria as $a$ varies. Bottom: local flow $\dot x=f(x)$ at the dotted parameter slice.
+- Top: equilibria as $a$ varies.
+- Bottom: local flow $\dot x=f(x)$ at the dotted parameter slice.
+
 :::
+
+::: {.column width=80%}
+![](img/normal_forms.png){fig-align="center" width="100%"}
+:::
+
+::::
+
 
 ## Hopf: birth of an oscillation
 
