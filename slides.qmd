@@ -16,7 +16,7 @@ format:
     dpi: 500
     fig-dpi: 500
     slide-number: true
-    scrollable: false
+    scrollable: true
     auto-stretch: true
     auto-play-media: true
     chalkboard: true
