@@ -321,7 +321,7 @@ $$
 ::::
 
 
-# Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
+# Towards Brain Dynamics: Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
 
 
 ## Mean field models & Neural Masses
@@ -883,6 +883,23 @@ res = exp.run("tvboptim")
 
 
 ::::
+
+## Specifying an experiment with TVB-O
+
+![](img/figures/tvbo/fig-overview.png){height=680px fig-align="center"}
+
+## What makes specifying brain network models easier?
+
+::: {.incremental}
+- **Common vocabulary:** Ontology-backed definitions link terms to persistent identifiers — no more ambiguous symbols across papers
+- **Machine-readable metadata:** Compact YAML schema captures everything needed to reproduce a simulation
+- **Curated database:** Published models, brain networks, and study configurations — ready to load and run
+- **Code generation:** One specification → executable code for TVB, JAX, Julia, and more
+:::
+
+::: {.fragment}
+![[@Martin2025]](./img/figures/tvbo/tvbo_logo.png){fig-align="center" height=250px}
+:::
 
 ## Applications in basic research
 
