@@ -15,3 +15,4 @@ __pycache__/
 # Notebooks rendered from notebooks/*.qmd sources
 /notebooks/*.ipynb
 site_libs
+_intro-section-notes.md
