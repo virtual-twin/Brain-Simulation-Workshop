@@ -142,15 +142,16 @@ format:
 
 
 authors:
-  - name: "Leon Stefanovski"
-    affiliation:
-       - ref: charite
   - name: "Marius Pille"
     affiliation:
        - ref: bih
   - name: "Leon Martin"
     affiliation:
        - ref: bih
+  - name: "Leon Stefanovski"
+    affiliation:
+       - ref: charite
+
 affiliations:
   - id: charite
     name: "Charité University Medicine Berlin"

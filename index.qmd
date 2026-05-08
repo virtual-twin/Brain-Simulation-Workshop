@@ -20,6 +20,7 @@ format: html
 
 # Mechanistic Whole-Brain Simulation Workshop {#workshop-hero-title}
 
+
 ::: {.workshop-hero__lead}
 Personalized brain network modeling with The Virtual Brain, ontology-driven
 model specification, and gradient-based optimization.
@@ -41,159 +42,64 @@ model specification, and gradient-based optimization.
 :::
 
 ::: {.container-lg .mb-5}
+
 ## About
 
-Track 4 of the **FAIR Brain Data Science Bootcamp 2026** — a joint event by
-[EBRAINS](https://ebrains.eu/news-and-events/events/2026/fair-brain-data-science-bootcamp-2026)
-and [INCF](https://www.incf.org/incf-brain-data-science-bootcamp-2026), hosted
-at **Karolinska Institutet**, Widerströmska huset
-([Tomtebodavägen 18](https://maps.app.goo.gl/), Stockholm, Sweden).
+This two-day workshop introduces mechanistic whole-brain simulation with The
+[Virtual Brain](https://thevirtualbrain.org), ontology-driven model
+specification, and differentiable parameter optimization. Participants move
+from model definition to simulation, analysis, and parameter fitting in
+reproducible workflows.
 
-The bootcamp brings together hands-on training across brain atlasing,
-electrophysiology, data sharing, and computational modeling within the EBRAINS
-research infrastructure. Track 4 focuses on personalized whole-brain network
-modeling with [The Virtual Brain](https://thevirtualbrain.org), combining
-individualized model definition, simulation, and analysis with ontology-driven
-model specification ([TVB-O](https://virtual-twin.github.io/tvbo)) and
-gradient-based optimization
-([TVB-Optim](https://virtual-twin.github.io/tvboptim))
-[@Martin2025; @Pille2025].
+The slides provide the conceptual map: brain network models, dynamical regimes,
+FAIR model specification, and inference. The notebooks turn those ideas into
+executable examples, including single-node dynamics, network coupling, noise,
+parameter exploration, bifurcation analysis, optimization, and stimulation.
+Examples connect the workflow to mechanistic and translational studies of
+decision dynamics, cortical waves, and task/rest fMRI separation
+[@Schirner2023; @Koller2024; @Kashyap2025].
 
-::: {.row .g-4 .mt-1}
-::: {.col-12 .col-md-6 .col-xl-4}
-::: {.card .h-100 .shadow-sm}
-::: {.card-body}
-### TVB foundations
+### Learning Goals
 
-Whole-brain network modeling concepts, coupled ODE/SDE systems, neural masses,
-and basic and clinical applications.
-:::
-:::
-:::
-
-::: {.col-12 .col-md-6 .col-xl-4}
-::: {.card .h-100 .shadow-sm}
-::: {.card-body}
-### FAIR model building
-
-Use TVB-O to describe parameters, state variables, equations, coupling,
-integration, observations, and execution metadata.
-:::
-:::
-:::
-
-::: {.col-12 .col-md-6 .col-xl-4}
-::: {.card .h-100 .shadow-sm}
-::: {.card-body}
-### Network simulation
-
-Load connectomes, assemble delayed coupling, run single-node and whole-brain
-simulations, and sweep global coupling regimes.
-:::
-:::
-:::
-
-::: {.col-12 .col-md-6 .col-xl-4}
-::: {.card .h-100 .shadow-sm}
-::: {.card-body}
-### Regime maps
-
-Read phase planes, stability, bifurcations, and numerical continuation diagrams
-to choose biologically plausible operating points.
-:::
-:::
-:::
-
-::: {.col-12 .col-md-6 .col-xl-4}
-::: {.card .h-100 .shadow-sm}
-::: {.card-body}
-### Parameter inference
-
-Compare grid, random, CMA-ES, gradient, and Bayesian strategies for fitting
-homogeneous and regional model parameters.
-:::
-:::
-:::
-
-::: {.col-12 .col-md-6 .col-xl-4}
-::: {.card .h-100 .shadow-sm}
-::: {.card-body}
-### Translation and stimulation
-
-Build Alzheimer and biomarker-driven use cases, simulate visual and TMS inputs,
-and carry the workflow into Day 2 research questions.
-:::
-:::
-:::
-:::
+- Specify brain network models as reusable, machine-readable metadata.
+- Simulate local dynamics, network coupling, noise, and stimulation.
+- Interpret phase planes, stability, bifurcations, and regime maps.
+- Fit and compare model parameters with optimization workflows.
 :::
 
 ::: {.container-lg .mb-5}
-## Program
+## Tools Used
 
-::: {.row .g-4 .mt-1}
-::: {.col-12 .col-md-6 .col-xl-3}
-::: {.card .h-100 .shadow-sm}
+:::: {.columns .workshop-tools}
+::: {.column width="50%"}
+::: {.card .h-100 .shadow-sm .workshop-tool-card}
 ::: {.card-body}
-[01]{.text-primary .fw-bold .small}
+### [![](img/figures/tvbo/tvbo_logo.png){.workshop-tool-logo fig-alt="TVB-O logo"}](https://virtual-twin.github.io/tvbo){.stretched-link}
 
-#### [Setup](setup.qmd)
-
-Install `uv`, `tvb`, `tvbo`, and `tvboptim`. Verify the environment before
-day one.
+Ontology-backed model specification for brain network simulations. `TVB-O`
+captures equations, parameters, networks, coupling, integrators, observations,
+and provenance in one reusable metadata record. It also provides a curated
+database of published models and experiments and generates executable simulation
+code [@Martin2025].
 :::
 :::
 :::
 
-::: {.col-12 .col-md-6 .col-xl-3}
-::: {.card .h-100 .shadow-sm}
+::: {.column width="50%"}
+::: {.card .h-100 .shadow-sm .workshop-tool-card}
 ::: {.card-body}
-[02]{.text-primary .fw-bold .small}
+### [![](img/section-4/tvboptim.png){.workshop-tool-logo fig-alt="TVB-Optim logo"}](https://virtual-twin.github.io/tvboptim){.stretched-link}
 
-#### [Agenda](agenda/agenda.qmd)
-
-Two-day program: lectures, hands-on sessions, and a mini hackathon.
+Differentiable and accelerator-ready inference workflows for whole-brain models.
+`TVB-Optim` supports parallel simulation, automatic differentiation, and
+gradient-based fitting of large parameter spaces [@Pille2025].
 :::
 :::
 :::
-
-::: {.col-12 .col-md-6 .col-xl-3}
-::: {.card .h-100 .shadow-sm}
-::: {.card-body}
-[03]{.text-primary .fw-bold .small}
-
-#### [Slides](slides.qmd)
-
-RevealJS slides used in the live sessions.
-:::
-:::
+::::
 :::
 
-::: {.col-12 .col-md-6 .col-xl-3}
-::: {.card .h-100 .shadow-sm}
-::: {.card-body}
-[04]{.text-primary .fw-bold .small}
 
-#### [Notebooks](notebooks/1_introduction.qmd)
-
-Hands-on Jupyter notebooks: introduction, FAIR models, dynamics, optimization,
-and stimulation.
-:::
-:::
-:::
-:::
-:::
-
-::: {.container-lg .mb-5}
-## Quick start
-
-```bash
-pip install uv
-uv pip install tvb tvbo tvboptim
-```
-
-Source code: <https://github.com/virtual-twin/Brain-Simulation-Workshop>.
-:::
 
 ::: {.container-lg .mb-5}
 ## References {.unnumbered}

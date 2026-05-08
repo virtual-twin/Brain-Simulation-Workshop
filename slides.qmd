@@ -1213,7 +1213,7 @@ result = exp.run("bifurcationkit.jl")
 
 - TODO: takeaways from Day 1
 
-# Day 2 — Mini Hackathon {background-color="#6880af"}
+# Day 2 — Mini Hackathon and Plot Your Brain Tutorial {background-color="#6880af"}
 
 ## Format
 
