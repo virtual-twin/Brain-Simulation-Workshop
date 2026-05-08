@@ -553,13 +553,13 @@ at fine scales.
 
 ## Use-cases
 
-**I — fMRI Bold**
+**I — fMRI Bold FC Optimization**
 
-- Same as toy model, exptent to regional w 
+- Same as toy model, extent to regional w
+- Link:  
 
-**II — Alzheimer's disease**
+**II — MEG Peak Frequency Optimization**
 
-- TODO: tau PET / amyloid map → *prior* on regional parameters
-- TODO: high-dim (regional) fit → gradient-descent territory
-- TODO: healthy vs patient simulation, refs [@Schirner2023; @Stefanovski2019]
+- Fit the Peak frequencies of an oscillating model to match empirical data
+- Link:
 
