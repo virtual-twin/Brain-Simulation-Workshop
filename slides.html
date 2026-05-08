@@ -285,11 +285,11 @@ Leon Martin
 <strong>Block 1 - 09:00-12:00:</strong><br>
 1. Intro to Brain Network Modelling<br>
 2. Defining a FAIR brain network model<br>
-3. Applications in Basic and Clinical Research<br>
-4. Setup &amp; First examples</p>
+3. Setup &amp; First examples<br>
+4. Applications in Basic and Clinical Research</p>
 <p><strong>Block 2 - 13:00-15:00:</strong><br>
-5. Bifurcation Theory<br>
-6. Parameter exploration &amp; inference I</p>
+1. Bifurcation Theory<br>
+2. Parameter exploration &amp; inference I</p>
 <p><strong>Block 3 - 15:30-17:30:</strong><br>
 7. Parameter exploration &amp; inference II<br>
 8. Stimulating the brain</p>
@@ -306,15 +306,128 @@ Plotting the Brain</p>
 <section>
 <section id="intro-to-brain-network-modelling" class="title-slide slide level1 center" data-background-color="#6880af">
 <h1>1. Intro to Brain Network Modelling</h1>
-<ul>
-<li>TODO: motivation for whole-brain network modeling</li>
-<li>TODO: brief historical arc of TVB</li>
-</ul>
+
 </section>
-<section id="basic-ideas-and-history" class="slide level2">
-<h2>Basic ideas and history</h2>
-<div class="rows">
-<div class="row" height="70%">
+<section id="why-network-models-same-lesion-different-outcomes" class="slide level2">
+<h2>Why network models? Same lesion, different outcomes</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<ul>
+<li class="fragment">Two patients, similar lesion location and volume</li>
+<li class="fragment">Different deficits, different recovery trajectories</li>
+<li class="fragment">The locus alone doesn’t predict outcome</li>
+<li class="fragment">Function lives in the <strong>network</strong>: regional damage propagates through the connections that survive</li>
+</ul>
+</div><div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-1/lesion_network.png"></p>
+<figcaption>Same lesion, same network position, but a hub lesion (left, degree 6) wipes out most of the network’s input, while a peripheral lesion (right, degree 1) barely touches it.</figcaption>
+</figure>
+</div>
+</div></div>
+<div class="fragment">
+<p><strong>To predict outcome, model the whole network, not a catalogue of regions.</strong></p>
+</div>
+</section>
+<section id="why-dynamics-the-brain-is-never-idle" class="slide level2">
+<h2>Why dynamics? The brain is never idle</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<ul>
+<li class="fragment">At rest, the brain shows <strong>structured spontaneous activity</strong>, not noise</li>
+<li class="fragment">Resting-state networks are reproducible across subjects and species</li>
+<li class="fragment">Tasks are perturbations of this ongoing dynamical state</li>
+<li class="fragment">Like a tennis player at the baseline: never still, poised for the next service</li>
+</ul>
+<div class="fragment">
+<p><strong>A model has to reproduce the resting repertoire, not only stimulus responses.</strong></p>
+</div>
+</div><div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-1/rest_structured.png" style="width:50.0%"></p>
+<figcaption>Resting activity for 8 regions in 3 modules. Top: traces wiggle in sync within each module, decoupled across them. Bottom: the resulting FC matrix shows three clear blocks.</figcaption>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="outputs-match-what-we-measure" class="slide level2">
+<h2>Outputs match what we measure</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li class="fragment">TVB outputs <strong>what scanners record:</strong> EEG · MEG · SEEG · fMRI BOLD</li>
+<li class="fragment">Each modality is a <strong>forward model</strong> (<span class="math inline">\(h\)</span>) on the same simulated state</li>
+<li class="fragment">Timescales come for free, EEG/SEEG in <strong>ms</strong>, BOLD in <strong>seconds</strong></li>
+</ul>
+<div class="fragment">
+<p><strong>Direct comparison with data, no translation gap.</strong></p>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/section-1/observables_multimodal.png"></p>
+<figcaption>One simulated state, three observables. Top: EEG/MEG-like fast oscillations. Middle: SEEG with sharp transients. Bottom: BOLD, the slow envelope through the HRF.</figcaption>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="a-short-history-of-tvb" class="slide level2">
+<h2>A short history of TVB</h2>
+
+<img data-src="img/section-1/tvb_history_timeline.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"></section>
+<section id="from-scans-to-a-simulator-the-tvb-recipe" class="slide level2">
+<h2>From scans to a simulator: the TVB recipe</h2>
+<div class="fragment">
+<div style="height:240px; background:rgba(104,128,175,0.08); border:2px dashed #6880af; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:1em; text-align:center; color:#3a5080; font-size:0.8em; font-style:italic; margin-bottom:0.6em;">
+<p>TODO: 4-tile recipe diagram — Connectome | Local dynamics | Coupling | Observation</p>
+</div>
+</div>
+<div class="smaller fragment">
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ingredient</th>
+<th>Symbol</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Connectome</strong> (weights, delays)</td>
+<td><span class="math inline">\(A_{ij},\ \tau_{ij}\)</span></td>
+<td>DTI / tractography</td>
+</tr>
+<tr class="even">
+<td><strong>Local dynamics</strong></td>
+<td><span class="math inline">\(f\)</span></td>
+<td>Neural mass / mean-field model</td>
+</tr>
+<tr class="odd">
+<td><strong>Coupling</strong></td>
+<td><span class="math inline">\(g\)</span></td>
+<td>Network propagation, with delays</td>
+</tr>
+<tr class="even">
+<td><strong>Observation</strong></td>
+<td><span class="math inline">\(h\)</span></td>
+<td>BOLD / EEG / MEG forward model</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment smaller">
+<p>The next slides unpack each building block.</p>
+</div>
+</section>
+<section id="building-block-1-the-connectome" class="slide level2">
+<h2>Building Block 1: The Connectome</h2>
 <div class="columns">
 <div class="column" style="width:25%;">
 <p><img data-src="img/figures/basic_idea_imaging_workflow1.png"></p>
@@ -325,113 +438,14 @@ Plotting the Brain</p>
 </div><div class="column fragment" style="width:25%;">
 <p><img data-src="img/figures/basic_idea_imaging_workflow4.png"></p>
 </div></div>
+<div class="fragment smaller">
+<p><strong>Diffusion MRI → tractography → parcellation → connectivity matrix.</strong> The output is the structural backbone <span class="math inline">\(A_{ij}\)</span> (weights) and <span class="math inline">\(\tau_{ij}\)</span> (delays).</p>
 </div>
-<div class="row fragment" height="30%">
-<div class="columns">
-<div class="column">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/state_evolution_node.png" class="quarto-figure quarto-figure-center" height="150"></p>
-</figure>
-</div>
-</div><div class="column">
-<div class="cell" data-fig-width="5" data-fig-height="1.6" data-layout-align="center">
-<div class="cell-output-display">
-<div>
-<p></p><figure class=""><p></p>
-<div>
-<svg width="480" height="154" viewbox="0.00 0.00 360.00 73.81" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none; display: block; margin: auto auto auto auto">
-<g id="graph0" class="graph" transform="scale(0.753116 0.753116) rotate(0) translate(4 94)">
-<title>G</title>
-<!-- S -->
-<g id="node1" class="node">
-<title>S</title>
-<path fill="#d6e4f0" stroke="#6880af" stroke-width="2" d="M90.08,-90C90.08,-90 39.04,-90 39.04,-90 33.04,-90 27.04,-84 27.04,-78 27.04,-78 27.04,-66 27.04,-66 27.04,-60 33.04,-54 39.04,-54 39.04,-54 90.08,-54 90.08,-54 96.08,-54 102.08,-60 102.08,-66 102.08,-66 102.08,-78 102.08,-78 102.08,-84 96.08,-90 90.08,-90"></path>
-<text text-anchor="middle" x="64.56" y="-67.8" font-family="Helvetica,sans-Serif" font-size="14.00">State: S(t)</text>
-</g>
-<!-- F -->
-<g id="node2" class="node">
-<title>F</title>
-<path fill="#6880af" stroke="#3a5080" stroke-width="2" d="M315.21,-63C315.21,-63 166.08,-63 166.08,-63 160.08,-63 154.08,-57 154.08,-51 154.08,-51 154.08,-39 154.08,-39 154.08,-33 160.08,-27 166.08,-27 166.08,-27 315.21,-27 315.21,-27 321.21,-27 327.21,-33 327.21,-39 327.21,-39 327.21,-51 327.21,-51 327.21,-57 321.21,-63 315.21,-63"></path>
-<text text-anchor="middle" x="240.65" y="-40.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="white">Evolution Function: f(S, θ)</text>
-</g>
-<!-- S&#45;&gt;F -->
-<g id="edge1" class="edge">
-<title>S-&gt;F</title>
-<path fill="none" stroke="black" stroke-width="1.2" d="M102.48,-66.27C115.63,-64.23 131.11,-61.83 146.83,-59.39"></path>
-<polygon fill="black" stroke="black" stroke-width="1.2" points="147.53,-61.77 154.07,-58.27 146.77,-56.92 147.53,-61.77"></polygon>
-</g>
-<!-- dS -->
-<g id="node3" class="node">
-<title>dS</title>
-<path fill="#d6e4f0" stroke="#6880af" stroke-width="2" d="M457.93,-63C457.93,-63 364.26,-63 364.26,-63 358.26,-63 352.26,-57 352.26,-51 352.26,-51 352.26,-39 352.26,-39 352.26,-33 358.26,-27 364.26,-27 364.26,-27 457.93,-27 457.93,-27 463.93,-27 469.93,-33 469.93,-39 469.93,-39 469.93,-51 469.93,-51 469.93,-57 463.93,-63 457.93,-63"></path>
-<text text-anchor="middle" x="411.1" y="-40.8" font-family="Helvetica,sans-Serif" font-size="14.00">Next State: dS/dt</text>
-</g>
-<!-- F&#45;&gt;dS -->
-<g id="edge3" class="edge">
-<title>F-&gt;dS</title>
-<path fill="none" stroke="black" stroke-width="1.2" d="M327.35,-45C333.18,-45 339,-45 344.7,-45"></path>
-<polygon fill="black" stroke="black" stroke-width="1.2" points="344.84,-47.45 351.84,-45 344.84,-42.55 344.84,-47.45"></polygon>
-</g>
-<!-- theta -->
-<g id="node4" class="node">
-<title>theta</title>
-<ellipse fill="#f0dfd6" stroke="#af8068" stroke-width="2" cx="64.56" cy="-18" rx="64.61" ry="18"></ellipse>
-<text text-anchor="middle" x="64.56" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00">Parameters: θ</text>
-</g>
-<!-- theta&#45;&gt;F -->
-<g id="edge2" class="edge">
-<title>theta-&gt;F</title>
-<path fill="none" stroke="black" stroke-width="1.2" d="M121.6,-26.69C129.75,-27.96 138.33,-29.29 146.98,-30.63"></path>
-<polygon fill="black" stroke="black" stroke-width="1.2" points="146.63,-33.05 153.92,-31.71 147.38,-28.21 146.63,-33.05"></polygon>
-</g>
-</g>
-</svg>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</div></div>
-</div>
-</div>
+<!-- section 1 intro lives in _slides-section-1-intro.qmd to keep diffs scoped
+     and reduce merge conflicts when collaborators touch slides.qmd -->
 </section>
-<section id="mathematical-framework" class="slide level2">
-<h2>Mathematical framework</h2>
-<div class="rows">
-<div class="row" style="height:10%;justify-content:center">
-<p><span class="math display">\[
-dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
-\]</span></p>
-</div>
-<div class="row" style="height:90%;">
-<div class="columns">
-<div class="column r-fit-text" style="width:60%;">
-<p><strong>State Evolution</strong></p>
-<ul>
-<li><span class="math inline">\(S_i\)</span> - state variables at node <span class="math inline">\(i\)</span></li>
-<li><span class="math inline">\(f_d\)</span> - dynamics function with parameters <span class="math inline">\(\theta^d\)</span></li>
-<li><span class="math inline">\(C_i\)</span> - coupling input from connected nodes</li>
-<li><span class="math inline">\(I_i\)</span> - external input (stimulation, driving signals)</li>
-<li><span class="math inline">\(g\)</span> - noise diffusion coefficient with parameters <span class="math inline">\(\theta^g\)</span></li>
-<li><span class="math inline">\(dW_i\)</span> - Wiener process (stochastic fluctuations)</li>
-</ul>
-</div><div class="column" style="width:40%;">
-<div id="56c86162" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display" data-execution_count="29">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="slides_files/figure-revealjs/cell-2-output-1.png" class="quarto-figure quarto-figure-center"></p>
-</figure>
-</div>
-</div>
-</div>
-</div></div>
-</div>
-</div>
-</section>
-<section id="dynamical-systems" class="slide level2">
-<h2>Dynamical Systems</h2>
+<section id="building-block-2-dynamical-systems" class="slide level2">
+<h2>Building Block 2: Dynamical Systems</h2>
 <div class="columns">
 <div class="column" style="width:30%; font-size: 0.62em;">
 <p>A mass <span class="math inline">\(m\)</span> on a spring with stiffness <span class="math inline">\(k\)</span>. <br> Perpetual oscillation at <span class="math inline">\(\omega = \sqrt{k/m}\)</span>.</p>
@@ -497,10 +511,9 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 </tbody>
 </table>
 </div><div class="column" style="width:70%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_single.mp4" class="quarto-figure quarto-figure-center" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png" data-autoplay="false" height="430"><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_single.mp4">Video</a></video></p>
-</figure>
+<div class="spring-stack">
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_single_thumb.png" class="fragment spring-frame"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_single.gif" class="fragment spring-frame"></p>
 </div>
 </div></div>
 </section>
@@ -522,10 +535,9 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <li>Closed motion stays perfectly periodic</li>
 </ul>
 </div><div class="column" style="width:70%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.mp4" class="quarto-figure quarto-figure-center" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png" data-autoplay="false" height="430"><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.mp4">Video</a></video></p>
-</figure>
+<div class="spring-stack">
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png" class="fragment spring-frame"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.gif" class="fragment spring-frame"></p>
 </div>
 </div></div>
 </section>
@@ -549,7 +561,7 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 </div><div class="column" style="width:70%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.mp4" class="quarto-figure quarto-figure-center" height="430" controls=""><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.mp4">Video</a></video></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.gif" class="quarto-figure quarto-figure-center" height="430"></p>
 </figure>
 </div>
 </div></div>
@@ -572,10 +584,9 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <li>Box size encodes the mass value visually</li>
 </ul>
 </div><div class="column" style="width:70%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.mp4" class="quarto-figure quarto-figure-center" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" data-autoplay="false" height="430"><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.mp4">Video</a></video></p>
-</figure>
+<div class="spring-stack">
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" class="fragment spring-frame"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.gif" class="fragment spring-frame"></p>
 </div>
 </div></div>
 </section>
@@ -599,10 +610,9 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <li>Compare ideal toy model vs damped + load</li>
 </ul>
 </div><div class="column" style="width:70%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.mp4" class="quarto-figure quarto-figure-center" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png" data-autoplay="false" height="430"><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.mp4">Video</a></video></p>
-</figure>
+<div class="spring-stack">
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_thumb.png" class="fragment spring-frame"></p>
+<p><img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism.gif" class="fragment spring-frame"></p>
 </div>
 </div></div>
 </section>
@@ -610,12 +620,14 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
 <h2>Phase Space: Damped Spring</h2>
 <div class="columns">
 <div class="column">
-<p><video data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.mp4" controls=""><a href="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.mp4">Video</a></video></p>
+<p><strong>Spring Oscillator</strong> <img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.gif" class="quarto-figure quarto-figure-center" height="430"></p>
+</div><div class="column">
+<p><strong>Damped Spring</strong> <img data-src="img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.gif" class="quarto-figure quarto-figure-center" height="430"></p>
 </div></div>
 </section></section>
 <section>
-<section id="mean-field-models" class="title-slide slide level1 center" data-background-video="img/videos/birds.mp4" data-background-video-loop="true" data-background-video-muted="true">
-<h1>Mean Field Models</h1>
+<section id="towards-brain-dynamics-mean-field-models" class="title-slide slide level1 center" data-background-video="img/videos/birds.mp4" data-background-video-loop="true" data-background-video-muted="true">
+<h1>Towards Brain Dynamics: Mean Field Models</h1>
 
 </section>
 <section id="mean-field-models-neural-masses" class="slide level2">
@@ -792,10 +804,10 @@ C_{4} = 0.25*C
 <p><img data-src="img/figures/jansen1995/fig-jr-singlenode.png"></p>
 </div></div>
 </section>
-<section id="network-dynamics" class="slide level2">
-<h2>Network dynamics</h2>
+<section id="building-block-3-coupling-network-dynamics" class="slide level2">
+<h2>Building Block 3: Coupling → Network Dynamics</h2>
 
-<img data-src="slides_files/figure-revealjs/cell-3-output-1.png" class="r-stretch"></section>
+<img data-src="slides_files/figure-revealjs/cell-2-output-1.png" class="r-stretch"></section>
 <section id="uncoupled-system" class="slide level2">
 <h2>Uncoupled system</h2>
 <div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
@@ -947,6 +959,38 @@ I = \frac{K \sum_{j=0}^{-1 + N} - {g}_{i,j} \sin{\left(\theta_{i} - \theta_{j} \
 </div>
 </div>
 </section>
+<section id="mathematical-framework" class="slide level2">
+<h2>Mathematical framework</h2>
+<div style="display:flex; flex-direction:column; height:85vh; padding:0 1em; gap:0.5em;">
+<div style="text-align:center; padding:0.3em 0 0.5em; font-size:1em;">
+<p><span class="math display">\[dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i\]</span></p>
+</div>
+<div style="display:flex; flex:1; gap:2em; align-items:flex-start; min-height:0; overflow:hidden">
+<div style="flex:0 0 55%; font-size:0.8em;">
+<p><strong>State Evolution</strong></p>
+<ul>
+<li><span class="math inline">\(S_i\)</span> - state variables at node <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(f_d\)</span> - dynamics function with parameters <span class="math inline">\(\theta^d\)</span></li>
+<li><span class="math inline">\(C_i\)</span> - coupling input from connected nodes</li>
+<li><span class="math inline">\(I_i\)</span> - external input (stimulation, driving signals)</li>
+<li><span class="math inline">\(g\)</span> - noise diffusion coefficient with parameters <span class="math inline">\(\theta^g\)</span></li>
+<li><span class="math inline">\(dW_i\)</span> - Wiener process (stochastic fluctuations)</li>
+</ul>
+</div>
+<div style="flex:1; min-width:0;">
+<div id="dfd26040" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="slides_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 <section id="coupled-brain-network" class="slide level2">
 <h2>Coupled Brain Network</h2>
 <!-- - TODO: nodes, coupling, delays, noise
@@ -985,12 +1029,20 @@ C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij
 <h1>2. Defining a FAIR brain network model</h1>
 
 </section>
-<section id="why-fair-tvb-o-in-one-slide" class="slide level2">
-<h2>Why FAIR? TVB-O in one slide</h2>
+<section id="fair-guiding-principles" class="slide level2">
+<h2>FAIR Guiding Principles</h2>
+
+<img data-src="https://book.the-turing-way.org/build/reproducible-definit-cf703a7826a4b28c47d3ebbe4c77204b.svg" class="r-stretch quarto-figure-center"><p class="caption"><span class="citation" data-cites="TuringCommunity2024">(<a href="#/references" role="doc-biblioref" onclick="">The Turing Way Community and Scriberia 2024</a>)</span></p></section>
+<section id="fair-principles" class="slide level2">
+<h2>FAIR Principles</h2>
+
+<img data-src="https://book.the-turing-way.org/build/fair-principles-4100e1e0d2fa468c37493353b8bf77c5.svg" class="r-stretch quarto-figure-center"><p class="caption"><span class="citation" data-cites="TuringCommunity2024">(<a href="#/references" role="doc-biblioref" onclick="">The Turing Way Community and Scriberia 2024</a>)</span></p></section>
+<section id="a-simulation-experiment-in-computational-neuroscience" class="slide level2">
+<h2>A Simulation Experiment in Computational Neuroscience</h2>
 
 <img data-src="img/tvbo/tvbo-network-insets.png" class="r-stretch"></section>
-<section id="why-fair-tvb-o-in-one-slide-1" class="slide level2">
-<h2>Why FAIR? TVB-O in one slide</h2>
+<section id="a-simulation-experiment-in-computational-neuroscience-1" class="slide level2">
+<h2>A Simulation Experiment in Computational Neuroscience</h2>
 <style>
 .se-dia {
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -1204,6 +1256,31 @@ C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij
 <span id="cb2-26"><a></a>res <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 </section>
+<section id="specifying-an-experiment-with-tvb-o" class="slide level2">
+<h2>Specifying an experiment with TVB-O</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/figures/tvbo/fig-overview.png" class="quarto-figure quarto-figure-center" height="680"></p>
+</figure>
+</div>
+</section>
+<section id="what-makes-specifying-brain-network-models-easier" class="slide level2">
+<h2>What makes specifying brain network models easier?</h2>
+<ul>
+<li class="fragment"><strong>Common vocabulary:</strong> Ontology-backed definitions link terms to persistent identifiers — no more ambiguous symbols across papers</li>
+<li class="fragment"><strong>Machine-readable metadata:</strong> Compact YAML schema captures everything needed to reproduce a simulation</li>
+<li class="fragment"><strong>Curated database:</strong> Published models, brain networks, and study configurations — ready to load and run</li>
+<li class="fragment"><strong>Code generation:</strong> One specification → executable code for TVB, JAX, Julia, and more</li>
+</ul>
+<div class="fragment">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="./img/figures/tvbo/tvbo_logo.png" height="250"></p>
+<figcaption><span class="citation" data-cites="Martin2025">(<a href="#/references" role="doc-biblioref" onclick="">Martin et al. 2025</a>)</span></figcaption>
+</figure>
+</div>
+</div>
+</section>
 <section id="applications-in-basic-research" class="slide level2">
 <h2>Applications in basic research</h2>
 <div class="columns">
@@ -1224,26 +1301,20 @@ C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij
 </figure>
 </div>
 </div></div>
-</section>
-<section id="clinical-applications" class="slide level2">
-<h2>Clinical applications</h2>
-</section>
-<section id="virtual-dbs" class="slide level2">
-<h2>Virtual DBS</h2>
-
-<img data-src="img/figures/applications/clinical/fig-dbspy-overview_white.png" class="r-stretch"><ul>
-<li>TODO: translational use-cases</li>
-<li>TODO: virtual epileptic / Alzheimer / stroke patient examples</li>
-</ul>
 </section></section>
 <section id="setup-first-examples" class="title-slide slide level1 center">
 <h1>Setup &amp; First Examples</h1>
 
 </section>
 
+<section id="clinical-applications" class="title-slide slide level1 center">
+<h1>Clinical Applications</h1>
+
+</section>
+
 <section>
 <section id="bifurcation-analysis" class="title-slide slide level1 center" data-background-color="#6880af">
-<h1>3. Bifurcation Analysis</h1>
+<h1>Bifurcation Analysis</h1>
 
 </section>
 <section id="how-to-analyse-a-brain-system" class="slide level2">
@@ -1282,15 +1353,21 @@ x(t) = x_0\,e^{a t}
 <div class="r-stack">
 <p><img data-src="img/figures/bifurcation/fig-stability.png" class="fragment"></p>
 <p><img data-src="img/figures/bifurcation/fig-stability-perturbation.png" class="fragment"></p>
+<div class="r-stack">
+<p><img data-src="img/figures/bifurcation/fig-stability.png" class="fragment"></p>
+<p><img data-src="img/figures/bifurcation/fig-stability-perturbation.png" class="fragment"></p>
+</div>
 </div>
 </div></div>
 </section>
 <section id="d-portraits" class="slide level2">
 <h2>2D portraits</h2>
-
-<img data-src="img/figures/bifurcation/fig-bifurcation-phase-portraits-animation.gif" class="quarto-figure quarto-figure-center r-stretch" style="width:82.0%"><div class="smaller">
-<p><strong>Same local rule:</strong> arrows define the flow; trajectories reveal attraction, repulsion, rotation and separatrices.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/figures/bifurcation/fig-bifurcation-phase-portraits-animation.gif" class="quarto-figure quarto-figure-center" style="width:82.0%"></p>
+</figure>
 </div>
+<p><img data-src="img/figures/bifurcation/fig-bifurcation-phase-portraits-static.png"></p>
 </section>
 <section id="regime-change-building-blocks" class="slide level2">
 <h2>Regime-change building blocks</h2>
@@ -1314,18 +1391,16 @@ x(t) = x_0\,e^{a t}
 \dot z = (a + i\omega)z - |z|^2z,
 \qquad r_{\mathrm{cycle}} = \sqrt a
 \]</span></p>
-
-<img data-src="img/figures/bifurcation/fig-bifurcation-hopf-birth.gif" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><div class="smaller">
+<p><img data-src="img/figures/bifurcation/fig-bifurcation-hopf-birth.gif" class="quarto-figure quarto-figure-center" style="width:100.0%"> <img data-src="img/figures/bifurcation/fig-bifurcation-hopf-birth.gif" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+<div class="smaller">
 <p>fixed point loses stability <span class="math inline">\(\Rightarrow\)</span> stable oscillation appears</p>
 </div>
 </section>
-<section id="generic2doscillator-regimes-over-input-i" class="slide level2">
-<h2>Generic2dOscillator: regimes over input <span class="math inline">\(I\)</span></h2>
+<section id="dynamical-regimes" class="slide level2">
+<h2>Dynamical Regimes</h2>
+<!-- ![](img/g2d_bifurcation.png){fig-align="center" width="82%"} -->
 
-<img data-src="img/g2d_bifurcation.png" class="quarto-figure quarto-figure-center r-stretch" style="width:82.0%"><div class="smaller">
-<p>resting branch | oscillatory window | folds and Hopf points</p>
-</div>
-</section>
+<img data-src="img/figures/bifurcation/fig-bifurcation_timeseries.png" class="r-stretch"></section>
 <section id="numerical-continuation" class="slide level2">
 <h2>Numerical continuation</h2>
 <div class="columns">
@@ -1351,7 +1426,7 @@ F(x, a)=0,
 </div>
 </section>
 <section id="bifurcation-analysis-hands-on" class="slide level2">
-<h2>3.1 Bifurcation analysis: hands-on</h2>
+<h2>Bifurcation analysis: hands-on</h2>
 <ul>
 <li>Notebook: <a href="./notebooks/03_bifurcation_analysis.html"><code>notebooks/03_bifurcation_analysis.qmd</code></a></li>
 <li>Sweep input <span class="math inline">\(I\)</span> in a TVB neural mass model</li>
@@ -1361,7 +1436,7 @@ F(x, a)=0,
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>result <span class="op">=</span> exp.run(<span class="st">"bifurcationkit.jl"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section></section>
 <section>
-<section id="parameter-exploration-and-inference" class="title-slide slide level1 center" data-background-color="#0b3d91">
+<section id="parameter-exploration-and-inference" class="title-slide slide level1 center" data-background-color="#6880af">
 <h1>4. Parameter exploration and inference</h1>
 
 </section>
@@ -2170,10 +2245,16 @@ F(x, a)=0,
 </div></div>
 <!-- - TODO: stimulation primitives in TVB
 - TODO: VEP / TEP example -->
+</section>
+<section id="take-aways-from-day-1" class="slide level2">
+<h2>Take Aways from Day 1</h2>
+<ul>
+<li>TODO: takeaways from Day 1</li>
+</ul>
 </section></section>
 <section>
-<section id="day-2-mini-hackathon" class="title-slide slide level1 center" data-background-color="#6880af">
-<h1>Day 2 — Mini Hackathon</h1>
+<section id="day-2-mini-hackathon-and-plot-your-brain-tutorial" class="title-slide slide level1 center" data-background-color="#6880af">
+<h1>Day 2 — Mini Hackathon and Plot Your Brain Tutorial</h1>
 
 </section>
 <section id="format" class="slide level2">
@@ -2195,6 +2276,12 @@ F(x, a)=0,
 <section id="wrap-up" class="title-slide slide level1 center" data-background-color="#6880af">
 <h1>Wrap-up</h1>
 
+</section>
+<section id="acknowledgements" class="slide level2">
+<h2>Acknowledgements</h2>
+<ul>
+<li>TODO: thanks to all who made this happen</li>
+</ul>
 </section>
 <section id="take-aways" class="slide level2">
 <h2>Take-aways</h2>
@@ -2252,6 +2339,9 @@ Koller, Dominik P., Michael Schirner, and Petra Ritter. 2024. <span>“Human Con
 <div id="ref-Kuramoto1975" class="csl-entry" role="listitem">
 Kuramoto, Yoshiki. 1975. <span>“Self-Entrainment of a Population of Coupled Non-Linear Oscillators.”</span> In <em>Lecture Notes in Physics</em>, 420–22. Springer-Verlag. <a href="https://doi.org/10.1007/bfb0013365">https://doi.org/10.1007/bfb0013365</a>.
 </div>
+<div id="ref-Martin2025" class="csl-entry" role="listitem">
+Martin, Leon, Konstantin Buelau, Marius Pille, Rico Andre Schmitt, Christoph Huettl, Jil M Meier, Halgurd Taher, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. <span>“The Virtual Brain Ontology: A Digital Knowledge Framework for Reproducible Brain Network Modeling.”</span> <em>bioRxiv</em>, November. <a href="https://doi.org/10.1101/2025.11.19.689211">https://doi.org/10.1101/2025.11.19.689211</a>.
+</div>
 <div id="ref-Pille2025" class="csl-entry" role="listitem">
 Pille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. <span>“Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.”</span> <em>bioRxiv</em>, November. <a href="https://doi.org/10.1101/2025.11.18.689003">https://doi.org/10.1101/2025.11.18.689003</a>.
 </div>
@@ -2260,6 +2350,9 @@ Schirner, Michael, Gustavo Deco, and Petra Ritter. 2023. <span>“Learning How N
 </div>
 <div id="ref-Stefanovski2019" class="csl-entry" role="listitem">
 Stefanovski, Leon, Paul Triebkorn, Andreas Spiegler, Margarita-Arimatea Diaz-Cortes, Ana Solodkin, Viktor Jirsa, Anthony Randal McIntosh, and Petra Ritter. 2019. <span>“Linking Molecular Pathways and Large-Scale Computational Modeling to Assess Candidate Disease Mechanisms and Pharmacodynamics in Alzheimer’s Disease.”</span> Edited by Anke Meyer-Baese Li Su. <em>Frontiers in Computational Neuroscience</em> 13 (August). <a href="https://doi.org/10.3389/fncom.2019.00054">https://doi.org/10.3389/fncom.2019.00054</a>.
+</div>
+<div id="ref-TuringCommunity2024" class="csl-entry" role="listitem">
+The Turing Way Community, and Scriberia. 2024. <span>“Illustrations from the Turing Way: Shared Under CC-BY 4.0 for Reuse.”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.13882307">https://doi.org/10.5281/zenodo.13882307</a>.
 </div>
 </div>
 </section>

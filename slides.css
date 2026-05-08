@@ -91,3 +91,27 @@
 .reveal .slide > div.rows > div.row[height="90%"] { flex-grow: 90; }
 .reveal .slide > div.rows > div.row[height="95%"] { flex-grow: 95; }
 .reveal .slide > div.rows > div.row[height="100%"] { flex-grow: 100; }
+
+.reveal .spring-stack {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 430px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.reveal .spring-stack > *,
+.reveal .spring-stack p,
+.reveal .spring-stack figure {
+  grid-area: 1 / 1;
+  margin: 0 !important;
+}
+
+.reveal .spring-stack img.spring-frame {
+  display: block;
+  height: 430px;
+  width: auto;
+  max-width: 100%;
+  max-height: 430px;
+}

@@ -20,41 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -171,59 +136,50 @@ div.csl-indent {
     <ul class="dropdown-menu" aria-labelledby="nav-menu-notebooks">    
         <li>
     <a class="dropdown-item" href="./notebooks/1_introduction.html">
- <span class="dropdown-text">1. Introduction to Brain Network Modelling</span></a>
+ <span class="dropdown-text">0. Introduction to Brain Network Modelling</span></a>
   </li>  
+        <li><hr class="dropdown-divider"></li>
         <li>
     <a class="dropdown-item" href="./notebooks/1_1_MathematicalFramework/DynamicalSystems.html">
- <span class="dropdown-text">1.1 Mathematical Framework</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li>
-    <a class="dropdown-item" href="./notebooks/2_fair_model.html">
- <span class="dropdown-text">2. Defining a FAIR model</span></a>
+ <span class="dropdown-text">1. Dynamical Systems</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./notebooks/02a_mean_field_models.html">
- <span class="dropdown-text">2.1 Mean field models</span></a>
+    <a class="dropdown-item" href="./notebooks/2_NetworkAndNoise/NetworkAndNoise.html">
+ <span class="dropdown-text">2. Networks and Noise</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./notebooks/02b_coupled_networks.html">
- <span class="dropdown-text">2.2 Coupled networks</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li>
-    <a class="dropdown-item" href="./notebooks/3_dynamics.html">
- <span class="dropdown-text">3. Dynamical perspective</span></a>
+    <a class="dropdown-item" href="./notebooks/3_ParameterExploration/ParameterExploration.html">
+ <span class="dropdown-text">3. Parameter Exploration</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./notebooks/03_bifurcation_analysis.html">
- <span class="dropdown-text">3.1 Bifurcation analysis</span></a>
+    <a class="dropdown-item" href="./notebooks/4_BifurcationAnalysis/BifurcationAnalysis.html">
+ <span class="dropdown-text">4. Bifurcation Analysis</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
     <a class="dropdown-item" href="./notebooks/4_optimization.html">
- <span class="dropdown-text">4. Parameter optimisation</span></a>
+ <span class="dropdown-text">5. Parameter optimisation</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./notebooks/04a_alzheimer_usecase.html">
- <span class="dropdown-text">4.1 Alzheimer use case</span></a>
+ <span class="dropdown-text">5.1 Alzheimer use case</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./notebooks/04b_parameter_fitting.html">
- <span class="dropdown-text">4.2 Parameter fitting</span></a>
+ <span class="dropdown-text">5.2 Parameter fitting</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./notebooks/4_inference_demos.html">
- <span class="dropdown-text">4.3 Inference demos</span></a>
+ <span class="dropdown-text">5.3 Inference demos</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
     <a class="dropdown-item" href="./notebooks/5_stimulation.html">
- <span class="dropdown-text">5. Stimulating the brain</span></a>
+ <span class="dropdown-text">6. Stimulating the brain</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./notebooks/05_stimulation.html">
- <span class="dropdown-text">5.1 Stimulation</span></a>
+ <span class="dropdown-text">6.1 Stimulation</span></a>
   </li>  
     </ul>
   </li>
@@ -260,14 +216,6 @@ div.csl-indent {
   <div class="quarto-title-meta-heading">Affiliations</div>
   
     <div class="quarto-title-meta-contents">
-    <p class="author">Leon Stefanovski </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            Charité University Medicine Berlin
-          </p>
-      </div>
-    <div class="quarto-title-meta-contents">
     <p class="author">Marius Pille </p>
   </div>
   <div class="quarto-title-meta-contents">
@@ -281,6 +229,14 @@ div.csl-indent {
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
             Berlin Institute of Health at Charité University Medicine
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Leon Stefanovski </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Charité University Medicine Berlin
           </p>
       </div>
   </div>
@@ -323,122 +279,55 @@ div.csl-indent {
 </div>
 <section id="about" class="level2 container-lg mb-5">
 <h2 class="anchored" data-anchor-id="about">About</h2>
-<p>Track 4 of the <strong>FAIR Brain Data Science Bootcamp 2026</strong> — a joint event by <a href="https://ebrains.eu/news-and-events/events/2026/fair-brain-data-science-bootcamp-2026">EBRAINS</a> and <a href="https://www.incf.org/incf-brain-data-science-bootcamp-2026">INCF</a>, hosted at <strong>Karolinska Institutet</strong>, Widerströmska huset (<a href="https://maps.app.goo.gl/">Tomtebodavägen 18</a>, Stockholm, Sweden).</p>
-<p>The bootcamp brings together hands-on training across brain atlasing, electrophysiology, data sharing, and computational modeling within the EBRAINS research infrastructure. Track 4 focuses on personalized whole-brain network modeling with <a href="https://thevirtualbrain.org">The Virtual Brain</a>, combining individualized model definition, simulation, and analysis with ontology-driven model specification (<a href="https://virtual-twin.github.io/tvbo">TVB-O</a>) and gradient-based optimization (<a href="https://virtual-twin.github.io/tvboptim">TVB-Optim</a>) <span class="citation" data-cites="Martin2025 Pille2025">(<a href="#ref-Martin2025" role="doc-biblioref">Martin et al. 2025</a>; <a href="#ref-Pille2025" role="doc-biblioref">Pille et al. 2025</a>)</span>.</p>
-<div class="row g-4 mt-1">
-<div class="col-12 col-md-6 col-xl-4">
-<div class="card h-100 shadow-sm">
-<section id="tvb-foundations" class="level3 card-body">
-<h3 class="anchored" data-anchor-id="tvb-foundations">TVB foundations</h3>
-<p>Whole-brain network modeling concepts, coupled ODE/SDE systems, neural masses, and basic and clinical applications.</p>
+<p>This two-day workshop introduces mechanistic whole-brain simulation with The <a href="https://thevirtualbrain.org">Virtual Brain</a>, ontology-driven model specification, and differentiable parameter optimization. Participants move from model definition to simulation, analysis, and parameter fitting in reproducible workflows.</p>
+<p>The slides provide the conceptual map: brain network models, dynamical regimes, FAIR model specification, and inference. The notebooks turn those ideas into executable examples, including single-node dynamics, network coupling, noise, parameter exploration, bifurcation analysis, optimization, and stimulation. Examples connect the workflow to mechanistic and translational studies of decision dynamics, cortical waves, and task/rest fMRI separation <span class="citation" data-cites="Schirner2023 Koller2024 Kashyap2025">(<a href="#ref-Schirner2023" role="doc-biblioref">Schirner, Deco, and Ritter 2023</a>; <a href="#ref-Koller2024" role="doc-biblioref">Koller, Schirner, and Ritter 2024</a>; <a href="#ref-Kashyap2025" role="doc-biblioref">Kashyap et al. 2025</a>)</span>.</p>
+<section id="learning-goals" class="level3">
+<h3 class="anchored" data-anchor-id="learning-goals">Learning Goals</h3>
+<ul>
+<li>Specify brain network models as reusable, machine-readable metadata.</li>
+<li>Simulate local dynamics, network coupling, noise, and stimulation.</li>
+<li>Interpret phase planes, stability, bifurcations, and regime maps.</li>
+<li>Fit and compare model parameters with optimization workflows.</li>
+</ul>
+</section>
+</section>
+<section id="tools-used" class="level2 container-lg mb-5">
+<h2 class="anchored" data-anchor-id="tools-used">Tools Used</h2>
+<div class="columns workshop-tools">
+<div class="column" style="width:50%;">
+<div class="card h-100 shadow-sm workshop-tool-card">
+<section id="section" class="level3 card-body">
+<h3 class="anchored" data-anchor-id="section"><a href="https://virtual-twin.github.io/tvbo" class="stretched-link"><img src="img/figures/tvbo/tvbo_logo.png" class="workshop-tool-logo img-fluid" alt="TVB-O logo"></a></h3>
+<p>Ontology-backed model specification for brain network simulations. <code>TVB-O</code> captures equations, parameters, networks, coupling, integrators, observations, and provenance in one reusable metadata record. It also provides a curated database of published models and experiments and generates executable simulation code <span class="citation" data-cites="Martin2025">(<a href="#ref-Martin2025" role="doc-biblioref">Martin et al. 2025</a>)</span>.</p>
 </section>
 </div>
-</div>
-<div class="col-12 col-md-6 col-xl-4">
-<div class="card h-100 shadow-sm">
-<section id="fair-model-building" class="level3 card-body">
-<h3 class="anchored" data-anchor-id="fair-model-building">FAIR model building</h3>
-<p>Use TVB-O to describe parameters, state variables, equations, coupling, integration, observations, and execution metadata.</p>
-</section>
-</div>
-</div>
-<div class="col-12 col-md-6 col-xl-4">
-<div class="card h-100 shadow-sm">
-<section id="network-simulation" class="level3 card-body">
-<h3 class="anchored" data-anchor-id="network-simulation">Network simulation</h3>
-<p>Load connectomes, assemble delayed coupling, run single-node and whole-brain simulations, and sweep global coupling regimes.</p>
-</section>
-</div>
-</div>
-<div class="col-12 col-md-6 col-xl-4">
-<div class="card h-100 shadow-sm">
-<section id="regime-maps" class="level3 card-body">
-<h3 class="anchored" data-anchor-id="regime-maps">Regime maps</h3>
-<p>Read phase planes, stability, bifurcations, and numerical continuation diagrams to choose biologically plausible operating points.</p>
-</section>
-</div>
-</div>
-<div class="col-12 col-md-6 col-xl-4">
-<div class="card h-100 shadow-sm">
-<section id="parameter-inference" class="level3 card-body">
-<h3 class="anchored" data-anchor-id="parameter-inference">Parameter inference</h3>
-<p>Compare grid, random, CMA-ES, gradient, and Bayesian strategies for fitting homogeneous and regional model parameters.</p>
-</section>
-</div>
-</div>
-<div class="col-12 col-md-6 col-xl-4">
-<div class="card h-100 shadow-sm">
-<section id="translation-and-stimulation" class="level3 card-body">
-<h3 class="anchored" data-anchor-id="translation-and-stimulation">Translation and stimulation</h3>
-<p>Build Alzheimer and biomarker-driven use cases, simulate visual and TMS inputs, and carry the workflow into Day 2 research questions.</p>
+</div><div class="column" style="width:50%;">
+<div class="card h-100 shadow-sm workshop-tool-card">
+<section id="section-1" class="level3 card-body">
+<h3 class="anchored" data-anchor-id="section-1"><a href="https://virtual-twin.github.io/tvboptim" class="stretched-link"><img src="img/section-4/tvboptim.png" class="workshop-tool-logo img-fluid" alt="TVB-Optim logo"></a></h3>
+<p>Differentiable and accelerator-ready inference workflows for whole-brain models. <code>TVB-Optim</code> supports parallel simulation, automatic differentiation, and gradient-based fitting of large parameter spaces <span class="citation" data-cites="Pille2025">(<a href="#ref-Pille2025" role="doc-biblioref">Pille et al. 2025</a>)</span>.</p>
 </section>
 </div>
 </div>
 </div>
-</section>
-<section id="program" class="level2 container-lg mb-5">
-<h2 class="anchored" data-anchor-id="program">Program</h2>
-<div class="row g-4 mt-1">
-<div class="col-12 col-md-6 col-xl-3">
-<div class="card h-100 shadow-sm">
-<div class="card-body">
-<p><span class="text-primary fw-bold small">01</span></p>
-<section id="setup" class="level4">
-<h4 class="anchored" data-anchor-id="setup"><a href="./setup.html">Setup</a></h4>
-<p>Install <code>uv</code>, <code>tvb</code>, <code>tvbo</code>, and <code>tvboptim</code>. Verify the environment before day one.</p>
-</section>
-</div>
-</div>
-</div>
-<div class="col-12 col-md-6 col-xl-3">
-<div class="card h-100 shadow-sm">
-<div class="card-body">
-<p><span class="text-primary fw-bold small">02</span></p>
-<section id="agenda" class="level4">
-<h4 class="anchored" data-anchor-id="agenda"><a href="./agenda/agenda.html">Agenda</a></h4>
-<p>Two-day program: lectures, hands-on sessions, and a mini hackathon.</p>
-</section>
-</div>
-</div>
-</div>
-<div class="col-12 col-md-6 col-xl-3">
-<div class="card h-100 shadow-sm">
-<div class="card-body">
-<p><span class="text-primary fw-bold small">03</span></p>
-<section id="slides" class="level4">
-<h4 class="anchored" data-anchor-id="slides"><a href="./slides.html">Slides</a></h4>
-<p>RevealJS slides used in the live sessions.</p>
-</section>
-</div>
-</div>
-</div>
-<div class="col-12 col-md-6 col-xl-3">
-<div class="card h-100 shadow-sm">
-<div class="card-body">
-<p><span class="text-primary fw-bold small">04</span></p>
-<section id="notebooks" class="level4">
-<h4 class="anchored" data-anchor-id="notebooks"><a href="./notebooks/1_introduction.html">Notebooks</a></h4>
-<p>Hands-on Jupyter notebooks: introduction, FAIR models, dynamics, optimization, and stimulation.</p>
-</section>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="quick-start" class="level2 container-lg mb-5">
-<h2 class="anchored" data-anchor-id="quick-start">Quick start</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install uv</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install tvb tvbo tvboptim</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Source code: <a href="https://github.com/virtual-twin/Brain-Simulation-Workshop" class="uri">https://github.com/virtual-twin/Brain-Simulation-Workshop</a>.</p>
 </section>
 <section id="references" class="level2 unnumbered container-lg mb-5">
 <h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Kashyap2025" class="csl-entry" role="listitem">
+Kashyap, Amrit, Eloy Geenjaar, Patrik Bey, Kiret Dhindsa, Katharina Glomb, Sergey Plis, Shella Keilholz, and Petra Ritter. 2025. <span>“Using an Ordinary Differential Equation Model to Separate Rest and Task Signals in fMRI.”</span> <em>Nature Communications</em> 16 (1). <a href="https://doi.org/10.1038/s41467-025-62491-6">https://doi.org/10.1038/s41467-025-62491-6</a>.
+</div>
+<div id="ref-Koller2024" class="csl-entry" role="listitem">
+Koller, Dominik P., Michael Schirner, and Petra Ritter. 2024. <span>“Human Connectome Topology Directs Cortical Traveling Waves and Shapes Frequency Gradients.”</span> <em>Nature Communications</em> 15 (1). <a href="https://doi.org/10.1038/s41467-024-47860-x">https://doi.org/10.1038/s41467-024-47860-x</a>.
+</div>
 <div id="ref-Martin2025" class="csl-entry" role="listitem">
 Martin, Leon, Konstantin Buelau, Marius Pille, Rico Andre Schmitt, Christoph Huettl, Jil M Meier, Halgurd Taher, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. <span>“The Virtual Brain Ontology: A Digital Knowledge Framework for Reproducible Brain Network Modeling.”</span> <em>bioRxiv</em>, November. <a href="https://doi.org/10.1101/2025.11.19.689211">https://doi.org/10.1101/2025.11.19.689211</a>.
 </div>
 <div id="ref-Pille2025" class="csl-entry" role="listitem">
 Pille, Marius, Leon Martin, Emilius Richter, Dionysios Perdikis, Michael Schirner, and Petra Ritter. 2025. <span>“Fast and Easy Whole-Brain Network Model Parameter Estimation with Automatic Differentiation.”</span> <em>bioRxiv</em>, November. <a href="https://doi.org/10.1101/2025.11.18.689003">https://doi.org/10.1101/2025.11.18.689003</a>.
+</div>
+<div id="ref-Schirner2023" class="csl-entry" role="listitem">
+Schirner, Michael, Gustavo Deco, and Petra Ritter. 2023. <span>“Learning How Network Structure Shapes Decision-Making for Bio-Inspired Computing.”</span> <em>Nature Communications</em> 14 (1). <a href="https://doi.org/10.1038/s41467-023-38626-y">https://doi.org/10.1038/s41467-023-38626-y</a>.
 </div>
 </div>
 </section>

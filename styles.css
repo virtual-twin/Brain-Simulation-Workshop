@@ -101,7 +101,59 @@ body.workshop-home-page #quarto-content {
   max-width: 1120px;
 }
 
+.workshop-tool-logo {
+  display: block;
+  width: auto;
+  max-width: 240px;
+  height: 72px;
+  object-fit: contain;
+  object-position: left center;
+  margin-bottom: 1rem;
+}
+
+.workshop-tools.columns {
+  display: flex;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.workshop-tools.columns > .column {
+  display: flex;
+  min-width: 0;
+}
+
+.workshop-tools.columns > .column > .card {
+  width: 100%;
+}
+
+.workshop-tool-card {
+  position: relative;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.workshop-tool-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.75rem 1.75rem rgba(24, 35, 63, 0.14) !important;
+}
+
+.workshop-tool-card a.stretched-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.workshop-tool-card a.stretched-link:hover {
+  color: var(--bs-primary);
+}
+
 @media (max-width: 860px) {
+  .workshop-tools.columns {
+    flex-direction: column;
+  }
+
+  .workshop-tools.columns > .column {
+    width: 100% !important;
+  }
+
   .workshop-hero {
     min-height: 30rem;
   }
