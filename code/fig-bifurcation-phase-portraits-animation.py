@@ -24,7 +24,7 @@ OUT = os.path.join(IMG, os.path.basename(__file__).replace(".py", ".gif"))
 T_FINAL = 10.0
 DT = 0.01
 N_TRAJ = 5
-SAMPLES_PER_TRAJ = 60
+SAMPLES_PER_TRAJ = 40
 
 
 def _slower_node_yaml():
@@ -146,6 +146,6 @@ def _update(frame):
 
 
 anim = FuncAnimation(fig, _update, frames=total_frames, interval=80, blit=True)
-anim.save(OUT, writer=PillowWriter(fps=15))
+anim.save(OUT, writer=PillowWriter(fps=12), dpi=300)
 print("wrote", OUT)
 plt.close(fig)

@@ -901,7 +901,18 @@ res = exp.run("tvboptim")
 
 ![](img/figures/tvbo/fig-overview.png){height=680px fig-align="center"}
 
-## What makes building brain network models easier?
+## What makes specifying brain network models easier?
+
+::: {.incremental}
+- **Common vocabulary:** Ontology-backed definitions link terms to persistent identifiers — no more ambiguous symbols across papers
+- **Machine-readable metadata:** Compact YAML schema captures everything needed to reproduce a simulation
+- **Curated database:** Published models, brain networks, and study configurations — ready to load and run
+- **Code generation:** One specification → executable code for TVB, JAX, Julia, and more
+:::
+
+::: {.fragment}
+![[@Martin2025]](./img/figures/tvbo/tvbo_logo.png){fig-align="center" height=250px}
+:::
 
 ## Applications in basic research
 
