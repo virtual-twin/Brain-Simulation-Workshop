@@ -1,0 +1,79 @@
+---
+jupyter: python3
+title: "Parameter Exploration"
+---
+
+```{python}
+# | label: setup
+# | collapse: true
+import bsplot
+import matplotlib.pyplot as plt
+
+from tvbo import Dynamics, SimulationExperiment
+from tvbo.datamodel.schema import Exploration, ExplorationAxis
+
+bsplot.style.use("tvbo")
+```
+
+# Sweeping parameters declaratively
+
+In Chapter 1 we changed parameters by re-instantiating the `Dynamics`. That is fine for one or two values, but it scales badly. TVBO has a first-class metadata object for this: `Exploration`.
+
+An `Exploration` lives on `experiment.explorations` and is dispatched by the backend when you call `.run()`.
+
+## A one-axis sweep
+
+We take the `Generic2dOscillator` and sweep its bifurcation parameter `a` across five values.
+
+```{python}
+model = Dynamics.from_db("Generic2dOscillator")
+
+exp = SimulationExperiment(dynamics=model)
+exp.integration.duration = 800       # ms
+exp.integration.step_size = 0.1      # ms
+
+exp.explorations["a_sweep"] = Exploration(
+    name="a_sweep",
+    space=ExplorationAxis(parameter="a", explored_values=[-2.0, -1.0, 0.0, 1.0, 2.0]),
+)
+
+result = exp.run("tvboptim")
+```
+
+The result keeps the same shape conventions as a single simulation, with one extra axis for the swept parameter:
+
+```{python}
+sweep = result.explorations["a_sweep"]
+print("results shape:", sweep.results.shape, "  axis:", sweep.axes[0].name)
+```
+
+`Exploration.plot()` overlays the trajectories. Increasing `a` walks the system through a Hopf bifurcation: from a stable focus to a sustained limit cycle.
+
+```{python}
+fig = sweep.plot(overlay=True)
+fig.suptitle("Sweep of Generic2dOscillator parameter a")
+plt.show()
+```
+
+## Trial-based exploration
+
+The same object also drives Monte-Carlo style replication via `n_trials`. Each trial uses different initial conditions and (if noise is configured) different noise realisations.
+
+```{python}
+exp.explorations.clear()
+exp.explorations["trials"] = Exploration(name="trials", n_trials=10)
+
+result = exp.run("tvboptim")
+fig = result.explorations["trials"].plot(overlay=True)
+fig.suptitle("Ten trials with randomised initial conditions")
+plt.show()
+```
+
+## Recap
+
+- `exp.explorations[name] = Exploration(...)` declares a sweep — never assign a plain dict.
+- `ExplorationAxis(parameter=..., explored_values=[...])` defines the axis.
+- `n_trials=N` runs `N` randomised replicates.
+- The backend (`tvboptim`) vectorises the sweep automatically; nothing else changes.
+
+The next chapter takes the same `Dynamics` object and replaces brute-force sweeping with **continuation**, which tracks equilibria and limit cycles directly.
