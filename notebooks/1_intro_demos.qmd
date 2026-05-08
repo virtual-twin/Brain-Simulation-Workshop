@@ -290,3 +290,266 @@ plt.tight_layout()
 savefig("rest_structured.png")
 plt.show()
 ```
+
+## Slide 4 — same state, different observables
+
+Three modalities derived from the same underlying network state — EEG/MEG
+on top (fast oscillations), SEEG in the middle (fast oscillations with
+the occasional sharp transient), fMRI BOLD on the bottom (slow envelope
+through the canonical HRF). Multi-scale stays implicit: the eye reads
+"ms vs. seconds" without anyone having to say "multi-scale".
+
+All three traces are pure schematics. No real data, no model — the
+point is to picture that one simulation directly produces the
+quantities a clinician would record.
+
+```{python}
+#| output: false
+from scipy.special import gamma as gamma_func
+
+rng = np.random.default_rng(13)
+
+fs = 200.0
+T = 20.0
+n_t = int(fs * T)
+t_obs = np.arange(n_t) / fs
+
+# --- shared underlying slow envelope (the network "state") ----------------
+slow_env = gaussian_filter1d(rng.standard_normal(n_t), sigma=fs * 1.5)
+slow_env = (slow_env - slow_env.mean()) / (slow_env.std() + 1e-9)
+
+# --- EEG / MEG: ~8 Hz alpha, modulated by the slow envelope ---------------
+eeg_osc = np.sin(2 * np.pi * 8 * t_obs) * (1.0 + 0.4 * slow_env)
+eeg_noise = gaussian_filter1d(rng.standard_normal(n_t), sigma=2)
+eeg = eeg_osc + 0.20 * eeg_noise
+
+# --- SEEG / iEEG: ~15 Hz beta + a few sharp transients --------------------
+seeg_osc = np.sin(2 * np.pi * 15 * t_obs) * (1.0 + 0.3 * slow_env)
+seeg_noise = gaussian_filter1d(rng.standard_normal(n_t), sigma=1)
+seeg = 0.7 * seeg_osc + 0.30 * seeg_noise
+for ts in [4.5, 11.2, 16.8]:
+    idx = int(ts * fs)
+    width = int(0.15 * fs)
+    if idx + width < n_t:
+        seeg[idx:idx + 5] += np.linspace(1.5, 4.5, 5)
+        seeg[idx + 5:idx + width] += 4.5 * np.exp(
+            -np.arange(width - 5) / (0.03 * fs)
+        )
+
+# --- fMRI BOLD: slow envelope convolved with canonical HRF ----------------
+# HRF kernel must be shorter than the signal so np.convolve(mode="same")
+# returns the signal length, not the kernel length.
+t_hrf = np.arange(0, 15, 1 / fs)
+hrf_k = ((t_hrf ** 5 * np.exp(-t_hrf)) / gamma_func(6)
+         - (1 / 6) * (t_hrf ** 15 * np.exp(-t_hrf)) / gamma_func(16))
+hrf_k = hrf_k / hrf_k.max()
+bold = np.convolve(slow_env, hrf_k, mode="same")
+bold = (bold - bold.mean()) / (bold.std() + 1e-9)
+```
+
+```{python}
+#| label: fig-observables
+#| fig-cap: "One simulated state, three observables. Top: EEG/MEG fast oscillations (ms). Middle: SEEG with sharp transients (ms, focal). Bottom: BOLD, the slow envelope through the canonical HRF (seconds)."
+
+cividis = plt.get_cmap("cividis")
+mod_colors = [cividis(0.20), cividis(0.55), cividis(0.85)]
+
+modalities = [
+    ("EEG / MEG",   eeg,  "ms",      mod_colors[0], 0.8),
+    ("SEEG",        seeg, "ms, focal", mod_colors[1], 0.9),
+    ("fMRI BOLD",   bold, "seconds", mod_colors[2], 2.4),
+]
+
+fig, axes = plt.subplots(
+    3, 1, figsize=(8.5, 5.0), sharex=True,
+    gridspec_kw={"hspace": 0.25},
+)
+
+for ax, (name, sig, scale, color, lw) in zip(axes, modalities):
+    ax.plot(t_obs, sig, color=color, lw=lw)
+    ax.set_ylabel(name, fontsize=14, fontweight="bold",
+                  rotation=0, ha="right", va="center", labelpad=14,
+                  color=color)
+    ax.text(1.015, 0.5, scale, transform=ax.transAxes,
+            ha="left", va="center", fontsize=12,
+            color=color, style="italic", fontweight="bold")
+    ax.set_yticks([])
+    for spine in ("top", "right", "left"):
+        ax.spines[spine].set_visible(False)
+
+for ax in axes[:-1]:
+    ax.spines["bottom"].set_visible(False)
+    ax.tick_params(axis="x", which="both", length=0)
+axes[-1].set_xlabel("time  [s]", fontsize=12)
+
+plt.tight_layout()
+savefig("observables_multimodal.png")
+plt.show()
+```
+
+## Slide 5 — TVB history timeline
+
+Horizontal time arrow with three milestones: first release (~2013),
+applications era (~2015–2022), FAIR / TVB-O / tvboptim era (2024–today).
+Colour progresses along the cividis ramp so the eye reads the timeline
+chronologically without needing to chase the years.
+
+```{python}
+#| label: fig-tvb-history
+#| fig-cap: "Three eras of TVB on a single time arrow. Marker colour walks the cividis ramp from past to present."
+
+from matplotlib.patches import FancyArrowPatch
+
+cividis = plt.get_cmap("cividis")
+colors = [cividis(0.20), cividis(0.55), cividis(0.88)]
+
+milestones = [
+    dict(
+        x_start=2013, x_end=2013, y=0.45,
+        year="~2013",
+        title="First release",
+        subtitle="Open-source platform\nneural masses on\nthe connectome",
+        color=colors[0],
+    ),
+    dict(
+        x_start=2015, x_end=2026.5, x_label=2018.5, y=0.45,
+        year="~2015–today",
+        title="Applications era",
+        subtitle="Python ecosystem\ngrowing model zoo\nclinical applications",
+        color=colors[1],
+    ),
+    dict(
+        x_start=2024, x_end=2026.5, y=0.70,
+        year="2024–today",
+        title="FAIR · TVB-O · TVB-Optim",
+        subtitle="Declarative, ontology-backed,\nreproducible whole-brain\nsimulation",
+        color=colors[2],
+    ),
+]
+
+fig, ax = plt.subplots(figsize=(13.0, 6.5))
+
+x_lo, x_hi = 2010.5, 2027.5
+ax.set_xlim(x_lo, x_hi)
+ax.set_ylim(-2.85, 2.4)
+ax.axis("off")
+
+# time arrow
+arrow = FancyArrowPatch(
+    (x_lo + 0.2, 0), (x_hi - 0.1, 0),
+    arrowstyle="-|>", mutation_scale=24,
+    color="#444", lw=2.5, zorder=2,
+)
+ax.add_patch(arrow)
+
+# year ticks under the arrow
+for yr in range(2012, 2027, 2):
+    ax.plot([yr, yr], [-0.10, 0.10], color="#666", lw=1.0, zorder=2)
+    ax.text(yr, -0.32, str(yr),
+            ha="center", va="top", fontsize=12, color="#666")
+
+# milestones — each era starts at a dot and extends as a coloured arrow
+# along its actual span. Eras 2 and 3 sit on different y-rows because they
+# overlap chronologically (both extend to "today").
+for m in milestones:
+    y = m["y"]
+    # start dot
+    ax.scatter([m["x_start"]], [y], s=200, color=m["color"],
+               edgecolors="black", linewidths=2, zorder=5)
+    # era arrow (only for ranges, not for point events)
+    if m["x_end"] > m["x_start"] + 0.5:
+        ax.add_patch(FancyArrowPatch(
+            (m["x_start"] + 0.20, y), (m["x_end"], y),
+            arrowstyle="-|>", mutation_scale=22,
+            color=m["color"], lw=3.0, zorder=4,
+        ))
+    # label block above the dot (shifted to x_label if set, to avoid overlaps)
+    x_label = m.get("x_label", m["x_start"])
+    ax.text(x_label, y + 0.15, m["year"],
+            ha="center", va="bottom",
+            fontsize=14, fontweight="bold", color=m["color"])
+    ax.text(x_label, y + 0.55, m["title"],
+            ha="center", va="bottom",
+            fontsize=17, fontweight="bold", color="#222")
+    ax.text(x_label, y + 1.00, m["subtitle"],
+            ha="center", va="bottom",
+            fontsize=13, color="#444")
+
+# "time" label at the end of the arrow
+ax.text(x_hi - 0.05, 0.25, "time",
+        ha="right", va="bottom", fontsize=13,
+        color="#444", style="italic")
+
+# --- tech context band (below the arrow) ----------------------------------
+# Background events that shaped the tooling brain network models now lean on:
+# autodiff frameworks (JAX powers tvboptim), and the broader AI moment.
+tech_color = "#7a7a7a"
+tech_events = [
+    dict(x=2016.0, label="FAIR principles", row=0),
+    dict(x=2016.7, label="BIDS standard",   row=1),
+    dict(x=2018, label="JAX",             row=0),
+    dict(x=2019, label="EBRAINS",         row=1),
+    dict(x=2020, label="sbi package",     row=0),
+    dict(x=2022, label="ChatGPT",         row=1),
+    dict(x=2024, label="Claude Opus",     row=0),
+]
+
+row_y_marker = {0: -0.85, 1: -1.30}
+row_y_label  = {0: -1.00, 1: -1.45}
+
+# row label on the far left
+ax.text(x_lo + 0.3, -1.07, "tech context",
+        ha="left", va="center",
+        fontsize=12, color=tech_color, style="italic", fontweight="bold")
+
+for t in tech_events:
+    ym = row_y_marker[t["row"]]
+    yl = row_y_label[t["row"]]
+    # short connector from arrow base down to marker
+    ax.plot([t["x"], t["x"]], [-0.18, ym + 0.06],
+            color=tech_color, lw=1.0, alpha=0.4, zorder=3)
+    # marker
+    ax.scatter([t["x"]], [ym], s=110,
+               color="white", edgecolors=tech_color,
+               linewidths=1.5, zorder=5)
+    # label
+    ax.text(t["x"], yl, t["label"],
+            ha="center", va="top",
+            fontsize=12, color=tech_color)
+
+# --- landmark TVB studies band (further below the tech band) --------------
+# Concrete TVB-driven results that the era bubbles refer to in the abstract.
+study_color = "#3a4d6b"
+study_y_marker = {0: -1.95, 1: -2.40}
+study_y_label  = {0: -2.10, 1: -2.55}
+
+studies = [
+    dict(x=2013,   label="Ritter et al.\nTVB platform",             row=0),
+    dict(x=2017,   label="Jirsa et al.\nVirtual Epileptic Patient", row=1),
+    dict(x=2019,   label="Stefanovski et al.\nAlzheimer's",         row=0),
+    dict(x=2021,   label="Meier et al.\nVirtual DBS",                      row=1),
+    dict(x=2022,   label="Schirner et al.\nTVB on EBRAINS",         row=0),
+    dict(x=2023,   label="Schirner et al.\nDecision dynamics",      row=1),
+    dict(x=2024,   label="Koller et al.\nCortical waves",           row=0),
+    dict(x=2025.9, label="Martin et al. TVB-O",                    row=1),
+    dict(x=2025.8, label="Pille et al. TVB-Optim",                 row=0),
+]
+
+ax.text(x_lo + 0.3, -1.75, "publications",
+        ha="left", va="center",
+        fontsize=12, color=study_color, style="italic", fontweight="bold")
+
+for s in studies:
+    ym = study_y_marker[s["row"]]
+    yl = study_y_label[s["row"]]
+    ax.scatter([s["x"]], [ym], s=140,
+               color=study_color, edgecolors="white",
+               linewidths=1.0, zorder=5, marker="s")
+    ax.text(s["x"], yl, s["label"],
+            ha="center", va="top",
+            fontsize=11, color=study_color)
+
+plt.tight_layout()
+savefig("tvb_history_timeline.png")
+plt.show()
+```

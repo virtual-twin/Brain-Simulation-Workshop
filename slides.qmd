@@ -88,123 +88,8 @@ Plotting the Brain
 <!-- section 1 intro lives in _slides-section-1-intro.qmd to keep diffs scoped
      and reduce merge conflicts when collaborators touch slides.qmd -->
 
-## Basic ideas and history
 
-:::: {.rows}
-
-::: {.row height="70%"}
-
-:::: {.columns}
-
-::: {.column width="25%"}
-![](img/figures/basic_idea_imaging_workflow1.png)
-:::
-
-::: {.column width="25%" .fragment}
-![](img/figures/basic_idea_imaging_workflow2.png)
-:::
-
-::: {.column width="25%" .fragment}
-![](img/figures/basic_idea_imaging_workflow3.png)
-:::
-
-::: {.column width="25%" .fragment}
-![](img/figures/basic_idea_imaging_workflow4.png)
-:::
-
-::::
-
-:::
-
-::: {.row height="30%" .fragment}
-
-:::: {.columns}
-
-::: {.column}
-![](img/state_evolution_node.png){height=150px fig-align=center}
-
-:::
-
-::: {.column}
-```{dot}
-//| fig-align: center
-//| fig-width: 5
-//| fig-height: 1.6
-digraph G {
-  rankdir=LR;
-  bgcolor="transparent";
-  size="5,1.6!";
-  ratio=compress;
-  nodesep=0.25;
-  ranksep=0.35;
-  node [fontname="Helvetica", fontsize=14, fontcolor="black", style="filled,rounded", penwidth=2, margin="0.08,0.04"];
-  edge [penwidth=1.2, arrowsize=0.7];
-
-  S     [label="State: S(t)", shape=box,     fillcolor="#d6e4f0", color="#6880af"];
-  F     [label="Evolution Function: f(S, θ)", shape=box, fillcolor="#6880af", color="#3a5080", fontcolor="white"];
-  dS    [label="Next State: dS/dt", shape=box, fillcolor="#d6e4f0", color="#6880af"];
-  theta [label="Parameters: θ", shape=ellipse, fillcolor="#f0dfd6", color="#af8068"];
-
-  S     -> F;
-  theta -> F;
-  F     -> dS;
-}
-```
-:::
-::::
-
-:::
-
-::::
-
-
-## Mathematical framework
-
-:::: {.rows}
-
-::: {.row style="height:10%;justify-content:center"}
-
-$$
-dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
-$$
-
-:::
-
-::: {.row style="height:90%;"}
-
-:::: {.columns}
-
-::: {.column .r-fit-text width=60%}
-
-**State Evolution**
-
-- $S_i$ - state variables at node $i$
-- $f_d$ - dynamics function with parameters $\theta^d$
-- $C_i$ - coupling input from connected nodes
-- $I_i$ - external input (stimulation, driving signals)
-- $g$ - noise diffusion coefficient with parameters $\theta^g$
-- $dW_i$ - Wiener process (stochastic fluctuations)
-
-:::
-
-::: {.column width=40%}
-
-```{python}
-# | fig-align: center
-from tvbo import Dynamics, SimulationExperiment
-kur = Dynamics.from_db('Kuramoto')
-kur.run().plot()
-```
-
-:::
-
-::::
-
-:::
-
-::::
-
-## Dynamical Systems
+## Building Block 2: Dynamical Systems
 
 
 :::: {.columns}
@@ -484,7 +369,7 @@ $$
 ::::
 
 
-## Network dynamics
+## Building Block 3: Coupling → Network Dynamics
 
 ```{python}
 from tvbo import Network
@@ -649,6 +534,53 @@ $$
 ::: {.fragment fragment-index=3}
 ![](img/coupling_schematic.png){height="250px" fig-align="center"}
 :::
+
+:::
+
+::::
+
+
+## Mathematical framework
+
+:::: {.rows}
+
+::: {.row style="height:10%;justify-content:center"}
+
+$$
+dS_i = \left[f_d(S_i, \theta^d, C_i, I_i) \right]dt + g(S_i, \theta^g)\, dW_i
+$$
+
+:::
+
+::: {.row style="height:90%;"}
+
+:::: {.columns}
+
+::: {.column .r-fit-text width=60%}
+
+**State Evolution**
+
+- $S_i$ - state variables at node $i$
+- $f_d$ - dynamics function with parameters $\theta^d$
+- $C_i$ - coupling input from connected nodes
+- $I_i$ - external input (stimulation, driving signals)
+- $g$ - noise diffusion coefficient with parameters $\theta^g$
+- $dW_i$ - Wiener process (stochastic fluctuations)
+
+:::
+
+::: {.column width=40%}
+
+```{python}
+# | fig-align: center
+from tvbo import Dynamics, SimulationExperiment
+kur = Dynamics.from_db('Kuramoto')
+kur.run().plot()
+```
+
+:::
+
+::::
 
 :::
 
@@ -1202,6 +1134,10 @@ result = exp.run("bifurcationkit.jl")
 <!-- - TODO: stimulation primitives in TVB
 - TODO: VEP / TEP example -->
 
+## Take Aways from Day 1
+
+- TODO: takeaways from Day 1
+
 # Day 2 — Mini Hackathon {background-color="#6880af"}
 
 ## Format
@@ -1216,6 +1152,10 @@ result = exp.run("bifurcationkit.jl")
 - TODO: EBRAINS / local setup reminder
 
 # Wrap-up {background-color="#6880af"}
+
+## Acknowledgements
+
+- TODO: thanks to all who made this happen
 
 ## Take-aways
 
