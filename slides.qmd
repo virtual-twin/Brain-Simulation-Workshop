@@ -82,8 +82,11 @@ Plotting the Brain
 :::
 
 # 1. Intro to Brain Network Modelling {background-color="#6880af"}
-- TODO: motivation for whole-brain network modeling
-- TODO: brief historical arc of TVB
+
+{{< include _slides-section-1-intro.qmd >}}
+
+<!-- section 1 intro lives in _slides-section-1-intro.qmd to keep diffs scoped
+     and reduce merge conflicts when collaborators touch slides.qmd -->
 
 ## Basic ideas and history
 

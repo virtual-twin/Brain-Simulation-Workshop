@@ -1,6 +1,7 @@
 /.quarto/
 /_site/
 /_slides-section-4_files/
+/_slides-section-1-intro_files/
 # Quarto / RevealJS render artifacts for slides
 /slides.html
 /slides_files/
