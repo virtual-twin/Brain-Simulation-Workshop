@@ -55,12 +55,12 @@ jupyter: python3
 **Block 1 - 09:00-12:00:**\
 1. Intro to Brain Network Modelling\
 2. Defining a FAIR brain network model\
-3. Applications in Basic and Clinical Research\
-4. Setup & First examples
+3. Setup & First examples\
+4. Applications in Basic and Clinical Research
 
 **Block 2 - 13:00-15:00:**\
-5. Bifurcation Theory\
-6. Parameter exploration & inference I
+1. Bifurcation Theory\
+2. Parameter exploration & inference I
 
 **Block 3 - 15:30-17:30:**\
 7. Parameter exploration & inference II\
@@ -160,7 +160,6 @@ Same spring-mass system as before.
 ![](img/figures/dynamical_systems/fig-dynamical_systems_springs_ics.mp4){fig-align="center" height="430px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_ics_thumb.png" data-autoplay="false"}
 
 :::
-
 ::::
 
 ## Phase Space {background-color="#ffffff"}
@@ -192,9 +191,63 @@ Same spring-mass system. Only the representation changes.
 :::
 
 ::::
+:::: {.columns}
+
+::: {.column style="width:30%; font-size: 0.62em;"}
+
+Same spring-mass system. Only the representation changes.
+
+**What changes?**
+
+- Plot state as $(x,v)$ instead of $x(t)$
+- Use several initial conditions
+- Add the vector field of the dynamics
+
+**What do we see?**
+
+- Closed trajectories around equilibrium
+- Conservative dynamics with no damping
+- Geometry of the flow instead of time evolution
+
+:::
+
+::: {.column style="width:70%;"}
+
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.mp4){fig-align="center" height="430px"}
+
+:::
+
+::::
 
 ## Parameters — Mass {background-color="#ffffff"}
 
+:::: {.columns}
+
+::: {.column style="width:30%; font-size: 0.62em;"}
+
+Same equations and same initial condition. Only the mass changes.
+
+**What changes?**
+
+- $m \in \{0.5, 1.0, 2.0\}$
+- $x_0=-2$, $v_0=0$ stay fixed
+- $k$ stays fixed
+
+**What do we see?**
+
+- Frequency follows $\omega = \sqrt{k/m}$
+- Heavier masses oscillate more slowly
+- Box size encodes the mass value visually
+
+:::
+
+::: {.column style="width:70%;"}
+
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.mp4){fig-align="center" height="430px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" data-autoplay="false"}
+
+:::
+
+::::
 :::: {.columns}
 
 ::: {.column style="width:30%; font-size: 0.62em;"}
@@ -403,8 +456,98 @@ net.plot_overview()
 ```
 
 
+
 ## Uncoupled system
 
+<div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
+<div style="flex:0 0 28%; box-sizing:border-box; overflow-y:scroll; height:100%; font-size:0.48em; padding-right:6px;">
+
+**@Kuramoto1975**
+
+Phase oscillator model. Each node evolves with its own natural frequency $\omega$; coupling $I$ is added by the network.
+
+**State Equations**
+$$\dot{\theta} = \omega$$
+
+*State Variables*
+
+| Variable | Initial value | Unit |
+|---|---|---|
+| $\theta$ | $\sim\mathcal{U}(0,2\pi)$ | — |
+
+**Derived Variables**
+$$activity = \sin(\theta)$$
+
+*Parameters*
+
+| Parameter | Value | Unit | Description |
+|---|---|---|---|
+| $\omega$ | 1.0 | — | Natural frequency |
+
+*Simulation settings*
+
+| | |
+|---|---|
+| Duration | 100 s |
+| Step size | 0.01 s |
+| Integrator | Heun |
+| Nodes | 3 (V1, V2, MT) |
+| Coupling $K$ | 0.0 (uncoupled) |
+
+</div>
+<div style="flex:1; box-sizing:border-box; padding-left:8px;">
+
+![](img/videos/NetworkDynamics/uncoupled_kuramoto.gif){width="100%"}
+
+</div>
+</div>
+
+## Coupled system {.nostretch}
+
+<div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
+<div style="flex:0 0 28%; box-sizing:border-box; overflow-y:scroll; height:100%; font-size:0.48em; padding-right:6px;">
+
+**@Kuramoto1975** — same model as before, now with coupling enabled.
+
+**State Equations**
+$$\dot{\theta} = I + \omega$$
+
+**Coupling: $I$**
+
+$$
+I = \frac{K \sum_{j=0}^{-1 + N} - {g}_{i,j} \sin{\left(\theta_{i} - \theta_{j} \right)}}{3}
+$$
+
+Receives $\theta$ from connected regions.
+
+**Pre-synaptic:** $c_{\text{pre}} = \sin(\theta_j - \theta_i)$
+
+**Post-synaptic:** $c_{\text{post}} = \dfrac{K \cdot gx}{3}$
+
+*Coupling parameters*
+
+| Parameter | Value | Description |
+|---|---|---|
+| $K$ | 0.4 | Global coupling strength |
+
+*Network*
+
+| Edge | Weight |
+|---|---|
+| V1 → V2 | 0.7 |
+| V2 → MT | 0.4 |
+| V1 → MT | 0.2 |
+
+*Simulation settings*
+
+| | |
+|---|---|
+| Duration | 100 s |
+| Step size | 0.01 s |
+| Integrator | Heun |
+
+</div>
+<div style="flex:1; box-sizing:border-box; padding-left:8px;">
 <div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
 <div style="flex:0 0 28%; box-sizing:border-box; overflow-y:scroll; height:100%; font-size:0.48em; padding-right:6px;">
 
@@ -499,6 +642,10 @@ Receives $\theta$ from connected regions.
 
 </div>
 </div>
+![](img/videos/NetworkDynamics/coupled_kuramoto.gif){width="100%"}
+
+</div>
+</div>
 
 ## Coupled Brain Network
 <!-- - TODO: nodes, coupling, delays, noise
@@ -588,11 +735,19 @@ kur.run().plot()
 
 # 2. Defining a FAIR brain network model {background-color="#6880af"}
 
-## Why FAIR? TVB-O in one slide
+## FAIR Guiding Principles
+
+![[@TuringCommunity2024]](https://book.the-turing-way.org/build/reproducible-definit-cf703a7826a4b28c47d3ebbe4c77204b.svg)
+
+## FAIR Principles
+
+![[@TuringCommunity2024]](https://book.the-turing-way.org/build/fair-principles-4100e1e0d2fa468c37493353b8bf77c5.svg)
+
+## A Simulation Experiment in Computational Neuroscience
 
 ![](img/tvbo/tvbo-network-insets.png)
 
-## Why FAIR? TVB-O in one slide
+## A Simulation Experiment in Computational Neuroscience
 
 ```{=html}
 <style>
@@ -855,10 +1010,20 @@ res = exp.run("tvboptim")
 # Setup & First Examples
 
 
-# 3. Bifurcation Analysis {background-color="#6880af"}
+# Clinical applications
+
+<!-- ## Virtual DBS
+![](img/figures/applications/clinical/fig-dbspy-overview_white.png) -->
+<!--
+- TODO: translational use-cases
+- TODO: virtual epileptic / Alzheimer / stroke patient examples -->
+
+
+# Bifurcation Analysis {background-color="#6880af"}
 
 ## How to analyse a brain system
 
+![](img/figures/bifurcation/fig-bifurcation-overview.png){fig-align="center" width="96%"}
 ![](img/figures/bifurcation/fig-bifurcation-overview.png){fig-align="center" width="96%"}
 
 ::: {.columns}
@@ -912,8 +1077,15 @@ $$
 ![](img/figures/bifurcation/fig-stability.png){.fragment}
 
 ![](img/figures/bifurcation/fig-stability-perturbation.png){.fragment}
+
+::: {.r-stack }
+
+![](img/figures/bifurcation/fig-stability.png){.fragment}
+
+![](img/figures/bifurcation/fig-stability-perturbation.png){.fragment}
 :::
 
+:::
 :::
 
 ::::
@@ -922,9 +1094,7 @@ $$
 
 ![](img/figures/bifurcation/fig-bifurcation-phase-portraits-animation.gif){fig-align="center" width="82%"}
 
-::: {.smaller}
-**Same local rule:** arrows define the flow; trajectories reveal attraction, repulsion, rotation and separatrices.
-:::
+![](img/figures/bifurcation/fig-bifurcation-phase-portraits-static.png)
 
 ## Regime-change building blocks
 
@@ -952,20 +1122,18 @@ $$
 $$
 
 ![](img/figures/bifurcation/fig-bifurcation-hopf-birth.gif){fig-align="center" width="100%"}
+![](img/figures/bifurcation/fig-bifurcation-hopf-birth.gif){fig-align="center" width="100%"}
 
 ::: {.smaller}
 fixed point loses stability $\Rightarrow$ stable oscillation appears
 :::
 
 
-## Generic2dOscillator: regimes over input $I$
+## Dynamical Regimes
 
-![](img/g2d_bifurcation.png){fig-align="center" width="82%"}
+<!-- ![](img/g2d_bifurcation.png){fig-align="center" width="82%"} -->
 
-::: {.smaller}
-resting branch | oscillatory window | folds and Hopf points
-:::
-
+![](img/figures/bifurcation/fig-bifurcation_timeseries.png)
 
 ## Numerical continuation {.r-fit-text}
 
@@ -996,7 +1164,7 @@ TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany networ
 :::
 
 
-## 3.1 Bifurcation analysis: hands-on
+## Bifurcation analysis: hands-on
 
 - Notebook: [`notebooks/03_bifurcation_analysis.qmd`](notebooks/03_bifurcation_analysis.qmd)
 - Sweep input $I$ in a TVB neural mass model
