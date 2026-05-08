@@ -215,6 +215,8 @@ def generate_phase_animation() -> None:
 
 def generate_damped_phase_animation() -> None:
     system = make_damped_system()
+    system.state_variables["x"]["initial_value"] = -2
+
     results = run_phase_trajectories(system)
     x_eq = system.parameters["m"]["value"] * system.parameters["g_eff"]["value"] / system.parameters["k"]["value"]
     ani = animate_phase_plane(system, results, "Damped oscillator phase plane", (x_eq, 0.0))
@@ -235,7 +237,7 @@ def generate_mass() -> None:
         model.parameters["m"]["value"] = mass
         results.append(run_system(model))
 
-    sizes = [0.4 * (mass ** (1 / 3)) for mass in m_values]
+    sizes = [0.4 * (mass ** 2) for mass in m_values]
     titles = [rf"$m={mass},\, \omega={(k_fixed / mass) ** 0.5:.4f}$" for mass in m_values]
 
     ani = animate_spring(
@@ -255,8 +257,14 @@ def generate_realism() -> None:
     ideal = make_system()
     realistic = make_damped_system()
 
+    ideal.state_variables["x"]["initial_value"] = -2.0
+    ideal.state_variables["v"]["initial_value"] = 0.0
+    realistic.state_variables["x"]["initial_value"] = -2.0
+    realistic.state_variables["v"]["initial_value"] = 0.0
+
     ideal_result = run_system(ideal)
     realistic_result = run_system(realistic)
+
 
     g_eff = realistic.parameters["g_eff"]["value"]
     k = realistic.parameters["k"]["value"]

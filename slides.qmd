@@ -248,34 +248,6 @@ Same equations and same initial condition. Only the mass changes.
 :::
 
 ::::
-:::: {.columns}
-
-::: {.column style="width:30%; font-size: 0.62em;"}
-
-Same equations and same initial condition. Only the mass changes.
-
-**What changes?**
-
-- $m \in \{0.5, 1.0, 2.0\}$
-- $x_0=-2$, $v_0=0$ stay fixed
-- $k$ stays fixed
-
-**What do we see?**
-
-- Frequency follows $\omega = \sqrt{k/m}$
-- Heavier masses oscillate more slowly
-- Box size encodes the mass value visually
-
-:::
-
-::: {.column style="width:70%;"}
-
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_mass.mp4){fig-align="center" height="430px" controls="" loop="" preload="none" poster="img/figures/dynamical_systems/fig-dynamical_systems_springs_mass_thumb.png" data-autoplay="false"}
-
-:::
-
-::::
-
 
 ## Towards Realism — Damping & Load {background-color="#ffffff"}
 
@@ -923,31 +895,16 @@ res = exp.run("tvboptim")
 
 ::::
 
-## Clinical applications
-
-## Virtual DBS
-![](img/figures/applications/clinical/fig-dbspy-overview_white.png)
-
-- TODO: translational use-cases
-- TODO: virtual epileptic / Alzheimer / stroke patient examples
 
 # Setup & First Examples
 
-
-# Clinical applications
-
-<!-- ## Virtual DBS
-![](img/figures/applications/clinical/fig-dbspy-overview_white.png) -->
-<!--
-- TODO: translational use-cases
-- TODO: virtual epileptic / Alzheimer / stroke patient examples -->
+# Clinical Applications
 
 
 # Bifurcation Analysis {background-color="#6880af"}
 
 ## How to analyse a brain system
 
-![](img/figures/bifurcation/fig-bifurcation-overview.png){fig-align="center" width="96%"}
 ![](img/figures/bifurcation/fig-bifurcation-overview.png){fig-align="center" width="96%"}
 
 ::: {.columns}
