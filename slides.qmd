@@ -55,12 +55,12 @@ jupyter: python3
 **Block 1 - 09:00-12:00:**\
 1. Intro to Brain Network Modelling\
 2. Defining a FAIR brain network model\
-3. Applications in Basic and Clinical Research\
-4. Setup & First examples
+3. Setup & First examples\
+4. Applications in Basic and Clinical Research
 
 **Block 2 - 13:00-15:00:**\
-5. Bifurcation Theory\
-6. Parameter exploration & inference I
+1. Bifurcation Theory\
+2. Parameter exploration & inference I
 
 **Block 3 - 15:30-17:30:**\
 7. Parameter exploration & inference II\
@@ -383,7 +383,7 @@ $$
 ::::
 
 
-# Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
+# Towards Brain Dynamics: Mean Field Models {background-video="img/videos/birds.mp4" background-video-loop="true" background-video-muted="true"}
 
 
 ## Mean field models & Neural Masses
@@ -656,11 +656,19 @@ $$
 
 # 2. Defining a FAIR brain network model {background-color="#6880af"}
 
-## Why FAIR? TVB-O in one slide
+## FAIR Guiding Principles
+
+![[@TuringCommunity2024]](https://book.the-turing-way.org/build/reproducible-definit-cf703a7826a4b28c47d3ebbe4c77204b.svg)
+
+## FAIR Principles
+
+![[@TuringCommunity2024]](https://book.the-turing-way.org/build/fair-principles-4100e1e0d2fa468c37493353b8bf77c5.svg)
+
+## A Simulation Experiment in Computational Neuroscience
 
 ![](img/tvbo/tvbo-network-insets.png)
 
-## Why FAIR? TVB-O in one slide
+## A Simulation Experiment in Computational Neuroscience
 
 ```{=html}
 <style>
@@ -887,8 +895,13 @@ res = exp.run("tvboptim")
 ```
 :::
 
-
 ::::
+
+## Specifying an experiment with TVB-O
+
+![](img/figures/tvbo/fig-overview.png){height=680px fig-align="center"}
+
+## What makes building brain network models easier?
 
 ## Applications in basic research
 
@@ -912,18 +925,19 @@ res = exp.run("tvboptim")
 
 ::::
 
-## Clinical applications
-
-## Virtual DBS
-![](img/figures/applications/clinical/fig-dbspy-overview_white.png)
-
-- TODO: translational use-cases
-- TODO: virtual epileptic / Alzheimer / stroke patient examples
-
 # Setup & First Examples
 
 
-# 3. Bifurcation Analysis {background-color="#6880af"}
+# Clinical applications
+
+<!-- ## Virtual DBS
+![](img/figures/applications/clinical/fig-dbspy-overview_white.png) -->
+<!--
+- TODO: translational use-cases
+- TODO: virtual epileptic / Alzheimer / stroke patient examples -->
+
+
+# Bifurcation Analysis {background-color="#6880af"}
 
 ## How to analyse a brain system
 
@@ -990,9 +1004,9 @@ $$
 
 ![](img/figures/bifurcation/fig-bifurcation-phase-portraits-animation.gif){fig-align="center" width="82%"}
 
-::: {.smaller}
-**Same local rule:** arrows define the flow; trajectories reveal attraction, repulsion, rotation and separatrices.
-:::
+## 2D portraits
+
+![](img/figures/bifurcation/fig-bifurcation-phase-portraits-static.png)
 
 ## Regime-change building blocks
 
@@ -1026,14 +1040,11 @@ fixed point loses stability $\Rightarrow$ stable oscillation appears
 :::
 
 
-## Generic2dOscillator: regimes over input $I$
+## Dynamical Regimes
 
-![](img/g2d_bifurcation.png){fig-align="center" width="82%"}
+<!-- ![](img/g2d_bifurcation.png){fig-align="center" width="82%"} -->
 
-::: {.smaller}
-resting branch | oscillatory window | folds and Hopf points
-:::
-
+![](img/figures/bifurcation/fig-bifurcation_timeseries.png)
 
 ## Numerical continuation {.r-fit-text}
 
@@ -1064,7 +1075,7 @@ TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany networ
 :::
 
 
-## 3.1 Bifurcation analysis: hands-on
+## Bifurcation analysis: hands-on
 
 - Notebook: [`notebooks/03_bifurcation_analysis.qmd`](notebooks/03_bifurcation_analysis.qmd)
 - Sweep input $I$ in a TVB neural mass model

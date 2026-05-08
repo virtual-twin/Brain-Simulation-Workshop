@@ -49,17 +49,23 @@ CASES = [
     ("Centre", _slower_centre_yaml(), "centre", 44, 0.75),
 ]
 
-PP_POS = {"node": (0, 1), "saddle": (0, 2), "focus": (1, 1), "centre": (1, 2)}
-TS_POS = {"node": (0, 0), "saddle": (0, 3), "focus": (1, 0), "centre": (1, 3)}
+EQUATIONS = {
+    "node":   r"$\dot{x}_1 = -0.35\,x_1$" "\n" r"$\dot{x}_2 = -0.18\,x_2$",
+    "saddle": r"$\dot{x}_1 = 0.1\,(x_1 - x_2)$" "\n" r"$\dot{x}_2 = -0.1\,(x_1 + x_2)$",
+    "focus":  r"$\dot{x}_1 = -0.12\,x_1 - 0.8\,x_2$" "\n" r"$\dot{x}_2 = 0.8\,x_1 - 0.12\,x_2$",
+    "centre": r"$\dot{x}_1 = -0.8\,x_2$" "\n" r"$\dot{x}_2 = 0.8\,x_1$",
+}
 
-fig = plt.figure(figsize=(12.2, 6.0))
-gs = fig.add_gridspec(
-    2,
-    4,
-    width_ratios=[1.35, 2.0, 2.0, 1.35],
-    height_ratios=[1.0, 1.0],
-    hspace=0.34,
-    wspace=0.34,
+# Layout: eq | ts | pp || pp | ts | eq
+MOSAIC = [
+    ["node_eq",  "node_ts",  "node_pp",  "saddle_pp",  "saddle_ts",  "saddle_eq"],
+    ["focus_eq", "focus_ts", "focus_pp", "centre_pp",  "centre_ts",  "centre_eq"],
+]
+fig, axes = plt.subplot_mosaic(
+    MOSAIC,
+    figsize=(17.0, 7.5),
+    gridspec_kw={"width_ratios": [0.45, 1.2, 2.0, 2.0, 1.2, 0.45]},
+    layout="compressed",
 )
 
 artists = []
@@ -78,17 +84,26 @@ for title, yml, key, seed, shrink in CASES:
     )
     data_by_key[key] = runs
 
-    pp_ax = fig.add_subplot(gs[PP_POS[key]])
+    pp_ax = axes[f"{key}_pp"]
     dyn.plot("x1", "x2", kind="vectorfield", ax=pp_ax, grid_n=20, stream=True)
     pp_ax.plot(0, 0, "o", color=ACCENT, ms=9, mec="white", mew=1.5, zorder=15, clip_on=False)
     pp_ax.set_title(title, fontsize=10)
 
-    ts_ax = fig.add_subplot(gs[TS_POS[key]])
+    ts_ax = axes[f"{key}_ts"]
     ts_ax.set_title(r"$x_1(t)$", fontsize=8.5)
     ts_ax.set_xlabel("$t$", fontsize=8)
     ts_ax.set_ylabel("$x_1$", fontsize=8)
     ts_ax.tick_params(labelsize=7)
     ts_ax.set_xlim(0, T_FINAL)
+
+    eq_ax = axes[f"{key}_eq"]
+    eq_ax.axis("off")
+    eq_ax.text(
+        0.5, 0.5, EQUATIONS[key],
+        transform=eq_ax.transAxes,
+        ha="center", va="center",
+        fontsize=8.5, linespacing=1.9,
+    )
 
     yvals = [run["series"]["x1"] for run in runs]
     ymin = min(float(y.min()) for y in yvals)
