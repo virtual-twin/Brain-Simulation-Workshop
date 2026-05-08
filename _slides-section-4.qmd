@@ -88,7 +88,7 @@ Every method is a **bet** about which of these difficulties dominates.
 :::
 
 ::: {.fragment}
-![](./img/section-4/tvboptim.png){fig-align="center" height="40%"}
+![](./img/section-4/tvboptim.png){fig-align="center" width="50%"}
 :::
 
 ## The example problem: fMRI functional connectivity
