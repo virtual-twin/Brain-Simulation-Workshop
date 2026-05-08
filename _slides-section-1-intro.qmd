@@ -1,0 +1,126 @@
+
+## Why network models? Same lesion, different outcomes
+
+:::: {.columns}
+
+::: {.column width="55%"}
+
+::: {.incremental}
+- Two patients, similar lesion location and volume
+- Different deficits, different recovery trajectories
+- The locus alone doesn't predict outcome
+- Function lives in the **network**: regional damage propagates through the connections that survive
+:::
+
+
+:::
+
+::: {.column width="45%"}
+
+![Same lesion, same network position — but a hub lesion (left, degree 6) wipes out most of the network's input, while a peripheral lesion (right, degree 1) barely touches it.](img/section-1/lesion_network.png){fig-align="center"}
+
+:::
+
+::::
+::: {.fragment}
+**To predict outcome, model the whole network, not a catalogue of regions.**
+:::
+
+
+## The brain is never idle
+
+:::: {.columns}
+
+::: {.column width="55%"}
+
+::: {.incremental}
+- At rest, the brain shows **structured spontaneous activity**, not noise
+- Resting-state networks are reproducible across subjects and species
+- Tasks are perturbations of this ongoing dynamical state
+- Like a tennis player at the baseline: never still, poised for the next service
+:::
+
+::: {.fragment}
+**A model has to reproduce the resting repertoire, not only stimulus responses.**
+:::
+
+:::
+
+::: {.column width="45%"}
+
+![Synthetic resting activity for 8 regions in 3 modules. Top: traces wiggle in sync within each module, decoupled across them. Bottom: the resulting FC matrix shows three clear blocks.](img/section-1/rest_structured.png){fig-align="center" width="50%"}
+
+:::
+
+::::
+
+
+## From scans to a simulator: the TVB recipe
+
+::: {.fragment}
+::: {style="height:240px; background:rgba(104,128,175,0.08); border:2px dashed #6880af; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:1em; text-align:center; color:#3a5080; font-size:0.8em; font-style:italic; margin-bottom:0.6em;"}
+TODO: 4-tile recipe diagram — Connectome | Local dynamics | Coupling | Observation
+:::
+:::
+
+::: {.smaller}
+
+| Ingredient | Symbol | Source |
+|---|---|---|
+| **Connectome** (weights, delays) | $A_{ij},\ \tau_{ij}$ | DTI / tractography |
+| **Local dynamics** | $f$ | Neural mass / mean-field model |
+| **Coupling** | $g$ | Network propagation, with delays |
+| **Observation** | $h$ | BOLD / EEG / MEG forward model |
+
+:::
+
+::: {.fragment .smaller}
+The rest of this section unpacks each ingredient.
+:::
+
+
+## Multi-scale by design
+
+:::: {.columns}
+
+::: {.column width="55%"}
+
+::: {.incremental}
+- **Synapses → populations → regions → whole brain**
+- We don't simulate every spike; we simulate **mean-field** activity at the population level
+- Mesoscopic dynamics are largely insensitive to microscopic detail
+- This is the scale that maps onto fMRI / EEG / MEG observables
+:::
+
+::: {.fragment .smaller}
+*Universality:* the macroscopic behaviour does not depend on most microscopic details.
+:::
+
+:::
+
+::: {.column width="45%"}
+
+::: {style="aspect-ratio:4/3; background:rgba(104,128,175,0.08); border:2px dashed #6880af; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:1em; text-align:center; color:#3a5080; font-size:0.75em; font-style:italic;"}
+TODO: 4-tile horizontal scale ladder (synapse → population → region → brain) with arrow
+:::
+
+:::
+
+::::
+
+
+## A short history of TVB
+
+::: {.fragment}
+::: {style="height:200px; background:rgba(104,128,175,0.08); border:2px dashed #6880af; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:1em; text-align:center; color:#3a5080; font-size:0.8em; font-style:italic; margin-bottom:0.6em;"}
+TODO: horizontal 3-milestone timeline — TVB ~2013 · applications era · FAIR / TVB-O era
+:::
+:::
+
+::: {.smaller .incremental}
+
+- **~2013** — Sanz Leon, Jirsa et al.: first TVB release. Neural masses on the connectome, MATLAB/Python GUI.
+- **~2015–2022** — Python ecosystem and a growing model zoo. Clinical milestones: epilepsy (Jirsa group), Alzheimer's [@Stefanovski2019], connectome-constrained decision dynamics [@Schirner2023], cortical waves [@Koller2024].
+- **2024–today** — FAIR-by-construction with **TVB-O** [@Martin2025] and **tvboptim** [@Pille2025]: declarative, ontology-backed, reproducible whole-brain simulation. *This workshop.*
+
+:::

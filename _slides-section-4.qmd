@@ -1,5 +1,5 @@
 
-# 4. Parameter exploration and inference {background-color="#0b3d91"}
+# 4. Parameter exploration and inference {background-color="#6880af"}
 
 ## Models as computational hypotheses
 
