@@ -17,11 +17,9 @@ render:
     - slides.qmd
     - notebooks/1_introduction.qmd
     - notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
-    - notebooks/2_fair_model.qmd
-    - notebooks/02a_mean_field_models.qmd
-    - notebooks/02b_coupled_networks.qmd
-    - notebooks/3_dynamics.qmd
-    - notebooks/03_bifurcation_analysis.qmd
+    - notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd
+    - notebooks/3_ParameterExploration/ParameterExploration.qmd
+    - notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd
     - notebooks/4_optimization.qmd
     - notebooks/04a_alzheimer_usecase.qmd
     - notebooks/04b_parameter_fitting.qmd
@@ -53,35 +51,30 @@ website:
       - text: Notebooks
         menu:
           - href: notebooks/1_introduction.qmd
-            text: "1. Introduction to Brain Network Modelling"
+            text: "0. Introduction to Brain Network Modelling"
+          - text: "---"
           - href: notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
-            text: "  1.1 Mathematical Framework"
-          - text: "---"
-          - href: notebooks/2_fair_model.qmd
-            text: "2. Defining a FAIR model"
-          - href: notebooks/02a_mean_field_models.qmd
-            text: "  2.1 Mean field models"
-          - href: notebooks/02b_coupled_networks.qmd
-            text: "  2.2 Coupled networks"
-          - text: "---"
-          - href: notebooks/3_dynamics.qmd
-            text: "3. Dynamical perspective"
-          - href: notebooks/03_bifurcation_analysis.qmd
-            text: "  3.1 Bifurcation analysis"
+            text: "1. Dynamical Systems"
+          - href: notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd
+            text: "2. Networks and Noise"
+          - href: notebooks/3_ParameterExploration/ParameterExploration.qmd
+            text: "3. Parameter Exploration"
+          - href: notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd
+            text: "4. Bifurcation Analysis"
           - text: "---"
           - href: notebooks/4_optimization.qmd
-            text: "4. Parameter optimisation"
+            text: "5. Parameter optimisation"
           - href: notebooks/04a_alzheimer_usecase.qmd
-            text: "  4.1 Alzheimer use case"
+            text: "  5.1 Alzheimer use case"
           - href: notebooks/04b_parameter_fitting.qmd
-            text: "  4.2 Parameter fitting"
+            text: "  5.2 Parameter fitting"
           - href: notebooks/4_inference_demos.qmd
-            text: "  4.3 Inference demos"
+            text: "  5.3 Inference demos"
           - text: "---"
           - href: notebooks/5_stimulation.qmd
-            text: "5. Stimulating the brain"
+            text: "6. Stimulating the brain"
           - href: notebooks/05_stimulation.qmd
-            text: "  5.1 Stimulation"
+            text: "  6.1 Stimulation"
     right:
       - icon: github
         href: "https://github.com/virtual-twin/Brain-Simulation-Workshop"
@@ -92,25 +85,25 @@ website:
       contents:
         - setup.qmd
         - notebooks/1_introduction.qmd
-        - section: "1.1 Mathematical Framework"
+        - section: "1. Dynamical Systems"
           contents:
             - notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
-        - section: "2. Defining a FAIR model"
-          href: notebooks/2_fair_model.qmd
+        - section: "2. Networks and Noise"
           contents:
-            - notebooks/02a_mean_field_models.qmd
-            - notebooks/02b_coupled_networks.qmd
-        - section: "3. Dynamical perspective"
-          href: notebooks/3_dynamics.qmd
+            - notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd
+        - section: "3. Parameter Exploration"
           contents:
-            - notebooks/03_bifurcation_analysis.qmd
-        - section: "4. Parameter optimisation"
+            - notebooks/3_ParameterExploration/ParameterExploration.qmd
+        - section: "4. Bifurcation Analysis"
+          contents:
+            - notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd
+        - section: "5. Parameter optimisation"
           href: notebooks/4_optimization.qmd
           contents:
             - notebooks/04a_alzheimer_usecase.qmd
             - notebooks/04b_parameter_fitting.qmd
             - notebooks/4_inference_demos.qmd
-        - section: "5. Stimulating the brain"
+        - section: "6. Stimulating the brain"
           href: notebooks/5_stimulation.qmd
           contents:
             - notebooks/05_stimulation.qmd
