@@ -548,144 +548,11 @@ Receives $\theta$ from connected regions.
 
 </div>
 <div style="flex:1; box-sizing:border-box; padding-left:8px;">
-<div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
-<div style="flex:0 0 28%; box-sizing:border-box; overflow-y:scroll; height:100%; font-size:0.48em; padding-right:6px;">
-
-**@Kuramoto1975**
-
-Phase oscillator model. Each node evolves with its own natural frequency $\omega$; coupling $I$ is added by the network.
-
-**State Equations**
-$$\dot{\theta} = \omega$$
-
-*State Variables*
-
-| Variable | Initial value | Unit |
-|---|---|---|
-| $\theta$ | $\sim\mathcal{U}(0,2\pi)$ | — |
-
-**Derived Variables**
-$$activity = \sin(\theta)$$
-
-*Parameters*
-
-| Parameter | Value | Unit | Description |
-|---|---|---|---|
-| $\omega$ | 1.0 | — | Natural frequency |
-
-*Simulation settings*
-
-| | |
-|---|---|
-| Duration | 100 s |
-| Step size | 0.01 s |
-| Integrator | Heun |
-| Nodes | 3 (V1, V2, MT) |
-| Coupling $K$ | 0.0 (uncoupled) |
-
-</div>
-<div style="flex:1; box-sizing:border-box; padding-left:8px;">
-
-![](img/videos/NetworkDynamics/uncoupled_kuramoto.gif){width="100%"}
-
-</div>
-</div>
-
-## Coupled system {.nostretch}
-
-<div style="display:flex; align-items:flex-start; gap:0; width:100%; height:660px;">
-<div style="flex:0 0 28%; box-sizing:border-box; overflow-y:scroll; height:100%; font-size:0.48em; padding-right:6px;">
-
-**@Kuramoto1975** — same model as before, now with coupling enabled.
-
-**State Equations**
-$$\dot{\theta} = I + \omega$$
-
-**Coupling: $I$**
-
-$$
-I = \frac{K \sum_{j=0}^{-1 + N} - {g}_{i,j} \sin{\left(\theta_{i} - \theta_{j} \right)}}{3}
-$$
-
-Receives $\theta$ from connected regions.
-
-**Pre-synaptic:** $c_{\text{pre}} = \sin(\theta_j - \theta_i)$
-
-**Post-synaptic:** $c_{\text{post}} = \dfrac{K \cdot gx}{3}$
-
-*Coupling parameters*
-
-| Parameter | Value | Description |
-|---|---|---|
-| $K$ | 0.4 | Global coupling strength |
-
-*Network*
-
-| Edge | Weight |
-|---|---|
-| V1 → V2 | 0.7 |
-| V2 → MT | 0.4 |
-| V1 → MT | 0.2 |
-
-*Simulation settings*
-
-| | |
-|---|---|
-| Duration | 100 s |
-| Step size | 0.01 s |
-| Integrator | Heun |
-
-</div>
-<div style="flex:1; box-sizing:border-box; padding-left:8px;">
 
 ![](img/videos/NetworkDynamics/coupled_kuramoto.gif){width="100%"}
 
 </div>
 </div>
-![](img/videos/NetworkDynamics/coupled_kuramoto.gif){width="100%"}
-
-</div>
-</div>
-
-## Coupled Brain Network
-<!-- - TODO: nodes, coupling, delays, noise
-- TODO: connectome loading
-- TODO: global coupling sweep -->
-
-:::: {.columns}
-
-::: {.column width=20%}
-![](img/fig-network_visualization_rows.png){height=590px}
-:::
-
-::: {.column width=80%}
-
-::: {.fragment fragment-index=2}
-$$
-C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij}), \theta^c), S_i, \theta^c\Big)
-$$
-
-::: {style="font-size: 0.55em;"}
-**Coupling**
-
-- $f_c^{\text{pre}}$ - pre-aggregation transformation
-- $A_{ij}$ - structural connectivity weight ($j \to i$)
-- $\tau_{ij}$ - transmission delay (tract length / conduction speed)
-- $f_c^{\text{post}}$ - post-aggregation transformation
-- $\theta^c$ - coupling parameters
-
-:::
-
-:::
-
-::: {.fragment fragment-index=3}
-![](img/coupling_schematic.png){height="250px" fig-align="center"}
-:::
-
-:::
-
-::::
-
 
 ## Mathematical framework
 
@@ -732,6 +599,46 @@ kur.run().plot()
 :::
 
 ::::
+
+## Coupled Brain Network
+<!-- - TODO: nodes, coupling, delays, noise
+- TODO: connectome loading
+- TODO: global coupling sweep -->
+
+:::: {.columns}
+
+::: {.column width=20%}
+![](img/fig-network_visualization_rows.png){height=590px}
+:::
+
+::: {.column width=80%}
+
+::: {.fragment fragment-index=2}
+$$
+C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij}), \theta^c), S_i, \theta^c\Big)
+$$
+
+::: {style="font-size: 0.55em;"}
+**Coupling**
+
+- $f_c^{\text{pre}}$ - pre-aggregation transformation
+- $A_{ij}$ - structural connectivity weight ($j \to i$)
+- $\tau_{ij}$ - transmission delay (tract length / conduction speed)
+- $f_c^{\text{post}}$ - post-aggregation transformation
+- $\theta^c$ - coupling parameters
+
+:::
+
+:::
+
+::: {.fragment fragment-index=3}
+![](img/coupling_schematic.png){height="250px" fig-align="center"}
+:::
+
+:::
+
+::::
+
 
 # 2. Defining a FAIR brain network model {background-color="#6880af"}
 
