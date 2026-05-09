@@ -1,0 +1,162 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "jupyter: python3\n",
+        "title: \"Parameter Exploration\"\n",
+        "---"
+      ],
+      "id": "8ef58105"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "collapse": true
+      },
+      "source": [
+        "#| label: setup\n",
+        "import bsplot\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "from tvbo import Dynamics, SimulationExperiment\n",
+        "from tvbo.datamodel.schema import Exploration, ExplorationAxis\n",
+        "\n",
+        "bsplot.style.use(\"tvbo\")"
+      ],
+      "id": "setup",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "# Sweeping parameters declaratively\n",
+        "\n",
+        "In Chapter 1 we changed parameters by re-instantiating the `Dynamics`. That is fine for one or two values, but it scales badly. TVBO has a first-class metadata object for this: `Exploration`.\n",
+        "\n",
+        "An `Exploration` lives on `experiment.explorations` and is dispatched by the backend when you call `.run()`.\n",
+        "\n",
+        "## A one-axis sweep\n",
+        "\n",
+        "We take the `Generic2dOscillator` and sweep its bifurcation parameter `a` across five values."
+      ],
+      "id": "40c8a214"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "model = Dynamics.from_db(\"Generic2dOscillator\")\n",
+        "\n",
+        "exp = SimulationExperiment(dynamics=model)\n",
+        "exp.integration.duration = 800       # ms\n",
+        "exp.integration.step_size = 0.01      # ms\n",
+        "\n",
+        "exp.explorations[\"a_sweep\"] = Exploration(\n",
+        "    name=\"a_sweep\",\n",
+        "    space=ExplorationAxis(parameter=\"a\", explored_values=[-2.0, -1.0, 0.0, 1.0, 2.0]),\n",
+        ")\n",
+        "\n",
+        "result = exp.run(\"tvboptim\")"
+      ],
+      "id": "ddd402fc",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The result keeps the same shape conventions as a single simulation, with one extra axis for the swept parameter:"
+      ],
+      "id": "b2e4fa67"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sweep = result.explorations[\"a_sweep\"]\n",
+        "print(\"results shape:\", sweep.results.shape, \"  axis:\", sweep.axes[0].name)"
+      ],
+      "id": "aa32e950",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "`Exploration.plot()` overlays the trajectories. Increasing `a` walks the system through a Hopf bifurcation: from a stable focus to a sustained limit cycle."
+      ],
+      "id": "2a9e18a3"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sweep.plot(overlay=True)"
+      ],
+      "id": "bbfe66cb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Trial-based exploration\n",
+        "\n",
+        "The same object also drives Monte-Carlo style replication via `n_trials`. Each trial uses different initial conditions and (if noise is configured) different noise realisations."
+      ],
+      "id": "fdcabd77"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "from tvbo.datamodel.schema import Distribution, Range\n",
+        "# exp.explorations.clear()\n",
+        "\n",
+        "exp.dynamics.state_variables['V'].distribution = Distribution(domain=Range(lo=-1, hi=1))\n",
+        "exp.dynamics.state_variables['W'].initial_value = 0\n",
+        "\n",
+        "exp.explorations[\"trials\"] = Exploration(name=\"trials\", n_trials=10)\n",
+        "\n",
+        "result = exp.run(\"tvb\")\n",
+        "result.explorations[\"trials\"].plot(overlay=True)"
+      ],
+      "id": "9ea665da",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Recap\n",
+        "\n",
+        "- `exp.explorations[name] = Exploration(...)` declares a sweep — never assign a plain dict.\n",
+        "- `ExplorationAxis(parameter=..., explored_values=[...])` defines the axis.\n",
+        "- `n_trials=N` runs `N` randomised replicates.\n",
+        "- The backend (`tvboptim`) vectorises the sweep automatically; nothing else changes.\n",
+        "\n",
+        "The next chapter takes the same `Dynamics` object and replaces brute-force sweeping with **continuation**, which tracks equilibria and limit cycles directly."
+      ],
+      "id": "f623aa24"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Users/leonmartin_bih/projects/TVB-O/tvb-ontology-optim-workshop/.venv/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

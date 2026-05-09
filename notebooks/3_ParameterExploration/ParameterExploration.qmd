@@ -30,7 +30,7 @@ model = Dynamics.from_db("Generic2dOscillator")
 
 exp = SimulationExperiment(dynamics=model)
 exp.integration.duration = 800       # ms
-exp.integration.step_size = 0.1      # ms
+exp.integration.step_size = 0.01      # ms
 
 exp.explorations["a_sweep"] = Exploration(
     name="a_sweep",
@@ -50,9 +50,7 @@ print("results shape:", sweep.results.shape, "  axis:", sweep.axes[0].name)
 `Exploration.plot()` overlays the trajectories. Increasing `a` walks the system through a Hopf bifurcation: from a stable focus to a sustained limit cycle.
 
 ```{python}
-fig = sweep.plot(overlay=True)
-fig.suptitle("Sweep of Generic2dOscillator parameter a")
-plt.show()
+sweep.plot(overlay=True)
 ```
 
 ## Trial-based exploration
@@ -60,13 +58,16 @@ plt.show()
 The same object also drives Monte-Carlo style replication via `n_trials`. Each trial uses different initial conditions and (if noise is configured) different noise realisations.
 
 ```{python}
-exp.explorations.clear()
+from tvbo.datamodel.schema import Distribution, Range
+# exp.explorations.clear()
+
+exp.dynamics.state_variables['V'].distribution = Distribution(domain=Range(lo=-1, hi=1))
+exp.dynamics.state_variables['W'].initial_value = 0
+
 exp.explorations["trials"] = Exploration(name="trials", n_trials=10)
 
 result = exp.run("tvboptim")
-fig = result.explorations["trials"].plot(overlay=True)
-fig.suptitle("Ten trials with randomised initial conditions")
-plt.show()
+result.explorations["trials"].plot(overlay=True)
 ```
 
 ## Recap
