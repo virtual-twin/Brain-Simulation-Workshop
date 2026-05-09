@@ -553,13 +553,34 @@ at fine scales.
 
 ## Use-cases
 
-**I — fMRI Bold FC Optimization**
+:::: {.columns}
+::: {.column width="50%"}
+::: {.fragment}
+**I — fMRI BOLD FC**
 
-- Same as toy model, extent to regional w
-- Link:  
+Reduced Wong-Wang → match empirical FC.
 
-**II — MEG Peak Frequency Optimization**
+- Loss: RMSE on FC matrices
+- Path: grid `(G, w)` → global gradient fit → per-region `w`
+- [Open notebook](notebooks/4_I_fMRI_BOLD_FC.html){target="_blank"}
+:::
+:::
 
-- Fit the Peak frequencies of an oscillating model to match empirical data
-- Link:
+::: {.column width="50%"}
+::: {.fragment}
+**II — MEG Peak Frequency**
+
+Jansen-Rit with delays → match the alpha-band gradient.
+
+- Target: 7 Hz (association) → 11 Hz (visual cortex)
+- Loss: $1 - \text{mean}(\mathrm{corr})$ across regional PSDs
+- Path: grid `(a, b)` → per-region `(a, b)` gradient fit
+- [Open notebook](notebooks/4_II_MEG_Peak_Frequency.html){target="_blank"}
+:::
+:::
+::::
+
+::: {.fragment}
+Both notebooks share the same TVB-Optim idioms (`Parameter`, `.shape`, `Space`, `@cache`) on different observables.
+:::
 
