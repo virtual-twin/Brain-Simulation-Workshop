@@ -87,11 +87,7 @@
 
 ## From scans to a simulator: the TVB recipe
 
-::: {.fragment}
-::: {style="height:240px; background:rgba(104,128,175,0.08); border:2px dashed #6880af; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:1em; text-align:center; color:#3a5080; font-size:0.8em; font-style:italic; margin-bottom:0.6em;"}
-TODO: 4-tile recipe diagram — Connectome | Local dynamics | Coupling | Observation
-:::
-:::
+![](img/fig-tvb-recipe.png){fig-align="center"}
 
 ::: {.smaller .fragment}
 
