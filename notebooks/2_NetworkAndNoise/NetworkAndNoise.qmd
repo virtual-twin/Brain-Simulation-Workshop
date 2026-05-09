@@ -41,12 +41,11 @@ nodes:
   - {id: 1, label: B}
   - {id: 2, label: C}
 edges:
-  - {source: 0, target: 1, parameters: {weight: {value: 0.6}, distance: {value: 30, unit: mm}}}
+  - {source: 0, target: 1, parameters: {weight: {value: 2}, distance: {value: 30, unit: mm}}}
   - {source: 1, target: 2, parameters: {weight: {value: 0.5}, distance: {value: 40, unit: mm}}}
   - {source: 0, target: 2, parameters: {weight: {value: 0.3}, distance: {value: 60, unit: mm}}}
 """)
 toy.plot_graph()
-plt.show()
 ```
 
 The Desikan-Killiany connectome ships with TVBO and is loaded the same way:
@@ -55,8 +54,24 @@ The Desikan-Killiany connectome ships with TVBO and is loaded the same way:
 sc = Network.from_db(rec="avgMatrix", atlas="DesikanKilliany")
 print(sc.label, "—", sc.number_of_nodes, "regions")
 sc.plot_overview()
-plt.show()
 ```
+
+## The Coupling Function
+
+```{python}
+from tvbo import Coupling
+C = Coupling.from_db('Linear')
+C
+```
+
+```{python}
+C.equation
+```
+
+```{python}
+C.plot()
+```
+
 
 ## Simulating a coupled network
 
@@ -65,10 +80,14 @@ plt.show()
 ```{python}
 model = Dynamics.from_db("Generic2dOscillator")
 
+toy.coupling['c_glob'] = C
+
+C.parameters['a'].value=1.5
+
+
 exp = SimulationExperiment(
     dynamics=model,
     network=toy,
-    coupling="Linear",
 )
 exp.integration.duration = 1000      # ms
 exp.integration.step_size = 0.1      # ms
@@ -81,9 +100,31 @@ result.integration.data
 The result is an `xarray.DataArray` with named axes. We select the first state variable and let TVBO plot all regions.
 
 ```{python}
-fig = result.integration.plot()
-fig.suptitle("Deterministic network — Generic2dOscillator on ToyChain")
-plt.show()
+result.integration.sel(variable='V').plot()
+```
+
+Fully declarative wiring can also be expressed with an explicit mapping layer: network-level coupling aliases are declared once, then each model coupling input points to its source.
+
+```{python}
+import copy
+
+model_decl = Dynamics.from_db("Generic2dOscillator")
+toy_decl = copy.deepcopy(toy)
+
+toy_decl.coupling["global_linear"] = Coupling.from_db("Linear")
+
+model_decl.coupling_inputs["c_glob"].source = "global_linear"
+
+exp_decl = SimulationExperiment(
+    dynamics=model_decl,
+    network=toy_decl,
+)
+exp_decl.integration.duration = 1000
+exp_decl.integration.step_size = 0.1
+exp_decl.integration.method = "Heun"
+
+result_decl = exp_decl.run("tvboptim")
+result_decl.integration.sel(variable='V').plot()
 ```
 
 ## Adding noise
@@ -95,27 +136,21 @@ Noise enters the equation through the diffusion term $g(S, \theta^g)\,dW$. TVBO 
 ```{python}
 exp.integration.noise = Noise(
     noise_type="gaussian",
-    parameters={"sigma": {"value": 0.05}},
+    parameters={"sigma": {"value": 0.01}},
 )
 result_white = exp.run("tvboptim")
-fig = result_white.integration.plot()
-fig.suptitle("Stochastic network — additive Gaussian noise (σ = 0.05)")
-plt.show()
+result_white.integration.sel(variable='V').plot()
 ```
 
-### Ornstein–Uhlenbeck (coloured) noise
-
-OU noise has finite correlation time `ntau` and intensity `nsig`, producing temporally smooth fluctuations.
 
 ```{python}
 exp.integration.noise = Noise(
-    noise_type="ou",
-    parameters={"nsig": {"value": 0.05}, "ntau": {"value": 5.0}},
+    noise_type="gaussian",
+    parameters={"sigma": {"value": 0.01}},
 )
-result_ou = exp.run("tvboptim")
-fig = result_ou.integration.plot()
-fig.suptitle("Stochastic network — Ornstein–Uhlenbeck noise (ntau = 5 ms)")
-plt.show()
+exp.integration.transient = 200
+result_white = exp.run("tvboptim")
+result_white.integration.sel(variable='V').plot()
 ```
 
 ## What we have so far

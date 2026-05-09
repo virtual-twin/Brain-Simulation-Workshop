@@ -12,7 +12,8 @@ from pathlib import Path
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.animation import FuncAnimation
+from matplotlib.animation import FuncAnimation, PillowWriter
+from PIL import Image
 
 import bsplot
 from tvbo import Dynamics, SimulationExperiment
@@ -69,22 +70,19 @@ def v_series(result) -> np.ndarray:
     return np.asarray(result.data.sel(variable="v")).ravel()
 
 
-def save_animation(ani, stem: str, fps: int = 30) -> None:
+def save_animation(ani, stem: str, fps: int = 24) -> None:
     out_thumb = FIG_DIR / f"{PREFIX}_{stem}_thumb.png"
-    out_mp4 = FIG_DIR / f"{PREFIX}_{stem}.mp4"
-    ani._init_draw()
-    ani._func(0)
-    with mpl.rc_context({"savefig.bbox": "standard"}):
-        ani._fig.savefig(out_thumb, dpi=MEDIA_DPI)
+    out_gif = FIG_DIR / f"{PREFIX}_{stem}.gif"
     ani.save(
-        str(out_mp4),
-        writer="ffmpeg",
-        fps=fps,
+        str(out_gif),
+        writer=PillowWriter(fps=fps),
         dpi=MEDIA_DPI,
-        extra_args=["-vcodec", "libx264", "-pix_fmt", "yuv420p"],
     )
+    with Image.open(out_gif) as gif:
+        gif.seek(0)
+        gif.convert("RGBA").save(out_thumb)
     print(f"Saved -> {out_thumb}")
-    print(f"Saved -> {out_mp4}")
+    print(f"Saved -> {out_gif}")
 
 
 def make_damped_system() -> Dynamics:
@@ -107,17 +105,20 @@ def run_phase_trajectories(system: Dynamics, initials=PHASE_ICS):
 
 def animate_phase_plane(system: Dynamics, results, title: str, equilibrium: tuple[float, float]) -> FuncAnimation:
     fig, ax = plt.subplots(figsize=MEDIA_FIGSIZE)
-    system.plot(kind="vectorfield", ax=ax, alpha=0.28, grid_n=22, stream=True)
 
     xs = [x_series(result) for result in results]
     vs = [v_series(result) for result in results]
     colors = mpl.rcParams["axes.prop_cycle"].by_key()["color"]
-    frame_idx = np.linspace(0, min(len(x) for x in xs) - 1, 180, dtype=int)
+    frame_idx = np.linspace(0, min(len(x) for x in xs) - 1, 240, dtype=int)
 
     x_pad = 0.35 * max(max(np.ptp(x) for x in xs), 1.0)
     v_pad = 0.35 * max(max(np.ptp(v) for v in vs), 0.02)
-    ax.set_xlim(min(float(x.min()) for x in xs) - x_pad, max(float(x.max()) for x in xs) + x_pad)
-    ax.set_ylim(min(float(v.min()) for v in vs) - v_pad, max(float(v.max()) for v in vs) + v_pad)
+    xlim = (min(float(x.min()) for x in xs) - x_pad, max(float(x.max()) for x in xs) + x_pad)
+    ylim = (min(float(v.min()) for v in vs) - v_pad, max(float(v.max()) for v in vs) + v_pad)
+    ax.set_xlim(*xlim)
+    ax.set_ylim(*ylim)
+
+    system.plot(kind="vectorfield", ax=ax, alpha=0.35, grid_n=28)
     ax.plot(*equilibrium, "o", color="#c85030", ms=8, mec="white", mew=1.2, zorder=12)
     ax.set_title(title)
     ax.set_xlabel("x (position)")
@@ -161,7 +162,7 @@ def generate_single() -> None:
         labels=["$x$"],
         titles=["Spring oscillator"],
         figsize=MEDIA_FIGSIZE,
-        n_periods=1,
+        n_periods=2,
     )
     save_animation(ani, "single")
 
@@ -182,7 +183,7 @@ def generate_initial_conditions() -> None:
         orientation="vertical",
         anchor_pos=3.5,
         figsize=MEDIA_FIGSIZE,
-        n_periods=1,
+        n_periods=2,
     )
     save_animation(ani, "ics")
 
@@ -248,7 +249,7 @@ def generate_mass() -> None:
         orientation="vertical",
         anchor_pos=3.5,
         figsize=MEDIA_FIGSIZE,
-        n_periods=1,
+        n_periods=2,
     )
     save_animation(ani, "mass")
 
@@ -280,7 +281,7 @@ def generate_realism() -> None:
         orientation="vertical",
         anchor_pos=3.5,
         figsize=MEDIA_FIGSIZE,
-        n_periods=3,
+        n_periods=4,
     )
     save_animation(ani, "realism")
 

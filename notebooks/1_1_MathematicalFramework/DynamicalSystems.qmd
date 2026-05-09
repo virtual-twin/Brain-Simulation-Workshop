@@ -29,16 +29,19 @@ $$
 
 Here we remove everything except deterministic local dynamics: one system, no coupling, no external input, and no noise. That leaves the core object that appears throughout TVBO: a dynamical system with state variables, parameters, initial conditions, and equations of motion.
 
+$$
+dS_i = f(S_i, \theta)
+$$
+
 ## Learning Path
 
 1. Specify a dynamical system as a TVBO `Dynamics` object.
-2. Run it directly with `.run()` for quick local analysis.
-3. Put it in a `SimulationExperiment` and run it with `tvboptim`.
-4. Read results through named dimensions.
-5. Compare initial conditions as trajectories in the same flow.
-6. Use phase space to see the geometry of the dynamics.
-7. Vary parameters declaratively with `Exploration`.
-8. Add damping and load terms to move from a toy model toward realism.
+2. Put it in a `SimulationExperiment` and run it with `tvboptim`.
+3. Read results through named dimensions.
+4. Compare initial conditions as trajectories in the same flow.
+5. Use phase space to see the geometry of the dynamics.
+6. Vary parameters declaratively with `Exploration`.
+7. Add damping and load terms to move from a toy model toward realism.
 
 ## From a Second-Order Equation to TVBO
 
@@ -88,33 +91,30 @@ spring = Dynamics(
     },
 )
 
+print(spring.render('yaml'))
+```
+
+Each TVB-O element can also render a Markdown report. This enables the user to double-check the equations and specification in human-readable format.
+
+```{python}
+
 Markdown(spring.render("markdown"))
 ```
 
-## Run the Dynamics Directly
-
-For a single local system, `Dynamics.run()` is the shortest route from equations to a simulated trajectory.
-
-```{python}
-spring_timeseries = spring.run(duration=900.0, dt=1.0)
-spring_timeseries
-```
-
-TVBO objects also know how to plot themselves. A quick state-variable plot does not need custom notebook helper functions.
-
-```{python}
-spring.plot("x", kind="timeseries", duration=900.0, dt=1.0)
-```
 
 ## Run a Simulation Experiment
 
-For the workshop workflow we usually wrap the model in a `SimulationExperiment`. The model still describes the equations; the experiment describes how to run them.
+For the workshop workflow we usually wrap the model in a `SimulationExperiment`. The model still describes the equations; the experiment describes how to run them. The SimulationExperiment contains all metadata relevant to run it with different software backends.
 
 ```{python}
 experiment = SimulationExperiment(dynamics=spring)
 experiment.integration.duration = 900.0
 experiment.integration.step_size = 1.0
+print(experiment.render('yaml'))
+```
 
+
+```{python}
 result = experiment.run("tvboptim")
 result.integration.data
 ```
@@ -123,8 +123,6 @@ The result mirrors the experiment structure. The main simulation output is `resu
 
 ```{python}
 fig = result.integration.plot()
-fig.suptitle("Spring state variables")
-fig
 ```
 
 Named dimensions make the analysis explicit. For example, select the displacement variable by name rather than by positional index.
@@ -176,25 +174,12 @@ A time series shows one coordinate as a function of time. A phase portrait shows
 For the undamped spring, the trajectories are closed loops because energy is conserved. The vector field is shared by every trajectory; only the initial condition changes.
 
 ```{python}
-fig, ax = plt.subplots(figsize=(5.2, 4.8))
+from tvbo.datamodel.schema import Range
+fig, ax = plt.subplots()
+spring.state_variables['x'].domain = Range(lo=-5, hi=5)
+spring.state_variables['v'].domain = Range(lo=-.05, hi=.05)
+spring.plot("x", "v", kind="vectorfield", ax=ax)
 
-spring.plot("x", "v", kind="vectorfield", ax=ax, alpha=0.35, grid_n=24, stream=True)
-spring.plot(
-    "x",
-    "v",
-    kind="phase",
-    ax=ax,
-    duration=900.0,
-    dt=1.0,
-    n_trials=len(initial_conditions),
-    u_0=initial_conditions,
-    cmap="viridis",
-    lw=1.5,
-)
-
-ax.set_title("Same vector field, different initial conditions")
-fig.tight_layout()
-fig
 ```
 
 TVBO can also draw the phase plane directly, including vector field, nullclines, fixed points, and sample trajectories.
@@ -300,6 +285,9 @@ damped_initial_conditions = np.array([
     [2.5, -0.01],
 ])
 
+damped_spring.state_variables['x'].domain = Range(lo=-5, hi=5)
+damped_spring.state_variables['v'].domain = Range(lo=-.05, hi=.05)
+
 fig, ax = plt.subplots(figsize=(5.2, 4.8))
 
 damped_spring.plot("x", "v", kind="vectorfield", ax=ax, alpha=0.35, grid_n=24, stream=True)
@@ -320,7 +308,6 @@ x_equilibrium = damped_spring.parameters["m"].value * damped_spring.parameters["
 ax.plot(x_equilibrium, 0.0, "o", color="C3", ms=7, mec="white", mew=1.0, zorder=10)
 ax.set_title("Damping turns closed loops into spirals")
 fig.tight_layout()
-fig
 ```
 
 For a broader qualitative picture, let TVBO add sample trajectories on top of the damped phase plane.
@@ -332,8 +319,9 @@ damped_spring.plot(
     kind="phaseplane",
     duration=1800.0,
     dt=1.0,
-    n_trajectories=20,
+    n_trajectories=100,
     show_nullclines=False,
+    lw=0.1
 )
 ```
 
@@ -344,8 +332,6 @@ The spring example is intentionally simple, but each piece maps directly to the 
 | Concept in this notebook | TVBO object or method | Why it matters later |
 |---|---|---|
 | Equations and parameters | `Dynamics` | Neural mass and oscillator models use the same schema. |
-| Quick local simulation | `Dynamics.run()` | Fast checks of one isolated dynamical system. |
-| Quick local plots | `Dynamics.plot()` | Time series, phase portraits, vector fields, and phase planes. |
 | Full experiment execution | `SimulationExperiment.run("tvboptim")` | The experiment combines dynamics, integration, networks, observations, algorithms, and continuations. |
 | Named output | `result.integration.data` | Results are xarray objects, so analysis should use named dimensions like `time`, `variable`, and `node`. |
 | Parameter sweeps | `Exploration`, `ExplorationAxis` | Parameter scans become declarative experiment metadata. |
@@ -372,6 +358,12 @@ This is the key bridge: the spring has $(x, v)$, while a neural mass model has v
 2. Put it in a `SimulationExperiment`.
 3. Run the experiment.
 4. Plot and analyze the result.
+
+### TASK: Run and Plot Simple Single-Node SimulationExperiment with JansenRit Model
+```{python}
+
+
+```
 
 ## What Comes Next in the Workshop
 

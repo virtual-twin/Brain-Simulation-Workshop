@@ -225,7 +225,10 @@ def animate_spring(
             trajs = [a[:n_pts] for a in trajs]
 
     if t is None:
-        t = np.linspace(0, 1, n_pts)
+        t_end = float(n_periods) if n_periods is not None else 1.0
+        t = np.linspace(0, t_end, n_pts)
+        if n_periods is not None and ts_xlabel == "time (normalised)":
+            ts_xlabel = "time (periods)"
 
     _colors = list(colors) if colors else _default_colors(n)
     _labels = labels or [f"$x_{{{i}}}$" for i in range(n)]
