@@ -401,13 +401,13 @@ window.Quarto = {
   <li><a href="#from-a-single-node-to-a-brain-network" id="toc-from-a-single-node-to-a-brain-network" class="nav-link active" data-scroll-target="#from-a-single-node-to-a-brain-network"><span class="header-section-number">1</span> From a single node to a brain network</a>
   <ul class="collapse">
   <li><a href="#a-toy-network" id="toc-a-toy-network" class="nav-link" data-scroll-target="#a-toy-network"><span class="header-section-number">1.1</span> A toy network</a></li>
-  <li><a href="#simulating-a-coupled-network" id="toc-simulating-a-coupled-network" class="nav-link" data-scroll-target="#simulating-a-coupled-network"><span class="header-section-number">1.2</span> Simulating a coupled network</a></li>
-  <li><a href="#adding-noise" id="toc-adding-noise" class="nav-link" data-scroll-target="#adding-noise"><span class="header-section-number">1.3</span> Adding noise</a>
+  <li><a href="#the-coupling-function" id="toc-the-coupling-function" class="nav-link" data-scroll-target="#the-coupling-function"><span class="header-section-number">1.2</span> The Coupling Function</a></li>
+  <li><a href="#simulating-a-coupled-network" id="toc-simulating-a-coupled-network" class="nav-link" data-scroll-target="#simulating-a-coupled-network"><span class="header-section-number">1.3</span> Simulating a coupled network</a></li>
+  <li><a href="#adding-noise" id="toc-adding-noise" class="nav-link" data-scroll-target="#adding-noise"><span class="header-section-number">1.4</span> Adding noise</a>
   <ul class="collapse">
-  <li><a href="#gaussian-white-noise" id="toc-gaussian-white-noise" class="nav-link" data-scroll-target="#gaussian-white-noise"><span class="header-section-number">1.3.1</span> Gaussian (white) noise</a></li>
-  <li><a href="#ornsteinuhlenbeck-coloured-noise" id="toc-ornsteinuhlenbeck-coloured-noise" class="nav-link" data-scroll-target="#ornsteinuhlenbeck-coloured-noise"><span class="header-section-number">1.3.2</span> Ornstein–Uhlenbeck (coloured) noise</a></li>
+  <li><a href="#gaussian-white-noise" id="toc-gaussian-white-noise" class="nav-link" data-scroll-target="#gaussian-white-noise"><span class="header-section-number">1.4.1</span> Gaussian (white) noise</a></li>
   </ul></li>
-  <li><a href="#what-we-have-so-far" id="toc-what-we-have-so-far" class="nav-link" data-scroll-target="#what-we-have-so-far"><span class="header-section-number">1.4</span> What we have so far</a></li>
+  <li><a href="#what-we-have-so-far" id="toc-what-we-have-so-far" class="nav-link" data-scroll-target="#what-we-have-so-far"><span class="header-section-number">1.5</span> What we have so far</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/edit/main/notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="NetworkAndNoise.ipynb" download="NetworkAndNoise.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
@@ -486,7 +486,7 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i)\right]dt + g(S_i, \theta^g)\,dW_i.
 <section id="a-toy-network" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="a-toy-network"><span class="header-section-number">1.1</span> A toy network</h2>
 <p>Networks in TVBO are first-class metadata objects. A small connectome can be written inline as YAML; a real one is loaded from the database.</p>
-<div id="7eb83b47" class="cell" data-execution_count="2">
+<div id="e974c365" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>toy <span class="op">=</span> Network.from_string(<span class="st">"""</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">label: ToyChain</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">nodes:</span></span>
@@ -494,41 +494,102 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i)\right]dt + g(S_i, \theta^g)\,dW_i.
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  - {id: 1, label: B}</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">  - {id: 2, label: C}</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">edges:</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">  - {source: 0, target: 1, parameters: {weight: </span><span class="sc">{value: 0.6}</span><span class="st">, distance: {value: 30, unit: mm</span><span class="sc">}}</span><span class="st">}</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">  - {source: 0, target: 1, parameters: {weight: </span><span class="sc">{value: 2}</span><span class="st">, distance: {value: 30, unit: mm</span><span class="sc">}}</span><span class="st">}</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">  - {source: 1, target: 2, parameters: {weight: </span><span class="sc">{value: 0.5}</span><span class="st">, distance: {value: 40, unit: mm</span><span class="sc">}}</span><span class="st">}</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">  - {source: 0, target: 2, parameters: {weight: </span><span class="sc">{value: 0.3}</span><span class="st">, distance: {value: 60, unit: mm</span><span class="sc">}}</span><span class="st">}</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>toy.plot_graph()</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>toy.plot_graph()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="125">
+<div>
+<figure class="figure">
+<p><img src="NetworkAndNoise_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>The Desikan-Killiany connectome ships with TVBO and is loaded the same way:</p>
-<div id="7b11c43c" class="cell" data-execution_count="3">
+<div id="86e43528" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> Network.from_db(rec<span class="op">=</span><span class="st">"avgMatrix"</span>, atlas<span class="op">=</span><span class="st">"DesikanKilliany"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sc.label, <span class="st">"—"</span>, sc.number_of_nodes, <span class="st">"regions"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sc.plot_overview()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sc.plot_overview()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>DesikanKilliany (avgMatrix SC+FC) — 84 regions</code></pre>
 </div>
+<div class="cell-output cell-output-display" data-execution_count="126">
+<div>
+<figure class="figure">
+<p><img src="NetworkAndNoise_files/figure-html/cell-4-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
-<section id="simulating-a-coupled-network" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="simulating-a-coupled-network"><span class="header-section-number">1.2</span> Simulating a coupled network</h2>
+<section id="the-coupling-function" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="the-coupling-function"><span class="header-section-number">1.2</span> The Coupling Function</h2>
+<div id="546a7aee" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> Coupling</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> Coupling.from_db(<span class="st">'Linear'</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>C</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="127">
+<pre><code>Coupling({
+  'name': 'Linear',
+  'parameters': {'b': Parameter({
+      'name': 'b',
+      'value': 0.0,
+      'description': ('Shifts the base of the connection strength while maintaining the absolute '
+         'difference between different values.')
+    }),
+    'a': Parameter({
+      'name': 'a',
+      'value': 0.00390625,
+      'description': 'Linear scaling factor of the coupled (delayed) input.'
+    })},
+  'sparse': False,
+  'pre_expression': Equation({'rhs': 'x_j', 'latex': False}),
+  'post_expression': Equation({'rhs': 'a*gx + b', 'latex': False}),
+  'delayed': True,
+  'symmetry': 'directed'
+})</code></pre>
+</div>
+</div>
+<div id="3f620300" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>C.equation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="128">
+<p><span class="math inline">\(\displaystyle b + a \sum_{j=0}^{-1 + N} {x}_{j} {g}_{i,j}\)</span></p>
+</div>
+</div>
+<div id="9440970d" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>C.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="129">
+<div>
+<figure class="figure">
+<p><img src="NetworkAndNoise_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="simulating-a-coupled-network" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="simulating-a-coupled-network"><span class="header-section-number">1.3</span> Simulating a coupled network</h2>
 <p><code>SimulationExperiment</code> accepts a <code>Dynamics</code>, a <code>Network</code>, and a coupling kernel. We use the generic 2D oscillator coupled linearly across the toy connectome and run with the JAX-based <code>tvboptim</code> backend.</p>
-<div id="ccd7902f" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Dynamics.from_db(<span class="st">"Generic2dOscillator"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>exp <span class="op">=</span> SimulationExperiment(</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    dynamics<span class="op">=</span>model,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    network<span class="op">=</span>toy,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    coupling<span class="op">=</span><span class="st">"Linear"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>exp.integration.duration <span class="op">=</span> <span class="dv">1000</span>      <span class="co"># ms</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>exp.integration.step_size <span class="op">=</span> <span class="fl">0.1</span>      <span class="co"># ms</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>exp.integration.method <span class="op">=</span> <span class="st">"Heun"</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>result.integration.data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a920502d" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Dynamics.from_db(<span class="st">"Generic2dOscillator"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>toy.coupling[<span class="st">'c_glob'</span>] <span class="op">=</span> C</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>C.parameters[<span class="st">'a'</span>].value<span class="op">=</span><span class="fl">1.5</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>exp <span class="op">=</span> SimulationExperiment(</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    dynamics<span class="op">=</span>model,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    network<span class="op">=</span>toy,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>exp.integration.duration <span class="op">=</span> <span class="dv">1000</span>      <span class="co"># ms</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>exp.integration.step_size <span class="op">=</span> <span class="fl">0.1</span>      <span class="co"># ms</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>exp.integration.method <span class="op">=</span> <span class="st">"Heun"</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>result.integration.data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ============================================================
@@ -542,7 +603,7 @@ STEP 1: Running simulation...
 Experiment complete.
 ============================================================</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div class="cell-output cell-output-display" data-execution_count="130">
 <div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
 <defs>
 <symbol id="icon-database" viewbox="0 0 32 32">
@@ -1086,71 +1147,116 @@ dl.xr-attrs {
   stroke-width: 0.8px;
 }
 </style><pre class="xr-text-repr-fallback">&lt;xarray.DataArray (time: 10000, variable: 2, node: 3)&gt; Size: 480kB
-array([[[ 0.10025272,  0.10025289,  0.10025264],
-        [ 0.09380361,  0.09380361,  0.09380361]],
+array([[[ 0.10094234,  0.10100238,  0.10049208],
+        [ 0.09379672,  0.09379612,  0.09380122]],
 
-       [[ 0.10049334,  0.10049368,  0.10049317],
-        [ 0.08761468,  0.08761467,  0.08761468]],
+       [[ 0.10187335,  0.10199349,  0.10097233],
+        [ 0.08758712,  0.08758472,  0.08760511]],
 
-       [[ 0.10072186,  0.10072237,  0.1007216 ],
-        [ 0.08143342,  0.0814334 ,  0.08143343]],
+       [[ 0.10279301,  0.10297331,  0.10144073],
+        [ 0.08137144,  0.08136604,  0.08141191]],
 
        ...,
 
-       [[-0.18869964, -0.18871028, -0.18869432],
-        [-0.11300357, -0.11289718, -0.11305677]],
+       [[-0.26858695, -0.27299324, -0.21705416],
+        [ 0.65534673,  0.69881663,  0.16184414]],
 
-       [[-0.18869964, -0.18871028, -0.18869432],
-        [-0.11300357, -0.11289718, -0.11305677]],
+       [[-0.26861707, -0.27302391, -0.21706705],
+        [ 0.65540802,  0.69887911,  0.16186165]],
 
-       [[-0.18869964, -0.18871028, -0.18869432],
-        [-0.11300357, -0.11289718, -0.11305677]]], shape=(10000, 2, 3))
+       [[-0.26864716, -0.27305454, -0.21707993],
+        [ 0.65546979,  0.69894208,  0.16187938]]], shape=(10000, 2, 3))
 Coordinates:
   * time      (time) float64 80kB 0.1 0.2 0.3 0.4 ... 999.7 999.8 999.9 1e+03
   * variable  (variable) &lt;U1 8B 'V' 'W'
-  * node      (node) &lt;U1 12B 'A' 'B' 'C'</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-obj-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">time</span>: 10000</li><li><span class="xr-has-index">variable</span>: 2</li><li><span class="xr-has-index">node</span>: 3</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-22d776dc-1d78-4ceb-8862-fb949769fec3" class="xr-array-in" type="checkbox" checked=""><label for="section-22d776dc-1d78-4ceb-8862-fb949769fec3" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0.1003 0.1003 0.1003 0.0938 0.0938 ... -0.1887 -0.113 -0.1129 -0.1131</span></div><div class="xr-array-data"><pre>array([[[ 0.10025272,  0.10025289,  0.10025264],
-        [ 0.09380361,  0.09380361,  0.09380361]],
+  * node      (node) &lt;U1 12B 'A' 'B' 'C'</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-obj-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">time</span>: 10000</li><li><span class="xr-has-index">variable</span>: 2</li><li><span class="xr-has-index">node</span>: 3</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-46606a12-b79d-42f9-b6c1-d5c310a2b05e" class="xr-array-in" type="checkbox" checked=""><label for="section-46606a12-b79d-42f9-b6c1-d5c310a2b05e" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0.1009 0.101 0.1005 0.0938 0.0938 ... -0.2171 0.6555 0.6989 0.1619</span></div><div class="xr-array-data"><pre>array([[[ 0.10094234,  0.10100238,  0.10049208],
+        [ 0.09379672,  0.09379612,  0.09380122]],
 
-       [[ 0.10049334,  0.10049368,  0.10049317],
-        [ 0.08761468,  0.08761467,  0.08761468]],
+       [[ 0.10187335,  0.10199349,  0.10097233],
+        [ 0.08758712,  0.08758472,  0.08760511]],
 
-       [[ 0.10072186,  0.10072237,  0.1007216 ],
-        [ 0.08143342,  0.0814334 ,  0.08143343]],
+       [[ 0.10279301,  0.10297331,  0.10144073],
+        [ 0.08137144,  0.08136604,  0.08141191]],
 
        ...,
 
-       [[-0.18869964, -0.18871028, -0.18869432],
-        [-0.11300357, -0.11289718, -0.11305677]],
+       [[-0.26858695, -0.27299324, -0.21705416],
+        [ 0.65534673,  0.69881663,  0.16184414]],
 
-       [[-0.18869964, -0.18871028, -0.18869432],
-        [-0.11300357, -0.11289718, -0.11305677]],
+       [[-0.26861707, -0.27302391, -0.21706705],
+        [ 0.65540802,  0.69887911,  0.16186165]],
 
-       [[-0.18869964, -0.18871028, -0.18869432],
-        [-0.11300357, -0.11289718, -0.11305677]]], shape=(10000, 2, 3))</pre></div></div></li><li class="xr-section-item"><input id="section-7f2e7c32-5829-4a21-b8e8-40531db6b482" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-7f2e7c32-5829-4a21-b8e8-40531db6b482" class="xr-section-summary" title="Expand/collapse section">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">0.1 0.2 0.3 ... 999.8 999.9 1e+03</div><input id="attrs-c6071d1d-0523-4a0c-a8e1-c81266f824f0" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-c6071d1d-0523-4a0c-a8e1-c81266f824f0" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-0c68d644-d9b2-46dd-8be5-9c25f1d15eca" class="xr-var-data-in" type="checkbox"><label for="data-0c68d644-d9b2-46dd-8be5-9c25f1d15eca" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([1.000e-01, 2.000e-01, 3.000e-01, ..., 9.998e+02, 9.999e+02, 1.000e+03],
-      shape=(10000,))</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">variable</span></div><div class="xr-var-dims">(variable)</div><div class="xr-var-dtype">&lt;U1</div><div class="xr-var-preview xr-preview">'V' 'W'</div><input id="attrs-b95f9028-9fda-4099-883d-cdd5ff92fc15" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-b95f9028-9fda-4099-883d-cdd5ff92fc15" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-601e6114-e3cc-4fc5-8e51-9889bb859c48" class="xr-var-data-in" type="checkbox"><label for="data-601e6114-e3cc-4fc5-8e51-9889bb859c48" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(['V', 'W'], dtype='&lt;U1')</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">node</span></div><div class="xr-var-dims">(node)</div><div class="xr-var-dtype">&lt;U1</div><div class="xr-var-preview xr-preview">'A' 'B' 'C'</div><input id="attrs-c960954c-ef47-48f4-b118-1b71051b00ca" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-c960954c-ef47-48f4-b118-1b71051b00ca" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-b7a69073-9c2b-4f49-9bc8-cd08dc3e2940" class="xr-var-data-in" type="checkbox"><label for="data-b7a69073-9c2b-4f49-9bc8-cd08dc3e2940" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(['A', 'B', 'C'], dtype='&lt;U1')</pre></div></li></ul></div></li></ul></div></div>
+       [[-0.26864716, -0.27305454, -0.21707993],
+        [ 0.65546979,  0.69894208,  0.16187938]]], shape=(10000, 2, 3))</pre></div></div></li><li class="xr-section-item"><input id="section-8902fa67-89ef-4e2d-a840-aed882b1467b" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-8902fa67-89ef-4e2d-a840-aed882b1467b" class="xr-section-summary" title="Expand/collapse section">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">0.1 0.2 0.3 ... 999.8 999.9 1e+03</div><input id="attrs-d572fb98-3e7e-4e6a-8eb1-daf4a239901d" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-d572fb98-3e7e-4e6a-8eb1-daf4a239901d" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-d22ff89f-d75d-41f1-8153-c5d9690df394" class="xr-var-data-in" type="checkbox"><label for="data-d22ff89f-d75d-41f1-8153-c5d9690df394" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([1.000e-01, 2.000e-01, 3.000e-01, ..., 9.998e+02, 9.999e+02, 1.000e+03],
+      shape=(10000,))</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">variable</span></div><div class="xr-var-dims">(variable)</div><div class="xr-var-dtype">&lt;U1</div><div class="xr-var-preview xr-preview">'V' 'W'</div><input id="attrs-44da94af-04f1-45d9-864d-ef63575f477c" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-44da94af-04f1-45d9-864d-ef63575f477c" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-7aea56f1-06fa-4a7e-8693-de801ead98eb" class="xr-var-data-in" type="checkbox"><label for="data-7aea56f1-06fa-4a7e-8693-de801ead98eb" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(['V', 'W'], dtype='&lt;U1')</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">node</span></div><div class="xr-var-dims">(node)</div><div class="xr-var-dtype">&lt;U1</div><div class="xr-var-preview xr-preview">'A' 'B' 'C'</div><input id="attrs-0d846456-3e46-4111-aa1e-dcb52db428db" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-0d846456-3e46-4111-aa1e-dcb52db428db" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-acf90886-be45-412b-8c32-700c56b9122f" class="xr-var-data-in" type="checkbox"><label for="data-acf90886-be45-412b-8c32-700c56b9122f" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(['A', 'B', 'C'], dtype='&lt;U1')</pre></div></li></ul></div></li></ul></div></div>
 </div>
 </div>
 <p>The result is an <code>xarray.DataArray</code> with named axes. We select the first state variable and let TVBO plot all regions.</p>
-<div id="387efa54" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> result.integration.plot()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"Deterministic network — Generic2dOscillator on ToyChain"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="791d2001" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>result.integration.sel(variable<span class="op">=</span><span class="st">'V'</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="131">
+<div>
+<figure class="figure">
+<p><img src="NetworkAndNoise_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Fully declarative wiring can also be expressed with an explicit mapping layer: network-level coupling aliases are declared once, then each model coupling input points to its source.</p>
+<div id="cbd5230b" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> copy</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>model_decl <span class="op">=</span> Dynamics.from_db(<span class="st">"Generic2dOscillator"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>toy_decl <span class="op">=</span> copy.deepcopy(toy)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>toy_decl.coupling[<span class="st">"global_linear"</span>] <span class="op">=</span> Coupling.from_db(<span class="st">"Linear"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>model_decl.coupling_inputs[<span class="st">"c_glob"</span>].source <span class="op">=</span> <span class="st">"global_linear"</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>exp_decl <span class="op">=</span> SimulationExperiment(</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    dynamics<span class="op">=</span>model_decl,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    network<span class="op">=</span>toy_decl,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>exp_decl.integration.duration <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>exp_decl.integration.step_size <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>exp_decl.integration.method <span class="op">=</span> <span class="st">"Heun"</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>result_decl <span class="op">=</span> exp_decl.run(<span class="st">"tvboptim"</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>result_decl.integration.sel(variable<span class="op">=</span><span class="st">'V'</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.1 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="132">
+<div>
+<figure class="figure">
+<p><img src="NetworkAndNoise_files/figure-html/cell-10-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
-<section id="adding-noise" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="adding-noise"><span class="header-section-number">1.3</span> Adding noise</h2>
+<section id="adding-noise" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="adding-noise"><span class="header-section-number">1.4</span> Adding noise</h2>
 <p>Noise enters the equation through the diffusion term <span class="math inline">\(g(S, \theta^g)\,dW\)</span>. TVBO exposes it as a metadata object that we attach to <code>integration</code>. Two flavours are built in.</p>
-<section id="gaussian-white-noise" class="level3" data-number="1.3.1">
-<h3 data-number="1.3.1" class="anchored" data-anchor-id="gaussian-white-noise"><span class="header-section-number">1.3.1</span> Gaussian (white) noise</h3>
-<div id="1f89233f" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>exp.integration.noise <span class="op">=</span> Noise(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    noise_type<span class="op">=</span><span class="st">"gaussian"</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>{<span class="st">"sigma"</span>: {<span class="st">"value"</span>: <span class="fl">0.05</span>}},</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>result_white <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> result_white.integration.plot()</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"Stochastic network — additive Gaussian noise (σ = 0.05)"</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="gaussian-white-noise" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="gaussian-white-noise"><span class="header-section-number">1.4.1</span> Gaussian (white) noise</h3>
+<div id="999eaf63" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>exp.integration.noise <span class="op">=</span> Noise(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    noise_type<span class="op">=</span><span class="st">"gaussian"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>{<span class="st">"sigma"</span>: {<span class="st">"value"</span>: <span class="fl">0.01</span>}},</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>result_white <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>result_white.integration.sel(variable<span class="op">=</span><span class="st">'V'</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ============================================================
@@ -1164,20 +1270,21 @@ STEP 1: Running simulation...
 Experiment complete.
 ============================================================</code></pre>
 </div>
+<div class="cell-output cell-output-display" data-execution_count="133">
+<div>
+<figure class="figure">
+<p><img src="NetworkAndNoise_files/figure-html/cell-11-output-2.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
-</section>
-<section id="ornsteinuhlenbeck-coloured-noise" class="level3" data-number="1.3.2">
-<h3 data-number="1.3.2" class="anchored" data-anchor-id="ornsteinuhlenbeck-coloured-noise"><span class="header-section-number">1.3.2</span> Ornstein–Uhlenbeck (coloured) noise</h3>
-<p>OU noise has finite correlation time <code>ntau</code> and intensity <code>nsig</code>, producing temporally smooth fluctuations.</p>
-<div id="39adc5cd" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>exp.integration.noise <span class="op">=</span> Noise(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    noise_type<span class="op">=</span><span class="st">"ou"</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>{<span class="st">"nsig"</span>: {<span class="st">"value"</span>: <span class="fl">0.05</span>}, <span class="st">"ntau"</span>: {<span class="st">"value"</span>: <span class="fl">5.0</span>}},</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>result_ou <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> result_ou.integration.plot()</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"Stochastic network — Ornstein–Uhlenbeck noise (ntau = 5 ms)"</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="9343989a" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>exp.integration.noise <span class="op">=</span> Noise(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    noise_type<span class="op">=</span><span class="st">"gaussian"</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>{<span class="st">"sigma"</span>: {<span class="st">"value"</span>: <span class="fl">0.01</span>}},</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>result_white <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>result_white.integration.sel(variable<span class="op">=</span><span class="st">'V'</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ============================================================
@@ -1191,11 +1298,18 @@ STEP 1: Running simulation...
 Experiment complete.
 ============================================================</code></pre>
 </div>
+<div class="cell-output cell-output-display" data-execution_count="134">
+<div>
+<figure class="figure">
+<p><img src="NetworkAndNoise_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 </section>
-<section id="what-we-have-so-far" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="what-we-have-so-far"><span class="header-section-number">1.4</span> What we have so far</h2>
+<section id="what-we-have-so-far" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="what-we-have-so-far"><span class="header-section-number">1.5</span> What we have so far</h2>
 <ul>
 <li>A <code>Network</code> is metadata, just like a <code>Dynamics</code>.</li>
 <li><code>SimulationExperiment(dynamics, network, coupling)</code> is the canonical container.</li>

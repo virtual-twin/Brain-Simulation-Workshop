@@ -442,12 +442,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="a-one-axis-sweep" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="a-one-axis-sweep"><span class="header-section-number">1.1</span> A one-axis sweep</h2>
 <p>We take the <code>Generic2dOscillator</code> and sweep its bifurcation parameter <code>a</code> across five values.</p>
-<div id="6de6f9d1" class="cell" data-execution_count="2">
+<div id="4733a260" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Dynamics.from_db(<span class="st">"Generic2dOscillator"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>exp <span class="op">=</span> SimulationExperiment(dynamics<span class="op">=</span>model)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>exp.integration.duration <span class="op">=</span> <span class="dv">800</span>       <span class="co"># ms</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>exp.integration.step_size <span class="op">=</span> <span class="fl">0.1</span>      <span class="co"># ms</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>exp.integration.step_size <span class="op">=</span> <span class="fl">0.01</span>      <span class="co"># ms</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>exp.explorations[<span class="st">"a_sweep"</span>] <span class="op">=</span> Exploration(</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"a_sweep"</span>,</span>
@@ -460,7 +460,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ============================================================
 STEP 1: Running simulation...
 ============================================================
-  Simulation period: 800.0 ms, dt: 0.1 ms
+  Simulation period: 800.0 ms, dt: 0.01 ms
   Transient period: 0.0 ms
   Simulation complete.
 
@@ -476,49 +476,66 @@ Experiment complete.
 </div>
 </div>
 <p>The result keeps the same shape conventions as a single simulation, with one extra axis for the swept parameter:</p>
-<div id="742cba2b" class="cell" data-execution_count="3">
+<div id="68a7fde7" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sweep <span class="op">=</span> result.explorations[<span class="st">"a_sweep"</span>]</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"results shape:"</span>, sweep.results.shape, <span class="st">"  axis:"</span>, sweep.axes[<span class="dv">0</span>].name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>results shape: (5, 8000, 2, 1)   axis: a</code></pre>
+<pre><code>results shape: (5, 80000, 2, 1)   axis: a</code></pre>
 </div>
 </div>
 <p><code>Exploration.plot()</code> overlays the trajectories. Increasing <code>a</code> walks the system through a Hopf bifurcation: from a stable focus to a sustained limit cycle.</p>
-<div id="61557846" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> sweep.plot(overlay<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"Sweep of Generic2dOscillator parameter a"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0305876b" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sweep.plot(overlay<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+<figure class="figure">
+<p><img src="ParameterExploration_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="trial-based-exploration" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="trial-based-exploration"><span class="header-section-number">1.2</span> Trial-based exploration</h2>
 <p>The same object also drives Monte-Carlo style replication via <code>n_trials</code>. Each trial uses different initial conditions and (if noise is configured) different noise realisations.</p>
-<div id="3883ec5e" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>exp.explorations.clear()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>exp.explorations[<span class="st">"trials"</span>] <span class="op">=</span> Exploration(name<span class="op">=</span><span class="st">"trials"</span>, n_trials<span class="op">=</span><span class="dv">10</span>)</span>
+<div id="6e555eb6" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo.datamodel.schema <span class="im">import</span> Distribution, Range</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># exp.explorations.clear()</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> result.explorations[<span class="st">"trials"</span>].plot(overlay<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"Ten trials with randomised initial conditions"</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>exp.dynamics.state_variables[<span class="st">'V'</span>].distribution <span class="op">=</span> Distribution(domain<span class="op">=</span>Range(lo<span class="op">=-</span><span class="dv">1</span>, hi<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>exp.dynamics.state_variables[<span class="st">'W'</span>].initial_value <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>exp.explorations[<span class="st">"trials"</span>] <span class="op">=</span> Exploration(name<span class="op">=</span><span class="st">"trials"</span>, n_trials<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>result.explorations[<span class="st">"trials"</span>].plot(overlay<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ============================================================
 STEP 1: Running simulation...
 ============================================================
-  Simulation period: 800.0 ms, dt: 0.1 ms
+  Simulation period: 800.0 ms, dt: 0.01 ms
   Transient period: 0.0 ms
   Simulation complete.
 
 ============================================================
 STEP 2: Running explorations...
 ============================================================
+  &gt; a_sweep
   &gt; trials
   Explorations complete.
 
 ============================================================
 Experiment complete.
 ============================================================</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+<figure class="figure">
+<p><img src="ParameterExploration_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
