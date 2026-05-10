@@ -1,0 +1,31 @@
+---
+title: "2. Defining a FAIR brain network model"
+subtitle: "Sessions 2.1 · 2.2"
+toc: false
+---
+
+In this chapter you will use the TVB Ontology (TVB-O) to define a neural mass
+model in a FAIR-compliant way, simulate a single node, and then connect
+multiple nodes into a whole-brain network driven by structural connectivity.
+
+## Sessions
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### [2.1 Mean field models](02a_mean_field_models.qmd)
+Load a neural mass model from the TVB-O knowledge base. Inspect parameters and
+state variables. Simulate a single uncoupled node and visualise its dynamics.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### [2.2 Coupled networks](02b_coupled_networks.qmd)
+Connect multiple neural masses via a structural connectome. Understand how
+coupling functions and long-range delays shape collective network activity.
+:::
+
+:::
+
+---
+
+*See the [workshop agenda](../agenda/agenda.qmd).*

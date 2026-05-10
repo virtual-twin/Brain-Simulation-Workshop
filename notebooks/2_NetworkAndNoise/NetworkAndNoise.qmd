@@ -153,6 +153,32 @@ result_white = exp.run("tvboptim")
 result_white.integration.sel(variable='V').plot()
 ```
 
+## All together
+
+
+```{python}
+
+from tvbo import SimulationExperiment, Dynamics, Network, Coupling, Noise
+
+network = Network.from_db(atlas="DesikanKilliany", rec="avgMatrix")
+
+network.coupling["Linear"] = Coupling.from_db("Linear")
+network.normalize()
+
+exp = SimulationExperiment(
+    dynamics=Dynamics.from_db("Generic2dOscillator"), network=network
+)
+
+exp.dynamics.state_variables["V"].noise = Noise(parameters={"sigma": {"value": 0.1}})
+
+exp.network.coupling["Linear"].parameters["a"].value = 0.5
+
+res = exp.run()
+
+res.sel(variable="V").data.T.plot()
+```
+
+
 ## What we have so far
 
 - A `Network` is metadata, just like a `Dynamics`.

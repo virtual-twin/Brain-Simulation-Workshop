@@ -34,7 +34,7 @@ exp.integration.step_size = 0.01      # ms
 
 exp.explorations["a_sweep"] = Exploration(
     name="a_sweep",
-    space=ExplorationAxis(parameter="a", explored_values=[-2.0, -1.0, 0.0, 1.0, 2.0]),
+    space=ExplorationAxis(parameter="a", explored_values=[-2.0, -1.0, 0.0, 1.0, 2.0, 5]),
 )
 
 result = exp.run("tvboptim")
@@ -57,14 +57,20 @@ sweep.plot(overlay=True)
 
 ```{python}
 from tvbo import Observation
+from tvbo.datamodel.schema import Range
 
-exp.observations['mean_V'] = Observation(
-    name='mean_V',
-    source='V',  # the state variable to observe
-    aggregation='mean',  # aggregate over space (node dimension)
+exp.observations["mean_V"] = Observation(
+    name="mean_V",
+    source="V",  # the state variable to observe
+    aggregation="mean",  # aggregate over space (node dimension)
 )
 
 res = exp.run()
+
+plt.plot(
+    res.explorations["a_sweep"].observations["mean_V"].a,
+    res.explorations["a_sweep"].observations["mean_V"].data,
+)
 
 ```
 
@@ -72,6 +78,8 @@ res = exp.run()
 from tvbo import Observation
 from tvbo.datamodel.schema import FunctionCall, Callable, Argument
 import numpy
+
+exp.explorations
 exp.observations['mean_V'] = Observation(
     name='V_mean',
     source='V',
@@ -86,7 +94,23 @@ exp.observations['mean_V'] = Observation(
         ),
     ],
 )
-exp.run().observations['mean_V'].data
+
+exp.explorations["ab_grid"] = Exploration(
+    name="ab_grid",
+    space=[
+        ExplorationAxis(parameter="a", domain=Range(lo=-10, hi=10, step=1)),
+        ExplorationAxis(parameter="b", domain=Range(lo=-10, hi=10, step=1)),
+    ],
+)
+
+
+res = exp.run()
+
+mv = res.explorations["ab_grid"].observations["mean_V"]
+
+# Most native — xarray.DataArray.plot.imshow respects coords automatically
+mv.plot.imshow(x="a", y="b") # uses 'b' as y-axis, 'a' as x-axis (last dim → x)
+
 ```
 
 ## Trial-based exploration
@@ -99,6 +123,8 @@ from tvbo.datamodel.schema import Distribution, Range
 
 exp.dynamics.state_variables['V'].distribution = Distribution(domain=Range(lo=-1, hi=1))
 exp.dynamics.state_variables['W'].initial_value = 0
+
+exp.explorations.clear()
 
 exp.explorations["trials"] = Exploration(name="trials", n_trials=10)
 

@@ -364,18 +364,3 @@ This is the key bridge: the spring has $(x, v)$, while a neural mass model has v
 
 
 ```
-
-## What Comes Next in the Workshop
-
-The spring notebook stops at a single deterministic system. The later slides add the missing terms from the workshop equation.
-
-| Next concept | TVBO object | Role |
-|---|---|---|
-| Brain regions and structural connectivity | `Network` | Adds nodes, edges, weights, delays, and positions. |
-| Inter-regional influence | `Coupling` | Turns source-node activity into input for target-node dynamics. |
-| External stimulation or perturbations | `Event` | Adds time-dependent input $I_i(t)$. |
-| Measurement models | `observations` | Transforms hidden state into BOLD, FC, PSD, or custom outputs. |
-| Noise | noise terms and stochastic integrators | Adds fluctuations via $g(S_i, \theta^g)dW_i$. |
-| Regime changes | `Continuation` | Tracks fixed points, stability changes, and oscillatory branches. |
-
-This is why phase space and stability are introduced early. They are not only mathematical background; they are the language used later to interpret excitability, oscillations, bifurcations, and transitions in neural population models.
