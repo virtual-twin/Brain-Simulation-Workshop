@@ -67,6 +67,7 @@ exp.dynamics.state_variables['W'].initial_value = 0
 exp.explorations["trials"] = Exploration(name="trials", n_trials=10)
 
 result = exp.run("tvboptim")
+
 result.explorations["trials"].plot(overlay=True)
 ```
 
