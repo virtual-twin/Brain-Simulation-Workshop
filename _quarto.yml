@@ -21,8 +21,8 @@ render:
     - notebooks/3_ParameterExploration/ParameterExploration.qmd
     - notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd
     - notebooks/4_optimization.qmd
-    - notebooks/04a_alzheimer_usecase.qmd
-    - notebooks/04b_parameter_fitting.qmd
+    - notebooks/4_I_fMRI_BOLD_FC.qmd
+    - notebooks/4_II_MEG_Peak_Frequency.qmd
     - notebooks/4_inference_demos.qmd
     - notebooks/5_stimulation.qmd
     - notebooks/05_stimulation.qmd
@@ -64,10 +64,10 @@ website:
           - text: "---"
           - href: notebooks/4_optimization.qmd
             text: "5. Parameter optimisation"
-          - href: notebooks/04a_alzheimer_usecase.qmd
-            text: "  5.1 Alzheimer use case"
-          - href: notebooks/04b_parameter_fitting.qmd
-            text: "  5.2 Parameter fitting"
+          - href: notebooks/4_I_fMRI_BOLD_FC.qmd
+            text: "  5.1 fMRI BOLD FC"
+          - href: notebooks/4_II_MEG_Peak_Frequency.qmd
+            text: "  5.2 MEG peak frequency"
           - href: notebooks/4_inference_demos.qmd
             text: "  5.3 Inference demos"
           - text: "---"
@@ -100,8 +100,8 @@ website:
         - section: "5. Parameter optimisation"
           href: notebooks/4_optimization.qmd
           contents:
-            - notebooks/04a_alzheimer_usecase.qmd
-            - notebooks/04b_parameter_fitting.qmd
+            - notebooks/4_I_fMRI_BOLD_FC.qmd
+            - notebooks/4_II_MEG_Peak_Frequency.qmd
             - notebooks/4_inference_demos.qmd
         - section: "6. Stimulating the brain"
           href: notebooks/5_stimulation.qmd

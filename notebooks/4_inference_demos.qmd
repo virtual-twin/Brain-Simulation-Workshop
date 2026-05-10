@@ -1,5 +1,5 @@
 ---
-title: "Inference demos — figures for §4"
+title: "Inference demos: figures and method walkthrough"
 subtitle: "Running example: fit RWW global coupling G (and recurrence w) to empirical FC"
 format:
   html:
@@ -14,15 +14,29 @@ execute:
   cache: true
 ---
 
-This notebook produces the figures embedded in `_slides-section-4.qmd`.
-It re-uses the Reduced Wong-Wang setup from `RWW.qmd` but pins the
-inference *running example* to **fitting `G` (and `w`) so simulated FC
-matches empirical FC**.
+This notebook has two jobs:
 
-Each figure is saved to `img/section-4/` and referenced from the slides
-by path. Re-run this notebook whenever the §4 figures need to change.
+1. **Source of the §4 figures.** Every figure embedded in `_slides-section-4.qmd` is generated and saved here under `img/section-4/`. Re-run when the slide visuals need to change.
+2. **Method-by-method reference.** Each section walks through one inference approach on the *same* running example: fit the Reduced Wong-Wang model's global coupling `G` (and excitatory recurrence `w`) so that simulated functional connectivity matches an empirical FC matrix from the Desikan-Killiany parcellation.
+
+The arc moves from cheap and informative (grid scan) to expensive and informative (Bayesian posterior). Two structural waypoints sit in the middle: the **sampling ceiling**, where every method that varies parameters by sampling stops scaling, and **gradient descent**, the only thing that crosses it.
+
+| Section            | Method                       | Scales to     | Returns                  |
+|--------------------|------------------------------|---------------|--------------------------|
+| Grid scan          | exhaustive 2D sweep          | $\le 3$ params  | full landscape           |
+| 1D slice           | a single axis                | 1 param       | curve                    |
+| Random search      | uniform sampling             | $\sim 20$       | sketch + best so far     |
+| Sobol sensitivity  | Saltelli + Sobol indices     | $\sim 20$       | which knobs matter       |
+| CMA-ES             | adaptive evolutionary        | $\sim 50$       | local optimum            |
+| Gradient descent   | Adam + reverse-mode AD       | $10^4$+       | local optimum            |
+| HMC (NUTS)         | gradient-based MCMC          | $10^4$+       | exact posterior          |
+| SVI                | gradient + variational guide | $10^4$+       | approximate posterior    |
+
+The same `state` object (defined in *The running example* below) is the shared input across every method; only how we *vary* it changes.
 
 ## Setup
+
+Imports, JAX configuration (8 virtual CPU devices, 64-bit precision), and a `savefig` helper that writes every figure to `img/section-4/` at slide-friendly resolution.
 
 ```{python}
 #| output: false
@@ -69,7 +83,9 @@ def savefig(name, **kw):
     print(f"saved → {path}")
 ```
 
-## Network and loss
+## The running example: RWW + FC
+
+Define `loss(state)` once, reuse everywhere. A 2-minute Reduced Wong-Wang simulation on the Desikan-Killiany graph, monitored as BOLD, producing a simulated FC matrix; the loss is the RMSE against an empirical FC target. Every section below feeds a different `state` into this function.
 
 ```{python}
 #| output: false
@@ -110,12 +126,9 @@ def loss(s):
     return rmse(observation(s), fc_target)
 ```
 
-## 2D loss landscape over (w, G)
+## Grid scan: see the whole landscape
 
-The running example is the global-coupling fit. We sweep `w` *and* `G`
-because (a) it gives a nicer 2D picture for the slides and (b) brain
-network models typically show a **degeneracy**: a curved valley of
-roughly equivalent (`w`, `G`) combinations all produce comparable FC fits.
+When you have only two knobs, exhaustive sweep is cheapest *per insight*: $N^2$ evaluations buy you the whole loss surface. The two-panel figure (empirical FC + 2D loss) and the loss-only variant are the foundational images that subsequent figures (random samples, CMA-ES populations, gradient trajectory, posteriors) all overlay onto. The curved low-loss valley is the **degeneracy** characteristic of brain network models: many `(G, w)` combinations fit FC about equally well, and we'll see every later method engage with that valley in its own way.
 
 ```{python}
 #| output: false
@@ -197,12 +210,9 @@ savefig("loss_surface_2d_only.png")
 plt.show()
 ```
 
-## Parallelism — grid in, losses out
+## Parallelism: how `Space` evaluates a grid
 
-Two-panel teaser for the parallelism slide. Schematic on a 10×10 grid
-over abstract $(\theta_1, \theta_2)$ with a synthetic Gaussian loss —
-the point is the *shape of the API* (grid in, losses out), not the
-specific running example.
+A short detour to make the API shape concrete. The grid scan above produced 1024 evaluations in one batched call distributed across 8 virtual JAX devices. This synthetic Gaussian loss (no dependency on the running example) illustrates the input/output relationship cleanly: parameters in, losses out, no per-evaluation Python loop. Same pattern powers random search, Sobol sampling, and the per-generation CMA-ES populations below.
 
 ```{python}
 #| label: fig-parallelism
@@ -252,11 +262,9 @@ savefig("parallelism_grid.png")
 plt.show()
 ```
 
-## 1D slice along G
+## 1D slice: the easy picture, with caveats
 
-Slice the 2D landscape along `G` at a fixed `w` (the model default
-`w = 0.5`). This is the "easy to picture" 1D view — but the 2D plot
-above is what reveals the degeneracy.
+Take the same grid data and slice it along `G` at fixed `w = 0.5`. The 1D loss curve is what you'd plot if you only ever varied one knob — clean and easy to talk about, but it hides the degenerate valley that the 2D view exposes. Slicing also doesn't generalize past 2-3 dimensions, which motivates the move to random sampling next.
 
 ```{python}
 #| label: fig-loss-1d
@@ -276,10 +284,9 @@ savefig("loss_surface_1d.png")
 plt.show()
 ```
 
-## Random search over (w, G)
+## Random search: same range, 10× fewer evaluations
 
-Same parameter ranges as the grid scan, but 100 samples drawn uniformly
-and zipped into a single `Space`.
+Same `(G, w)` ranges as the grid scan, 100 uniform samples instead of 1024 grid points. Bergstra & Bengio (2012) showed that real loss surfaces have low effective dimensionality, so random samples — which vary every axis at every trial — beat grid for the same budget once `d > 2-3`. The figure overlays the 100 samples on the (faded) grid landscape: same valley, far cheaper.
 
 ```{python}
 #| output: false
@@ -327,14 +334,9 @@ savefig("random_search.png")
 plt.show()
 ```
 
-## Sensitivity analysis (Sobol indices)
+## Sobol sensitivity: which knobs actually matter
 
-Quasi-random Sobol sequences power more than just exploration: combined
-with Saltelli's design they let us compute **variance-based sensitivity
-indices** — a quantitative version of the Bergstra & Bengio "low
-effective dimensionality" claim. We extend the problem to four
-parameters (`G`, `w`, `I_o`, `sigma`) and ask which knobs the FC loss
-actually depends on.
+A quantitative version of the Bergstra & Bengio claim. Quasi-random Sobol sequences combined with Saltelli's design produce **variance-based sensitivity indices**: each parameter's share of the loss variance, decomposed into direct effects (`S1`) and total effects including interactions (`ST`). Same `Space` + `DataAxis` plumbing as random search; the design matrix is just smarter. We extend the problem to three parameters (`G`, `w`, `sigma`) and confirm what the 2D landscape suggested: FC loss lives on an effectively 2D subspace, with `sigma` contributing essentially nothing.
 
 ```{python}
 #| output: false
@@ -421,12 +423,9 @@ savefig("sensitivity_sobol.png")
 plt.show()
 ```
 
-## CMA-ES on (G, w) — population evolution
+## CMA-ES: adaptive sampling without gradients
 
-Adaptive evolutionary strategy. Each generation a population of
-candidate `(G, w)` pairs is evaluated **in parallel** via `DataAxis`,
-the covariance of the sampling distribution is updated to align with
-the local descent direction, and the next generation is sampled.
+Maintain a population, fit a Gaussian to its better half, bias the next generation toward low-loss regions. Each generation is one `DataAxis` batch — same parallel-evaluation pattern as the grid scan. No gradients required, which makes CMA-ES the right tool when the loss is non-smooth, chaotic, or you have ~10–50 parameters. The covariance ellipse rotates and shrinks to align with the curved valley over ~20 generations; the section saves both four-panel snapshots and an animation for the slide.
 
 ```{python}
 #| output: false
@@ -559,11 +558,9 @@ print(f"saved → {gif_path}")
 plt.close(fig_anim)
 ```
 
-## Method ceiling — where sampling stops scaling
+## The sampling ceiling
 
-Horizontal bars: each method's usable range in parameter dimension $d$.
-The shaded band marks the regional-parameter regime ($d \sim 10^3$–$10^4$)
-that brain network models live in. Only gradient descent crosses it.
+Every method up to here evaluates the simulator at chosen `theta` and learns from the returned losses. None of them reach the regional-parameter regime where a single brain-network model has 10²–10⁴ knobs (one `w_i` per region, plus per-region noise, plus …). The bar chart shows roughly where each sampling method dies. The shaded band marks where regional brain models live; only gradient descent crosses it.
 
 ```{python}
 cividis = plt.get_cmap("cividis")
@@ -616,10 +613,9 @@ savefig("method_ceiling.png")
 plt.show()
 ```
 
-## Gradient descent trajectory
+## Gradient descent: the only thing that scales
 
-Run Adam from a deliberately off-valley starting point and overlay the
-iterate path on the same loss landscape.
+Reverse-mode automatic differentiation gives gradients with respect to *every* parameter at the cost of ~3-30× one forward simulation, **independent of dimension** — this is what makes regional fits tractable. Here we still work in `(G, w)` for the figure, but the same code generalizes to `n_nodes`-dimensional parameter vectors without changing complexity. Adam is run from a deliberately off-valley starting point; the iterates trace into the low-loss valley. One trajectory, one optimum: gradient descent gives *a* good fit cheaply, not the valley itself. To characterize the valley you need a posterior, which is what the Bayesian sections do next.
 
 ```{python}
 #| output: false
@@ -741,11 +737,9 @@ print(f"saved → {grad_gif_path}")
 plt.close(fig_grad_anim)
 ```
 
-## Prior pictograms — uniform / weakly / strongly informative
+## Prior shapes: three regimes
 
-Tiny inline pictograms used as bullet decorations on the priors slide.
-Each is a square, axes-off, single-color sketch of one prior shape over
-the same range.
+Three small icons used as bullet decorations on the priors slide. Each is a square, axes-off sketch of one prior over the same range: uniform (just bounds), weakly informative Normal (broad shape, regularizes), strongly informative Normal (e.g. tied to a literature value, or a regional constraint from PET / EEG / receptor density). The point of the slide is that priors are a *modular choice*: same simulator, same data, different priors → different posteriors.
 
 ```{python}
 from scipy.stats import norm as _norm, uniform as _uniform
@@ -775,11 +769,9 @@ for name, y in prior_shapes.items():
 print(f"saved → {list(prior_shapes)}")
 ```
 
-## Bayesian shrinkage cartoon — prior, likelihood, posterior
+## Bayes in one picture
 
-A generic textbook visual to introduce Bayes on the slide: a wide prior
-times a peaked likelihood gives a tighter posterior. No connection to
-the running example.
+The textbook visual that introduces Bayes on the slide: a wide prior times a peaked likelihood gives a tighter posterior. Generic, no connection to the running example — its job is purely pedagogical, before we run actual inference on `(G, w)` next.
 
 ```{python}
 from scipy.stats import norm
@@ -817,19 +809,14 @@ savefig("bayes_shrinkage.png")
 plt.show()
 ```
 
-## Bayesian inference — HMC over (G, w)
+## HMC vs SVI: posterior over the degenerate valley
 
-A point estimate gives one fit; a posterior gives **all fits consistent
-with the data**. With the curved valley we already know the model is
-near-degenerate, so the posterior should *characterize* that valley.
-We run NUTS (Hamiltonian Monte Carlo with adaptive step size) under two
-prior choices:
+Gradient descent gave one fit. This section gives **all fits consistent with the data**, on the same problem. Same `fc_model`, same wide priors (Uniform on both `G` and `w`), two inference algorithms back-to-back:
 
-1. **Wide priors** — Uniform on both `G` and `w`. The posterior should
-   spread along the valley.
-2. **Tight prior on w** — Normal(0.5, 0.03) on `w` (think: literature
-   value, or a regional constraint from imaging). This should pin `G`
-   to a narrow basin, breaking the degeneracy.
+- **NUTS** (Hamiltonian Monte Carlo with adaptive step size). Asymptotically exact, gradient-based. ~4 h for 300 samples. Gold standard if you can afford it.
+- **SVI** with an `AutoMultivariateNormal` guide. Fits a Gaussian in unconstrained space by gradient descent on the ELBO. ~12 min, about 20× faster.
+
+The expectation: HMC traces along the curved valley, recovering the diagonal `(G, w)` correlation that the grid scan made visible; SVI's Gaussian family aligns with the valley locally but cannot bend, so the diagonal correlation collapses. The figure overlays both posteriors on the (faded) grid landscape with marginal histograms on the side.
 
 ```{python}
 #| output: false
@@ -977,11 +964,9 @@ savefig("posteriors_compare.png")
 plt.show()
 ```
 
-## Pipeline overview cartoon
+## The recipe in one figure
 
-A 4-panel cartoon for the "default tvboptim recipe" slide: bifurcation
-diagram → coarse-search loss landscape → gradient descent (global → regional)
-→ Bayesian posterior. All synthetic, all cividis.
+A four-panel cartoon for the closing slide. Each panel summarizes one stage of the default TVB-Optim workflow: (1) bifurcation map → pick a regime, (2) coarse random/Sobol search → find a basin, (3) gradient descent → polish global, then scale to regional, (4) Bayesian inference → posterior + uncertainty. Each step uses the previous as a warm start. All synthetic data, all cividis — the point is the workflow shape, not the numbers.
 
 ```{python}
 from matplotlib.patches import FancyArrowPatch

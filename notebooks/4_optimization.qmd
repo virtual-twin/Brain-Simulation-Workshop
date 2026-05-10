@@ -1,30 +1,31 @@
 ---
-title: "4. Parameter exploration and inference"
-subtitle: "Sessions 4.1 · 4.2"
+title: "Parameter exploration and inference"
 toc: false
 ---
 
-In this chapter you will fit personalized whole-brain models to empirical data
-using TVB-Optim's gradient-based optimisation. Two complementary approaches
-are covered: a disease use case with biomedical data integration, and a
-systematic comparison of homogeneous versus heterogeneous parameter strategies.
+In this chapter you will fit whole-brain models to empirical observables
+using TVB-Optim's gradient-based optimisation. Two complementary use cases
+are covered, each on a different modality and observable, but sharing the
+same TVB-Optim idioms (`Parameter`, `.shape`, `Space`, `@cache`).
 
 ## Sessions
 
 ::: {.grid}
 
 ::: {.g-col-12 .g-col-md-6}
-### [4a · Alzheimer's disease use case](04a_alzheimer_usecase.qmd)
-Build a personalised model using patient-specific connectivity and tau
-deposition maps. Reproduce empirical BOLD signals and interpret the result in
-the context of network degeneration.
+### [fMRI BOLD functional connectivity](4_I_fMRI_BOLD_FC.qmd)
+Fit a Reduced Wong-Wang network on the Desikan-Killiany parcellation to
+match empirical resting-state FC. Workflow: grid exploration over `(G, w)`,
+global gradient fit, then heterogeneous per-region `w`. Loss is the RMSE
+between simulated and empirical FC matrices.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
-### [4b · Parameter fitting](04b_parameter_fitting.qmd)
-Compare homogeneous and heterogeneous parameter fitting strategies.
-Use TVB-Optim to optimise a frequency gradient (or another map from TVBase)
-and assess the impact on model fit quality.
+### [MEG peak frequency gradient](4_II_MEG_Peak_Frequency.qmd)
+Fit a Jansen-Rit network with delays to reproduce the resting-state alpha
+gradient (7 Hz in association areas to 11 Hz in visual cortex). Workflow:
+grid exploration over `(a, b)`, then per-region `(a, b)` gradient fit
+against Cauchy target spectra.
 :::
 
 :::
