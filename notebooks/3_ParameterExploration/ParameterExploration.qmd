@@ -57,11 +57,36 @@ sweep.plot(overlay=True)
 
 ```{python}
 from tvbo import Observation
+
 exp.observations['mean_V'] = Observation(
     name='mean_V',
-    source='V',
-    aggregation='mean',
+    source='V',  # the state variable to observe
+    aggregation='mean',  # aggregate over space (node dimension)
 )
+
+res = exp.run()
+
+```
+
+```{python}
+from tvbo import Observation
+from tvbo.datamodel.schema import FunctionCall, Callable, Argument
+import numpy
+exp.observations['mean_V'] = Observation(
+    name='V_mean',
+    source='V',
+    pipeline=[
+        FunctionCall(
+            name='spatial_mean',
+            callable=Callable(
+                name='mean',
+                module='np',
+            ),
+            input='V',
+        ),
+    ],
+)
+exp.run().observations['mean_V'].data
 ```
 
 ## Trial-based exploration

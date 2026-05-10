@@ -276,13 +276,17 @@ $$
 :::: {.columns}
 
 ::: {.column}
+
 **Spring Oscillator**
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.gif){fig-align="center"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.gif)
+
 :::
 
 ::: {.column}
+
 **Damped Spring**
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.gif){fig-align="center"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.gif)
+
 :::
 
 ::::
@@ -947,16 +951,10 @@ $$
 
 ::: {.r-stack }
 
-![](img/figures/bifurcation/fig-stability.png){.fragment}
+![](img/figures/bifurcation/fig-stability.png)
 
 ![](img/figures/bifurcation/fig-stability-perturbation.png){.fragment}
 
-::: {.r-stack }
-
-![](img/figures/bifurcation/fig-stability.png){.fragment}
-
-![](img/figures/bifurcation/fig-stability-perturbation.png){.fragment}
-:::
 
 :::
 :::
@@ -965,9 +963,11 @@ $$
 
 ## 2D portraits
 
-![](img/figures/bifurcation/fig-bifurcation-phase-portraits-animation.gif){fig-align="center" width="82%"}
+![](img/figures/bifurcation/fig-bifurcation-phase-portraits-animation.gif){fig-align="center"}
 
-![](img/figures/bifurcation/fig-bifurcation-phase-portraits-static.png)
+## 2D portraits
+
+![](img/figures/bifurcation/fig-bifurcation-phase-portraits-static.png){fig-align="center"}
 
 ## Regime-change building blocks
 
@@ -1189,9 +1189,17 @@ result = exp.run("bifurcationkit.jl")
 - data formats we can support
 
 
-## Brain Plotting
+## Brain Plotting with `bsplot`
 
-![](img/figures/bsplot/overview_figure.png)
+![](img/figures/bsplot/overview_figure.png){fig-align='center'}
+
+```bash
+uv pip install bsplot
+```
+
+
+## {background-iframe="https://martinl.git-pages.bihealth.org/bsplot/Usage" background-interactive=true}
+
 
 
 

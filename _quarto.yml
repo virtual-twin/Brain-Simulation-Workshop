@@ -16,7 +16,7 @@ render:
     - agenda/agenda.qmd
     - slides.qmd
     - notebooks/1_introduction.qmd
-    - notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
+    - notebooks/1_MathematicalFramework/DynamicalSystems.qmd
     - notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd
     - notebooks/3_ParameterExploration/ParameterExploration.qmd
     - notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd
@@ -53,7 +53,7 @@ website:
           - href: notebooks/1_introduction.qmd
             text: "0. Introduction to Brain Network Modelling"
           - text: "---"
-          - href: notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
+          - href: notebooks/1_MathematicalFramework/DynamicalSystems.qmd
             text: "1. Dynamical Systems"
           - href: notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd
             text: "2. Networks and Noise"
@@ -87,7 +87,7 @@ website:
         - notebooks/1_introduction.qmd
         - section: "1. Dynamical Systems"
           contents:
-            - notebooks/1_1_MathematicalFramework/DynamicalSystems.qmd
+            - notebooks/1_MathematicalFramework/DynamicalSystems.qmd
         - section: "2. Networks and Noise"
           contents:
             - notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd
