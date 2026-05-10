@@ -5,28 +5,28 @@
     <lastmod>2026-05-09T13:42:19.615Z</lastmod>
   </url>
   <url>
+    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/4_II_MEG_Peak_Frequency.html</loc>
+    <lastmod>2026-05-10T07:17:55.867Z</lastmod>
+  </url>
+  <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/4_optimization.html</loc>
-    <lastmod>2026-05-07T14:11:49.048Z</lastmod>
+    <lastmod>2026-05-10T07:17:55.868Z</lastmod>
   </url>
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/02b_coupled_networks.html</loc>
     <lastmod>2026-05-06T13:09:28.607Z</lastmod>
   </url>
   <url>
-    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/04b_parameter_fitting.html</loc>
+    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/05_stimulation.html</loc>
     <lastmod>2026-05-06T13:09:28.607Z</lastmod>
-  </url>
-  <url>
-    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/4_inference_demos.html</loc>
-    <lastmod>2026-05-07T14:11:45.993Z</lastmod>
   </url>
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/2_fair_model.html</loc>
     <lastmod>2026-05-07T14:11:49.047Z</lastmod>
   </url>
   <url>
-    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/1_introduction.html</loc>
-    <lastmod>2026-05-07T14:11:49.048Z</lastmod>
+    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/4_I_fMRI_BOLD_FC.html</loc>
+    <lastmod>2026-05-10T07:17:55.867Z</lastmod>
   </url>
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/1_intro_demos.html</loc>
@@ -34,7 +34,7 @@
   </url>
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/3_ParameterExploration/ParameterExploration.html</loc>
-    <lastmod>2026-05-09T13:43:08.218Z</lastmod>
+    <lastmod>2026-05-10T10:27:26.902Z</lastmod>
   </url>
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/setup.html</loc>
@@ -46,7 +46,7 @@
   </url>
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/slides.html</loc>
-    <lastmod>2026-05-08T15:20:16.484Z</lastmod>
+    <lastmod>2026-05-10T11:01:29.670Z</lastmod>
   </url>
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/index.html</loc>
@@ -65,20 +65,16 @@
     <lastmod>2026-05-07T14:11:49.048Z</lastmod>
   </url>
   <url>
-    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/04a_alzheimer_usecase.html</loc>
-    <lastmod>2026-05-06T13:09:28.607Z</lastmod>
+    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/1_introduction.html</loc>
+    <lastmod>2026-05-07T14:11:49.048Z</lastmod>
   </url>
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/4_BifurcationAnalysis/BifurcationAnalysis.html</loc>
     <lastmod>2026-05-08T10:56:25.758Z</lastmod>
   </url>
   <url>
-    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/1_1_MathematicalFramework/DynamicalSystems.html</loc>
-    <lastmod>2026-05-09T12:59:33.628Z</lastmod>
-  </url>
-  <url>
-    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/05_stimulation.html</loc>
-    <lastmod>2026-05-06T13:09:28.607Z</lastmod>
+    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/4_inference_demos.html</loc>
+    <lastmod>2026-05-10T07:17:55.867Z</lastmod>
   </url>
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/02a_mean_field_models.html</loc>
@@ -91,5 +87,9 @@
   <url>
     <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/5_stimulation.html</loc>
     <lastmod>2026-05-07T14:11:49.048Z</lastmod>
+  </url>
+  <url>
+    <loc>https://virtual-twin.github.io/Brain-Simulation-Workshop/notebooks/1_MathematicalFramework/DynamicalSystems.html</loc>
+    <lastmod>2026-05-09T12:59:33.628Z</lastmod>
   </url>
 </urlset>

@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
-    <a class="dropdown-item" href="../../notebooks/1_1_MathematicalFramework/DynamicalSystems.html">
+    <a class="dropdown-item" href="../../notebooks/1_MathematicalFramework/DynamicalSystems.html">
  <span class="dropdown-text">1. Dynamical Systems</span></a>
   </li>  
         <li>
@@ -178,12 +178,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">5. Parameter optimisation</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../notebooks/04a_alzheimer_usecase.html">
- <span class="dropdown-text">5.1 Alzheimer use case</span></a>
+    <a class="dropdown-item" href="../../notebooks/4_I_fMRI_BOLD_FC.html">
+ <span class="dropdown-text">5.1 fMRI BOLD FC</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../notebooks/04b_parameter_fitting.html">
- <span class="dropdown-text">5.2 Parameter fitting</span></a>
+    <a class="dropdown-item" href="../../notebooks/4_II_MEG_Peak_Frequency.html">
+ <span class="dropdown-text">5.2 MEG peak frequency</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../notebooks/4_inference_demos.html">
@@ -253,7 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/1_1_MathematicalFramework/DynamicalSystems.html" class="sidebar-item-text sidebar-link">
+  <a href="../../notebooks/1_MathematicalFramework/DynamicalSystems.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Dynamical Systems with TVBO: A Spring-Mass Example</span></a>
   </div>
 </li>
@@ -321,20 +321,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/04a_alzheimer_usecase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Use-case A — Alzheimer’s disease</span></a>
+  <a href="../../notebooks/4_I_fMRI_BOLD_FC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Reduced Wong-Wang BOLD FC Optimization</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/04b_parameter_fitting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Use-case B — homogeneous vs.&nbsp;heterogeneous parameter fitting</span></a>
+  <a href="../../notebooks/4_II_MEG_Peak_Frequency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Jansen-Rit Peak Frequency Optimization</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/4_inference_demos.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Inference demos — figures for §4</span></a>
+ <span class="menu-text">Inference demos: figures and method walkthrough</span></a>
   </div>
 </li>
       </ul>
@@ -369,8 +369,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#sweeping-parameters-declaratively" id="toc-sweeping-parameters-declaratively" class="nav-link active" data-scroll-target="#sweeping-parameters-declaratively"><span class="header-section-number">1</span> Sweeping parameters declaratively</a>
   <ul class="collapse">
   <li><a href="#a-one-axis-sweep" id="toc-a-one-axis-sweep" class="nav-link" data-scroll-target="#a-one-axis-sweep"><span class="header-section-number">1.1</span> A one-axis sweep</a></li>
-  <li><a href="#trial-based-exploration" id="toc-trial-based-exploration" class="nav-link" data-scroll-target="#trial-based-exploration"><span class="header-section-number">1.2</span> Trial-based exploration</a></li>
-  <li><a href="#recap" id="toc-recap" class="nav-link" data-scroll-target="#recap"><span class="header-section-number">1.3</span> Recap</a></li>
+  <li><a href="#observations" id="toc-observations" class="nav-link" data-scroll-target="#observations"><span class="header-section-number">1.2</span> Observations</a></li>
+  <li><a href="#trial-based-exploration" id="toc-trial-based-exploration" class="nav-link" data-scroll-target="#trial-based-exploration"><span class="header-section-number">1.3</span> Trial-based exploration</a></li>
+  <li><a href="#recap" id="toc-recap" class="nav-link" data-scroll-target="#recap"><span class="header-section-number">1.4</span> Recap</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/edit/main/notebooks/3_ParameterExploration/ParameterExploration.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ParameterExploration.ipynb" download="ParameterExploration.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
@@ -442,7 +443,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="a-one-axis-sweep" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="a-one-axis-sweep"><span class="header-section-number">1.1</span> A one-axis sweep</h2>
 <p>We take the <code>Generic2dOscillator</code> and sweep its bifurcation parameter <code>a</code> across five values.</p>
-<div id="4733a260" class="cell" data-execution_count="2">
+<div id="467a99a2" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Dynamics.from_db(<span class="st">"Generic2dOscillator"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>exp <span class="op">=</span> SimulationExperiment(dynamics<span class="op">=</span>model)</span>
@@ -476,7 +477,7 @@ Experiment complete.
 </div>
 </div>
 <p>The result keeps the same shape conventions as a single simulation, with one extra axis for the swept parameter:</p>
-<div id="68a7fde7" class="cell" data-execution_count="3">
+<div id="1db53188" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sweep <span class="op">=</span> result.explorations[<span class="st">"a_sweep"</span>]</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"results shape:"</span>, sweep.results.shape, <span class="st">"  axis:"</span>, sweep.axes[<span class="dv">0</span>].name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -484,9 +485,9 @@ Experiment complete.
 </div>
 </div>
 <p><code>Exploration.plot()</code> overlays the trajectories. Increasing <code>a</code> walks the system through a Hopf bifurcation: from a stable focus to a sustained limit cycle.</p>
-<div id="0305876b" class="cell" data-execution_count="4">
+<div id="2e45d7ac" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sweep.plot(overlay<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <figure class="figure">
 <p><img src="ParameterExploration_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
@@ -495,21 +496,96 @@ Experiment complete.
 </div>
 </div>
 </section>
-<section id="trial-based-exploration" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="trial-based-exploration"><span class="header-section-number">1.2</span> Trial-based exploration</h2>
-<p>The same object also drives Monte-Carlo style replication via <code>n_trials</code>. Each trial uses different initial conditions and (if noise is configured) different noise realisations.</p>
-<div id="6e555eb6" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo.datamodel.schema <span class="im">import</span> Distribution, Range</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># exp.explorations.clear()</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>exp.dynamics.state_variables[<span class="st">'V'</span>].distribution <span class="op">=</span> Distribution(domain<span class="op">=</span>Range(lo<span class="op">=-</span><span class="dv">1</span>, hi<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>exp.dynamics.state_variables[<span class="st">'W'</span>].initial_value <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>exp.explorations[<span class="st">"trials"</span>] <span class="op">=</span> Exploration(name<span class="op">=</span><span class="st">"trials"</span>, n_trials<span class="op">=</span><span class="dv">10</span>)</span>
+<section id="observations" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="observations"><span class="header-section-number">1.2</span> Observations</h2>
+<div id="80b951b2" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> Observation</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>exp.observations[<span class="st">'mean_V'</span>] <span class="op">=</span> Observation(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">'mean_V'</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">'V'</span>,  <span class="co"># the state variable to observe</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    aggregation<span class="op">=</span><span class="st">'mean'</span>,  <span class="co"># aggregate over space (node dimension)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>result.explorations[<span class="st">"trials"</span>].plot(overlay<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> exp.run()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 800.0 ms, dt: 0.01 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+STEP 2: Running explorations...
+============================================================
+  &gt; a_sweep
+  Explorations complete.
+
+============================================================
+Experiment complete.
+============================================================</code></pre>
+</div>
+</div>
+<div id="893813e9" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> Observation</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo.datamodel.schema <span class="im">import</span> FunctionCall, Callable, Argument</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>exp.observations[<span class="st">'mean_V'</span>] <span class="op">=</span> Observation(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">'V_mean'</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">'V'</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    pipeline<span class="op">=</span>[</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        FunctionCall(</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">'spatial_mean'</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>            <span class="bu">callable</span><span class="op">=</span>Callable(</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                name<span class="op">=</span><span class="st">'mean'</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                module<span class="op">=</span><span class="st">'np'</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>            <span class="bu">input</span><span class="op">=</span><span class="st">'V'</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>exp.run().observations[<span class="st">'mean_V'</span>].data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 800.0 ms, dt: 0.01 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+STEP 2: Running explorations...
+============================================================
+  &gt; a_sweep
+  Explorations complete.
+
+============================================================
+Experiment complete.
+============================================================</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>Array(-0.18526074, dtype=float64)</code></pre>
+</div>
+</div>
+</section>
+<section id="trial-based-exploration" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="trial-based-exploration"><span class="header-section-number">1.3</span> Trial-based exploration</h2>
+<p>The same object also drives Monte-Carlo style replication via <code>n_trials</code>. Each trial uses different initial conditions and (if noise is configured) different noise realisations.</p>
+<div id="178d0b12" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo.datamodel.schema <span class="im">import</span> Distribution, Range</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># exp.explorations.clear()</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>exp.dynamics.state_variables[<span class="st">'V'</span>].distribution <span class="op">=</span> Distribution(domain<span class="op">=</span>Range(lo<span class="op">=-</span><span class="dv">1</span>, hi<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>exp.dynamics.state_variables[<span class="st">'W'</span>].initial_value <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>exp.explorations[<span class="st">"trials"</span>] <span class="op">=</span> Exploration(name<span class="op">=</span><span class="st">"trials"</span>, n_trials<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>result.explorations[<span class="st">"trials"</span>].plot(overlay<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ============================================================
@@ -530,17 +606,17 @@ STEP 2: Running explorations...
 Experiment complete.
 ============================================================</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 <figure class="figure">
-<p><img src="ParameterExploration_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="ParameterExploration_files/figure-html/cell-8-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="recap" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="recap"><span class="header-section-number">1.3</span> Recap</h2>
+<section id="recap" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="recap"><span class="header-section-number">1.4</span> Recap</h2>
 <ul>
 <li><code>exp.explorations[name] = Exploration(...)</code> declares a sweep — never assign a plain dict.</li>
 <li><code>ExplorationAxis(parameter=..., explored_values=[...])</code> defines the axis.</li>

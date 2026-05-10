@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4. Parameter exploration and inference – Brainsimulation Workshop</title>
+<title>Parameter exploration and inference – Brainsimulation Workshop</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../notebooks/04a_alzheimer_usecase.html" rel="next">
+<link href="../notebooks/4_I_fMRI_BOLD_FC.html" rel="next">
 <link href="../notebooks/4_BifurcationAnalysis/BifurcationAnalysis.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -122,7 +122,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
-    <a class="dropdown-item" href="../notebooks/1_1_MathematicalFramework/DynamicalSystems.html">
+    <a class="dropdown-item" href="../notebooks/1_MathematicalFramework/DynamicalSystems.html">
  <span class="dropdown-text">1. Dynamical Systems</span></a>
   </li>  
         <li>
@@ -143,12 +143,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">5. Parameter optimisation</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../notebooks/04a_alzheimer_usecase.html">
- <span class="dropdown-text">5.1 Alzheimer use case</span></a>
+    <a class="dropdown-item" href="../notebooks/4_I_fMRI_BOLD_FC.html">
+ <span class="dropdown-text">5.1 fMRI BOLD FC</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../notebooks/04b_parameter_fitting.html">
- <span class="dropdown-text">5.2 Parameter fitting</span></a>
+    <a class="dropdown-item" href="../notebooks/4_II_MEG_Peak_Frequency.html">
+ <span class="dropdown-text">5.2 MEG peak frequency</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../notebooks/4_inference_demos.html">
@@ -218,7 +218,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/1_1_MathematicalFramework/DynamicalSystems.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/1_MathematicalFramework/DynamicalSystems.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Dynamical Systems with TVBO: A Spring-Mass Example</span></a>
   </div>
 </li>
@@ -286,20 +286,20 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/04a_alzheimer_usecase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Use-case A — Alzheimer’s disease</span></a>
+  <a href="../notebooks/4_I_fMRI_BOLD_FC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Reduced Wong-Wang BOLD FC Optimization</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/04b_parameter_fitting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Use-case B — homogeneous vs.&nbsp;heterogeneous parameter fitting</span></a>
+  <a href="../notebooks/4_II_MEG_Peak_Frequency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Jansen-Rit Peak Frequency Optimization</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/4_inference_demos.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Inference demos — figures for §4</span></a>
+ <span class="menu-text">Inference demos: figures and method walkthrough</span></a>
   </div>
 </li>
       </ul>
@@ -333,8 +333,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">4. Parameter exploration and inference</h1>
-<p class="subtitle lead">Sessions 4.1 · 4.2</p>
+<h1 class="title">Parameter exploration and inference</h1>
 </div>
 
 
@@ -380,17 +379,17 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>In this chapter you will fit personalized whole-brain models to empirical data using TVB-Optim’s gradient-based optimisation. Two complementary approaches are covered: a disease use case with biomedical data integration, and a systematic comparison of homogeneous versus heterogeneous parameter strategies.</p>
+<p>In this chapter you will fit whole-brain models to empirical observables using TVB-Optim’s gradient-based optimisation. Two complementary use cases are covered, each on a different modality and observable, but sharing the same TVB-Optim idioms (<code>Parameter</code>, <code>.shape</code>, <code>Space</code>, <code>@cache</code>).</p>
 <section id="sessions" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="sessions"><span class="header-section-number">1</span> Sessions</h2>
 <div class="grid">
-<section id="a-alzheimers-disease-use-case" class="level3 g-col-12 g-col-md-6" data-number="1.1">
-<h3 data-number="1.1" class="anchored" data-anchor-id="a-alzheimers-disease-use-case"><span class="header-section-number">1.1</span> <a href="../notebooks/04a_alzheimer_usecase.html">4a · Alzheimer’s disease use case</a></h3>
-<p>Build a personalised model using patient-specific connectivity and tau deposition maps. Reproduce empirical BOLD signals and interpret the result in the context of network degeneration.</p>
+<section id="fmri-bold-functional-connectivity" class="level3 g-col-12 g-col-md-6" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="fmri-bold-functional-connectivity"><span class="header-section-number">1.1</span> <a href="../notebooks/4_I_fMRI_BOLD_FC.html">fMRI BOLD functional connectivity</a></h3>
+<p>Fit a Reduced Wong-Wang network on the Desikan-Killiany parcellation to match empirical resting-state FC. Workflow: grid exploration over <code>(G, w)</code>, global gradient fit, then heterogeneous per-region <code>w</code>. Loss is the RMSE between simulated and empirical FC matrices.</p>
 </section>
-<section id="b-parameter-fitting" class="level3 g-col-12 g-col-md-6" data-number="1.2">
-<h3 data-number="1.2" class="anchored" data-anchor-id="b-parameter-fitting"><span class="header-section-number">1.2</span> <a href="../notebooks/04b_parameter_fitting.html">4b · Parameter fitting</a></h3>
-<p>Compare homogeneous and heterogeneous parameter fitting strategies. Use TVB-Optim to optimise a frequency gradient (or another map from TVBase) and assess the impact on model fit quality.</p>
+<section id="meg-peak-frequency-gradient" class="level3 g-col-12 g-col-md-6" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="meg-peak-frequency-gradient"><span class="header-section-number">1.2</span> <a href="../notebooks/4_II_MEG_Peak_Frequency.html">MEG peak frequency gradient</a></h3>
+<p>Fit a Jansen-Rit network with delays to reproduce the resting-state alpha gradient (7 Hz in association areas to 11 Hz in visual cortex). Workflow: grid exploration over <code>(a, b)</code>, then per-region <code>(a, b)</code> gradient fit against Cauchy target spectra.</p>
 </section>
 </div>
 <hr>
@@ -811,8 +810,8 @@ ul.task-list li input[type="checkbox"] {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../notebooks/04a_alzheimer_usecase.html" class="pagination-link" aria-label="Use-case A — Alzheimer's disease">
-        <span class="nav-page-text">Use-case A — Alzheimer’s disease</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../notebooks/4_I_fMRI_BOLD_FC.html" class="pagination-link" aria-label="Reduced Wong-Wang BOLD FC Optimization">
+        <span class="nav-page-text">Reduced Wong-Wang BOLD FC Optimization</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
