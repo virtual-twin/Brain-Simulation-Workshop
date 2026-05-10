@@ -57,7 +57,11 @@ sweep.plot(overlay=True)
 
 ```{python}
 from tvbo import Observation
-
+exp.observations['mean_V'] = Observation(
+    name='mean_V',
+    source='V',
+    aggregation='mean',
+)
 ```
 
 ## Trial-based exploration

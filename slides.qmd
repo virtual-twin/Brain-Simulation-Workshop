@@ -194,7 +194,7 @@ Same spring-mass system. Only the representation changes.
 
 ::: {.column style="width:70%;"}
 
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.gif){fig-align="center" height="430px"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.gif){fig-align="center"}
 
 :::
 
@@ -277,12 +277,12 @@ $$
 
 ::: {.column}
 **Spring Oscillator**
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.gif){fig-align="center" height="430px"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_phase_plane.gif){fig-align="center"}
 :::
 
 ::: {.column}
 **Damped Spring**
-![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.gif){fig-align="center" height="430px"}
+![](img/figures/dynamical_systems/fig-dynamical_systems_springs_realism_phase_plane.gif){fig-align="center"}
 :::
 
 ::::

@@ -104,7 +104,7 @@ def run_phase_trajectories(system: Dynamics, initials=PHASE_ICS):
 
 
 def animate_phase_plane(system: Dynamics, results, title: str, equilibrium: tuple[float, float]) -> FuncAnimation:
-    fig, ax = plt.subplots(figsize=MEDIA_FIGSIZE)
+    fig, ax = plt.subplots(figsize=MEDIA_FIGSIZE, layout='compressed')
 
     xs = [x_series(result) for result in results]
     vs = [v_series(result) for result in results]
@@ -144,7 +144,7 @@ def animate_phase_plane(system: Dynamics, results, title: str, equilibrium: tupl
             changed.append(dot)
         return changed
 
-    fig.tight_layout()
+    ax.set_box_aspect(1.0)
     return FuncAnimation(fig, update, frames=len(frame_idx), interval=40, blit=True)
 
 
