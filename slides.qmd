@@ -1172,25 +1172,28 @@ result = exp.run("bifurcationkit.jl")
 
 :::::
 
-<!-- - TODO: stimulation primitives in TVB
-- TODO: VEP / TEP example -->
-
 ## Take Aways from Day 1
 
 - TODO: takeaways from Day 1
 
 # Day 2 — Mini Hackathon and Plot Your Brain Tutorial {background-color="#6880af"}
 
-## Format
+## Hackathon
 
-- TODO: pitch your question (5 min each)
-- TODO: form small groups
-- TODO: checkpoint + wrap-up times
+- pitch your question (5 min each)
+- form small groups
+- checkpoint + wrap-up times
 
 ## Bring your own…
 
-- TODO: data formats we can support
-- TODO: EBRAINS / local setup reminder
+- data formats we can support
+
+
+## Brain Plotting
+
+![](img/figures/bsplot/overview_figure.png)
+
+
 
 # Wrap-up {background-color="#6880af"}
 

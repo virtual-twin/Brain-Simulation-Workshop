@@ -53,6 +53,13 @@ print("results shape:", sweep.results.shape, "  axis:", sweep.axes[0].name)
 sweep.plot(overlay=True)
 ```
 
+## Observations
+
+```{python}
+from tvbo import Observation
+
+```
+
 ## Trial-based exploration
 
 The same object also drives Monte-Carlo style replication via `n_trials`. Each trial uses different initial conditions and (if noise is configured) different noise realisations.
