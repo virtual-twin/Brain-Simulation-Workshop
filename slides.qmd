@@ -1200,7 +1200,6 @@ uv pip install bsplot
 ```
 
 
-## {background-iframe="https://martinl.git-pages.bihealth.org/bsplot/Usage" background-interactive=true}
 
 
 

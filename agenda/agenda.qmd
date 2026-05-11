@@ -48,7 +48,7 @@ Hands-on session introducing the theoretical and programmatic framework for spec
 
 1. [Stimulating the brain](../notebooks/5_stimulation.qmd)
 
-- [Visual and TMS-evoked potentials](../notebooks/05_stimulation.qmd)
+- [Visual and TMS-evoked potentials](../notebooks/5_stimulation.qmd)
 
 ### Day 2: Mini Hackathon
 
