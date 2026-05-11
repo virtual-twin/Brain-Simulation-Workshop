@@ -1,0 +1,289 @@
+---
+title: "Stimulating the brain"
+subtitle: "Driving a whole-brain network model with an external stimulus"
+format:
+  html:
+    code-fold: false
+    toc: true
+    echo: true
+    embed-resources: true
+    fig-width: 8
+    out-width: "100%"
+jupyter: python3
+execute:
+  cache: true
+---
+
+Try this notebook interactively:
+
+[Download .ipynb](https://github.com/virtual-twin/Brain-Simulation-Workshop/blob/main/notebooks/5_stimulation.ipynb){.btn .btn-primary download="stimulation.ipynb"}
+[Download .qmd](https://github.com/virtual-twin/Brain-Simulation-Workshop/blob/main/notebooks/5_stimulation.qmd){.btn .btn-secondary download="stimulation.qmd"}
+[Open in Colab](https://colab.research.google.com/github/virtual-twin/Brain-Simulation-Workshop/blob/main/notebooks/5_stimulation.ipynb){.btn .btn-warning target="_blank"}
+
+## Introduction
+
+This tutorial shows how to **drive a whole-brain network model (BNM) with an external stimulus** using only TVB-O's built-in classes.  We will:
+
+1. Load a normative structural connectome (SC) from TVB-O's database.
+2. Configure a local dynamical model (Generic 2D oscillator) and a coupling function.
+3. Construct a **`Stimulus`** from an arbitrary 1-D waveform — here a short audio recording, but the same workflow applies to a TMS pulse, a visual flash, or any waveform you write down symbolically.
+4. Attach the stimulus to a single node, run the simulation, and compare it to a rest condition.
+5. Compute and visualise functional connectivity (FC) for both conditions through a declarative **`ObservationModel`** DAG.
+
+::: {.callout-tip}
+## What you'll learn
+
+- **Concepts:** what a stimulus *is* in TVB-O (a `Stimulus` with either a closed-form equation or a `dataLocation` pointing to a waveform), how it is injected into a node's state variable, and how it interacts with long-range coupling.
+- **TVB-O idioms:** `Network` for the connectome, `Dynamics` / `Coupling` for the local model and edge function, `GraphRunner.add_stimulus(node, stimulus, stvar=...)` to attach the stimulus to a specific state variable, and `ObservationModel` for declarative post-processing.
+- **Workflow:** *connectome → BNM → stimulus → simulation → observation* — all from internal TVB-O functions.
+
+:::
+
+```{python}
+#| output: false
+#| echo: false
+# Install dependencies if running in Google Colab
+try:
+    import google.colab
+    print("Running in Google Colab - installing dependencies...")
+    !pip install -q tvbo[audio]
+    print("✓ Dependencies installed!")
+except ImportError:
+    pass  # Not in Colab, assume dependencies are available
+```
+
+## Setup
+
+We rely entirely on TVB-O's public classes:
+
+- `Network` — the structural connectome (weights + tract lengths).
+- `Dynamics` — local neural-mass model.
+- `Coupling` — long-range coupling function.
+- `Stimulus` — the external drive (closed-form expression or waveform file).
+- `GraphRunner` — assembles a BNM and runs it on the Python backend.
+- `ObservationModel` / `Function` — declarative post-processing pipeline.
+
+```{python}
+#| code-fold: true
+#| code-summary: "Imports"
+import numpy as np
+import matplotlib.pyplot as plt
+
+from tvbo import Network, Dynamics, Coupling
+from tvbo.classes.perturbation import Stimulus
+from tvbo.classes.observation import ObservationModel, Function
+from tvbo.run.graph import GraphRunner
+```
+
+## Loading the Structural Connectome
+
+`Network` can pull a normative SC straight from the TVB-O database. Here we use the **Yeo 17-network parcellation** with the default `dTOR` tractogram. Weights are min-max normalised so that the coupling strength has a well-defined scale.
+
+```{python}
+#| code-fold: false
+SC = Network(
+    parcellation={"atlas": {"name": "Yeo17"}},
+)
+SC.normalize()
+print(f"Number of regions: {SC.number_of_nodes}")
+```
+
+```{python}
+#| label: fig-sc
+#| fig-cap: "**Structural connectivity matrices.** Left: normalised connection weights between the 17 Yeo networks. Right: average tract lengths in millimetres."
+
+weights_norm = SC.weights_matrix
+lengths_mm = SC.lengths_matrix
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 3.6), layout="compressed")
+im1 = ax1.imshow(weights_norm, cmap="magma")
+ax1.set_title("SC weights (normalised)")
+fig.colorbar(im1, ax=ax1, shrink=0.8, label="norm. weight")
+
+im2 = ax2.imshow(lengths_mm, cmap="magma")
+ax2.set_title("Tract lengths")
+fig.colorbar(im2, ax=ax2, shrink=0.8, label="mm")
+for ax in (ax1, ax2):
+    ax.set_xlabel("region")
+    ax.set_ylabel("region")
+plt.show()
+```
+
+## Configuring the Stimulus
+
+A `Stimulus` is a first-class TVB-O object — it carries metadata, parameters and either a **symbolic equation** *or* a **`dataLocation`** pointing to a waveform. The waveform is resampled at simulation time and exposed as a callable `f(t)`.
+
+In this example we use an audio recording as the stimulus waveform; the workflow is identical for any other source signal.
+
+```{python}
+#| code-fold: false
+simulation_length = 4000  # ms
+
+# Replace this path with any 1-D waveform file (.wav, .npy via a small wrapper, …).
+# Closed-form alternatives: `Stimulus.from_ontology("Pulse")`,
+# `Stimulus(name="Sinusoid", equation={"rhs": "A*sin(2*pi*f*t)"}, parameters=...)`.
+stimulus_file = "data/Mariana Zwarg Sexteto Universal - Nascentes - 02 Viva Hermeto.wav"
+
+stimulus = Stimulus(
+    # name="AcousticStimulus",
+    dataLocation=stimulus_file,
+    duration=simulation_length,
+)
+```
+
+We can evaluate the stimulus on an arbitrary time grid through `stimulus.execute("python", ...)`:
+
+```{python}
+#| label: fig-stimulus
+#| fig-cap: "**The stimulus waveform** resampled at 1 kHz over the simulation window."
+
+t = np.arange(0, simulation_length, 1)
+stim_fun = stimulus.execute("python", duration=simulation_length, sampling_rate=1000)
+stim_signal = stim_fun(t)
+
+fig, ax = plt.subplots(figsize=(8, 2.5), layout="compressed")
+ax.plot(t, stim_signal, color="gray", lw=0.6)
+ax.set_xlabel("time [ms]")
+ax.set_ylabel("amplitude [a.u.]")
+ax.set_title("Acoustic stimulus")
+plt.show()
+```
+
+## Building the Brain Network Model
+
+A BNM in TVB-O is built by **wrapping a connectome in a `GraphRunner`** and then attaching:
+
+- a **local model** to every node (`add_local_model`),
+- a **coupling function** to every edge (`add_coupling`),
+- one or more **stimuli** to specific nodes (`add_stimulus`).
+
+We use a *Generic 2D oscillator* (a Hopf-like normal form, state variables `V` and `W`) with a small `a` parameter that places it just below the oscillation threshold, and a linear coupling. The stimulus is injected into node 3, into the recovery variable `W`.
+
+```{python}
+#| code-fold: false
+bnm = GraphRunner(SC)
+bnm.add_local_model(
+    Dynamics("Generic2dOscillator", parameters={"a": {"name": "a", "value": 0.001}})
+)
+bnm.add_coupling(
+    Coupling(name="Linear", parameters={"a": {"name": "a", "value": 0.5}})
+)
+bnm.add_stimulus(node=3, stimulus=stimulus, stvar="W")
+```
+
+## Running the Simulation
+
+We run the BNM twice on the same network and dynamics — once **with the stimulus**, once at **rest** — to obtain a direct comparison.
+
+```{python}
+#| code-fold: false
+ts_stim = bnm.run(duration=simulation_length, dt=1)
+
+# Detach the stimulus and re-run for the rest condition.
+for node in bnm.graph.nodes:
+    bnm.graph.nodes[node]["stimulus"] = None
+    bnm.graph.nodes[node]["stimfun"] = None
+ts_rest = bnm.run(duration=simulation_length, dt=1)
+```
+
+```{python}
+#| label: fig-ts
+#| fig-cap: "**Simulated time series** of the membrane variable `V`. The stimulus waveform (grey, scaled for display) is injected into node 3, which is excluded from this plot to highlight downstream propagation through the network."
+
+fig, ax = plt.subplots(figsize=(8, 3.2), layout="compressed")
+ax.plot(t, 0.003 * stim_signal, color="gray", lw=0.6, label="Stimulus", zorder=0)
+ts_stim.exclude_region(3).get_state_variable("V").plot(ax)
+ax.set_xlim(0, simulation_length)
+ax.set_xlabel("time [ms]")
+ax.set_title("Stimulus-driven response (excluding stimulated node)")
+plt.show()
+```
+
+## Functional Connectivity: Stimulus vs. Rest
+
+The simplest derived signal is the **Pearson functional connectivity** (FC) matrix.  We compute it for both conditions and overlay them in a single triangular plot — upper triangle = stimulus, lower triangle = rest.
+
+```{python}
+#| label: fig-fc
+#| fig-cap: "**Functional connectivity comparison.** Upper triangle: FC under stimulation. Lower triangle: FC at rest. Differences along the diagonal of off-block structure reveal stimulus-induced reorganisation."
+
+FC_stim = np.corrcoef(ts_stim.get_state_variable("V").data.squeeze(), rowvar=False)
+FC_rest = np.corrcoef(ts_rest.get_state_variable("V").data.squeeze(), rowvar=False)
+
+FC_mix = FC_stim.copy()
+FC_mix[np.tril_indices(FC_rest.shape[0])] = FC_rest[np.tril_indices(FC_rest.shape[0])]
+
+fig, ax = plt.subplots(figsize=(5, 5), layout="compressed")
+im = ax.imshow(FC_mix, cmap="RdBu_r", vmin=-1, vmax=1)
+ax.plot([0, 1], [1, 0], transform=ax.transAxes, color="black", lw=1, zorder=10)
+ax.text(0.55, 0.45, "Stimulus", transform=ax.transAxes,
+        ha="center", va="center", rotation=-45,
+        bbox=dict(boxstyle="round,pad=0.2", facecolor="white", edgecolor="none", alpha=0.7))
+ax.text(0.45, 0.55, "Rest", transform=ax.transAxes,
+        ha="center", va="center", rotation=-45,
+        bbox=dict(boxstyle="round,pad=0.2", facecolor="white", edgecolor="none", alpha=0.7))
+ax.set_xlabel("region")
+ax.set_ylabel("region")
+ax.set_title("FC: Stimulus (upper) vs. Rest (lower)")
+fig.colorbar(im, ax=ax, shrink=0.8, label="Pearson R")
+plt.show()
+```
+
+## The Observation Model
+
+In TVB-O, post-processing is itself a first-class object: an **`ObservationModel`** is a DAG whose nodes are either *data* (time series) or *functions* (analyses applied to upstream nodes). Building the same FC computation declaratively makes it serialisable, reproducible, and exportable.
+
+```{python}
+#| label: fig-obs
+#| fig-cap: "**Observation DAG.** Two input time-series feed a shared analysis function (`np.corrcoef` with `rowvar=False`), producing two FC matrices that converge on a single `Output` node."
+
+obs = ObservationModel()
+obs.add_data("TimeSeriesStimulus", ts_stim.data)
+obs.add_data("TimeSeriesRest", ts_rest.data)
+
+obs.add_derivative(
+    Function(np.corrcoef),
+    argument_mapping={"x": "TimeSeriesStimulus"},
+    select_state=0,
+    rowvar=False,
+    alt_name=r"$FC_{stim}$",
+)
+obs.add_derivative(
+    Function(np.corrcoef),
+    argument_mapping={"x": "TimeSeriesRest"},
+    select_state=0,
+    rowvar=False,
+    alt_name=r"$FC_{rest}$",
+)
+
+# Wire the DAG: inputs → time series → FC → Output, with shared metadata nodes.
+obs.graph.add_edge(r"$FC_{stim}$", "Output")
+obs.graph.add_edge(r"$FC_{rest}$", "Output")
+obs.graph.add_edge("Input", "TimeSeriesStimulus")
+obs.graph.add_edge("Input", "TimeSeriesRest")
+
+if "corrcoef" not in obs.graph:
+    obs.graph.add_node("corrcoef", function=None, params={}, metadata=True)
+if "rowvar=False" not in obs.graph:
+    obs.graph.add_node("rowvar=False", function=None, params={}, metadata=True)
+obs.graph.add_edge(r"$FC_{stim}$", "corrcoef", argument="method")
+obs.graph.add_edge(r"$FC_{rest}$", "corrcoef", argument="method")
+obs.graph.add_edge("corrcoef", "rowvar=False", argument="param")
+
+fig, ax = plt.subplots(figsize=(7, 5), layout="compressed")
+obs.plot_graph(ax=ax, plot_edge_labels=False, node_kwargs={"font_size": 7})
+ax.set_title("Observation DAG")
+plt.show()
+```
+
+## Exercises
+
+1. **Change the stimulated node.** Replace `node=3` with another region and re-run. How does the propagation pattern change? Does it depend on the node's in-degree?
+2. **Vary the stimulus amplitude.** `Stimulus` parameters can be scaled at run time — try several scales and find the threshold above which the network leaves rest dynamics.
+3. **Closed-form stimuli.** Instead of an audio file, construct a stimulus from a symbolic equation, e.g. a Gaussian pulse `A*exp(-((t-t0)/sigma)**2)` (declare `A`, `t0`, `sigma` as parameters in the `Stimulus` constructor) and compare its evoked response to the acoustic one.
+4. **Sweep the coupling strength.** Re-run the simulation for several values of the linear coupling `a` parameter. How does the difference between rest and stimulus FC scale with global coupling?
+5. **Add a second stimulus.** `add_stimulus` can be called multiple times. Drive two nodes simultaneously (or with a delay between them) and inspect the resulting FC.
+
+## Summary
+
+In this notebook we built a whole-brain stimulation experiment **using only TVB-O internals** — no manual integrators, no hand-rolled stimulus signals. The same `Stimulus`, `GraphRunner`, and `ObservationModel` objects round-trip through YAML, BIDS, and openMINDS, so the configuration shown here can be saved, shared, and re-executed on any of TVB-O's backends (JAX, TVB, PyRates, Julia).

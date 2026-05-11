@@ -1,40 +1,205 @@
 ---
 title: "Stimulating the brain"
-subtitle: "Visual and TMS-evoked potentials"
+subtitle: "Driving a neural-mass model with an Event"
+format:
+  html:
+    code-fold: false
+    toc: true
+    echo: true
+    embed-resources: true
+    fig-width: 8
+    out-width: "100%"
 jupyter: python3
 ---
 
-## Goals
+## Goal
 
-- TODO: configure a Jansen–Rit network
-- TODO: deliver a focal stimulus (visual / TMS)
-- TODO: extract evoked potentials and compare to references
-
-## Setup
+Use a TVB-O `SimulationExperiment` with a stimulus defined as an `Event`. Compare the resting and stimulated time series.
 
 ```{python}
-# TODO: imports
+import matplotlib.pyplot as plt
+from tvbo import Dynamics, SimulationExperiment
+from tvbo.datamodel.schema import Event
 ```
 
-## Build the JR network
+## 1. A baseline experiment
+
+Start with the `Generic2dOscillator` (G2D) and its database defaults. The trajectory relaxes onto a stable focus at `V ≈ −0.19`. These parameters are **far from any oscillation**.
 
 ```{python}
-# TODO: instantiate model, connect via connectome
+g2d = Dynamics.from_db("Generic2dOscillator")
+
+exp = SimulationExperiment(dynamics=g2d)
+res = exp.run()
+res.integration.sel(variable="V").plot()
 ```
 
-## Configure the stimulus
+## 2. Define a stimulus as an `Event`
+
+An `Event` is a symbolic, time-dependent perturbation. Here, a rectangular pulse is defined using `Piecewise`. Any expression in `t` and the event's parameters is valid.
 
 ```{python}
-# TODO: spatial pattern + temporal waveform
+event = Event(
+    name="perturbation",
+    event_type="stimulus",
+    parameters={
+        "onset":     {"value": 200.0},
+        "width":     {"value": 200.0},
+        "amplitude": {"value": 1.0},
+    },
+    equation={
+        "rhs": "Piecewise((amplitude, (t >= onset) & (t < onset + width)), (0.0, True))"
+    },
+)
+event.plot();
 ```
 
-## Run and extract evoked responses
+::: {.callout-note}
+The default G2D enters the oscillatory regime at `I ≈ 3.7` (lower Hopf). At `I + perturbation = 5`, the system is **above** the Hopf, so a limit cycle appears during the pulse.
+:::
+
+## 3. Inject the event into the model
+
+Steps:
+1. Register the event under `exp.events["<name>"]`.
+2. Edit the right-hand side of the state variable to be driven. Here, for `V`, replace the constant input `I` with `(I + perturbation)`.
 
 ```{python}
-# TODO: simulate, average across trials, plot ERPs
+exp.events["perturbation"] = event
+exp.dynamics.state_variables["V"].equation.rhs = (
+    "d*tau*((I + perturbation)*gamma - V**3*f + V**2*e + V*g "
+    "+ V*local_coupling + W*alpha + c_glob*gamma)"
+)
+res_stim = exp.run()
 ```
+
+::: {.callout-important}
+## Widen the `W` domain before running
+
+G2D uses `W ∈ [−6, 6]` as its state-variable domain. The JAX kernel wraps `Heun` in a `BoundedSolver` that clamps `W` at those limits. At `I = 5`, the limit cycle swings `W` down to about `−9`, so the solver pins `W` at `−6` and `V` settles on the cubic's right branch at `V ≈ 2.88`—a square plateau, not an oscillation. Widen the domain to allow the cycle.
+:::
+
+```{python}
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots()
+exp.dynamics.state_variables["W"].domain.lo = -20.0
+exp.dynamics.state_variables["W"].domain.hi = 20.0
+
+
+res_stim.integration.sel(variable="V").plot(ax=ax)
+
+ax2 = ax.twinx()
+
+event.plot(ax=ax2, alpha=0.5, linestyle=':')
+```
+
+Now the trajectory oscillates during the pulse and returns to the stable focus after.
+
+## 4. Five-node motif: stimulus propagation
+
+A minimal hub-and-leaf motif shows how excitability at downstream nodes controls propagation. The topology:
+
+```
+    R0 ── R1 ── R2
+           │
+          R3 ── R4
+```
+
+R0 is the stimulated site (peripheral). R1 is a hub (degree 3) with high excitability. R3 is also hyperexcitable. R2 and R4 are quiet leaves.
+
+::: {.callout-important}
+## Coupling gain
+
+The Linear coupling default in TVBO (`a ≈ 0.004`) is too weak to propagate signals here. Use `a = 0.3`—strong enough for the hub (R1, `I=3.5`) to be tipped into oscillation by the input from R0, but not strong enough to push the quiet leaves (R2, R4, `I=0.0`) over the Hopf at `I ≈ 3.7`.
+:::
+
+```{python}
+import yaml
+import matplotlib.pyplot as plt
+from tvbo import Network, SimulationExperiment, Dynamics, Coupling
+from tvbo.datamodel.schema import Event
+
+# Default G2D: Hopf bifurcation at I ≈ 3.7.
+# R1 (I=3.5) and R3 (I=3.2) are just below the bifurcation.
+# R0, R2, R4 (I=0.0) are far below — need large direct drive to oscillate.
+network = Network(**yaml.safe_load("""
+label: StimPropagationMotif
+number_of_nodes: 5
+nodes:
+  - {id: 0, label: R0, parameters: {I: {value: 0.0}}}
+  - {id: 1, label: R1, parameters: {I: {value: 3.5}}}
+  - {id: 2, label: R2, parameters: {I: {value: 0.0}}}
+  - {id: 3, label: R3, parameters: {I: {value: 3.2}}}
+  - {id: 4, label: R4, parameters: {I: {value: 0.0}}}
+edges:
+  - {source: 0, target: 1, weight: 1.0, delay: 10.0, directed: true}
+  - {source: 1, target: 2, weight: 1.0, delay: 20.0, directed: true}
+  - {source: 1, target: 3, weight: 1.0, delay: 20.0, directed: true}
+  - {source: 3, target: 4, weight: 1.0, delay: 30.0, directed: true}
+"""))
+
+network.plot_overview()
+```
+
+```{python}
+# 200 ms pulse at R0: I_eff = 0 + 5 = 5 > 3.7, so R0 oscillates during the pulse.
+# After the pulse, the coupled signal from R0 tips R1 (I=3.5) and R3 (I=3.2) into
+# oscillation. R2 and R4 (I=0) receive the same coupling but remain sub-threshold.
+event = Event(
+    name="perturbation",
+    event_type="stimulus",
+    parameters={
+        "onset":     {"value": 0.0},
+        "duration":  {"value": 200.0},
+        "amplitude": {"value": 5.0},
+    },
+    equation={"rhs": "Piecewise((amplitude, (t >= onset) & (t < onset + duration)), (0.0, True))"},
+    regions=[0],
+    weighting=[1.0],
+)
+
+exp = SimulationExperiment(
+    dynamics=Dynamics.from_db("Generic2dOscillator"),
+    coupling=Coupling(name="Linear", parameters={"a": {"value": 0.3}, "b": {"value": 0.0}}),
+    network=network,
+)
+exp.events["perturbation"] = event
+
+exp.dynamics.state_variables["V"].equation.rhs = (
+    "d*tau*((I + perturbation)*gamma - V**3*f + V**2*e + V*g "
+    "+ V*local_coupling + W*alpha + c_glob*gamma)"
+)
+exp.dynamics.state_variables["W"].domain.lo = -20.0
+exp.dynamics.state_variables["W"].domain.hi = 20.0
+
+res = exp.run(duration=800.0)
+```
+
+```{python}
+fig, axes = plt.subplots(5, 1, figsize=(9, 8), sharex=True)
+node_labels = [
+    "R0  stim, quiet (I=0.0)",
+    "R1  hub, hot (I=3.5)",
+    "R2  leaf, quiet (I=0.0)",
+    "R3  hot (I=3.2)",
+    "R4  leaf, quiet (I=0.0)",
+]
+for i, label in enumerate(node_labels):
+    res.integration.sel(variable="V").isel(node=i).plot(ax=axes[i])
+    axes[i].set_ylabel(label, fontsize=8)
+    axes[i].axvspan(0, 200, color="orange", alpha=0.15)
+axes[-1].set_xlabel("time [ms]")
+plt.tight_layout()
+```
+
+**Result:** The pulse starts at `t=0` and drives R0 into oscillation (`I_eff = 5 > 3.7`). After a 10 ms conduction delay, R0's signal reaches R1 (hub, `I=3.5`), tipping it above the Hopf. R1 then drives R2 and R3 with a further 20 ms delay; R3 drives R4 after 30 ms. The directed topology means no back-propagation: R2 and R4 (`I=0`) respond only if the forward drive is strong enough. The staggered delays make the propagation wave visible as successive onset shifts across the panels.
 
 ## Exercises
 
-- TODO: vary stimulus intensity and locate the response threshold
-- TODO: compare visual vs. TMS-like protocols
+1. **Iso-energy comparison.** Keep the *energy* `amplitude × width` constant but shrink `width` (e.g. `width=20, amplitude=50` instead of `width=200, amplitude=5`). Plot the response. Is a brief, strong kick more or less efficient at triggering the limit cycle than a long, gentle one? Consider the system's relaxation time vs. the pulse duration.
+2. **Phase / timing effects.** Once the system is on the limit cycle, the response to a second pulse depends on **when** it arrives within the cycle. Re-run with two events (`exp.events["pulse1"]`, `exp.events["pulse2"]`) at the same amplitude but different `onset` values offset by a fraction of the cycle period. Compare the trajectories—look for constructive and destructive interference depending on the phase.
+3. **Sub-threshold pulse.** Reduce `amplitude` to `0.1` and re-run. You should see only a small damped twitch around the pulse, because the system never leaves the basin of the stable fixed point.
+4. **Closer to the bifurcation.** Set the baseline `I` (`exp.dynamics.parameters["I"].value = 2.9`) and re-run with a small `amplitude`. A tiny perturbation now triggers oscillations.
+5. **Different waveform.** Replace the `Piecewise` rhs with a Gaussian, `amplitude*exp(-((t-onset)/width)**2)`, and observe the smoother response.
+6. **Different target.** Inject the event into `W` instead of `V` by editing `exp.dynamics.state_variables["W"].equation.rhs`.
