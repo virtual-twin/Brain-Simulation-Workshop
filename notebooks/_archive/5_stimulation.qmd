@@ -1,0 +1,26 @@
+---
+title: "Stimulating the brain"
+toc: false
+---
+
+Computational models can predict how external inputs — visual stimuli or
+transcranial magnetic stimulation — propagate through brain networks and
+generate measurable evoked potentials. This chapter applies the Jansen–Rit
+model to reproduce and interpret such responses.
+
+## Session
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-8}
+### [Stimulation](05_stimulation.qmd)
+Configure the Jansen–Rit model to receive external drive. Simulate visual- and
+TMS-evoked potentials, compare them to empirical waveforms, and explore how
+stimulation parameters shape the network response.
+:::
+
+:::
+
+---
+
+*See the [workshop agenda](../agenda/agenda.qmd).*

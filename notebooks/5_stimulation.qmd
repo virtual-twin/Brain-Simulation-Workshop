@@ -1,26 +1,40 @@
 ---
 title: "Stimulating the brain"
-toc: false
+subtitle: "Visual and TMS-evoked potentials"
+jupyter: python3
 ---
 
-Computational models can predict how external inputs — visual stimuli or
-transcranial magnetic stimulation — propagate through brain networks and
-generate measurable evoked potentials. This chapter applies the Jansen–Rit
-model to reproduce and interpret such responses.
+## Goals
 
-## Session
+- TODO: configure a Jansen–Rit network
+- TODO: deliver a focal stimulus (visual / TMS)
+- TODO: extract evoked potentials and compare to references
 
-::: {.grid}
+## Setup
 
-::: {.g-col-12 .g-col-md-8}
-### [Stimulation](05_stimulation.qmd)
-Configure the Jansen–Rit model to receive external drive. Simulate visual- and
-TMS-evoked potentials, compare them to empirical waveforms, and explore how
-stimulation parameters shape the network response.
-:::
+```{python}
+# TODO: imports
+```
 
-:::
+## Build the JR network
 
----
+```{python}
+# TODO: instantiate model, connect via connectome
+```
 
-*See the [workshop agenda](../agenda/agenda.qmd).*
+## Configure the stimulus
+
+```{python}
+# TODO: spatial pattern + temporal waveform
+```
+
+## Run and extract evoked responses
+
+```{python}
+# TODO: simulate, average across trials, plot ERPs
+```
+
+## Exercises
+
+- TODO: vary stimulus intensity and locate the response threshold
+- TODO: compare visual vs. TMS-like protocols
