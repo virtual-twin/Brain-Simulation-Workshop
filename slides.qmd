@@ -1041,7 +1041,7 @@ TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany networ
 
 ## Bifurcation analysis: hands-on
 
-- Notebook: [`notebooks/03_bifurcation_analysis.qmd`](notebooks/03_bifurcation_analysis.qmd)
+- Notebook: [`notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd`](notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd)
 - Sweep input $I$ in a TVB neural mass model
 - Continue fixed points and periodic orbits
 - Read the diagram as a **map of regimes**

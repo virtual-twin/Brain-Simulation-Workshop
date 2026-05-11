@@ -42,7 +42,7 @@ uv run quarto preview slides.qmd      # live reload during editing
 uv run quarto render agenda/agenda.qmd
 
 # hands-on notebooks — convert qmd → ipynb (no execution)
-uv run quarto convert notebooks/02a_mean_field_models.qmd
+uv run quarto convert notebooks/1_introduction.qmd
 # …or convert all of them at once:
 for f in notebooks/*.qmd; do uv run quarto convert "$f"; done
 ```
