@@ -65,6 +65,12 @@
                 <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Leon Stefanovski</strong></p>
       </div>
       <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://claude.com/claude-code" target="_blank">
+                    <img src="https://avatars.githubusercontent.com/u/76263028?s=200&v=4" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Claude Code</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
         <a href="https://neurologie.charite.de/metas/person/person/address_detail/univ_prof_dr_med_petra_ritter/" target="_blank">
                     <img src="https://brainsimulation.charite.de/fileadmin/user_upload/microsites/m_cc15/gehirnsimulation/Ritter_155x200.png" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
         </a>
