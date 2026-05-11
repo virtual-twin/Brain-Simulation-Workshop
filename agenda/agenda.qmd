@@ -44,7 +44,7 @@ Two days of hands-on sessions: theory and code for specifying, running, analyzin
    - [MEG peak frequency](../notebooks/4_II_MEG_Peak_Frequency.qmd)
    - [Inference demos](../notebooks/4_inference_demos.qmd)
 
-7. Stimulating the brain — [notebook](../notebooks/5_stimulation.qmd), [stimulation walkthrough](../notebooks/05_stimulation.qmd)
+7. Stimulating the brain — [notebook](../notebooks/5_stimulation.qmd)
 
 ### Day 2 — Mini Hackathon
 
