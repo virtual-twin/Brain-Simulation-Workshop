@@ -1,0 +1,180 @@
+##########################
+# Authors & Affiliations #
+##########################
+
+affiliations:
+  - id: bih
+    name: Berlin Institute of Health at Charité University Medicine Berlin
+  - id: charite
+    name: Charité University Medicine Berlin, Dept. Neurology & Experimental Neurology, Brain Simulation Section
+  - id: bernstein
+    name: Bernstein Focus State Dependencies of Learning and Bernstein Center for Computational Neuroscience, Berlin, Germany
+  - id: codemeart
+    name: Codemeart, Cluj-Napoca, Romania
+  - id: ecn
+    name: Einstein Center for Neuroscience Berlin
+  - id: ecd
+    name: Einstein Center Digital Future, Berlin, Germany
+
+authors:
+  # - name: Leon Martin
+  #   orcid: 0000-0002-2599-0165
+  #   corresponding: true
+  #   email: leon.martin@bih-charite.de
+  #   roles:
+  #     - conceptualization
+  #     - data curation
+  #     - formal analysis
+  #     - investigation
+  #     - methodology
+  #     - software
+  #     - validation
+  #     - visualization
+  #     - writing
+  #     - editing
+  #   affiliation:
+  #     - ref: bih
+  #     - ref: charite
+  #   image: https://brainsimulation.charite.de/fileadmin/user_upload/microsites/m_cc15/gehirnsimulation/Leon_HP_Charite.jpg
+  #   link: https://neurologie.charite.de/en/metas/person_detail/person/address_detail/leon_martin_bsc-1/
+
+  - name: Konstantin Buelau
+    supervisor: true
+    affiliation:
+      - ref: bih
+      - ref: charite
+    roles:
+      - conceptualization
+      - data curation
+      - formal analysis
+      - investigation
+      - methodology
+      - supervision
+      - validation
+      - editing
+    image: https://brainsimulation.charite.de/fileadmin/user_upload/microsites/m_cc15/gehirnsimulation/konstantin_337.jpg
+    link: https://neurologie.charite.de/metas/person/person/address_detail/dr_med_konstantin_buelau_md/
+
+  - name: Christoph Huettl
+    affiliation:
+      - ref: bih
+      - ref: charite
+    roles:
+      - data curation
+    image: https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/HueC_297x337.jpg
+    link: https://neurologie.charite.de/metas/person/person/address_detail/christoph_huettl_md/
+
+  - name: Rico Schmitt
+    affiliation:
+      - ref: bih
+      - ref: charite
+    roles:
+      - data curation
+    image: https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/SchmittR_297x337.png
+    link: https://neurologie.charite.de/metas/person/person/address_detail/rico_schmitt_msc-1/
+
+  - name: Lia Domide
+    affiliation:
+      - ref: codemeart
+    roles:
+      - software
+    image: https://codemart.ro/codemart/img/53/portrait_leader@2x
+    link: https://codemart.ro/codemart/zwei/crew
+
+  - name: Romina Baila
+    affiliation:
+      - ref: codemeart
+    roles:
+      - software
+    image: https://codemart.ro/codemart/img/4878/portrait_staff@2x
+
+  - name: Dionysios Perdikis
+    supervisor: true
+    affiliation:
+      - ref: bih
+      - ref: charite
+    roles:
+      - conceptualization
+      - data curation
+      - validation
+    image: https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/perdikis_d_297x337.jpg
+
+    link: https://neurologie.charite.de/en/metas/person_detail/person/address_detail/dr_dionysios_perdikis-1/
+
+  # - name: Marius Pille
+  #   affiliation:
+  #     - ref: bih
+  #     - ref: charite
+  #   roles:
+  #     - conceptualization
+  #     - software
+  #   link: https://neurologie.charite.de/metas/person/person/address_detail/marius_pille_msc-1/
+  #   image: https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/PillM_297x337.jpg
+
+  - name: Jil Meier
+    affiliation:
+      - ref: bih
+      - ref: charite
+    roles:
+      - conceptualization
+      - validation
+      - editing
+    image: https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/MeyerJ_297x337.jpg
+    link: https://neurologie.charite.de/metas/person/person/address_detail/dr_jil_meier/
+
+  - name: Halgurd Taher
+    affiliation:
+      - ref: bih
+      - ref: charite
+    roles:
+      - conceptualization
+      - methodology
+      - software
+      - visualization
+      - editing
+      - supervision
+    image: https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/TaherT_297x337.jpg
+    link: https://neurologie.charite.de/en/metas/person_detail/person/address_detail/halgurd_taher_msc_phd-1/
+
+  - name: Michael Schirner
+    supervisor: true
+    affiliation:
+      - ref: bih
+      - ref: charite
+    roles:
+      - conceptualization
+    image: https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/schirner-m_297x337.jpg
+    link: https://neurologie.charite.de/en/metas/person_detail/person/address_detail/dr_dionysios_perdikis-1/
+
+  - name: Leon Stefanovski
+    supervisor: true
+    orcid: 0000-0003-0197-2576
+    corresponding: false
+    roles:
+      - conceptualization
+      - project administration
+      - supervision
+      - editing
+    affiliation:
+      - ref: charite
+    image: https://brainsimulation.charite.de/fileadmin/user_upload/microsites/m_cc15/gehirnsimulation/charite_photo_big-337-leon.jpg
+    link: https://neurologie.charite.de/en/metas/person_detail/person/address_detail/leon_stefanovski_md/
+
+  - name: Petra Ritter
+    supervisor: true
+    corresponding: true
+    roles:
+      - conceptualization
+      - funding acquisition
+      - resources
+      - project administration
+      - supervision
+      - editing
+    affiliation:
+      - ref: bih
+      - ref: charite
+      - ref: bernstein
+      - ref: ecn
+      - ref: ecd
+    image: https://brainsimulation.charite.de/fileadmin/user_upload/microsites/m_cc15/gehirnsimulation/Ritter_155x200.png
+    link: https://neurologie.charite.de/metas/person/person/address_detail/univ_prof_dr_med_petra_ritter/

@@ -1208,12 +1208,10 @@ uv pip install bsplot
 
 ## Acknowledgements
 
-- TODO: thanks to all who made this happen
+::: {.r-stretch}
+{{< include authors_gallery.qmd >}}
+:::
 
-## Take-aways
-
-- TODO: what to remember from Day 1
-- TODO: where to go next
 
 ## Thanks & contact {.r-fit-text}
 
