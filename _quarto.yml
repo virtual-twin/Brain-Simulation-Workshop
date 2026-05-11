@@ -63,18 +63,18 @@ website:
             text: "4. Bifurcation Analysis"
           - text: "---"
           - href: notebooks/4_optimization.qmd
-            text: "5. Parameter optimisation"
+            text: "6. Parameter optimisation"
           - href: notebooks/4_I_fMRI_BOLD_FC.qmd
-            text: "  5.1 fMRI BOLD FC"
+            text: "  6.1 fMRI BOLD FC"
           - href: notebooks/4_II_MEG_Peak_Frequency.qmd
-            text: "  5.2 MEG peak frequency"
+            text: "  6.2 MEG peak frequency"
           - href: notebooks/4_inference_demos.qmd
-            text: "  5.3 Inference demos"
+            text: "  6.3 Inference demos"
           - text: "---"
           - href: notebooks/5_stimulation.qmd
-            text: "6. Stimulating the brain"
+            text: "7. Stimulating the brain"
           - href: notebooks/05_stimulation.qmd
-            text: "  6.1 Stimulation"
+            text: "  7.1 Stimulation"
     right:
       - icon: github
         href: "https://github.com/virtual-twin/Brain-Simulation-Workshop"
@@ -97,13 +97,13 @@ website:
         - section: "4. Bifurcation Analysis"
           contents:
             - notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd
-        - section: "5. Parameter optimisation"
+        - section: "6. Parameter optimisation"
           href: notebooks/4_optimization.qmd
           contents:
             - notebooks/4_I_fMRI_BOLD_FC.qmd
             - notebooks/4_II_MEG_Peak_Frequency.qmd
             - notebooks/4_inference_demos.qmd
-        - section: "6. Stimulating the brain"
+        - section: "7. Stimulating the brain"
           href: notebooks/5_stimulation.qmd
           contents:
             - notebooks/05_stimulation.qmd

@@ -59,12 +59,12 @@ jupyter: python3
 4. Applications in Basic and Clinical Research
 
 **Block 2 - 13:00-15:00:**\
-1. Bifurcation Theory\
-2. Parameter exploration & inference I
+5. Bifurcation Theory\
+6a. Parameter exploration & inference I
 
 **Block 3 - 15:30-17:30:**\
-7. Parameter exploration & inference II\
-8. Stimulating the brain
+6b. Parameter exploration & inference II\
+7. Stimulating the brain
 
 :::
 ::: {.column width="40%" .smaller}
@@ -892,12 +892,14 @@ res = exp.run("tvboptim")
 ::::
 
 
-# Setup & First Examples
+# 3. Setup & First Examples {background-color="#6880af"}
 
-# Clinical Applications
+See [setup](setup.qmd)
+
+# 4. Clinical Applications {background-color="#6880af"}
 
 
-# Bifurcation Analysis {background-color="#6880af"}
+# 5. Bifurcation Analysis {background-color="#6880af"}
 
 ## How to analyse a brain system
 
@@ -1056,7 +1058,7 @@ result = exp.run("bifurcationkit.jl")
      reduce merge conflicts when collaborators touch slides.qmd -->
 
 
-# 5. Stimulating the brain {background-color="#6880af"}
+# 7. Stimulating the brain {background-color="#6880af"}
 
 ## Visual evoked potentials
 
