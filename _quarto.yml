@@ -25,7 +25,7 @@ render:
     - notebooks/4_II_MEG_Peak_Frequency.qmd
     - notebooks/4_inference_demos.qmd
     - notebooks/5_stimulation.qmd
-    - notebooks/05_stimulation.qmd
+    - notebooks/5_stimulation.qmd
 
 website:
   title: "Brainsimulation Workshop"
@@ -73,7 +73,7 @@ website:
           - text: "---"
           - href: notebooks/5_stimulation.qmd
             text: "7. Stimulating the brain"
-          - href: notebooks/05_stimulation.qmd
+          - href: notebooks/5_stimulation.qmd
             text: "  7.1 Stimulation"
     right:
       - icon: github
@@ -106,7 +106,7 @@ website:
         - section: "Stimulating the brain"
           href: notebooks/5_stimulation.qmd
           contents:
-            - href: notebooks/05_stimulation.qmd
+            - href: notebooks/5_stimulation.qmd
               text: "Stimulating the Brain"
   page-footer:
     left: "© 2026 TVB Workshop. Charité University Medicine Berlin and Berlin Institute of Health."

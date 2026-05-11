@@ -21,6 +21,7 @@ changes when we move a parameter*. In TVBO every example below is just
 import numpy as np
 import matplotlib.pyplot as plt
 from tvbo import Dynamics, Continuation, SimulationExperiment
+from tvbo.datamodel.schema import Exploration, ExplorationAxis
 ```
 
 ## 1. Linear stability — sign of $a$ decides everything
@@ -44,23 +45,20 @@ parameters:
 state_variables:
   x:
     name: x
-    domain:
-      lo: -5.0
-      hi: 5.0
     equation:
       lhs: Derivative(x, t)
       rhs: a*x
     initial_value: 1.0
 """
 
-fig, ax = plt.subplots(figsize=(5, 3.2))
-for a, c in zip([-1.0, -0.5, 0.0, 0.5, 1.0],
-                ["C0", "C1", "0.4", "C2", "C3"]):
-    dyn = Dynamics.from_string(LIN); dyn.parameters["a"].value = a
-    dyn.plot("x", duration=4, dt=1e-3, ax=ax)
-    ax.lines[-1].set_color(c); ax.lines[-1].set_label(f"$a = {a:+.1f}$")
-ax.set(xlabel="$t$", ylabel="$x(t)$", xlim=(0, 4), ylim=(-0.2, 4.0))
-ax.legend(handlelength=1, fontsize=9); plt.tight_layout(); plt.show()
+exp_lin = SimulationExperiment(dynamics=Dynamics.from_string(LIN))
+exp_lin.integration.duration = 4
+exp_lin.integration.step_size = 1e-3
+exp_lin.explorations["a_sweep"] = Exploration(
+    name="a_sweep",
+    space=ExplorationAxis(parameter="a", explored_values=[-1.0, -0.5, 0.0, 0.5, 1.0]),
+)
+exp_lin.run("tvboptim").explorations["a_sweep"].plot(overlay=True)
 ```
 
 The slope at $t = 0$ equals $a$ — its sign decides growth vs. decay. For
@@ -180,7 +178,7 @@ CASES = [
 fig, axes = plt.subplots(2, 2, figsize=(8, 6.5))
 for ax, (label, yml) in zip(axes.flat, CASES):
     dyn = Dynamics.from_string(yml)
-    dyn.plot("x1", "x2", kind="phaseplane", ax=ax,
+    dyn.plot("x1", "x2", kind="vectorfield", ax=ax,
              grid_n=20, n_trajectories=3, duration=15)
     ax.set_title(label, fontsize=10)
 plt.tight_layout(); plt.show()
@@ -237,52 +235,11 @@ exp_sn = SimulationExperiment(
     continuations=[Continuation.from_string(SADDLE_NODE_CONT)],
 )
 exp_sn.run("bifurcationkit.jl").continuations["saddle_node_cont"].plot(VOI="x")
-plt.gca().set(xlim=(-2, 2), ylim=(-2, 2)); plt.show()
+plt.show()
 ```
 
-### Pitchfork — $\dot x = a x - x^3$ {.unnumbered}
-
-Symmetry breaking: the trivial branch loses stability at $a = 0$ and a
-pair of asymmetric branches $\pm\sqrt a$ emerges.
-
 ```{python}
-PITCHFORK = """
-name: Pitchfork
-parameters:
-  a:
-    name: a
-    value: 1.0
-state_variables:
-  x:
-    name: x
-    domain:
-      lo: -2.0
-      hi: 2.0
-    equation:
-      lhs: Derivative(x, t)
-      rhs: a*x - x**3
-    initial_value: 0.01
-"""
-
-PITCHFORK_CONT = """
-name: pitchfork_cont
-dynamics: Pitchfork
-free_parameters:
-  - name: a
-    domain:
-      lo: -2.0
-      hi: 2.0
-max_steps: 400
-ds: 0.01
-bothside: true
-"""
-
-exp_pf = SimulationExperiment(
-    dynamics=Dynamics.from_string(PITCHFORK),
-    continuations=[Continuation.from_string(PITCHFORK_CONT)],
-)
-exp_pf.run("bifurcationkit.jl").continuations["pitchfork_cont"].plot(VOI="x")
-plt.gca().set(xlim=(-1, 2), ylim=(-1.5, 1.5)); plt.show()
+exp_sn.run('tvboptim').plot()
 ```
 
 ### Hysteresis — $\dot x = a + x - x^3$ {.unnumbered}
@@ -327,28 +284,37 @@ exp_hy = SimulationExperiment(
     continuations=[Continuation.from_string(HYSTERESIS_CONT)],
 )
 exp_hy.run("bifurcationkit.jl").continuations["hysteresis_cont"].plot(VOI="x")
-plt.gca().set(xlim=(-1, 1), ylim=(-2, 2)); plt.show()
+plt.show()
+```
+
+Two `Exploration`s over $a$ — one starting from $x_0 = -1$, one from
+$x_0 = +1$ — expose the bistable region: for the same $a$, each initial
+condition lands on a different attractor.
+
+```{python}
+dyn_lo = Dynamics.from_string(HYSTERESIS)
+dyn_lo.state_variables["x"].initial_value = -1.0
+exp_hy_lo = SimulationExperiment(dynamics=dyn_lo)
+exp_hy_lo.integration.duration = 200
+exp_hy_lo.integration.step_size = 0.01
+exp_hy_lo.explorations["a"] = Exploration(
+    name="a",
+    space=ExplorationAxis(parameter="a", explored_values=list(np.linspace(-1.0, 1.0, 21))),
+)
+exp_hy_lo.run("tvboptim").explorations["a"].plot(overlay=True)
 ```
 
 ```{python}
-#| code-fold: true
-def sweep(a_start, a_end, n=4000, x0=1.0, dt=0.05):
-    a_traj = np.linspace(a_start, a_end, n); x = np.empty(n); x[0] = x0
-    for k in range(1, n):
-        x[k] = x[k-1] + dt * (a_traj[k-1] + x[k-1] - x[k-1]**3)
-    return a_traj, x
-
-a_up, x_up   = sweep(-1.0, +1.0, x0=-1.0)
-a_dn, x_dn   = sweep(+1.0, -1.0, x0=+1.0)
-af = 2.0/(3.0*np.sqrt(3.0))
-
-fig, ax = plt.subplots(figsize=(5.5, 3.5))
-ax.plot(a_up, x_up, "C0", lw=2, label=r"$a:-1\to1$")
-ax.plot(a_dn, x_dn, "C3", lw=2, label=r"$a:+1\to-1$")
-ax.axvline(+af, color="0.5", ls="--", lw=0.8)
-ax.axvline(-af, color="0.5", ls="--", lw=0.8)
-ax.set(xlabel="$a$", ylabel="$x$", xlim=(-1, 1), ylim=(-2, 2))
-ax.legend(); plt.tight_layout(); plt.show()
+dyn_hi = Dynamics.from_string(HYSTERESIS)
+dyn_hi.state_variables["x"].initial_value = 1.0
+exp_hy_hi = SimulationExperiment(dynamics=dyn_hi)
+exp_hy_hi.integration.duration = 200
+exp_hy_hi.integration.step_size = 0.01
+exp_hy_hi.explorations["a"] = Exploration(
+    name="a",
+    space=ExplorationAxis(parameter="a", explored_values=list(np.linspace(-1.0, 1.0, 21))),
+)
+exp_hy_hi.run("tvboptim").explorations["a"].plot(overlay=True)
 ```
 
 ## 4. Hopf normal form — birth of an oscillation
@@ -446,6 +412,8 @@ branches:
     source_point: "hopf:all"
 ```
 
+> Task: run the following example with and without the branches attributes
+
 ## 6. Brain-relevant: Generic2dOscillator
 
 The same `Continuation` API drives a TVB neural-mass model. We sweep the
@@ -466,10 +434,10 @@ free_parameters:
 max_steps: 500
 ds: 0.05
 bothside: true
-branches:
-  - name: po_from_hopf
-    source_point: "hopf:all"
-    bothside: true
+# branches:
+#   - name: po_from_hopf
+#     source_point: "hopf:all"
+#     bothside: true
 """)
 
 exp_g2d = SimulationExperiment(dynamics=model, continuations=[cont])
