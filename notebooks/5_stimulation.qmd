@@ -187,7 +187,10 @@ res = exp.run()
 ```
 
 ```{python}
-res.integration.sel(variable="V").plot()
+fig, ax = plt.subplots()
+res.integration.sel(variable="V").plot(ax=ax)
+ax2 = ax.twinx()
+event.plot(ax=ax2, color="grey")
 ```
 
 **Result:** The current pulse starts at 10 ms and lasts 1 ms. R0's voltage peak appears later because the state variable needs time to move after the input turns on. Downstream peaks shift by `length / conduction_speed`: the 30 mm and 100 mm branches separate most clearly. The edges are directed, so the response does not travel back into earlier nodes.
