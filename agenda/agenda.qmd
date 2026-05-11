@@ -2,11 +2,9 @@
 
 ## About
 
-In this workshop, participants will learn core concepts and methods for personalized whole-brain network modeling using The Virtual Brain (TVB). The workflow combines individualized model definition, simulation, and analysis with ontology-driven model specification and optimization tooling [@Martin2025; @Pille2025].
+Participants learn core concepts and methods for personalized whole-brain network modeling with The Virtual Brain (TVB). The workflow combines individualized model definition, simulation, and analysis with ontology-driven model specification and gradient-based optimization [@Martin2025; @Pille2025].
 
-The Virtual Brain Ontology (TVB-O) provides a knowledge framework for FAIR model specification and automated code generation, while connecting model metadata to biomedical ontologies [@Martin2025].
-
-TVB-Optim enables gradient-based fitting of large parameter spaces in whole-brain models and supports efficient scaling for computationally intensive optimization experiments [@Pille2025].
+The Virtual Brain Ontology (TVB-O) provides a knowledge framework for FAIR model specification and automated code generation, while connecting model metadata to biomedical ontologies [@Martin2025]. TVB-Optim adds gradient-based fitting of large parameter spaces in whole-brain models, with scaling for computationally intensive optimization experiments [@Pille2025].
 
 Relevant examples of mechanistic and translational whole-brain modeling include connectome-constrained decision dynamics [@Schirner2023], connectome-driven cortical wave phenomena [@Koller2024], and ODE-based separation of task and rest fMRI signals [@Kashyap2025].
 
@@ -18,50 +16,60 @@ Useful links:
 
 ## Format
 
-Hands-on session introducing the theoretical and programmatic framework for specifying, running, analyzing, and optimizing dynamical brain network models.
+Two days of hands-on sessions: theory and code for specifying, running, analyzing, and optimizing dynamical brain network models, followed by a mini hackathon.
 
 ## Agenda
 
 ### Day 1
 
-1. [Intro to The Virtual Brain and its applications](../notebooks/1_introduction.qmd)
+**Block 1 — 09:00–12:00**
 
-- Basic ideas and history
-- Mathematical framework
-- Applications in basic research
-- Clinical applications
+1. Intro to Brain Network Modelling — [notebook](../notebooks/1_introduction.qmd)
+2. Defining a FAIR brain network model
+    - [Dynamical Systems](../notebooks/1_MathematicalFramework/DynamicalSystems.qmd)
+    - [Networks and Noise](../notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd)
+3. Setup & first examples — see [setup](../setup.qmd)
+4. Applications in basic and clinical research
 
-1. [Defining a FAIR brain network model](../notebooks/2_fair_model.qmd)
+**Block 2 — 13:00–15:00**
 
-- [Mean field models](../notebooks/02a_mean_field_models.qmd)
-- [Coupled network dynamics](../notebooks/02b_coupled_networks.qmd)
+5. Bifurcation theory — [notebook](../notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd)
+6. (a) Parameter exploration & inference I — [notebook](../notebooks/3_ParameterExploration/ParameterExploration.qmd)
 
-1. [Dynamical perspective: how to analyze a brain system](../notebooks/3_dynamics.qmd)
+**Block 3 — 15:30–17:30**
 
-- [Bifurcation analysis](../notebooks/03_bifurcation_analysis.qmd)
+6. (b) Parameter exploration & inference II
+   - [Parameter optimisation](../notebooks/4_optimization.qmd)
+   - [fMRI BOLD FC](../notebooks/4_I_fMRI_BOLD_FC.qmd)
+   - [MEG peak frequency](../notebooks/4_II_MEG_Peak_Frequency.qmd)
+   - [Inference demos](../notebooks/4_inference_demos.qmd)
 
-1. [Parameter exploration and model optimization](../notebooks/4_optimization.qmd)
+7. Stimulating the brain — [notebook](../notebooks/5_stimulation.qmd), [stimulation walkthrough](../notebooks/05_stimulation.qmd)
 
-- Brain network models as computational hypotheses of the brain
-- [Use-case A: mechanistic simulation of Alzheimer's disease and integration of biomedical data](../notebooks/04a_alzheimer_usecase.qmd)
-- [Use-case B: homogeneous vs. heterogeneous parameter fitting](../notebooks/04b_parameter_fitting.qmd)
+### Day 2 — Mini Hackathon
 
-1. [Stimulating the brain](../notebooks/5_stimulation.qmd)
+**Block 1 — 09:00–11:30**
 
-- [Visual and TMS-evoked potentials](../notebooks/05_stimulation.qmd)
+- Pitch your research question
+- Form small groups
+- Plotting the brain with `bsplot`
 
-### Day 2: Mini Hackathon
+**Block 2 — 12:00–13:30**
 
-We help participants answer and gain insight into their own research questions. Bring your own data if possible.
+- Group work on your own data
+- Checkpoints and wrap-up
+
+We help participants work on their own research questions. Bring your own data if possible.
 
 ## Target Audience
 
-Researchers interested in computational neuroscience, including data scientists, clinicians, engineers, and generally curious participants. Prior TVB experience is helpful but not mandatory.
+Researchers in computational neuroscience: data scientists, clinicians, engineers, and curious participants. Prior TVB experience helps but is not required.
 
 ## Requirements
 
-- Basic Python programming skills are recommended.
-- Notebooks can be run online (EBRAINS account required).
-- Limited support for local setups is also provided.
+- Basic Python programming.
+- Notebooks run online via EBRAINS (account required).
+- Limited support for local setups.
 
 ## References
+
