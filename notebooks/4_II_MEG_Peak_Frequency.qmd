@@ -284,6 +284,7 @@ dynamics.plot(t1=1000, dt = 1)
 #| eval: false
 #| code-fold: true
 #| code-summary: "View source code for JansenRit and DelayedSigmoidalJansenRit"
+raise Exception("DO NOT RUN: View source code for JansenRit and DelayedSigmoidalJansenRit")
 
 class JansenRit(AbstractDynamics):
     """Jansen-Rit model with multi-coupling support."""
@@ -593,20 +594,21 @@ exploration_result = explore()
 #| fig-cap: "**Mean Peak Frequenc landscape across parameter space.** The heatmap shows how the network's dominant frequency varies with the excitatory (a) and inhibitory (b) time constants. This landscape guides our optimization by showing which parameter combinations can produce the desired 7-11 Hz frequency range."
 #| code-fold: true
 #| code-summary: "Show plotting code"
-# Prepare data for visualization
-pc = grid.collect()
-a = pc.dynamics.a
-b = pc.dynamics.b
+# Long-form table of (a, b, peak-freq) triples — pivot into a 2D matrix
+# indexed by b (rows) and a (columns) for plotting.
+df_grid = exploration_result.to_dataframe()
+freq_grid = df_grid.pivot(index='dynamics.b', columns='dynamics.a', values='value')
 
-# Get parameter ranges
-a_min, a_max = min(a), max(a)
-b_min, b_max = min(b), max(b)
+a_vals = freq_grid.columns.values
+b_vals = freq_grid.index.values
+a_min, a_max = a_vals.min(), a_vals.max()
+b_min, b_max = b_vals.min(), b_vals.max()
 
 # Create figure and axis
 fig, ax = plt.subplots(figsize=(8.1, 4.05))
 
 # Create the heatmap
-im = ax.imshow(jnp.stack(exploration_result).reshape(n, n).T,
+im = ax.imshow(freq_grid.values,
               cmap='cividis_r',
               extent=[a_min, a_max, b_min, b_max],
               origin='lower',
@@ -779,20 +781,20 @@ Let's visualize where the optimizer placed each region's parameters in the frequ
 #| code-fold: true
 #| code-summary: "Show plotting code"
 
-# Prepare data for visualization
-pc = grid.collect()
-a = pc.dynamics.a
-b = pc.dynamics.b
+# Same pivot trick as in the exploration plot above.
+df_grid = exploration_result.to_dataframe()
+freq_grid = df_grid.pivot(index='dynamics.b', columns='dynamics.a', values='value')
 
-# Get parameter ranges
-a_min, a_max = min(a), max(a)
-b_min, b_max = min(b), max(b)
+a_vals = freq_grid.columns.values
+b_vals = freq_grid.index.values
+a_min, a_max = a_vals.min(), a_vals.max()
+b_min, b_max = b_vals.min(), b_vals.max()
 
 # Create figure and axis
 fig, ax = plt.subplots(figsize=(8.1, 5.207))
 
 # Create the heatmap (frequency landscape from exploration)
-im = ax.imshow(jnp.stack(exploration_result).reshape(n, n).T,
+im = ax.imshow(freq_grid.values,
               cmap='cividis_r',
               extent=[a_min, a_max, b_min, b_max],
               origin='lower',
