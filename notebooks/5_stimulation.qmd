@@ -17,7 +17,6 @@ jupyter: python3
 Use a TVB-O `SimulationExperiment` with a stimulus defined as an `Event`. Compare the resting and stimulated time series.
 
 ```{python}
-import matplotlib.pyplot as plt
 from tvbo import Dynamics, SimulationExperiment
 from tvbo.datamodel.schema import Event
 ```
@@ -70,27 +69,23 @@ exp.dynamics.state_variables["V"].equation.rhs = (
     "d*tau*((I + perturbation)*gamma - V**3*f + V**2*e + V*g "
     "+ V*local_coupling + W*alpha + c_glob*gamma)"
 )
-res_stim = exp.run()
 ```
 
 ::: {.callout-important}
 ## Widen the `W` domain before running
 
-G2D uses `W ∈ [−6, 6]` as its state-variable domain. The JAX kernel wraps `Heun` in a `BoundedSolver` that clamps `W` at those limits. At `I = 5`, the limit cycle swings `W` down to about `−9`, so the solver pins `W` at `−6` and `V` settles on the cubic's right branch at `V ≈ 2.88`—a square plateau, not an oscillation. Widen the domain to allow the cycle.
+G2D uses `W ∈ [−6, 6]` as its state-variable domain. The JAX kernel wraps `Heun` in a `BoundedSolver` that clamps `W` at those limits. At `I = 5`, the limit cycle swings `W` down to about `−9`, so the solver pins `W` at `−6`. `V` then settles on the cubic's right branch at `V ≈ 2.88`, a square plateau rather than an oscillation. Widen the domain before running.
 :::
 
 ```{python}
 import matplotlib.pyplot as plt
-
 fig, ax = plt.subplots()
 exp.dynamics.state_variables["W"].domain.lo = -20.0
 exp.dynamics.state_variables["W"].domain.hi = 20.0
 
-
+res_stim = exp.run()
 res_stim.integration.sel(variable="V").plot(ax=ax)
-
-ax2 = ax.twinx()
-
+ax2=ax.twinx()
 event.plot(ax=ax2, alpha=0.5, linestyle=':')
 ```
 
@@ -98,70 +93,80 @@ Now the trajectory oscillates during the pulse and returns to the stable focus a
 
 ## 4. Five-node motif: stimulus propagation
 
-A minimal hub-and-leaf motif shows how excitability at downstream nodes controls propagation. The topology:
+The five-region motif below uses the same parameter regime as the Bayesian workshop example. The stimulus is brief, so R0 gives one evoked response rather than a long driven oscillation. Edge weights and delays live in edge parameters.
 
-```
-    R0 ── R1 ── R2
-           │
-          R3 ── R4
-```
+
 
 R0 is the stimulated site (peripheral). R1 is a hub (degree 3) with high excitability. R3 is also hyperexcitable. R2 and R4 are quiet leaves.
 
 ::: {.callout-important}
 ## Coupling gain
 
-The Linear coupling default in TVBO (`a ≈ 0.004`) is too weak to propagate signals here. Use `a = 0.3`—strong enough for the hub (R1, `I=3.5`) to be tipped into oscillation by the input from R0, but not strong enough to push the quiet leaves (R2, R4, `I=0.0`) over the Hopf at `I ≈ 3.7`.
+Use `a = 0.1`, matching the workshop example. The node excitabilities are `I = [0.05, 0.30, 0.05, 0.25, 0.05]`: R1 and R3 are hot, R0, R2, and R4 are quiet.
 :::
 
 ```{python}
-import yaml
-import matplotlib.pyplot as plt
 from tvbo import Network, SimulationExperiment, Dynamics, Coupling
 from tvbo.datamodel.schema import Event
 
-# Default G2D: Hopf bifurcation at I ≈ 3.7.
-# R1 (I=3.5) and R3 (I=3.2) are just below the bifurcation.
-# R0, R2, R4 (I=0.0) are far below — need large direct drive to oscillate.
-network = Network(**yaml.safe_load("""
+T1 = 150.0
+DT = 0.2
+ONSET = 10.0
+DURATION = 1.0
+G_COUPLING = 0.1
+TRUE_AMPLITUDE = 0.4
+DYNAMICS_PARAMS = {
+    "a": -1.5,
+    "b": -15.0,
+    "c": 0.0,
+    "d": 0.015,
+    "e": 3.0,
+    "f": 1.0,
+    "tau": 4.0,
+}
+
+network_yaml = """
 label: StimPropagationMotif
 number_of_nodes: 5
 nodes:
-  - {id: 0, label: R0, parameters: {I: {value: 0.0}}}
-  - {id: 1, label: R1, parameters: {I: {value: 3.5}}}
-  - {id: 2, label: R2, parameters: {I: {value: 0.0}}}
-  - {id: 3, label: R3, parameters: {I: {value: 3.2}}}
-  - {id: 4, label: R4, parameters: {I: {value: 0.0}}}
+    - {id: 0, label: R0, description: "stimulated site, peripheral, quiet", parameters: {I: {value: 0.05}}}
+    - {id: 1, label: R1, description: "hub, hyperexcitable", parameters: {I: {value: 0.30}}}
+    - {id: 2, label: R2, description: "quiet leaf", parameters: {I: {value: 0.05}}}
+    - {id: 3, label: R3, description: "hyperexcitable branch node", parameters: {I: {value: 0.25}}}
+    - {id: 4, label: R4, description: "quiet leaf", parameters: {I: {value: 0.05}}}
 edges:
-  - {source: 0, target: 1, weight: 1.0, delay: 10.0, directed: true}
-  - {source: 1, target: 2, weight: 1.0, delay: 20.0, directed: true}
-  - {source: 1, target: 3, weight: 1.0, delay: 20.0, directed: true}
-  - {source: 3, target: 4, weight: 1.0, delay: 30.0, directed: true}
-"""))
+    - {source: 0, target: 1, directed: true, parameters: {weight: {value: 1.0}, length: {value: 30.0, unit: ms}}}
+    - {source: 1, target: 2, directed: true, parameters: {weight: {value: 1.0}, length: {value: 20.0, unit: ms}}}
+    - {source: 1, target: 3, directed: true, parameters: {weight: {value: 1.0}, length: {value: 100.0, unit: ms}}}
+    - {source: 3, target: 4, directed: true, parameters: {weight: {value: 1.0}, length: {value: 30.0, unit: ms}}}
+"""
+
+network = Network.from_string(network_yaml)
 
 network.plot_overview()
 ```
 
 ```{python}
-# 200 ms pulse at R0: I_eff = 0 + 5 = 5 > 3.7, so R0 oscillates during the pulse.
-# After the pulse, the coupled signal from R0 tips R1 (I=3.5) and R3 (I=3.2) into
-# oscillation. R2 and R4 (I=0) receive the same coupling but remain sub-threshold.
 event = Event(
     name="perturbation",
     event_type="stimulus",
     parameters={
-        "onset":     {"value": 0.0},
-        "duration":  {"value": 200.0},
-        "amplitude": {"value": 5.0},
+        "onset": {"value": ONSET},
+        "duration": {"value": DURATION},
+        "amplitude": {"value": TRUE_AMPLITUDE},
     },
     equation={"rhs": "Piecewise((amplitude, (t >= onset) & (t < onset + duration)), (0.0, True))"},
     regions=[0],
     weighting=[1.0],
 )
 
+dynamics = Dynamics.from_db("Generic2dOscillator")
+for name, value in DYNAMICS_PARAMS.items():
+    dynamics.parameters[name].value = value
+
 exp = SimulationExperiment(
-    dynamics=Dynamics.from_db("Generic2dOscillator"),
-    coupling=Coupling(name="Linear", parameters={"a": {"value": 0.3}, "b": {"value": 0.0}}),
+    dynamics=dynamics,
+    coupling=Coupling(name="Linear", parameters={"a": {"value": G_COUPLING}, "b": {"value": 0.0}}),
     network=network,
 )
 exp.events["perturbation"] = event
@@ -170,35 +175,25 @@ exp.dynamics.state_variables["V"].equation.rhs = (
     "d*tau*((I + perturbation)*gamma - V**3*f + V**2*e + V*g "
     "+ V*local_coupling + W*alpha + c_glob*gamma)"
 )
-exp.dynamics.state_variables["W"].domain.lo = -20.0
-exp.dynamics.state_variables["W"].domain.hi = 20.0
+exp.integration.duration = T1
+exp.integration.step_size = DT
 
-res = exp.run(duration=800.0)
+res = exp.run()
 ```
 
 ```{python}
-fig, axes = plt.subplots(5, 1, figsize=(9, 8), sharex=True)
-node_labels = [
-    "R0  stim, quiet (I=0.0)",
-    "R1  hub, hot (I=3.5)",
-    "R2  leaf, quiet (I=0.0)",
-    "R3  hot (I=3.2)",
-    "R4  leaf, quiet (I=0.0)",
-]
-for i, label in enumerate(node_labels):
-    res.integration.sel(variable="V").isel(node=i).plot(ax=axes[i])
-    axes[i].set_ylabel(label, fontsize=8)
-    axes[i].axvspan(0, 200, color="orange", alpha=0.15)
-axes[-1].set_xlabel("time [ms]")
-plt.tight_layout()
+fig, ax = plt.subplots()
+res.integration.sel(variable="V").plot(ax=ax)
+ax2=ax.twinx()
+event.plot(ax=ax2, color='grey')
 ```
 
-**Result:** The pulse starts at `t=0` and drives R0 into oscillation (`I_eff = 5 > 3.7`). After a 10 ms conduction delay, R0's signal reaches R1 (hub, `I=3.5`), tipping it above the Hopf. R1 then drives R2 and R3 with a further 20 ms delay; R3 drives R4 after 30 ms. The directed topology means no back-propagation: R2 and R4 (`I=0`) respond only if the forward drive is strong enough. The staggered delays make the propagation wave visible as successive onset shifts across the panels.
+**Result:** The current pulse starts at 10 ms and lasts 1 ms. R0's voltage peak appears later because the state variable needs time to move after the input turns on. Downstream peaks shift again by the edge delays: 30 ms from R0 to R1, 20 ms from R1 to R2, 100 ms from R1 to R3, and 30 ms from R3 to R4. The edges are directed, so the response does not travel back into earlier nodes.
 
 ## Exercises
 
 1. **Iso-energy comparison.** Keep the *energy* `amplitude × width` constant but shrink `width` (e.g. `width=20, amplitude=50` instead of `width=200, amplitude=5`). Plot the response. Is a brief, strong kick more or less efficient at triggering the limit cycle than a long, gentle one? Consider the system's relaxation time vs. the pulse duration.
-2. **Phase / timing effects.** Once the system is on the limit cycle, the response to a second pulse depends on **when** it arrives within the cycle. Re-run with two events (`exp.events["pulse1"]`, `exp.events["pulse2"]`) at the same amplitude but different `onset` values offset by a fraction of the cycle period. Compare the trajectories—look for constructive and destructive interference depending on the phase.
+2. **Phase / timing effects.** Once the system is on the limit cycle, the response to a second pulse depends on **when** it arrives within the cycle. Re-run with two events (`exp.events["pulse1"]`, `exp.events["pulse2"]`) at the same amplitude but different `onset` values offset by a fraction of the cycle period. Compare the trajectories and look for constructive or destructive interference.
 3. **Sub-threshold pulse.** Reduce `amplitude` to `0.1` and re-run. You should see only a small damped twitch around the pulse, because the system never leaves the basin of the stable fixed point.
 4. **Closer to the bifurcation.** Set the baseline `I` (`exp.dynamics.parameters["I"].value = 2.9`) and re-run with a small `amplitude`. A tiny perturbation now triggers oscillations.
 5. **Different waveform.** Replace the `Piecewise` rhs with a Gaussian, `amplitude*exp(-((t-onset)/width)**2)`, and observe the smoother response.
