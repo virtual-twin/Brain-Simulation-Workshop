@@ -93,9 +93,14 @@ Now the trajectory oscillates during the pulse and returns to the stable focus a
 
 ## 4. Five-node motif: stimulus propagation
 
-The five-region motif below uses the same parameter regime as the Bayesian workshop example. The stimulus is brief, so R0 gives one evoked response rather than a long driven oscillation. Edge weights and delays live in edge parameters.
+The five-region motif below uses the same parameter regime as the Bayesian workshop example. The stimulus is brief, so R0 gives one evoked response rather than a long driven oscillation. Edge weights and tract lengths live in edge parameters.
 
-
+```
+    R0 -> R1 -> R2
+          |
+          v
+          R3 -> R4
+```
 
 R0 is the stimulated site (peripheral). R1 is a hub (degree 3) with high excitability. R3 is also hyperexcitable. R2 and R4 are quiet leaves.
 
@@ -135,10 +140,10 @@ nodes:
     - {id: 3, label: R3, description: "hyperexcitable branch node", parameters: {I: {value: 0.25}}}
     - {id: 4, label: R4, description: "quiet leaf", parameters: {I: {value: 0.05}}}
 edges:
-    - {source: 0, target: 1, directed: true, parameters: {weight: {value: 1.0}, length: {value: 30.0, unit: ms}}}
-    - {source: 1, target: 2, directed: true, parameters: {weight: {value: 1.0}, length: {value: 20.0, unit: ms}}}
-    - {source: 1, target: 3, directed: true, parameters: {weight: {value: 1.0}, length: {value: 100.0, unit: ms}}}
-    - {source: 3, target: 4, directed: true, parameters: {weight: {value: 1.0}, length: {value: 30.0, unit: ms}}}
+    - {source: 0, target: 1, directed: true, parameters: {weight: {value: 1.0}, length: {value: 30.0, unit: mm}}}
+    - {source: 1, target: 2, directed: true, parameters: {weight: {value: 1.0}, length: {value: 20.0, unit: mm}}}
+    - {source: 1, target: 3, directed: true, parameters: {weight: {value: 1.0}, length: {value: 100.0, unit: mm}}}
+    - {source: 3, target: 4, directed: true, parameters: {weight: {value: 1.0}, length: {value: 30.0, unit: mm}}}
 """
 
 network = Network.from_string(network_yaml)
@@ -182,13 +187,10 @@ res = exp.run()
 ```
 
 ```{python}
-fig, ax = plt.subplots()
-res.integration.sel(variable="V").plot(ax=ax)
-ax2=ax.twinx()
-event.plot(ax=ax2, color='grey')
+res.integration.sel(variable="V").plot()
 ```
 
-**Result:** The current pulse starts at 10 ms and lasts 1 ms. R0's voltage peak appears later because the state variable needs time to move after the input turns on. Downstream peaks shift again by the edge delays: 30 ms from R0 to R1, 20 ms from R1 to R2, 100 ms from R1 to R3, and 30 ms from R3 to R4. The edges are directed, so the response does not travel back into earlier nodes.
+**Result:** The current pulse starts at 10 ms and lasts 1 ms. R0's voltage peak appears later because the state variable needs time to move after the input turns on. Downstream peaks shift by `length / conduction_speed`: the 30 mm and 100 mm branches separate most clearly. The edges are directed, so the response does not travel back into earlier nodes.
 
 ## Exercises
 
