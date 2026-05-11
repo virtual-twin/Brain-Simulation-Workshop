@@ -13,6 +13,6 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Notebooks rendered from notebooks/*.qmd sources
-/notebooks/*.ipynb
+# /notebooks/*.ipynb
 site_libs
 _intro-section-notes.md
