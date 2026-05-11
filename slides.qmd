@@ -1174,6 +1174,17 @@ result = exp.run("bifurcationkit.jl")
 
 :::::
 
+## Stimulation with Bayesian inference
+
+<!-- TODO: full stimulus + inference slides go here -->
+
+Hands-on notebook: [`5_stimulation_with_bayesian_inference.qmd`](notebooks/5_stimulation_with_bayesian_inference.qmd)
+
+- Recover stimulus amplitude **and** excitability from a noisy recording
+- See the **degeneracy ridge** in the loss landscape
+- Use **priors as hypotheses** to pick a mechanistic explanation
+- Compare Bayesian posteriors against multi-start gradient descent
+
 ## End of Day 1
 
 ```default

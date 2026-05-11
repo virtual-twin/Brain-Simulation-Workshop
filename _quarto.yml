@@ -25,7 +25,7 @@ render:
     - notebooks/4_II_MEG_Peak_Frequency.qmd
     - notebooks/4_inference_demos.qmd
     - notebooks/5_stimulation.qmd
-    - notebooks/5_stimulation.qmd
+    - notebooks/5_stimulation_with_bayesian_inference.qmd
 
 website:
   title: "Brainsimulation Workshop"
@@ -75,6 +75,8 @@ website:
             text: "7. Stimulating the brain"
           - href: notebooks/5_stimulation.qmd
             text: "  7.1 Stimulation"
+          - href: notebooks/5_stimulation_with_bayesian_inference.qmd
+            text: "  7.2 Stimulation with Bayesian inference"
     right:
       - icon: github
         href: "https://github.com/virtual-twin/Brain-Simulation-Workshop"
@@ -108,6 +110,8 @@ website:
           contents:
             - href: notebooks/5_stimulation.qmd
               text: "Stimulating the Brain"
+            - href: notebooks/5_stimulation_with_bayesian_inference.qmd
+              text: "Stimulation with Bayesian inference"
   page-footer:
     left: "© 2026 TVB Workshop. Charité University Medicine Berlin and Berlin Institute of Health."
     center: |
