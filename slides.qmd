@@ -1174,9 +1174,13 @@ result = exp.run("bifurcationkit.jl")
 
 :::::
 
-## Take Aways from Day 1
+## End of Day 1
 
-- TODO: takeaways from Day 1
+```default
+         \(^_^)/
+```
+
+
 
 # Day 2 — Mini Hackathon and Plot Your Brain Tutorial {background-color="#6880af"}
 
@@ -1213,16 +1217,28 @@ uv pip install bsplot
 :::
 
 
-## Thanks & contact {.r-fit-text}
+## Thank You & Feedback {.r-fit-text} 
 
 ::::{.rows}
-
 :::{.row}
 ![Your Feedback](img/survey_qr.png){fig-align=center height=200px}
 :::
 
 :::{.row}
-Contact
+::: {.columns style="font-size: 0.7em; text-align: center;"}
+::: {.column width="33%"}
+**Marius Pille**\
+marius.pille [at] bih-charite.de
+:::
+::: {.column width="33%"}
+**Leon Martin**\
+leon.martin [at] bih-charite.de
+:::
+::: {.column width="34%"}
+**Leon Stefanovski**\
+leon.stefanovski [at] charite.de
+:::
+:::
 :::
 
 :::{.row}

@@ -15,6 +15,8 @@ affiliations:
     name: Einstein Center for Neuroscience Berlin
   - id: ecd
     name: Einstein Center Digital Future, Berlin, Germany
+  - id: anthropic
+    name: Anthropic
 
 authors:
   # - name: Leon Martin
@@ -135,6 +137,15 @@ authors:
       - supervision
     image: https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/TaherT_297x337.jpg
     link: https://neurologie.charite.de/en/metas/person_detail/person/address_detail/halgurd_taher_msc_phd-1/
+
+  - name: Claude Code
+    affiliation:
+      - ref: anthropic
+    roles:
+      - software
+      - editing
+    image: https://claude.ai/images/claude_app_icon.png
+    link: https://claude.com/claude-code
 
   - name: Michael Schirner
     supervisor: true
