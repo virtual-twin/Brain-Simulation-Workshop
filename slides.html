@@ -288,11 +288,11 @@ Leon Martin
 3. Setup &amp; First examples<br>
 4. Applications in Basic and Clinical Research</p>
 <p><strong>Block 2 - 13:00-15:00:</strong><br>
-1. Bifurcation Theory<br>
-2. Parameter exploration &amp; inference I</p>
+5. Bifurcation Theory<br>
+6a. Parameter exploration &amp; inference I</p>
 <p><strong>Block 3 - 15:30-17:30:</strong><br>
-7. Parameter exploration &amp; inference II<br>
-8. Stimulating the brain</p>
+6b. Parameter exploration &amp; inference II<br>
+7. Stimulating the brain</p>
 </div><div class="column smaller" style="width:40%;">
 <p><strong>Day 2</strong><br>
 <strong>Block 1 - 09:00-11:30:</strong><br>
@@ -974,7 +974,7 @@ I = \frac{K \sum_{j=0}^{-1 + N} - {g}_{i,j} \sin{\left(\theta_{i} - \theta_{j} \
 </ul>
 </div>
 <div style="flex:1; min-width:0;">
-<div id="aeca57b0" class="cell" data-execution_count="2">
+<div id="01dc2b97" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ============================================================
@@ -988,7 +988,7 @@ STEP 1: Running simulation...
 Experiment complete.
 ============================================================</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="30">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="slides_files/figure-revealjs/cell-3-output-2.png" class="quarto-figure quarto-figure-center"></p>
@@ -1311,19 +1311,19 @@ C_i = f_c^{\text{post}}\Big(\sum_j A_{ij}\, f_c^{\text{pre}}(S_i, S_j(t-\tau_{ij
 </div>
 </div></div>
 </section></section>
-<section id="setup-first-examples" class="title-slide slide level1 center">
-<h1>Setup &amp; First Examples</h1>
-
+<section id="setup-first-examples" class="title-slide slide level1 center" data-background-color="#6880af">
+<h1>3. Setup &amp; First Examples</h1>
+<p>See <a href="./setup.html">setup</a></p>
 </section>
 
-<section id="clinical-applications" class="title-slide slide level1 center">
-<h1>Clinical Applications</h1>
+<section id="clinical-applications" class="title-slide slide level1 center" data-background-color="#6880af">
+<h1>4. Clinical Applications</h1>
 
 </section>
 
 <section>
 <section id="bifurcation-analysis" class="title-slide slide level1 center" data-background-color="#6880af">
-<h1>Bifurcation Analysis</h1>
+<h1>5. Bifurcation Analysis</h1>
 
 </section>
 <section id="how-to-analyse-a-brain-system" class="slide level2">
@@ -1432,7 +1432,7 @@ F(x, a)=0,
 <section id="bifurcation-analysis-hands-on" class="slide level2">
 <h2>Bifurcation analysis: hands-on</h2>
 <ul>
-<li>Notebook: <a href="./notebooks/03_bifurcation_analysis.html"><code>notebooks/03_bifurcation_analysis.qmd</code></a></li>
+<li>Notebook: <a href="./notebooks/4_BifurcationAnalysis/BifurcationAnalysis.html"><code>notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd</code></a></li>
 <li>Sweep input <span class="math inline">\(I\)</span> in a TVB neural mass model</li>
 <li>Continue fixed points and periodic orbits</li>
 <li>Read the diagram as a <strong>map of regimes</strong></li>
@@ -1441,7 +1441,7 @@ F(x, a)=0,
 </section></section>
 <section>
 <section id="parameter-exploration-and-inference" class="title-slide slide level1 center" data-background-color="#6880af">
-<h1>4. Parameter exploration and inference</h1>
+<h1>6.. Parameter exploration and inference</h1>
 
 </section>
 <section id="models-as-computational-hypotheses" class="slide level2">
@@ -2160,7 +2160,7 @@ F(x, a)=0,
 </section></section>
 <section>
 <section id="stimulating-the-brain" class="title-slide slide level1 center" data-background-color="#6880af">
-<h1>5. Stimulating the brain</h1>
+<h1>7. Stimulating the brain</h1>
 
 </section>
 <section id="visual-evoked-potentials" class="slide level2">
@@ -2264,11 +2264,20 @@ F(x, a)=0,
 <p><img data-src="img/figures/jansen1995/reproduced/Jansen1995_Fig11.png"></p>
 </div></div>
 </section>
-<section id="take-aways-from-day-1" class="slide level2">
-<h2>Take Aways from Day 1</h2>
+<section id="stimulation-with-bayesian-inference" class="slide level2">
+<h2>Stimulation with Bayesian inference</h2>
+<!-- TODO: full stimulus + inference slides go here -->
+<p>Hands-on notebook: <a href="./notebooks/5_stimulation_with_bayesian_inference.html"><code>5_stimulation_with_bayesian_inference.qmd</code></a></p>
 <ul>
-<li>TODO: takeaways from Day 1</li>
+<li>Recover stimulus amplitude <strong>and</strong> excitability from a noisy recording</li>
+<li>See the <strong>degeneracy ridge</strong> in the loss landscape</li>
+<li>Use <strong>priors as hypotheses</strong> to pick a mechanistic explanation</li>
+<li>Compare Bayesian posteriors against multi-start gradient descent</li>
 </ul>
+</section>
+<section id="end-of-day-1" class="slide level2">
+<h2>End of Day 1</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource default number-lines code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a></a>         \(^_^)/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section></section>
 <section>
 <section id="day-2-mini-hackathon-and-plot-your-brain-tutorial" class="title-slide slide level1 center" data-background-color="#6880af">
@@ -2292,10 +2301,7 @@ F(x, a)=0,
 <section id="brain-plotting-with-bsplot" class="slide level2">
 <h2>Brain Plotting with <code>bsplot</code></h2>
 
-<img data-src="img/figures/bsplot/overview_figure.png" class="quarto-figure quarto-figure-center r-stretch"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a></a><span class="ex">uv</span> pip install bsplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="section" class="slide level2" data-background-iframe="https://martinl.git-pages.bihealth.org/bsplot/Usage" data-background-interactive="true">
-<h2></h2>
+<img data-src="img/figures/bsplot/overview_figure.png" class="quarto-figure quarto-figure-center r-stretch"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a></a><span class="ex">uv</span> pip install bsplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section></section>
 <section>
 <section id="wrap-up" class="title-slide slide level1 center" data-background-color="#6880af">
@@ -2304,19 +2310,90 @@ F(x, a)=0,
 </section>
 <section id="acknowledgements" class="slide level2">
 <h2>Acknowledgements</h2>
-<ul>
-<li>TODO: thanks to all who made this happen</li>
-</ul>
+<div class="r-stretch">
+<div style="display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; width: 100%; height: 100%; min-height: 58vh; box-sizing: border-box; padding: 1.2vh 4vw 1.8vh;">
+  <div style="flex: 1; display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; gap: 12px;">
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://neurologie.charite.de/metas/person/person/address_detail/christoph_huettl_md/" target="_blank">
+                    <img src="https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/HueC_297x337.jpg" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Christoph Huettl</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://neurologie.charite.de/metas/person/person/address_detail/rico_schmitt_msc-1/" target="_blank">
+                    <img src="https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/SchmittR_297x337.png" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Rico Schmitt</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://codemart.ro/codemart/zwei/crew" target="_blank">
+                    <img src="https://codemart.ro/codemart/img/53/portrait_leader@2x" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Lia Domide</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="#" target="_blank">
+                    <img src="https://codemart.ro/codemart/img/4878/portrait_staff@2x" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Romina Baila</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://neurologie.charite.de/metas/person/person/address_detail/dr_jil_meier/" target="_blank">
+                    <img src="https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/MeyerJ_297x337.jpg" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Jil Meier</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://neurologie.charite.de/en/metas/person_detail/person/address_detail/halgurd_taher_msc_phd-1/" target="_blank">
+                    <img src="https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/TaherT_297x337.jpg" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Halgurd Taher</strong></p>
+      </div>
+  </div>
+  <div style="height: 1.5vh;"></div>
+  <div style="flex: 1; display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; gap: 12px;">
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://neurologie.charite.de/metas/person/person/address_detail/dr_med_konstantin_buelau_md/" target="_blank">
+                    <img src="https://brainsimulation.charite.de/fileadmin/user_upload/microsites/m_cc15/gehirnsimulation/konstantin_337.jpg" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Konstantin Buelau</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://neurologie.charite.de/en/metas/person_detail/person/address_detail/dr_dionysios_perdikis-1/" target="_blank">
+                    <img src="https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/perdikis_d_297x337.jpg" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Dionysios Perdikis</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://neurologie.charite.de/en/metas/person_detail/person/address_detail/dr_dionysios_perdikis-1/" target="_blank">
+                    <img src="https://neurologie.charite.de/fileadmin/user_upload/microsites/m_cc15/neurologie/Mitarbeiter_neu/schirner-m_297x337.jpg" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Michael Schirner</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://neurologie.charite.de/en/metas/person_detail/person/address_detail/leon_stefanovski_md/" target="_blank">
+                    <img src="https://brainsimulation.charite.de/fileadmin/user_upload/microsites/m_cc15/gehirnsimulation/charite_photo_big-337-leon.jpg" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Leon Stefanovski</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://claude.com/claude-code" target="_blank">
+                    <img src="https://avatars.githubusercontent.com/u/76263028?s=200&amp;v=4" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Claude Code</strong></p>
+      </div>
+      <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <a href="https://neurologie.charite.de/metas/person/person/address_detail/univ_prof_dr_med_petra_ritter/" target="_blank">
+                    <img src="https://brainsimulation.charite.de/fileadmin/user_upload/microsites/m_cc15/gehirnsimulation/Ritter_155x200.png" style="width: clamp(128px, 11vw, 180px); height: clamp(128px, 11vw, 180px); object-fit: cover; border-radius: 50%; filter: grayscale(100%);">
+        </a>
+                <p style="margin: 8px 0 0; font-size: 0.66em; line-height: 1.2;"><strong>Petra Ritter</strong></p>
+      </div>
+  </div>
+</div>
+</div>
 </section>
-<section id="take-aways" class="slide level2">
-<h2>Take-aways</h2>
-<ul>
-<li>TODO: what to remember from Day 1</li>
-<li>TODO: where to go next</li>
-</ul>
-</section>
-<section id="thanks-contact" class="slide level2">
-<h2>Thanks &amp; contact</h2>
+<section id="thank-you-feedback" class="slide level2">
+<h2>Thank You &amp; Feedback</h2>
 <div class="rows">
 <div class="row">
 <div class="quarto-figure quarto-figure-center">
@@ -2327,7 +2404,17 @@ F(x, a)=0,
 </div>
 </div>
 <div class="row">
-<p>Contact</p>
+<div class="columns" style="font-size: 0.7em; text-align: center;">
+<div class="column" style="width:33%;">
+<p><strong>Marius Pille</strong><br>
+marius.pille [at] bih-charite.de</p>
+</div><div class="column" style="width:33%;">
+<p><strong>Leon Martin</strong><br>
+leon.martin [at] bih-charite.de</p>
+</div><div class="column" style="width:34%;">
+<p><strong>Leon Stefanovski</strong><br>
+leon.stefanovski [at] charite.de</p>
+</div></div>
 </div>
 <div class="row">
 <table class="caption-top">
@@ -2378,7 +2465,7 @@ The Turing Way Community, and Scriberia. 2024. <span>“Illustrations from the T
 </div>
 </div>
 </section>
-<section id="section-1" class="slide level2 unnumbered">
+<section id="section" class="slide level2 unnumbered">
 <h2></h2>
 
 

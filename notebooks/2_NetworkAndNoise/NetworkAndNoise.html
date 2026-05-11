@@ -207,28 +207,32 @@ window.Quarto = {
         <li><hr class="dropdown-divider"></li>
         <li>
     <a class="dropdown-item" href="../../notebooks/4_optimization.html">
- <span class="dropdown-text">5. Parameter optimisation</span></a>
+ <span class="dropdown-text">6. Parameter optimisation</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../notebooks/4_I_fMRI_BOLD_FC.html">
- <span class="dropdown-text">5.1 fMRI BOLD FC</span></a>
+ <span class="dropdown-text">6.1 fMRI BOLD FC</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../notebooks/4_II_MEG_Peak_Frequency.html">
- <span class="dropdown-text">5.2 MEG peak frequency</span></a>
+ <span class="dropdown-text">6.2 MEG peak frequency</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../notebooks/4_inference_demos.html">
- <span class="dropdown-text">5.3 Inference demos</span></a>
+ <span class="dropdown-text">6.3 Inference demos</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
     <a class="dropdown-item" href="../../notebooks/5_stimulation.html">
- <span class="dropdown-text">6. Stimulating the brain</span></a>
+ <span class="dropdown-text">7. Stimulating the brain</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../notebooks/05_stimulation.html">
- <span class="dropdown-text">6.1 Stimulation</span></a>
+    <a class="dropdown-item" href="../../notebooks/5_stimulation.html">
+ <span class="dropdown-text">7.1 Stimulation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../notebooks/5_stimulation_with_bayesian_inference.html">
+ <span class="dropdown-text">7.2 Stimulation with Bayesian inference</span></a>
   </li>  
     </ul>
   </li>
@@ -250,7 +254,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../notebooks/2_NetworkAndNoise/NetworkAndNoise.html">2. Networks and Noise</a></li><li class="breadcrumb-item"><a href="../../notebooks/2_NetworkAndNoise/NetworkAndNoise.html">Networks and Noise</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../notebooks/2_NetworkAndNoise/NetworkAndNoise.html">Networks and Noise</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -271,13 +275,37 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/1_introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">1. Introduction to The Virtual Brain</span></a>
+ <span class="menu-text">Introduction to Brain Network Modelling</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/1_MathematicalFramework/DynamicalSystems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dynamical Systems</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/2_NetworkAndNoise/NetworkAndNoise.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Networks and Noise</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/3_ParameterExploration/ParameterExploration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Parameter Exploration</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/4_BifurcationAnalysis/BifurcationAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bifurcation Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">1. Dynamical Systems</span></a>
+            <a href="../../notebooks/4_optimization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Parameter optimisation</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -285,88 +313,20 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/1_MathematicalFramework/DynamicalSystems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dynamical Systems with TVBO: A Spring-Mass Example</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">2. Networks and Noise</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../notebooks/2_NetworkAndNoise/NetworkAndNoise.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Networks and Noise</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">3. Parameter Exploration</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../notebooks/3_ParameterExploration/ParameterExploration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Parameter Exploration</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">4. Bifurcation Analysis</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../notebooks/4_BifurcationAnalysis/BifurcationAnalysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bifurcation Analysis</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../../notebooks/4_optimization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">5. Parameter optimisation</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../notebooks/4_I_fMRI_BOLD_FC.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Reduced Wong-Wang BOLD FC Optimization</span></a>
+ <span class="menu-text">fMRI BOLD FC</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/4_II_MEG_Peak_Frequency.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Jansen-Rit Peak Frequency Optimization</span></a>
+ <span class="menu-text">MEG peak frequency</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/4_inference_demos.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Inference demos: figures and method walkthrough</span></a>
+ <span class="menu-text">Inference demos</span></a>
   </div>
 </li>
       </ul>
@@ -374,16 +334,22 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../notebooks/5_stimulation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">6. Stimulating the brain</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+ <span class="menu-text">Stimulating the brain</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/05_stimulation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">5.1 Stimulating the brain</span></a>
+  <a href="../../notebooks/5_stimulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stimulating the Brain</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/5_stimulation_with_bayesian_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stimulation with Bayesian inference</span></a>
   </div>
 </li>
       </ul>
@@ -407,7 +373,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#gaussian-white-noise" id="toc-gaussian-white-noise" class="nav-link" data-scroll-target="#gaussian-white-noise"><span class="header-section-number">1.4.1</span> Gaussian (white) noise</a></li>
   </ul></li>
-  <li><a href="#what-we-have-so-far" id="toc-what-we-have-so-far" class="nav-link" data-scroll-target="#what-we-have-so-far"><span class="header-section-number">1.5</span> What we have so far</a></li>
+  <li><a href="#all-together" id="toc-all-together" class="nav-link" data-scroll-target="#all-together"><span class="header-section-number">1.5</span> All together</a></li>
+  <li><a href="#what-we-have-so-far" id="toc-what-we-have-so-far" class="nav-link" data-scroll-target="#what-we-have-so-far"><span class="header-section-number">1.6</span> What we have so far</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/edit/main/notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="NetworkAndNoise.ipynb" download="NetworkAndNoise.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
@@ -415,7 +382,7 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../notebooks/2_NetworkAndNoise/NetworkAndNoise.html">2. Networks and Noise</a></li><li class="breadcrumb-item"><a href="../../notebooks/2_NetworkAndNoise/NetworkAndNoise.html">Networks and Noise</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Networks and Noise</h1>
 </div>
@@ -486,7 +453,7 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i)\right]dt + g(S_i, \theta^g)\,dW_i.
 <section id="a-toy-network" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="a-toy-network"><span class="header-section-number">1.1</span> A toy network</h2>
 <p>Networks in TVBO are first-class metadata objects. A small connectome can be written inline as YAML; a real one is loaded from the database.</p>
-<div id="e974c365" class="cell" data-execution_count="2">
+<div id="403f32d7" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>toy <span class="op">=</span> Network.from_string(<span class="st">"""</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">label: ToyChain</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">nodes:</span></span>
@@ -499,7 +466,7 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i)\right]dt + g(S_i, \theta^g)\,dW_i.
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">  - {source: 0, target: 2, parameters: {weight: </span><span class="sc">{value: 0.3}</span><span class="st">, distance: {value: 60, unit: mm</span><span class="sc">}}</span><span class="st">}</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>toy.plot_graph()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="125">
+<div class="cell-output cell-output-display" data-execution_count="121">
 <div>
 <figure class="figure">
 <p><img src="NetworkAndNoise_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
@@ -508,14 +475,14 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i)\right]dt + g(S_i, \theta^g)\,dW_i.
 </div>
 </div>
 <p>The Desikan-Killiany connectome ships with TVBO and is loaded the same way:</p>
-<div id="86e43528" class="cell" data-execution_count="3">
+<div id="51427a58" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> Network.from_db(rec<span class="op">=</span><span class="st">"avgMatrix"</span>, atlas<span class="op">=</span><span class="st">"DesikanKilliany"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sc.label, <span class="st">"—"</span>, sc.number_of_nodes, <span class="st">"regions"</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sc.plot_overview()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>DesikanKilliany (avgMatrix SC+FC) — 84 regions</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="126">
+<div class="cell-output cell-output-display" data-execution_count="122">
 <div>
 <figure class="figure">
 <p><img src="NetworkAndNoise_files/figure-html/cell-4-output-2.png" class="img-fluid figure-img"></p>
@@ -526,11 +493,11 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i)\right]dt + g(S_i, \theta^g)\,dW_i.
 </section>
 <section id="the-coupling-function" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="the-coupling-function"><span class="header-section-number">1.2</span> The Coupling Function</h2>
-<div id="546a7aee" class="cell" data-execution_count="4">
+<div id="b21a8a3b" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> Coupling</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> Coupling.from_db(<span class="st">'Linear'</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>C</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="127">
+<div class="cell-output cell-output-display" data-execution_count="123">
 <pre><code>Coupling({
   'name': 'Linear',
   'parameters': {'b': Parameter({
@@ -552,15 +519,15 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i)\right]dt + g(S_i, \theta^g)\,dW_i.
 })</code></pre>
 </div>
 </div>
-<div id="3f620300" class="cell" data-execution_count="5">
+<div id="1d458068" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>C.equation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="128">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="124">
 <p><span class="math inline">\(\displaystyle b + a \sum_{j=0}^{-1 + N} {x}_{j} {g}_{i,j}\)</span></p>
 </div>
 </div>
-<div id="9440970d" class="cell" data-execution_count="6">
+<div id="d519474d" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>C.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="129">
+<div class="cell-output cell-output-display" data-execution_count="125">
 <div>
 <figure class="figure">
 <p><img src="NetworkAndNoise_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
@@ -572,7 +539,7 @@ dS_i = \left[f_d(S_i, \theta^d, C_i, I_i)\right]dt + g(S_i, \theta^g)\,dW_i.
 <section id="simulating-a-coupled-network" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="simulating-a-coupled-network"><span class="header-section-number">1.3</span> Simulating a coupled network</h2>
 <p><code>SimulationExperiment</code> accepts a <code>Dynamics</code>, a <code>Network</code>, and a coupling kernel. We use the generic 2D oscillator coupled linearly across the toy connectome and run with the JAX-based <code>tvboptim</code> backend.</p>
-<div id="a920502d" class="cell" data-execution_count="7">
+<div id="ac14c003" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Dynamics.from_db(<span class="st">"Generic2dOscillator"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>toy.coupling[<span class="st">'c_glob'</span>] <span class="op">=</span> C</span>
@@ -603,7 +570,7 @@ STEP 1: Running simulation...
 Experiment complete.
 ============================================================</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="130">
+<div class="cell-output cell-output-display" data-execution_count="126">
 <div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
 <defs>
 <symbol id="icon-database" viewbox="0 0 32 32">
@@ -1169,7 +1136,7 @@ array([[[ 0.10094234,  0.10100238,  0.10049208],
 Coordinates:
   * time      (time) float64 80kB 0.1 0.2 0.3 0.4 ... 999.7 999.8 999.9 1e+03
   * variable  (variable) &lt;U1 8B 'V' 'W'
-  * node      (node) &lt;U1 12B 'A' 'B' 'C'</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-obj-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">time</span>: 10000</li><li><span class="xr-has-index">variable</span>: 2</li><li><span class="xr-has-index">node</span>: 3</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-46606a12-b79d-42f9-b6c1-d5c310a2b05e" class="xr-array-in" type="checkbox" checked=""><label for="section-46606a12-b79d-42f9-b6c1-d5c310a2b05e" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0.1009 0.101 0.1005 0.0938 0.0938 ... -0.2171 0.6555 0.6989 0.1619</span></div><div class="xr-array-data"><pre>array([[[ 0.10094234,  0.10100238,  0.10049208],
+  * node      (node) &lt;U1 12B 'A' 'B' 'C'</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-obj-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">time</span>: 10000</li><li><span class="xr-has-index">variable</span>: 2</li><li><span class="xr-has-index">node</span>: 3</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-12a136d5-05e5-458b-a857-37b362308c37" class="xr-array-in" type="checkbox" checked=""><label for="section-12a136d5-05e5-458b-a857-37b362308c37" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0.1009 0.101 0.1005 0.0938 0.0938 ... -0.2171 0.6555 0.6989 0.1619</span></div><div class="xr-array-data"><pre>array([[[ 0.10094234,  0.10100238,  0.10049208],
         [ 0.09379672,  0.09379612,  0.09380122]],
 
        [[ 0.10187335,  0.10199349,  0.10097233],
@@ -1187,14 +1154,14 @@ Coordinates:
         [ 0.65540802,  0.69887911,  0.16186165]],
 
        [[-0.26864716, -0.27305454, -0.21707993],
-        [ 0.65546979,  0.69894208,  0.16187938]]], shape=(10000, 2, 3))</pre></div></div></li><li class="xr-section-item"><input id="section-8902fa67-89ef-4e2d-a840-aed882b1467b" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-8902fa67-89ef-4e2d-a840-aed882b1467b" class="xr-section-summary" title="Expand/collapse section">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">0.1 0.2 0.3 ... 999.8 999.9 1e+03</div><input id="attrs-d572fb98-3e7e-4e6a-8eb1-daf4a239901d" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-d572fb98-3e7e-4e6a-8eb1-daf4a239901d" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-d22ff89f-d75d-41f1-8153-c5d9690df394" class="xr-var-data-in" type="checkbox"><label for="data-d22ff89f-d75d-41f1-8153-c5d9690df394" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([1.000e-01, 2.000e-01, 3.000e-01, ..., 9.998e+02, 9.999e+02, 1.000e+03],
-      shape=(10000,))</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">variable</span></div><div class="xr-var-dims">(variable)</div><div class="xr-var-dtype">&lt;U1</div><div class="xr-var-preview xr-preview">'V' 'W'</div><input id="attrs-44da94af-04f1-45d9-864d-ef63575f477c" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-44da94af-04f1-45d9-864d-ef63575f477c" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-7aea56f1-06fa-4a7e-8693-de801ead98eb" class="xr-var-data-in" type="checkbox"><label for="data-7aea56f1-06fa-4a7e-8693-de801ead98eb" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(['V', 'W'], dtype='&lt;U1')</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">node</span></div><div class="xr-var-dims">(node)</div><div class="xr-var-dtype">&lt;U1</div><div class="xr-var-preview xr-preview">'A' 'B' 'C'</div><input id="attrs-0d846456-3e46-4111-aa1e-dcb52db428db" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-0d846456-3e46-4111-aa1e-dcb52db428db" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-acf90886-be45-412b-8c32-700c56b9122f" class="xr-var-data-in" type="checkbox"><label for="data-acf90886-be45-412b-8c32-700c56b9122f" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(['A', 'B', 'C'], dtype='&lt;U1')</pre></div></li></ul></div></li></ul></div></div>
+        [ 0.65546979,  0.69894208,  0.16187938]]], shape=(10000, 2, 3))</pre></div></div></li><li class="xr-section-item"><input id="section-ead3d612-227c-4743-8ef1-83bd2db4ebcb" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-ead3d612-227c-4743-8ef1-83bd2db4ebcb" class="xr-section-summary" title="Expand/collapse section">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">0.1 0.2 0.3 ... 999.8 999.9 1e+03</div><input id="attrs-00981c97-9001-4b00-8cd1-4205104b3279" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-00981c97-9001-4b00-8cd1-4205104b3279" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-85cfc8ec-0e0e-4019-ba93-ef9859570012" class="xr-var-data-in" type="checkbox"><label for="data-85cfc8ec-0e0e-4019-ba93-ef9859570012" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([1.000e-01, 2.000e-01, 3.000e-01, ..., 9.998e+02, 9.999e+02, 1.000e+03],
+      shape=(10000,))</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">variable</span></div><div class="xr-var-dims">(variable)</div><div class="xr-var-dtype">&lt;U1</div><div class="xr-var-preview xr-preview">'V' 'W'</div><input id="attrs-1bf3f5a3-4a60-4736-88c1-de809c1f8c1d" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-1bf3f5a3-4a60-4736-88c1-de809c1f8c1d" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-128720a4-9bee-40ad-9214-b8d9eef5b6b5" class="xr-var-data-in" type="checkbox"><label for="data-128720a4-9bee-40ad-9214-b8d9eef5b6b5" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(['V', 'W'], dtype='&lt;U1')</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">node</span></div><div class="xr-var-dims">(node)</div><div class="xr-var-dtype">&lt;U1</div><div class="xr-var-preview xr-preview">'A' 'B' 'C'</div><input id="attrs-e532fdc8-4160-4db6-b719-e78aea5de8e7" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-e532fdc8-4160-4db6-b719-e78aea5de8e7" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-5acade8e-7dd5-4739-9e96-74f4a243e39f" class="xr-var-data-in" type="checkbox"><label for="data-5acade8e-7dd5-4739-9e96-74f4a243e39f" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(['A', 'B', 'C'], dtype='&lt;U1')</pre></div></li></ul></div></li></ul></div></div>
 </div>
 </div>
 <p>The result is an <code>xarray.DataArray</code> with named axes. We select the first state variable and let TVBO plot all regions.</p>
-<div id="791d2001" class="cell" data-execution_count="8">
+<div id="2760204a" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>result.integration.sel(variable<span class="op">=</span><span class="st">'V'</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="131">
+<div class="cell-output cell-output-display" data-execution_count="127">
 <div>
 <figure class="figure">
 <p><img src="NetworkAndNoise_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
@@ -1203,7 +1170,7 @@ Coordinates:
 </div>
 </div>
 <p>Fully declarative wiring can also be expressed with an explicit mapping layer: network-level coupling aliases are declared once, then each model coupling input points to its source.</p>
-<div id="cbd5230b" class="cell" data-execution_count="9">
+<div id="b855e12f" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> copy</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>model_decl <span class="op">=</span> Dynamics.from_db(<span class="st">"Generic2dOscillator"</span>)</span>
@@ -1236,7 +1203,7 @@ STEP 1: Running simulation...
 Experiment complete.
 ============================================================</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="132">
+<div class="cell-output cell-output-display" data-execution_count="128">
 <div>
 <figure class="figure">
 <p><img src="NetworkAndNoise_files/figure-html/cell-10-output-2.png" class="img-fluid figure-img"></p>
@@ -1250,7 +1217,7 @@ Experiment complete.
 <p>Noise enters the equation through the diffusion term <span class="math inline">\(g(S, \theta^g)\,dW\)</span>. TVBO exposes it as a metadata object that we attach to <code>integration</code>. Two flavours are built in.</p>
 <section id="gaussian-white-noise" class="level3" data-number="1.4.1">
 <h3 data-number="1.4.1" class="anchored" data-anchor-id="gaussian-white-noise"><span class="header-section-number">1.4.1</span> Gaussian (white) noise</h3>
-<div id="999eaf63" class="cell" data-execution_count="10">
+<div id="8f74e4eb" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>exp.integration.noise <span class="op">=</span> Noise(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    noise_type<span class="op">=</span><span class="st">"gaussian"</span>,</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>{<span class="st">"sigma"</span>: {<span class="st">"value"</span>: <span class="fl">0.01</span>}},</span>
@@ -1270,7 +1237,7 @@ STEP 1: Running simulation...
 Experiment complete.
 ============================================================</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="133">
+<div class="cell-output cell-output-display" data-execution_count="129">
 <div>
 <figure class="figure">
 <p><img src="NetworkAndNoise_files/figure-html/cell-11-output-2.png" class="img-fluid figure-img"></p>
@@ -1278,13 +1245,14 @@ Experiment complete.
 </div>
 </div>
 </div>
-<div id="9343989a" class="cell" data-execution_count="11">
+<div id="9c6f58e9" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>exp.integration.noise <span class="op">=</span> Noise(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    noise_type<span class="op">=</span><span class="st">"gaussian"</span>,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>{<span class="st">"sigma"</span>: {<span class="st">"value"</span>: <span class="fl">0.01</span>}},</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>result_white <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>result_white.integration.sel(variable<span class="op">=</span><span class="st">'V'</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>exp.integration.transient <span class="op">=</span> <span class="dv">200</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>result_white <span class="op">=</span> exp.run(<span class="st">"tvboptim"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>result_white.integration.sel(variable<span class="op">=</span><span class="st">'V'</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ============================================================
@@ -1298,7 +1266,7 @@ STEP 1: Running simulation...
 Experiment complete.
 ============================================================</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="134">
+<div class="cell-output cell-output-display" data-execution_count="130">
 <div>
 <figure class="figure">
 <p><img src="NetworkAndNoise_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
@@ -1308,8 +1276,51 @@ Experiment complete.
 </div>
 </section>
 </section>
-<section id="what-we-have-so-far" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="what-we-have-so-far"><span class="header-section-number">1.5</span> What we have so far</h2>
+<section id="all-together" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="all-together"><span class="header-section-number">1.5</span> All together</h2>
+<div id="a06233c1" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tvbo <span class="im">import</span> SimulationExperiment, Dynamics, Network, Coupling, Noise</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>network <span class="op">=</span> Network.from_db(atlas<span class="op">=</span><span class="st">"DesikanKilliany"</span>, rec<span class="op">=</span><span class="st">"avgMatrix"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>network.coupling[<span class="st">"Linear"</span>] <span class="op">=</span> Coupling.from_db(<span class="st">"Linear"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>network.normalize()</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>exp <span class="op">=</span> SimulationExperiment(</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    dynamics<span class="op">=</span>Dynamics.from_db(<span class="st">"Generic2dOscillator"</span>), network<span class="op">=</span>network</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>exp.dynamics.state_variables[<span class="st">"V"</span>].noise <span class="op">=</span> Noise(parameters<span class="op">=</span>{<span class="st">"sigma"</span>: {<span class="st">"value"</span>: <span class="fl">0.1</span>}})</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>exp.network.coupling[<span class="st">"Linear"</span>].parameters[<span class="st">"a"</span>].value <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> exp.run()</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>res.sel(variable<span class="op">=</span><span class="st">"V"</span>).data.T.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+============================================================
+STEP 1: Running simulation...
+============================================================
+  Simulation period: 1000.0 ms, dt: 0.01220703125 ms
+  Transient period: 0.0 ms
+  Simulation complete.
+
+============================================================
+Experiment complete.
+============================================================</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="NetworkAndNoise_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="what-we-have-so-far" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="what-we-have-so-far"><span class="header-section-number">1.6</span> What we have so far</h2>
 <ul>
 <li>A <code>Network</code> is metadata, just like a <code>Dynamics</code>.</li>
 <li><code>SimulationExperiment(dynamics, network, coupling)</code> is the canonical container.</li>
@@ -1729,8 +1740,8 @@ Experiment complete.
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../notebooks/1_MathematicalFramework/DynamicalSystems.html" class="pagination-link" aria-label="Dynamical Systems with TVBO: A Spring-Mass Example">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Dynamical Systems with TVBO: A Spring-Mass Example</span>
+      <a href="../../notebooks/1_MathematicalFramework/DynamicalSystems.html" class="pagination-link" aria-label="Dynamical Systems">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Dynamical Systems</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

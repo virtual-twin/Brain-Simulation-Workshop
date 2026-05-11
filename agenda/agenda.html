@@ -158,28 +158,32 @@ div.csl-indent {
         <li><hr class="dropdown-divider"></li>
         <li>
     <a class="dropdown-item" href="../notebooks/4_optimization.html">
- <span class="dropdown-text">5. Parameter optimisation</span></a>
+ <span class="dropdown-text">6. Parameter optimisation</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../notebooks/4_I_fMRI_BOLD_FC.html">
- <span class="dropdown-text">5.1 fMRI BOLD FC</span></a>
+ <span class="dropdown-text">6.1 fMRI BOLD FC</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../notebooks/4_II_MEG_Peak_Frequency.html">
- <span class="dropdown-text">5.2 MEG peak frequency</span></a>
+ <span class="dropdown-text">6.2 MEG peak frequency</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../notebooks/4_inference_demos.html">
- <span class="dropdown-text">5.3 Inference demos</span></a>
+ <span class="dropdown-text">6.3 Inference demos</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
     <a class="dropdown-item" href="../notebooks/5_stimulation.html">
- <span class="dropdown-text">6. Stimulating the brain</span></a>
+ <span class="dropdown-text">7. Stimulating the brain</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../notebooks/05_stimulation.html">
- <span class="dropdown-text">6.1 Stimulation</span></a>
+    <a class="dropdown-item" href="../notebooks/5_stimulation.html">
+ <span class="dropdown-text">7.1 Stimulation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../notebooks/5_stimulation_with_bayesian_inference.html">
+ <span class="dropdown-text">7.2 Stimulation with Bayesian inference</span></a>
   </li>  
     </ul>
   </li>
@@ -211,7 +215,7 @@ div.csl-indent {
   <li><a href="#agenda" id="toc-agenda" class="nav-link" data-scroll-target="#agenda">Agenda</a>
   <ul class="collapse">
   <li><a href="#day-1" id="toc-day-1" class="nav-link" data-scroll-target="#day-1">Day 1</a></li>
-  <li><a href="#day-2-mini-hackathon" id="toc-day-2-mini-hackathon" class="nav-link" data-scroll-target="#day-2-mini-hackathon">Day 2: Mini Hackathon</a></li>
+  <li><a href="#day-2-mini-hackathon" id="toc-day-2-mini-hackathon" class="nav-link" data-scroll-target="#day-2-mini-hackathon">Day 2 — Mini Hackathon</a></li>
   </ul></li>
   <li><a href="#target-audience" id="toc-target-audience" class="nav-link" data-scroll-target="#target-audience">Target Audience</a></li>
   <li><a href="#requirements" id="toc-requirements" class="nav-link" data-scroll-target="#requirements">Requirements</a></li>
@@ -272,9 +276,8 @@ div.csl-indent {
 <p><strong>Workshop Dates:</strong> 12-13 May 2026</p>
 <section id="about" class="level2">
 <h2 class="anchored" data-anchor-id="about">About</h2>
-<p>In this workshop, participants will learn core concepts and methods for personalized whole-brain network modeling using The Virtual Brain (TVB). The workflow combines individualized model definition, simulation, and analysis with ontology-driven model specification and optimization tooling <span class="citation" data-cites="Martin2025 Pille2025">(<a href="#ref-Martin2025" role="doc-biblioref">Martin et al. 2025</a>; <a href="#ref-Pille2025" role="doc-biblioref">Pille et al. 2025</a>)</span>.</p>
-<p>The Virtual Brain Ontology (TVB-O) provides a knowledge framework for FAIR model specification and automated code generation, while connecting model metadata to biomedical ontologies <span class="citation" data-cites="Martin2025">(<a href="#ref-Martin2025" role="doc-biblioref">Martin et al. 2025</a>)</span>.</p>
-<p>TVB-Optim enables gradient-based fitting of large parameter spaces in whole-brain models and supports efficient scaling for computationally intensive optimization experiments <span class="citation" data-cites="Pille2025">(<a href="#ref-Pille2025" role="doc-biblioref">Pille et al. 2025</a>)</span>.</p>
+<p>Participants learn core concepts and methods for personalized whole-brain network modeling with The Virtual Brain (TVB). The workflow combines individualized model definition, simulation, and analysis with ontology-driven model specification and gradient-based optimization <span class="citation" data-cites="Martin2025 Pille2025">(<a href="#ref-Martin2025" role="doc-biblioref">Martin et al. 2025</a>; <a href="#ref-Pille2025" role="doc-biblioref">Pille et al. 2025</a>)</span>.</p>
+<p>The Virtual Brain Ontology (TVB-O) provides a knowledge framework for FAIR model specification and automated code generation, while connecting model metadata to biomedical ontologies <span class="citation" data-cites="Martin2025">(<a href="#ref-Martin2025" role="doc-biblioref">Martin et al. 2025</a>)</span>. TVB-Optim adds gradient-based fitting of large parameter spaces in whole-brain models, with scaling for computationally intensive optimization experiments <span class="citation" data-cites="Pille2025">(<a href="#ref-Pille2025" role="doc-biblioref">Pille et al. 2025</a>)</span>.</p>
 <p>Relevant examples of mechanistic and translational whole-brain modeling include connectome-constrained decision dynamics <span class="citation" data-cites="Schirner2023">(<a href="#ref-Schirner2023" role="doc-biblioref">Schirner, Deco, and Ritter 2023</a>)</span>, connectome-driven cortical wave phenomena <span class="citation" data-cites="Koller2024">(<a href="#ref-Koller2024" role="doc-biblioref">Koller, Schirner, and Ritter 2024</a>)</span>, and ODE-based separation of task and rest fMRI signals <span class="citation" data-cites="Kashyap2025">(<a href="#ref-Kashyap2025" role="doc-biblioref">Kashyap et al. 2025</a>)</span>.</p>
 <p>Useful links:</p>
 <ul>
@@ -285,64 +288,74 @@ div.csl-indent {
 </section>
 <section id="format" class="level2">
 <h2 class="anchored" data-anchor-id="format">Format</h2>
-<p>Hands-on session introducing the theoretical and programmatic framework for specifying, running, analyzing, and optimizing dynamical brain network models.</p>
+<p>Two days of hands-on sessions: theory and code for specifying, running, analyzing, and optimizing dynamical brain network models, followed by a mini hackathon.</p>
 </section>
 <section id="agenda" class="level2">
 <h2 class="anchored" data-anchor-id="agenda">Agenda</h2>
 <section id="day-1" class="level3">
 <h3 class="anchored" data-anchor-id="day-1">Day 1</h3>
+<p><strong>Block 1 — 09:00–12:00</strong></p>
 <ol type="1">
-<li><a href="../notebooks/1_introduction.html">Intro to The Virtual Brain and its applications</a></li>
+<li>Intro to Brain Network Modelling — <a href="../notebooks/1_introduction.html">notebook</a></li>
+<li>Defining a FAIR brain network model
+<ul>
+<li><a href="../notebooks/1_MathematicalFramework/DynamicalSystems.html">Dynamical Systems</a></li>
+<li><a href="../notebooks/2_NetworkAndNoise/NetworkAndNoise.html">Networks and Noise</a></li>
+</ul></li>
+<li>Setup &amp; first examples — see <a href="../setup.html">setup</a></li>
+<li>Applications in basic and clinical research</li>
+</ol>
+<p><strong>Block 2 — 13:00–15:00</strong></p>
+<ol start="5" type="1">
+<li>Bifurcation theory — <a href="../notebooks/4_BifurcationAnalysis/BifurcationAnalysis.html">notebook</a></li>
+<li><ol type="a">
+<li>Parameter exploration &amp; inference I — <a href="../notebooks/3_ParameterExploration/ParameterExploration.html">notebook</a></li>
+</ol></li>
+</ol>
+<p><strong>Block 3 — 15:30–17:30</strong></p>
+<ol start="6" type="1">
+<li><ol start="2" type="a">
+<li>Parameter exploration &amp; inference II</li>
 </ol>
 <ul>
-<li>Basic ideas and history</li>
-<li>Mathematical framework</li>
-<li>Applications in basic research</li>
-<li>Clinical applications</li>
-</ul>
-<ol type="1">
-<li><a href="../notebooks/2_fair_model.html">Defining a FAIR brain network model</a></li>
-</ol>
+<li><a href="../notebooks/4_optimization.html">Parameter optimisation</a></li>
+<li><a href="../notebooks/4_I_fMRI_BOLD_FC.html">fMRI BOLD FC</a></li>
+<li><a href="../notebooks/4_II_MEG_Peak_Frequency.html">MEG peak frequency</a></li>
+<li><a href="../notebooks/4_inference_demos.html">Inference demos</a></li>
+</ul></li>
+<li>Stimulating the brain
 <ul>
-<li><a href="../notebooks/02a_mean_field_models.html">Mean field models</a></li>
-<li><a href="../notebooks/02b_coupled_networks.html">Coupled network dynamics</a></li>
-</ul>
-<ol type="1">
-<li><a href="../notebooks/3_dynamics.html">Dynamical perspective: how to analyze a brain system</a></li>
+<li><a href="../notebooks/5_stimulation.html">Stimulation</a></li>
+<li><a href="../notebooks/5_stimulation_with_bayesian_inference.html">Stimulation with Bayesian inference</a></li>
+</ul></li>
 </ol>
-<ul>
-<li><a href="../notebooks/03_bifurcation_analysis.html">Bifurcation analysis</a></li>
-</ul>
-<ol type="1">
-<li><a href="../notebooks/4_optimization.html">Parameter exploration and model optimization</a></li>
-</ol>
-<ul>
-<li>Brain network models as computational hypotheses of the brain</li>
-<li><a href="../notebooks/04a_alzheimer_usecase.qmd">Use-case A: mechanistic simulation of Alzheimer’s disease and integration of biomedical data</a></li>
-<li><a href="../notebooks/04b_parameter_fitting.qmd">Use-case B: homogeneous vs.&nbsp;heterogeneous parameter fitting</a></li>
-</ul>
-<ol type="1">
-<li><a href="../notebooks/5_stimulation.html">Stimulating the brain</a></li>
-</ol>
-<ul>
-<li><a href="../notebooks/05_stimulation.html">Visual and TMS-evoked potentials</a></li>
-</ul>
 </section>
 <section id="day-2-mini-hackathon" class="level3">
-<h3 class="anchored" data-anchor-id="day-2-mini-hackathon">Day 2: Mini Hackathon</h3>
-<p>We help participants answer and gain insight into their own research questions. Bring your own data if possible.</p>
+<h3 class="anchored" data-anchor-id="day-2-mini-hackathon">Day 2 — Mini Hackathon</h3>
+<p><strong>Block 1 — 09:00–11:30</strong></p>
+<ul>
+<li>Pitch your research question</li>
+<li>Form small groups</li>
+<li>Plotting the brain with <code>bsplot</code></li>
+</ul>
+<p><strong>Block 2 — 12:00–13:30</strong></p>
+<ul>
+<li>Group work on your own data</li>
+<li>Checkpoints and wrap-up</li>
+</ul>
+<p>We help participants work on their own research questions. Bring your own data if possible.</p>
 </section>
 </section>
 <section id="target-audience" class="level2">
 <h2 class="anchored" data-anchor-id="target-audience">Target Audience</h2>
-<p>Researchers interested in computational neuroscience, including data scientists, clinicians, engineers, and generally curious participants. Prior TVB experience is helpful but not mandatory.</p>
+<p>Researchers in computational neuroscience: data scientists, clinicians, engineers, and curious participants. Prior TVB experience helps but is not required.</p>
 </section>
 <section id="requirements" class="level2">
 <h2 class="anchored" data-anchor-id="requirements">Requirements</h2>
 <ul>
-<li>Basic Python programming skills are recommended.</li>
-<li>Notebooks can be run online (EBRAINS account required).</li>
-<li>Limited support for local setups is also provided.</li>
+<li>Basic Python programming.</li>
+<li>Notebooks run online via EBRAINS (account required).</li>
+<li>Limited support for local setups.</li>
 </ul>
 </section>
 <section id="references" class="level2">
