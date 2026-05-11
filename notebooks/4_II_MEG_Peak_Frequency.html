@@ -426,7 +426,7 @@ What you’ll learn
 </ul>
 </div>
 </div>
-<div id="ab184c61" class="cell" data-execution_count="3">
+<div id="0bb17754" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Environment Setup and Imports</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up environment</span></span>
@@ -481,7 +481,7 @@ What you’ll learn
 <section id="loading-structural-data" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="loading-structural-data"><span class="header-section-number">2</span> Loading Structural Data</h2>
 <p>We load the Desikan-Killiany parcellation atlas and structural connectivity data.</p>
-<div id="3b417dde" class="cell" data-execution_count="4">
+<div id="fa3a4f77" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Load structural connectivity data</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load volume data for visualization</span></span>
@@ -531,7 +531,7 @@ Figure&nbsp;1: <strong>Resting State MEG Peak Frequency Gradient.</strong> Taken
 <section id="defining-target-frequencies" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="defining-target-frequencies"><span class="header-section-number">4</span> Defining Target Frequencies</h2>
 <p>We approximate this gradient by mapping peak frequencies based on the distance from visual cortex (lateral occipital gyrus), ranging from 11 Hz at visual cortex to 7 Hz at the most distant regions.</p>
-<div id="35309d73" class="cell" data-execution_count="5">
+<div id="1489d1f5" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Compute distance-based frequency targets</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ab_map <span class="op">=</span> np.zeros(dk.shape)</span>
@@ -567,7 +567,7 @@ Figure&nbsp;1: <strong>Resting State MEG Peak Frequency Gradient.</strong> Taken
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    f_map_target <span class="op">=</span> np.where(dk.get_fdata() <span class="op">==</span> idx, fp, f_map_target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-fig-distance-visual-cortex" class="cell" data-execution_count="6">
+<div id="cell-fig-distance-visual-cortex" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div id="fig-distance-visual-cortex" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -586,7 +586,7 @@ Figure&nbsp;2: <strong>Target frequency gradient based on anatomical distance.</
 <h2 data-number="5" class="anchored" data-anchor-id="the-jansen-rit-model"><span class="header-section-number">5</span> The Jansen-Rit Model</h2>
 <p>The Jansen-Rit model is a neural mass model that describes the mean activity of interconnected populations of excitatory and inhibitory neurons in a cortical column. It produces realistic alpha-band oscillations and is widely used in whole-brain modeling.</p>
 <p>The model has three key rate parameters: <code>a</code> and <code>b</code> control the time constants of excitatory and inhibitory populations respectively, while <code>mu</code> sets the baseline input. These parameters determine the oscillation frequency and amplitude.</p>
-<div id="cell-fig-jr-single" class="cell" data-execution_count="7">
+<div id="cell-fig-jr-single" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dynamics <span class="op">=</span> JansenRit(a <span class="op">=</span> <span class="fl">0.075</span>, b <span class="op">=</span> <span class="fl">0.075</span>, mu <span class="op">=</span> <span class="fl">0.15</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dynamics.plot(t1<span class="op">=</span><span class="dv">1000</span>, dt <span class="op">=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -605,112 +605,114 @@ Figure&nbsp;3: <strong>Single Jansen-Rit oscillator dynamics.</strong> Time seri
 </section>
 <section id="code-for-the-jansen-rit-model-and-sigmoidal-coupling" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="code-for-the-jansen-rit-model-and-sigmoidal-coupling"><span class="header-section-number">6</span> Code for the Jansen-Rit Model and Sigmoidal Coupling</h2>
-<div id="cc96e55e" class="cell" data-execution_count="8">
+<div id="484d1b08" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>View source code for JansenRit and DelayedSigmoidalJansenRit</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> JansenRit(AbstractDynamics):</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Jansen-Rit model with multi-coupling support."""</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    STATE_NAMES <span class="op">=</span> (<span class="st">"y0"</span>, <span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, <span class="st">"y4"</span>, <span class="st">"y5"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    INITIAL_STATE <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">5.0</span>, <span class="fl">5.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    AUXILIARY_NAMES <span class="op">=</span> (<span class="st">"sigm_y1_y2"</span>, <span class="st">"sigm_y0_1"</span>, <span class="st">"sigm_y0_3"</span>)</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"DO NOT RUN: View source code for JansenRit and DelayedSigmoidalJansenRit"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> JansenRit(AbstractDynamics):</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Jansen-Rit model with multi-coupling support."""</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    STATE_NAMES <span class="op">=</span> (<span class="st">"y0"</span>, <span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, <span class="st">"y4"</span>, <span class="st">"y5"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    INITIAL_STATE <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">5.0</span>, <span class="fl">5.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    DEFAULT_PARAMS <span class="op">=</span> Bunch(</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        A<span class="op">=</span><span class="fl">3.25</span>,          <span class="co"># Maximum amplitude of EPSP [mV]</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        B<span class="op">=</span><span class="fl">22.0</span>,          <span class="co"># Maximum amplitude of IPSP [mV]</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        a<span class="op">=</span><span class="fl">0.1</span>,           <span class="co"># Reciprocal of membrane time constant [ms^-1]</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        b<span class="op">=</span><span class="fl">0.05</span>,          <span class="co"># Reciprocal of membrane time constant [ms^-1]</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        v0<span class="op">=</span><span class="fl">5.52</span>,         <span class="co"># Firing threshold [mV]</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        nu_max<span class="op">=</span><span class="fl">0.0025</span>,   <span class="co"># Maximum firing rate [ms^-1]</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        r<span class="op">=</span><span class="fl">0.56</span>,          <span class="co"># Steepness of sigmoid [mV^-1]</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        J<span class="op">=</span><span class="fl">135.0</span>,         <span class="co"># Average number of synapses</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        a_1<span class="op">=</span><span class="fl">1.0</span>,         <span class="co"># Excitatory feedback probability</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        a_2<span class="op">=</span><span class="fl">0.8</span>,         <span class="co"># Slow excitatory feedback probability</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        a_3<span class="op">=</span><span class="fl">0.25</span>,        <span class="co"># Inhibitory feedback probability</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        a_4<span class="op">=</span><span class="fl">0.25</span>,        <span class="co"># Slow inhibitory feedback probability</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        mu<span class="op">=</span><span class="fl">0.22</span>,         <span class="co"># Mean input firing rate</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Multi-coupling: instantaneous and delayed</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    COUPLING_INPUTS <span class="op">=</span> {</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">'instant'</span>: <span class="dv">1</span>,</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">'delayed'</span>: <span class="dv">1</span>,</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> dynamics(</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>,</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        t: <span class="bu">float</span>,</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        state: jnp.ndarray,</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        params: Bunch,</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        coupling: Bunch</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">-&gt;</span> Tuple[jnp.ndarray, jnp.ndarray]:</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Unpack parameters</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        A, B <span class="op">=</span> params.A, params.B</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        a, b <span class="op">=</span> params.a, params.b</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        v0, nu_max, r <span class="op">=</span> params.v0, params.nu_max, params.r</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        J <span class="op">=</span> params.J</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>        a_1, a_2, a_3, a_4 <span class="op">=</span> params.a_1, params.a_2, params.a_3, params.a_4</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>        mu <span class="op">=</span> params.mu</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Unpack state variables</span></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>        y0, y1, y2, y3, y4, y5 <span class="op">=</span> state[<span class="dv">0</span>], state[<span class="dv">1</span>], state[<span class="dv">2</span>], state[<span class="dv">3</span>], state[<span class="dv">4</span>], state[<span class="dv">5</span>]</span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Unpack coupling inputs</span></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        c_instant <span class="op">=</span> coupling.instant[<span class="dv">0</span>]</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        c_delayed <span class="op">=</span> coupling.delayed[<span class="dv">0</span>]</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Sigmoid functions</span></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>        sigm_y1_y2 <span class="op">=</span> <span class="fl">2.0</span> <span class="op">*</span> nu_max <span class="op">/</span> (<span class="fl">1.0</span> <span class="op">+</span> jnp.exp(r <span class="op">*</span> (v0 <span class="op">-</span> (y1 <span class="op">-</span> y2))))</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>        sigm_y0_1 <span class="op">=</span> <span class="fl">2.0</span> <span class="op">*</span> nu_max <span class="op">/</span> (<span class="fl">1.0</span> <span class="op">+</span> jnp.exp(r <span class="op">*</span> (v0 <span class="op">-</span> (a_1 <span class="op">*</span> J <span class="op">*</span> y0))))</span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>        sigm_y0_3 <span class="op">=</span> <span class="fl">2.0</span> <span class="op">*</span> nu_max <span class="op">/</span> (<span class="fl">1.0</span> <span class="op">+</span> jnp.exp(r <span class="op">*</span> (v0 <span class="op">-</span> (a_3 <span class="op">*</span> J <span class="op">*</span> y0))))</span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        <span class="co"># State derivatives (both couplings add to excitatory interneuron)</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>        dy0_dt <span class="op">=</span> y3</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>        dy1_dt <span class="op">=</span> y4</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>        dy2_dt <span class="op">=</span> y5</span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>        dy3_dt <span class="op">=</span> A <span class="op">*</span> a <span class="op">*</span> sigm_y1_y2 <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> a <span class="op">*</span> y3 <span class="op">-</span> a<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> y0</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>        dy4_dt <span class="op">=</span> A <span class="op">*</span> a <span class="op">*</span> (mu <span class="op">+</span> a_2 <span class="op">*</span> J <span class="op">*</span> sigm_y0_1 <span class="op">+</span> c_instant <span class="op">+</span> c_delayed) <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> a <span class="op">*</span> y4 <span class="op">-</span> a<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> y1</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>        dy5_dt <span class="op">=</span> B <span class="op">*</span> b <span class="op">*</span> (a_4 <span class="op">*</span> J <span class="op">*</span> sigm_y0_3) <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> b <span class="op">*</span> y5 <span class="op">-</span> b<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> y2</span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Package results</span></span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>        derivatives <span class="op">=</span> jnp.array([dy0_dt, dy1_dt, dy2_dt, dy3_dt, dy4_dt, dy5_dt])</span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>        auxiliaries <span class="op">=</span> jnp.array([sigm_y1_y2, sigm_y0_1, sigm_y0_3])</span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> derivatives, auxiliaries</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    AUXILIARY_NAMES <span class="op">=</span> (<span class="st">"sigm_y1_y2"</span>, <span class="st">"sigm_y0_1"</span>, <span class="st">"sigm_y0_3"</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    DEFAULT_PARAMS <span class="op">=</span> Bunch(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        A<span class="op">=</span><span class="fl">3.25</span>,          <span class="co"># Maximum amplitude of EPSP [mV]</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        B<span class="op">=</span><span class="fl">22.0</span>,          <span class="co"># Maximum amplitude of IPSP [mV]</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        a<span class="op">=</span><span class="fl">0.1</span>,           <span class="co"># Reciprocal of membrane time constant [ms^-1]</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        b<span class="op">=</span><span class="fl">0.05</span>,          <span class="co"># Reciprocal of membrane time constant [ms^-1]</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        v0<span class="op">=</span><span class="fl">5.52</span>,         <span class="co"># Firing threshold [mV]</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        nu_max<span class="op">=</span><span class="fl">0.0025</span>,   <span class="co"># Maximum firing rate [ms^-1]</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        r<span class="op">=</span><span class="fl">0.56</span>,          <span class="co"># Steepness of sigmoid [mV^-1]</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        J<span class="op">=</span><span class="fl">135.0</span>,         <span class="co"># Average number of synapses</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        a_1<span class="op">=</span><span class="fl">1.0</span>,         <span class="co"># Excitatory feedback probability</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        a_2<span class="op">=</span><span class="fl">0.8</span>,         <span class="co"># Slow excitatory feedback probability</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        a_3<span class="op">=</span><span class="fl">0.25</span>,        <span class="co"># Inhibitory feedback probability</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        a_4<span class="op">=</span><span class="fl">0.25</span>,        <span class="co"># Slow inhibitory feedback probability</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        mu<span class="op">=</span><span class="fl">0.22</span>,         <span class="co"># Mean input firing rate</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Multi-coupling: instantaneous and delayed</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    COUPLING_INPUTS <span class="op">=</span> {</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">'instant'</span>: <span class="dv">1</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">'delayed'</span>: <span class="dv">1</span>,</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> dynamics(</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>,</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        t: <span class="bu">float</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        state: jnp.ndarray,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        params: Bunch,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        coupling: Bunch</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">-&gt;</span> Tuple[jnp.ndarray, jnp.ndarray]:</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Unpack parameters</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        A, B <span class="op">=</span> params.A, params.B</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        a, b <span class="op">=</span> params.a, params.b</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>        v0, nu_max, r <span class="op">=</span> params.v0, params.nu_max, params.r</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>        J <span class="op">=</span> params.J</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>        a_1, a_2, a_3, a_4 <span class="op">=</span> params.a_1, params.a_2, params.a_3, params.a_4</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        mu <span class="op">=</span> params.mu</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Unpack state variables</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>        y0, y1, y2, y3, y4, y5 <span class="op">=</span> state[<span class="dv">0</span>], state[<span class="dv">1</span>], state[<span class="dv">2</span>], state[<span class="dv">3</span>], state[<span class="dv">4</span>], state[<span class="dv">5</span>]</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Unpack coupling inputs</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        c_instant <span class="op">=</span> coupling.instant[<span class="dv">0</span>]</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>        c_delayed <span class="op">=</span> coupling.delayed[<span class="dv">0</span>]</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Sigmoid functions</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>        sigm_y1_y2 <span class="op">=</span> <span class="fl">2.0</span> <span class="op">*</span> nu_max <span class="op">/</span> (<span class="fl">1.0</span> <span class="op">+</span> jnp.exp(r <span class="op">*</span> (v0 <span class="op">-</span> (y1 <span class="op">-</span> y2))))</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>        sigm_y0_1 <span class="op">=</span> <span class="fl">2.0</span> <span class="op">*</span> nu_max <span class="op">/</span> (<span class="fl">1.0</span> <span class="op">+</span> jnp.exp(r <span class="op">*</span> (v0 <span class="op">-</span> (a_1 <span class="op">*</span> J <span class="op">*</span> y0))))</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        sigm_y0_3 <span class="op">=</span> <span class="fl">2.0</span> <span class="op">*</span> nu_max <span class="op">/</span> (<span class="fl">1.0</span> <span class="op">+</span> jnp.exp(r <span class="op">*</span> (v0 <span class="op">-</span> (a_3 <span class="op">*</span> J <span class="op">*</span> y0))))</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>        <span class="co"># State derivatives (both couplings add to excitatory interneuron)</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>        dy0_dt <span class="op">=</span> y3</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>        dy1_dt <span class="op">=</span> y4</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>        dy2_dt <span class="op">=</span> y5</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>        dy3_dt <span class="op">=</span> A <span class="op">*</span> a <span class="op">*</span> sigm_y1_y2 <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> a <span class="op">*</span> y3 <span class="op">-</span> a<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> y0</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>        dy4_dt <span class="op">=</span> A <span class="op">*</span> a <span class="op">*</span> (mu <span class="op">+</span> a_2 <span class="op">*</span> J <span class="op">*</span> sigm_y0_1 <span class="op">+</span> c_instant <span class="op">+</span> c_delayed) <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> a <span class="op">*</span> y4 <span class="op">-</span> a<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> y1</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        dy5_dt <span class="op">=</span> B <span class="op">*</span> b <span class="op">*</span> (a_4 <span class="op">*</span> J <span class="op">*</span> sigm_y0_3) <span class="op">-</span> <span class="fl">2.0</span> <span class="op">*</span> b <span class="op">*</span> y5 <span class="op">-</span> b<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> y2</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Package results</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>        derivatives <span class="op">=</span> jnp.array([dy0_dt, dy1_dt, dy2_dt, dy3_dt, dy4_dt, dy5_dt])</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>        auxiliaries <span class="op">=</span> jnp.array([sigm_y1_y2, sigm_y0_1, sigm_y0_3])</span>
 <span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DelayedSigmoidalJansenRit(DelayedCoupling):</span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Sigmoidal Jansen-Rit coupling function."""</span></span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>    N_OUTPUT_STATES <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>    DEFAULT_PARAMS <span class="op">=</span> Bunch(</span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>        G<span class="op">=</span><span class="fl">1.0</span>,</span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>        cmin<span class="op">=</span><span class="fl">0.0</span>,</span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>        cmax<span class="op">=</span><span class="fl">0.005</span>,  <span class="co"># 2 * 0.0025 from TVB default</span></span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>        midpoint<span class="op">=</span><span class="fl">6.0</span>,</span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>        r<span class="op">=</span><span class="fl">0.56</span>,</span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> pre(</span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>, incoming_states: jnp.ndarray, local_states: jnp.ndarray, params: Bunch</span>
-<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">-&gt;</span> jnp.ndarray:</span>
-<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract first two state variables: y1 and y2</span></span>
-<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>        <span class="co"># incoming_states[0] = y1, incoming_states[1] = y2</span></span>
-<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Each has shape [n_nodes_target, n_nodes_source]</span></span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>        state_diff <span class="op">=</span> incoming_states[<span class="dv">0</span>] <span class="op">-</span> incoming_states[<span class="dv">1</span>]</span>
-<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Apply sigmoidal transformation</span></span>
-<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>        exp_term <span class="op">=</span> jnp.exp(params.r <span class="op">*</span> (params.midpoint <span class="op">-</span> state_diff))</span>
-<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>        coupling_term <span class="op">=</span> params.cmin <span class="op">+</span> (params.cmax <span class="op">-</span> params.cmin) <span class="op">/</span> (<span class="fl">1.0</span> <span class="op">+</span> exp_term)</span>
-<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Return as [1, n_nodes_target, n_nodes_source] for matrix multiplication</span></span>
-<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> coupling_term[jnp.newaxis, :, :]</span>
-<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> post(</span>
-<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>, summed_inputs: jnp.ndarray, local_states: jnp.ndarray, params: Bunch</span>
-<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">-&gt;</span> jnp.ndarray:</span>
-<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Scale summed coupling inputs</span></span>
-<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> params.G <span class="op">*</span> summed_inputs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> derivatives, auxiliaries</span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DelayedSigmoidalJansenRit(DelayedCoupling):</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Sigmoidal Jansen-Rit coupling function."""</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>    N_OUTPUT_STATES <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>    DEFAULT_PARAMS <span class="op">=</span> Bunch(</span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>        G<span class="op">=</span><span class="fl">1.0</span>,</span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>        cmin<span class="op">=</span><span class="fl">0.0</span>,</span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>        cmax<span class="op">=</span><span class="fl">0.005</span>,  <span class="co"># 2 * 0.0025 from TVB default</span></span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>        midpoint<span class="op">=</span><span class="fl">6.0</span>,</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>        r<span class="op">=</span><span class="fl">0.56</span>,</span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> pre(</span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>, incoming_states: jnp.ndarray, local_states: jnp.ndarray, params: Bunch</span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">-&gt;</span> jnp.ndarray:</span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract first two state variables: y1 and y2</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>        <span class="co"># incoming_states[0] = y1, incoming_states[1] = y2</span></span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Each has shape [n_nodes_target, n_nodes_source]</span></span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>        state_diff <span class="op">=</span> incoming_states[<span class="dv">0</span>] <span class="op">-</span> incoming_states[<span class="dv">1</span>]</span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Apply sigmoidal transformation</span></span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>        exp_term <span class="op">=</span> jnp.exp(params.r <span class="op">*</span> (params.midpoint <span class="op">-</span> state_diff))</span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>        coupling_term <span class="op">=</span> params.cmin <span class="op">+</span> (params.cmax <span class="op">-</span> params.cmin) <span class="op">/</span> (<span class="fl">1.0</span> <span class="op">+</span> exp_term)</span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Return as [1, n_nodes_target, n_nodes_source] for matrix multiplication</span></span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> coupling_term[jnp.newaxis, :, :]</span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> post(</span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>, summed_inputs: jnp.ndarray, local_states: jnp.ndarray, params: Bunch</span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">-&gt;</span> jnp.ndarray:</span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Scale summed coupling inputs</span></span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> params.G <span class="op">*</span> summed_inputs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -723,7 +725,7 @@ Figure&nbsp;3: <strong>Single Jansen-Rit oscillator dynamics.</strong> Time seri
 <li><strong>Coupling</strong>: How regions influence each other through connections</li>
 <li><strong>Noise</strong>: Stochastic fluctuations in neural activity</li>
 </ol>
-<div id="6a1fdbe6" class="cell" data-execution_count="9">
+<div id="63cee965" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and normalize structural connectivity</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>weights, lengths, _ <span class="op">=</span> load_structural_connectivity(name<span class="op">=</span><span class="st">"dk_average"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> weights <span class="op">/</span> jnp.<span class="bu">max</span>(weights)  <span class="co"># Normalize to [0, 1]</span></span>
@@ -759,7 +761,7 @@ Print Network Equations
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="27f47cf1" class="cell" data-execution_count="10">
+<div id="99000c4c" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>print_network(network)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Network Dynamics Network System
@@ -851,7 +853,7 @@ Parameters
 <section id="preparing-the-simulation" class="level2" data-number="8">
 <h2 data-number="8" class="anchored" data-anchor-id="preparing-the-simulation"><span class="header-section-number">8</span> Preparing the Simulation</h2>
 <p>The <code>prepare()</code> function compiles the network into an efficient JAX function and initializes the state. We use the Heun solver (a second-order Runge-Kutta method) for numerical integration. Using <code>solve()</code> runs the simulation dirctly and is usefull for quick prototyping.</p>
-<div id="e2c3da4c" class="cell" data-execution_count="11">
+<div id="23fc4dbf" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare simulation: compile model and initialize state</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="op">=</span> <span class="dv">1000</span>  <span class="co"># Simulation duration (ms)</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>t1_init <span class="op">=</span> <span class="dv">20000</span>  <span class="co"># Simulation duration (ms)</span></span>
@@ -863,7 +865,7 @@ Parameters
 <section id="running-simulations" class="level2" data-number="9">
 <h2 data-number="9" class="anchored" data-anchor-id="running-simulations"><span class="header-section-number">9</span> Running Simulations</h2>
 <p>We run two consecutive simulations: the first allows the network to reach a quasi-stationary state from random initial conditions (transient), and the second continues from the settled state.</p>
-<div id="a6eb81d7" class="cell" data-execution_count="12">
+<div id="ce2f98eb" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First simulation: transient dynamics</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> model(state)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -874,7 +876,7 @@ Parameters
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Second simulation: quasi-stationary dynamics</span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>result2 <span class="op">=</span> model(state)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-fig-simulations" class="cell" data-execution_count="13">
+<div id="cell-fig-simulations" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
 <div id="fig-simulations" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -892,7 +894,7 @@ Figure&nbsp;4: <strong>Network dynamics from transient and quasi-stationary simu
 <section id="spectral-analysis" class="level2" data-number="10">
 <h2 data-number="10" class="anchored" data-anchor-id="spectral-analysis"><span class="header-section-number">10</span> Spectral Analysis</h2>
 <p>To compare our simulations with the target MEG frequency gradient, we need to compute power spectral densities (PSDs) for each brain region. We define helper functions using Welch’s method for spectral estimation. Building obervations progessively by enclosing them in functions is a common pattern in JAX.</p>
-<div id="2c542c78" class="cell" data-execution_count="14">
+<div id="26046d07" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> spectrum(state):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute power spectral density for each region using Welch's method."""</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    raw <span class="op">=</span> model(state)</span>
@@ -917,7 +919,7 @@ Figure&nbsp;4: <strong>Network dynamics from transient and quasi-stationary simu
 <span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>f, S <span class="op">=</span> jax.block_until_ready(avg_spectrum(state))</span>
 <span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>f, Pxx <span class="op">=</span> jax.block_until_ready(spectrum(state))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-fig-initial-spectrum" class="cell" data-execution_count="15">
+<div id="cell-fig-initial-spectrum" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display">
 <div id="fig-initial-spectrum" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -936,7 +938,7 @@ Figure&nbsp;5: <strong>Power spectral density of initial network dynamics.</stro
 <h2 data-number="11" class="anchored" data-anchor-id="parameter-exploration"><span class="header-section-number">11</span> Parameter Exploration</h2>
 <p>Before attempting optimization, it’s useful to understand the relationship between the Jansen-Rit parameters (<code>a</code> and <code>b</code>) and the resulting peak frequency. We perform a grid search over parameter space to map out this relationship.</p>
 <p>The <code>Space</code> and <code>GridAxis</code> classes from TVB-Optim make it easy to define parameter grids, and <code>ParallelExecution</code> efficiently evaluates the model across all grid points in parallel.</p>
-<div id="d155f842" class="cell" data-execution_count="16">
+<div id="d23283b8" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create grid for parameter exploration</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">32</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -963,7 +965,7 @@ Figure&nbsp;5: <strong>Power spectral density of initial network dynamics.</stro
 <span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>exploration_result <span class="op">=</span> explore()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-fig-parameter-landscape" class="cell" data-execution_count="17">
+<div id="cell-fig-parameter-landscape" class="cell" data-execution_count="16">
 <div class="cell-output cell-output-display">
 <div id="fig-parameter-landscape" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -981,7 +983,7 @@ Figure&nbsp;6: <strong>Mean Peak Frequenc landscape across parameter space.</str
 <section id="creating-target-spectra" class="level2" data-number="12">
 <h2 data-number="12" class="anchored" data-anchor-id="creating-target-spectra"><span class="header-section-number">12</span> Creating Target Spectra</h2>
 <p>To define optimization targets, we model each region’s desired spectrum as a Cauchy (Lorentzian) distribution centered at the target Mean Peak Frequenc. This gives a realistic spectral shape with a clear peak.</p>
-<div id="cell-fig-target-spectra" class="cell" data-execution_count="18">
+<div id="cell-fig-target-spectra" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Show code for target spectra generation and plotting</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cauchy_pdf(x, x0, gamma):</span>
@@ -1023,7 +1025,7 @@ Figure&nbsp;7: <strong>Comparison of initial and target spectra.</strong> Black 
 <section id="defining-the-loss-function" class="level2" data-number="13">
 <h2 data-number="13" class="anchored" data-anchor-id="defining-the-loss-function"><span class="header-section-number">13</span> Defining the Loss Function</h2>
 <p>The loss function quantifies how well the model’s spectra match the target spectra. We use correlation between predicted and target power spectra as our similarity metric. The loss is defined as 1 minus the mean correlation across all regions, so minimizing the loss maximizes spectral similarity.</p>
-<div id="c7608638" class="cell" data-execution_count="19">
+<div id="89150afa" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss(state):</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute loss as 1 - mean correlation between predicted and target PSDs.</span></span>
@@ -1069,7 +1071,7 @@ Figure&nbsp;7: <strong>Comparison of initial and target spectra.</strong> Black 
 <h2 data-number="14" class="anchored" data-anchor-id="running-gradient-based-optimization"><span class="header-section-number">14</span> Running Gradient-Based Optimization</h2>
 <p>Now we use gradient-based optimization to find region-specific parameters <code>a</code> and <code>b</code> that produce the target frequency gradient. We mark parameters as optimizable using the <code>Parameter</code> class and set their shape to be region-specific (heterogeneous).</p>
 <p>TVB-Optim integrates with <code>optax</code> for optimization, providing automatic differentiation through JAX. We use the AdaMax optimizer with callbacks for progress monitoring.</p>
-<div id="04f6c75b" class="cell" data-execution_count="21">
+<div id="dab07c5a" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrap values in Parameter(...) to mark them as optimizable. The optimizer</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># walks the state tree, finds every Parameter, computes gradients, and</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># updates them in place. Plain values stay frozen.</span></span>
@@ -1104,7 +1106,7 @@ Figure&nbsp;7: <strong>Comparison of initial and target spectra.</strong> Black 
 <section id="optimization-results-parameter-distribution" class="level2" data-number="15">
 <h2 data-number="15" class="anchored" data-anchor-id="optimization-results-parameter-distribution"><span class="header-section-number">15</span> Optimization Results: Parameter Distribution</h2>
 <p>Let’s visualize where the optimizer placed each region’s parameters in the frequency landscape we explored earlier.</p>
-<div id="cell-fig-optimized-params" class="cell" data-execution_count="22">
+<div id="cell-fig-optimized-params" class="cell" data-execution_count="21">
 <div class="cell-output cell-output-display">
 <div id="fig-optimized-params" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1122,7 +1124,7 @@ Figure&nbsp;8: <strong>Optimized parameters overlaid on the frequency landscape.
 <section id="optimization-results-frequency-maps" class="level2" data-number="16">
 <h2 data-number="16" class="anchored" data-anchor-id="optimization-results-frequency-maps"><span class="header-section-number">16</span> Optimization Results: Frequency Maps</h2>
 <p>Finally, let’s visualize the fitted frequency gradient in brain space and compare it to the initial homogeneous state.</p>
-<div id="cell-fig-frequency-maps" class="cell" data-execution_count="24">
+<div id="cell-fig-frequency-maps" class="cell" data-execution_count="23">
 <div class="cell-output cell-output-display">
 <div id="fig-frequency-maps" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
