@@ -13,7 +13,7 @@ execute:
     cache: true
 ---
 
-Try this notebook interactively: 
+Try this notebook interactively:
 
 [Download .ipynb](https://github.com/virtual-twin/Brain-Simulation-Workshop/blob/main/notebooks/4_II_MEG_Peak_Frequency.ipynb){.btn .btn-primary download="JR.ipynb"}
 [Download .qmd](https://github.com/virtual-twin/Brain-Simulation-Workshop/blob/main/notebooks/4_II_MEG_Peak_Frequency.qmd){.btn .btn-secondary download="JR.qmd"}
