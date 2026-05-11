@@ -1,17 +1,3 @@
----
-title: "Stimulating the brain"
-subtitle: "Driving a neural-mass model with an Event"
-format:
-  html:
-    code-fold: false
-    toc: true
-    echo: true
-    embed-resources: true
-    fig-width: 8
-    out-width: "100%"
-jupyter: python3
----
-
 ## Goal
 
 Use a TVB-O `SimulationExperiment` with a stimulus defined as an `Event`. Compare the resting and stimulated time series.
@@ -93,15 +79,7 @@ Now the trajectory oscillates during the pulse and returns to the stable focus a
 
 ## 4. Five-node motif: stimulus propagation
 
-The five-region motif below uses the same parameter regime as the Bayesian workshop example. The stimulus is brief, so R0 gives one evoked response rather than a long driven oscillation. Edge weights and tract lengths live in edge parameters.
-
-```
-                    R1 -> R2
-                /
-        R0
-                \
-                    R3 -> R4
-```
+The five-region motif below uses the same parameter regime as the Bayesian workshop example. The stimulus is brief, so R0 gives one evoked response rather than a long driven oscillation. Edge weights and tract lengths live in edge parameters, and `network.plot_overview()` shows the directed motif.
 
 R0 is the stimulated site (peripheral). The stimulus reaches R1 through a short 30 mm branch and R3 through a longer 100 mm branch. R1 and R3 are hyperexcitable branch nodes. R2 and R4 are quiet leaves.
 
@@ -220,11 +198,6 @@ slow_exp.integration.step_size = DT
 
 slow_res = slow_exp.run()
 
-print(f"conduction_speed = {SLOW_CONDUCTION_SPEED} mm/ms")
-slow_delays = slow_network.calculate_delays()
-print(f"R0 -> R1 delay: {slow_delays[1, 0]:.1f} ms")
-print(f"R0 -> R3 delay: {slow_delays[3, 0]:.1f} ms")
-
 fig, ax = plt.subplots()
 slow_res.integration.sel(variable="V").plot(ax=ax)
 ax2 = ax.twinx()
@@ -233,7 +206,7 @@ leg = ax2.get_legend()
 leg.set_loc("lower right")
 ```
 
-**Result:** The current pulse starts at 10 ms and lasts 1 ms. R0's voltage peak appears later because the state variable needs time to move after the input turns on. The direct branches from R0 separate by `length / conduction_speed`: R1 receives the short 30 mm branch before R3 receives the 100 mm branch. The edges are directed, so the response does not travel back into earlier nodes.
+**Result:** The current pulse starts at 10 ms and lasts 1 ms. Compare the two plots: slowing conduction speed stretches propagation along the direct branches from R0, so the longer R0-to-R3 branch lags more clearly behind the shorter R0-to-R1 branch.
 
 ## Exercises
 
