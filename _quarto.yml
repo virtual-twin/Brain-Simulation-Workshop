@@ -84,29 +84,30 @@ website:
       style: docked
       contents:
         - setup.qmd
-        - notebooks/1_introduction.qmd
-        - section: "1. Dynamical Systems"
-          contents:
-            - notebooks/1_MathematicalFramework/DynamicalSystems.qmd
-        - section: "2. Networks and Noise"
-          contents:
-            - notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd
-        - section: "3. Parameter Exploration"
-          contents:
-            - notebooks/3_ParameterExploration/ParameterExploration.qmd
-        - section: "4. Bifurcation Analysis"
-          contents:
-            - notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd
-        - section: "6. Parameter optimisation"
+        - href: notebooks/1_introduction.qmd
+          text: "Introduction to Brain Network Modelling"
+        - href: notebooks/1_MathematicalFramework/DynamicalSystems.qmd
+          text: "Dynamical Systems"
+        - href: notebooks/2_NetworkAndNoise/NetworkAndNoise.qmd
+          text: "Networks and Noise"
+        - href: notebooks/3_ParameterExploration/ParameterExploration.qmd
+          text: "Parameter Exploration"
+        - href: notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd
+          text: "Bifurcation Analysis"
+        - section: "Parameter optimisation"
           href: notebooks/4_optimization.qmd
           contents:
-            - notebooks/4_I_fMRI_BOLD_FC.qmd
-            - notebooks/4_II_MEG_Peak_Frequency.qmd
-            - notebooks/4_inference_demos.qmd
-        - section: "7. Stimulating the brain"
+            - href: notebooks/4_I_fMRI_BOLD_FC.qmd
+              text: "fMRI BOLD FC"
+            - href: notebooks/4_II_MEG_Peak_Frequency.qmd
+              text: "MEG peak frequency"
+            - href: notebooks/4_inference_demos.qmd
+              text: "Inference demos"
+        - section: "Stimulating the brain"
           href: notebooks/5_stimulation.qmd
           contents:
-            - notebooks/05_stimulation.qmd
+            - href: notebooks/05_stimulation.qmd
+              text: "Stimulating the Brain"
   page-footer:
     left: "© 2026 TVB Workshop. Charité University Medicine Berlin and Berlin Institute of Health."
     center: |
