@@ -96,13 +96,14 @@ Now the trajectory oscillates during the pulse and returns to the stable focus a
 The five-region motif below uses the same parameter regime as the Bayesian workshop example. The stimulus is brief, so R0 gives one evoked response rather than a long driven oscillation. Edge weights and tract lengths live in edge parameters.
 
 ```
-    R0 -> R1 -> R2
-          |
-          v
-          R3 -> R4
+                    R1 -> R2
+                /
+        R0
+                \
+                    R3 -> R4
 ```
 
-R0 is the stimulated site (peripheral). R1 is a hub (degree 3) with high excitability. R3 is also hyperexcitable. R2 and R4 are quiet leaves.
+R0 is the stimulated site (peripheral). The stimulus reaches R1 through a short 30 mm branch and R3 through a longer 100 mm branch. R1 and R3 are hyperexcitable branch nodes. R2 and R4 are quiet leaves.
 
 ::: {.callout-important}
 ## Coupling gain
@@ -140,10 +141,10 @@ nodes:
     - {id: 3, label: R3, description: "hyperexcitable branch node", parameters: {I: {value: 0.25}}}
     - {id: 4, label: R4, description: "quiet leaf", parameters: {I: {value: 0.05}}}
 edges:
-    - {source: 0, target: 1, directed: true, parameters: {weight: {value: 1.0}, length: {value: 30.0, unit: mm}}}
-    - {source: 1, target: 2, directed: true, parameters: {weight: {value: 1.0}, length: {value: 20.0, unit: mm}}}
-    - {source: 1, target: 3, directed: true, parameters: {weight: {value: 1.0}, length: {value: 100.0, unit: mm}}}
-    - {source: 3, target: 4, directed: true, parameters: {weight: {value: 1.0}, length: {value: 30.0, unit: mm}}}
+    - {source: 0, target: 1, directed: true, parameters: {weight: {value: .1}, length: {value: 30.0, unit: mm}}}
+    - {source: 0, target: 3, directed: true, parameters: {weight: {value: .1}, length: {value: 100.0, unit: mm}}}
+    - {source: 3, target: 4, directed: true, parameters: {weight: {value: .1}, length: {value: 30.0, unit: mm}}}
+    - {source: 1, target: 2, directed: true, parameters: {weight: {value: .1}, length: {value: 30.0, unit: mm}}}
 """
 
 network = Network.from_string(network_yaml)
@@ -195,7 +196,44 @@ leg = ax2.get_legend()
 leg.set_loc('lower right')
 ```
 
-**Result:** The current pulse starts at 10 ms and lasts 1 ms. R0's voltage peak appears later because the state variable needs time to move after the input turns on. Downstream peaks shift by `length / conduction_speed`: the 30 mm and 100 mm branches separate most clearly. The edges are directed, so the response does not travel back into earlier nodes.
+Run the same experiment again with a slower transmission speed. The edge lengths are unchanged; only `conduction_speed` changes, so delays scale as `length / conduction_speed`.
+
+```{python}
+SLOW_CONDUCTION_SPEED = 1
+
+slow_network = Network.from_string(network_yaml)
+slow_network.parameters["conduction_speed"].value = SLOW_CONDUCTION_SPEED
+
+slow_dynamics = Dynamics.from_db("Generic2dOscillator")
+for name, value in DYNAMICS_PARAMS.items():
+    slow_dynamics.parameters[name].value = value
+
+slow_exp = SimulationExperiment(
+    dynamics=slow_dynamics,
+    coupling=Coupling(name="Linear", parameters={"a": {"value": G_COUPLING}, "b": {"value": 0.0}}),
+    network=slow_network,
+)
+slow_exp.events["perturbation"] = event
+slow_exp.dynamics.state_variables["V"].equation.rhs = exp.dynamics.state_variables["V"].equation.rhs
+slow_exp.integration.duration = T1
+slow_exp.integration.step_size = DT
+
+slow_res = slow_exp.run()
+
+print(f"conduction_speed = {SLOW_CONDUCTION_SPEED} mm/ms")
+slow_delays = slow_network.calculate_delays()
+print(f"R0 -> R1 delay: {slow_delays[1, 0]:.1f} ms")
+print(f"R0 -> R3 delay: {slow_delays[3, 0]:.1f} ms")
+
+fig, ax = plt.subplots()
+slow_res.integration.sel(variable="V").plot(ax=ax)
+ax2 = ax.twinx()
+event.plot(ax=ax2, color="grey")
+leg = ax2.get_legend()
+leg.set_loc("lower right")
+```
+
+**Result:** The current pulse starts at 10 ms and lasts 1 ms. R0's voltage peak appears later because the state variable needs time to move after the input turns on. The direct branches from R0 separate by `length / conduction_speed`: R1 receives the short 30 mm branch before R3 receives the 100 mm branch. The edges are directed, so the response does not travel back into earlier nodes.
 
 ## Exercises
 
