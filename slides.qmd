@@ -83,6 +83,7 @@ Plotting the Brain
 
 # Workshop Website
 
+
 ![virtual-twin.github.io/Brain-Simulation-Workshop](img/website_qr.png){fig-align=center}
 
 # 1. Intro to Brain Network Modelling {background-color="#6880af"}
