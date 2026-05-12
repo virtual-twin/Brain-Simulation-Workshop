@@ -152,9 +152,9 @@ Run the notebooks in your browser. No install required.
 
 ---
 
-## Option D: Run on EBRAINS (not recommended)
+## Option D: Run on EBRAINS
 
-EBRAINS provides JupyterLab through the [Collaboratory](https://wiki.ebrains.eu/bin/view/Collabs/). It works, but RAM is limited and the preinstalled Python packages often conflict with the versions TVBO needs. Use this only if A, B, and C are not available to you.
+EBRAINS provides JupyterLab through the [Collaboratory](https://wiki.ebrains.eu/bin/view/Collabs/). It works, but RAM is limited.
 
 **Step 1.** Log in at [lab.ebrains.eu](https://lab.ebrains.eu) and start a JupyterLab session.
 

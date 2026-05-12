@@ -37,6 +37,8 @@ model specification, and gradient-based optimization.
 [Open Slides](slides.qmd){.btn .btn-outline-light .btn-lg}
 [View Agenda](agenda/agenda.qmd){.btn .btn-outline-light .btn-lg}
 [Notebooks](notebooks/1_introduction.qmd){.btn .btn-outline-light .btn-lg}
+
+[Give Feedback](http://tvbo.charite.de/survey/start/c7a2e1f3-4b8d-4e96-a0f5-2d3c9b1e7a04){.btn .btn-light .btn-lg}
 :::
 :::
 :::
