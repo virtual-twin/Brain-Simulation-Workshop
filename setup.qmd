@@ -14,15 +14,15 @@ Docker gives you a ready-to-run environment with everything pre-installed.
 **Step 2.** Run Jupyter Lab:
 
 ```bash
-docker run -p 8888:8888 ghcr.io/virtual-twin/tvbo:latest
+docker run -p 8888:8888 -e MODE=jupyter ghcr.io/virtual-twin/tvbo:latest
 ```
 
-**Step 3.** Open the URL printed in the terminal (e.g. `http://127.0.0.1:8888/lab?token=...`) in your browser.
+**Step 3.** Open <http://localhost:8888> in your browser.
 
 To keep your work across sessions, mount a local folder:
 
 ```bash
-docker run -p 8888:8888 -v "$PWD/notebooks:/home/tvbo/notebooks" ghcr.io/virtual-twin/tvbo:latest
+docker run -p 8888:8888 -e MODE=jupyter -v "$PWD/notebooks:/home/tvbo/notebooks" ghcr.io/virtual-twin/tvbo:latest
 ```
 
 ---
