@@ -1268,11 +1268,11 @@
     ]
   },
   {
-    "objectID": "setup.html#option-a-docker-recommended",
-    "href": "setup.html#option-a-docker-recommended",
+    "objectID": "setup.html#option-a-docker-recommended-if-you-know-how-to-use-docker",
+    "href": "setup.html#option-a-docker-recommended-if-you-know-how-to-use-docker",
     "title": "Setup",
-    "section": "Option A: Docker (recommended)",
-    "text": "Option A: Docker (recommended)\nDocker gives you a ready-to-run environment with everything pre-installed.\nStep 1. Install Docker Desktop and start it.\nStep 2. Run Jupyter Lab:\ndocker run -p 8888:8888 ghcr.io/virtual-twin/tvbo:latest\nStep 3. Open the URL printed in the terminal (e.g. http://127.0.0.1:8888/lab?token=...) in your browser.\nTo keep your work across sessions, mount a local folder:\ndocker run -p 8888:8888 -v \"$PWD/notebooks:/home/tvbo/notebooks\" ghcr.io/virtual-twin/tvbo:latest",
+    "section": "Option A: Docker (recommended if you know how to use Docker)",
+    "text": "Option A: Docker (recommended if you know how to use Docker)\nDocker gives you a ready-to-run environment with everything pre-installed.\nStep 1. Install Docker Desktop and start it.\nStep 2. Run Jupyter Lab:\ndocker run -p 8888:8888 ghcr.io/virtual-twin/tvbo:latest\nStep 3. Open the URL printed in the terminal (e.g. http://127.0.0.1:8888/lab?token=...) in your browser.\nTo keep your work across sessions, mount a local folder:\ndocker run -p 8888:8888 -v \"$PWD/notebooks:/home/tvbo/notebooks\" ghcr.io/virtual-twin/tvbo:latest",
     "crumbs": [
       "Setup"
     ]
@@ -1293,6 +1293,26 @@
     "title": "Setup",
     "section": "Troubleshooting",
     "text": "Troubleshooting\n\n\n\n\n\n\n\nProblem\nFix\n\n\n\n\nuv: command not found\nRestart your terminal; on macOS/Linux check that ~/.local/bin is on your PATH\n\n\nNo module named tvbo\nActivate the virtual environment first — you should see (.venv) in your prompt\n\n\nPython version error\nRun uv python install 3.12, then uv venv --python 3.12\n\n\nWindows execution policy error\nOpen PowerShell as Administrator and run Set-ExecutionPolicy RemoteSigned -Scope CurrentUser\n\n\nDocker: port already in use\nChange the host port: docker run -p 8889:8888 ... and open localhost:8889",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#option-c-run-in-google-colab",
+    "href": "setup.html#option-c-run-in-google-colab",
+    "title": "Setup",
+    "section": "Option C: Run in Google Colab",
+    "text": "Option C: Run in Google Colab\nRun the notebooks in your browser. No install required.\nStep 1. Open a notebook in Colab:\n\nClick the Open in Colab button at the top of any notebook page on this site, or\nDownload the .ipynb from the workshop repository and upload it in Colab via File → Upload notebook.\n\nStep 2. Run the first cell. It detects Colab and installs the dependencies. If a later cell fails with ModuleNotFoundError, install the missing package in a new cell:\n!pip install \"tvbo[all]\"   # or whichever package is missing",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#option-d-run-on-ebrains-not-recommended",
+    "href": "setup.html#option-d-run-on-ebrains-not-recommended",
+    "title": "Setup",
+    "section": "Option D: Run on EBRAINS (not recommended)",
+    "text": "Option D: Run on EBRAINS (not recommended)\nEBRAINS provides JupyterLab through the Collaboratory. It works, but RAM is limited and the preinstalled Python packages often conflict with the versions TVBO needs. Use this only if A, B, and C are not available to you.\nStep 1. Log in at lab.ebrains.eu and start a JupyterLab session.\nStep 2. Open a terminal and install TVBO into a user environment:\npip install --user \"tvbo[all]\"\nStep 3. Upload the notebook you want to run and execute it. If you hit memory errors or import conflicts, switch to one of the other options.",
     "crumbs": [
       "Setup"
     ]
