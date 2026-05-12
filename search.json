@@ -1308,11 +1308,11 @@
     ]
   },
   {
-    "objectID": "setup.html#option-d-run-on-ebrains-not-recommended",
-    "href": "setup.html#option-d-run-on-ebrains-not-recommended",
+    "objectID": "setup.html#option-d-run-on-ebrains",
+    "href": "setup.html#option-d-run-on-ebrains",
     "title": "Setup",
-    "section": "Option D: Run on EBRAINS (not recommended)",
-    "text": "Option D: Run on EBRAINS (not recommended)\nEBRAINS provides JupyterLab through the Collaboratory. It works, but RAM is limited and the preinstalled Python packages often conflict with the versions TVBO needs. Use this only if A, B, and C are not available to you.\nStep 1. Log in at lab.ebrains.eu and start a JupyterLab session.\nStep 2. Open a terminal and install TVBO into a user environment:\npip install --user \"tvbo[all]\"\nStep 3. Upload the notebook you want to run and execute it. If you hit memory errors or import conflicts, switch to one of the other options.",
+    "section": "Option D: Run on EBRAINS",
+    "text": "Option D: Run on EBRAINS\nEBRAINS provides JupyterLab through the Collaboratory. It works, but RAM is limited.\nStep 1. Log in at lab.ebrains.eu and start a JupyterLab session.\nStep 2. Open a terminal and install TVBO into a user environment:\npip install --user \"tvbo[all]\"\nStep 3. Upload the notebook you want to run and execute it. If you hit memory errors or import conflicts, switch to one of the other options.",
     "crumbs": [
       "Setup"
     ]

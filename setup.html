@@ -342,7 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">Troubleshooting</a></li>
   <li><a href="#option-c-run-in-google-colab" id="toc-option-c-run-in-google-colab" class="nav-link" data-scroll-target="#option-c-run-in-google-colab">Option C: Run in Google Colab</a></li>
-  <li><a href="#option-d-run-on-ebrains-not-recommended" id="toc-option-d-run-on-ebrains-not-recommended" class="nav-link" data-scroll-target="#option-d-run-on-ebrains-not-recommended">Option D: Run on EBRAINS (not recommended)</a></li>
+  <li><a href="#option-d-run-on-ebrains" id="toc-option-d-run-on-ebrains" class="nav-link" data-scroll-target="#option-d-run-on-ebrains">Option D: Run on EBRAINS</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/edit/main/setup.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/virtual-twin/Brain-Simulation-Workshop/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="setup.ipynb" download="setup.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
     </div>
@@ -520,9 +520,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="st">"tvbo[all]"</span>   <span class="co"># or whichever package is missing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <hr>
 </section>
-<section id="option-d-run-on-ebrains-not-recommended" class="level2">
-<h2 class="anchored" data-anchor-id="option-d-run-on-ebrains-not-recommended">Option D: Run on EBRAINS (not recommended)</h2>
-<p>EBRAINS provides JupyterLab through the <a href="https://wiki.ebrains.eu/bin/view/Collabs/">Collaboratory</a>. It works, but RAM is limited and the preinstalled Python packages often conflict with the versions TVBO needs. Use this only if A, B, and C are not available to you.</p>
+<section id="option-d-run-on-ebrains" class="level2">
+<h2 class="anchored" data-anchor-id="option-d-run-on-ebrains">Option D: Run on EBRAINS</h2>
+<p>EBRAINS provides JupyterLab through the <a href="https://wiki.ebrains.eu/bin/view/Collabs/">Collaboratory</a>. It works, but RAM is limited.</p>
 <p><strong>Step 1.</strong> Log in at <a href="https://lab.ebrains.eu">lab.ebrains.eu</a> and start a JupyterLab session.</p>
 <p><strong>Step 2.</strong> Open a terminal and install TVBO into a user environment:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--user</span> <span class="st">"tvbo[all]"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
