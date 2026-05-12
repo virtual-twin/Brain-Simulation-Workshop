@@ -403,10 +403,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Docker gives you a ready-to-run environment with everything pre-installed.</p>
 <p><strong>Step 1.</strong> Install <a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a> and start it.</p>
 <p><strong>Step 2.</strong> Run Jupyter Lab:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8888:8888 ghcr.io/virtual-twin/tvbo:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Step 3.</strong> Open the URL printed in the terminal (e.g.&nbsp;<code>http://127.0.0.1:8888/lab?token=...</code>) in your browser.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8888:8888 <span class="at">-e</span> MODE=jupyter ghcr.io/virtual-twin/tvbo:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Step 3.</strong> Open <a href="http://localhost:8888" class="uri">http://localhost:8888</a> in your browser.</p>
 <p>To keep your work across sessions, mount a local folder:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8888:8888 <span class="at">-v</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/notebooks:/home/tvbo/notebooks"</span> ghcr.io/virtual-twin/tvbo:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8888:8888 <span class="at">-e</span> MODE=jupyter <span class="at">-v</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/notebooks:/home/tvbo/notebooks"</span> ghcr.io/virtual-twin/tvbo:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <hr>
 </section>
 <section id="option-b-local-install-with-uv" class="level2">
