@@ -426,7 +426,7 @@ What you’ll learn
 </ul>
 </div>
 </div>
-<div id="0bb17754" class="cell" data-execution_count="2">
+<div id="e65a5194" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Environment Setup and Imports</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up environment</span></span>
@@ -481,7 +481,7 @@ What you’ll learn
 <section id="loading-structural-data" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="loading-structural-data"><span class="header-section-number">2</span> Loading Structural Data</h2>
 <p>We load the Desikan-Killiany parcellation atlas and structural connectivity data.</p>
-<div id="fa3a4f77" class="cell" data-execution_count="3">
+<div id="c1e74e85" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Load structural connectivity data</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load volume data for visualization</span></span>
@@ -531,7 +531,7 @@ Figure&nbsp;1: <strong>Resting State MEG Peak Frequency Gradient.</strong> Taken
 <section id="defining-target-frequencies" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="defining-target-frequencies"><span class="header-section-number">4</span> Defining Target Frequencies</h2>
 <p>We approximate this gradient by mapping peak frequencies based on the distance from visual cortex (lateral occipital gyrus), ranging from 11 Hz at visual cortex to 7 Hz at the most distant regions.</p>
-<div id="1489d1f5" class="cell" data-execution_count="4">
+<div id="af3fcf95" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Compute distance-based frequency targets</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ab_map <span class="op">=</span> np.zeros(dk.shape)</span>
@@ -605,10 +605,10 @@ Figure&nbsp;3: <strong>Single Jansen-Rit oscillator dynamics.</strong> Time seri
 </section>
 <section id="code-for-the-jansen-rit-model-and-sigmoidal-coupling" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="code-for-the-jansen-rit-model-and-sigmoidal-coupling"><span class="header-section-number">6</span> Code for the Jansen-Rit Model and Sigmoidal Coupling</h2>
-<div id="484d1b08" class="cell" data-execution_count="7">
+<div id="eb51b966" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>View source code for JansenRit and DelayedSigmoidalJansenRit</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"DO NOT RUN: View source code for JansenRit and DelayedSigmoidalJansenRit"</span>)</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> JansenRit(AbstractDynamics):</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Jansen-Rit model with multi-coupling support."""</span></span>
@@ -725,7 +725,7 @@ Figure&nbsp;3: <strong>Single Jansen-Rit oscillator dynamics.</strong> Time seri
 <li><strong>Coupling</strong>: How regions influence each other through connections</li>
 <li><strong>Noise</strong>: Stochastic fluctuations in neural activity</li>
 </ol>
-<div id="63cee965" class="cell" data-execution_count="8">
+<div id="ab8b81b9" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and normalize structural connectivity</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>weights, lengths, _ <span class="op">=</span> load_structural_connectivity(name<span class="op">=</span><span class="st">"dk_average"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> weights <span class="op">/</span> jnp.<span class="bu">max</span>(weights)  <span class="co"># Normalize to [0, 1]</span></span>
@@ -761,7 +761,7 @@ Print Network Equations
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="99000c4c" class="cell" data-execution_count="9">
+<div id="8099253d" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>print_network(network)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Network Dynamics Network System
@@ -853,7 +853,7 @@ Parameters
 <section id="preparing-the-simulation" class="level2" data-number="8">
 <h2 data-number="8" class="anchored" data-anchor-id="preparing-the-simulation"><span class="header-section-number">8</span> Preparing the Simulation</h2>
 <p>The <code>prepare()</code> function compiles the network into an efficient JAX function and initializes the state. We use the Heun solver (a second-order Runge-Kutta method) for numerical integration. Using <code>solve()</code> runs the simulation dirctly and is usefull for quick prototyping.</p>
-<div id="23fc4dbf" class="cell" data-execution_count="10">
+<div id="46b708a5" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare simulation: compile model and initialize state</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="op">=</span> <span class="dv">1000</span>  <span class="co"># Simulation duration (ms)</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>t1_init <span class="op">=</span> <span class="dv">20000</span>  <span class="co"># Simulation duration (ms)</span></span>
@@ -865,7 +865,7 @@ Parameters
 <section id="running-simulations" class="level2" data-number="9">
 <h2 data-number="9" class="anchored" data-anchor-id="running-simulations"><span class="header-section-number">9</span> Running Simulations</h2>
 <p>We run two consecutive simulations: the first allows the network to reach a quasi-stationary state from random initial conditions (transient), and the second continues from the settled state.</p>
-<div id="ce2f98eb" class="cell" data-execution_count="11">
+<div id="9edbf837" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First simulation: transient dynamics</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> model(state)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -894,7 +894,7 @@ Figure&nbsp;4: <strong>Network dynamics from transient and quasi-stationary simu
 <section id="spectral-analysis" class="level2" data-number="10">
 <h2 data-number="10" class="anchored" data-anchor-id="spectral-analysis"><span class="header-section-number">10</span> Spectral Analysis</h2>
 <p>To compare our simulations with the target MEG frequency gradient, we need to compute power spectral densities (PSDs) for each brain region. We define helper functions using Welch’s method for spectral estimation. Building obervations progessively by enclosing them in functions is a common pattern in JAX.</p>
-<div id="26046d07" class="cell" data-execution_count="13">
+<div id="d4b7d845" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> spectrum(state):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute power spectral density for each region using Welch's method."""</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    raw <span class="op">=</span> model(state)</span>
@@ -938,7 +938,7 @@ Figure&nbsp;5: <strong>Power spectral density of initial network dynamics.</stro
 <h2 data-number="11" class="anchored" data-anchor-id="parameter-exploration"><span class="header-section-number">11</span> Parameter Exploration</h2>
 <p>Before attempting optimization, it’s useful to understand the relationship between the Jansen-Rit parameters (<code>a</code> and <code>b</code>) and the resulting peak frequency. We perform a grid search over parameter space to map out this relationship.</p>
 <p>The <code>Space</code> and <code>GridAxis</code> classes from TVB-Optim make it easy to define parameter grids, and <code>ParallelExecution</code> efficiently evaluates the model across all grid points in parallel.</p>
-<div id="d23283b8" class="cell" data-execution_count="15">
+<div id="bcec01a3" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create grid for parameter exploration</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">32</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1025,7 +1025,7 @@ Figure&nbsp;7: <strong>Comparison of initial and target spectra.</strong> Black 
 <section id="defining-the-loss-function" class="level2" data-number="13">
 <h2 data-number="13" class="anchored" data-anchor-id="defining-the-loss-function"><span class="header-section-number">13</span> Defining the Loss Function</h2>
 <p>The loss function quantifies how well the model’s spectra match the target spectra. We use correlation between predicted and target power spectra as our similarity metric. The loss is defined as 1 minus the mean correlation across all regions, so minimizing the loss maximizes spectral similarity.</p>
-<div id="89150afa" class="cell" data-execution_count="18">
+<div id="7ff450c6" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss(state):</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute loss as 1 - mean correlation between predicted and target PSDs.</span></span>
@@ -1071,7 +1071,7 @@ Figure&nbsp;7: <strong>Comparison of initial and target spectra.</strong> Black 
 <h2 data-number="14" class="anchored" data-anchor-id="running-gradient-based-optimization"><span class="header-section-number">14</span> Running Gradient-Based Optimization</h2>
 <p>Now we use gradient-based optimization to find region-specific parameters <code>a</code> and <code>b</code> that produce the target frequency gradient. We mark parameters as optimizable using the <code>Parameter</code> class and set their shape to be region-specific (heterogeneous).</p>
 <p>TVB-Optim integrates with <code>optax</code> for optimization, providing automatic differentiation through JAX. We use the AdaMax optimizer with callbacks for progress monitoring.</p>
-<div id="dab07c5a" class="cell" data-execution_count="20">
+<div id="4a7cab85" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrap values in Parameter(...) to mark them as optimizable. The optimizer</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># walks the state tree, finds every Parameter, computes gradients, and</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># updates them in place. Plain values stay frozen.</span></span>
