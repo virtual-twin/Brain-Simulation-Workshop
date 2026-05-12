@@ -5,7 +5,7 @@ title: "Setup"
 This page explains how to set up your environment to run the workshop notebooks.
 Two options are available: Docker (recommended, no Python setup needed) or a local install via `uv`.
 
-## Option A: Docker (recommended)
+## Option A: Docker (recommended if you know how to use Docker)
 
 Docker gives you a ready-to-run environment with everything pre-installed.
 
@@ -132,3 +132,36 @@ python -c "from tvbo import Dynamics, SimulationExperiment; print('Ready!')"
 | Python version error | Run `uv python install 3.12`, then `uv venv --python 3.12` |
 | Windows execution policy error | Open PowerShell as Administrator and run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |
 | Docker: port already in use | Change the host port: `docker run -p 8889:8888 ...` and open `localhost:8889` |
+
+---
+
+## Option C: Run in Google Colab
+
+Run the notebooks in your browser. No install required.
+
+**Step 1.** Open a notebook in Colab:
+
+- Click the **Open in Colab** button at the top of any notebook page on this site, or
+- Download the `.ipynb` from the [workshop repository](https://github.com/virtual-twin/Brain-Simulation-Workshop) and upload it in Colab via *File → Upload notebook*.
+
+**Step 2.** Run the first cell. It detects Colab and installs the dependencies. If a later cell fails with `ModuleNotFoundError`, install the missing package in a new cell:
+
+```python
+!pip install "tvbo[all]"   # or whichever package is missing
+```
+
+---
+
+## Option D: Run on EBRAINS (not recommended)
+
+EBRAINS provides JupyterLab through the [Collaboratory](https://wiki.ebrains.eu/bin/view/Collabs/). It works, but RAM is limited and the preinstalled Python packages often conflict with the versions TVBO needs. Use this only if A, B, and C are not available to you.
+
+**Step 1.** Log in at [lab.ebrains.eu](https://lab.ebrains.eu) and start a JupyterLab session.
+
+**Step 2.** Open a terminal and install TVBO into a user environment:
+
+```bash
+pip install --user "tvbo[all]"
+```
+
+**Step 3.** Upload the notebook you want to run and execute it. If you hit memory errors or import conflicts, switch to one of the other options.
