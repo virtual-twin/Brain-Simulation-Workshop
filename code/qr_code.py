@@ -10,3 +10,12 @@ qr.make(fit=True)
 img = qr.make_image(image_factory=StyledPilImage, module_drawer=RoundedModuleDrawer())
 
 img.save("survey_qr.png")
+
+
+url2 = "https://virtual-twin.github.io/Brain-Simulation-Workshop"
+qr2 = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=20, border=2)
+qr2.add_data(url2)
+qr2.make(fit=True)
+img2 = qr2.make_image(image_factory=StyledPilImage, module_drawer=RoundedModuleDrawer())
+
+img2.save("website_qr.png")

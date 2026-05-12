@@ -81,6 +81,10 @@ Plotting the Brain
 :::
 :::
 
+# Workshop Website
+
+![virtual-twin.github.io/Brain-Simulation-Workshop](img/website_qr.png){fig-align=center}
+
 # 1. Intro to Brain Network Modelling {background-color="#6880af"}
 
 {{< include _slides-section-1-intro.qmd >}}
@@ -1228,7 +1232,7 @@ uv pip install bsplot
 :::
 
 
-## Thank You & Feedback {.r-fit-text} 
+## Thank You & Feedback {.r-fit-text}
 
 ::::{.rows}
 :::{.row}
