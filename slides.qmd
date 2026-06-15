@@ -1080,7 +1080,7 @@ result = exp.run("bifurcationkit.jl")
 :::: {.column width="40%"}
 **Specification**
 
-```yaml {code-line-numbers="|1-18|19-36|37-54|55-72|73-87"}
+```yaml
 - id: 6
   label: "VEP: different columns, with delay
           (Fig. 11)"
