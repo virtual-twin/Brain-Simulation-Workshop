@@ -2,12 +2,84 @@
 title: "Setup"
 ---
 
-This page explains how to set up your environment to run the workshop notebooks.
-Two options are available: Docker (recommended, no Python setup needed) or a local install via `uv`.
+This page gets your environment ready to run the workshop notebooks.
 
-## Option A: Docker (recommended if you know how to use Docker)
+**You only need to follow the recommended setup below.** It requires no Python
+installation, gives you a full editor, and is easy to customize later. The other
+options are collapsed at the bottom — only open them if the recommended path
+doesn't fit your situation.
 
-Docker gives you a ready-to-run environment with everything pre-installed.
+## Recommended: VS Code + Dev Container {#recommended}
+
+This combines [VS Code](https://code.visualstudio.com/) with a ready-to-run
+Docker environment. Everything (Python, TVBO, the simulator backend) is
+pre-installed in the container, so there is **nothing to install or compile**
+yourself — and because it's a real workspace, you can edit notebooks and add
+packages whenever you like.
+
+::: {.callout-tip}
+## What you get
+A working environment in a few clicks: open the project in VS Code, let it build
+the container once, and start running notebooks. No `pip`, no virtual
+environments, no version conflicts.
+:::
+
+### 1. Install the two tools
+
+| Tool | Link |
+|---|---|
+| **Docker Desktop** (start it after installing) | <https://www.docker.com/products/docker-desktop/> |
+| **VS Code** | <https://code.visualstudio.com/> |
+
+Then add the **Dev Containers** extension in VS Code: open the Extensions panel
+(`Ctrl/Cmd + Shift + X`), search for **Dev Containers**, and install the one by
+Microsoft (`ms-vscode-remote.remote-containers`).
+
+### 2. Get the workshop materials
+
+```bash
+git clone https://github.com/virtual-twin/Brain-Simulation-Workshop
+```
+
+No Git? Download the repository as a ZIP from the
+[workshop repository](https://github.com/virtual-twin/Brain-Simulation-Workshop)
+(green **Code** button → **Download ZIP**) and unzip it.
+
+### 3. Open it in the container
+
+1. In VS Code, choose **File → Open Folder…** and select the workshop folder.
+2. VS Code detects the dev container config and shows a prompt in the
+   bottom-right: **Reopen in Container** — click it.
+   *(No prompt? Open the Command Palette with `Ctrl/Cmd + Shift + P` and run
+   **Dev Containers: Reopen in Container**.)*
+3. The first time, VS Code pulls the pre-built image. This can take a few
+   minutes — afterwards it's instant.
+
+### 4. Run a notebook
+
+Open any notebook under `notebooks/`, select the suggested Python kernel if
+prompted, and run the cells. You're set.
+
+::: {.callout-note}
+## Customizing later
+You're in a normal VS Code workspace, just running inside the container. Install
+extra packages from the integrated terminal (`pip install <package>`), edit the
+notebooks, or add VS Code extensions in `.devcontainer/devcontainer.json` and
+rebuild. Your changes to files in the project persist on your machine.
+:::
+
+---
+
+## Other options
+
+Only need these if the recommended setup doesn't work for you (e.g. you can't
+install Docker, or you want everything in the browser). Click to expand.
+
+:::: {.callout-note collapse="true"}
+## Docker only — Jupyter Lab in your browser
+
+Use this if you're comfortable with Docker and don't want to use VS Code. It runs
+the same pre-built environment, served as Jupyter Lab.
 
 **Step 1.** Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and start it.
 
@@ -24,12 +96,13 @@ To keep your work across sessions, mount a local folder:
 ```bash
 docker run -p 8888:8888 -e MODE=jupyter -v "$PWD/notebooks:/home/tvbo/notebooks" ghcr.io/virtual-twin/tvbo:latest
 ```
+::::
 
----
+:::: {.callout-note collapse="true"}
+## Local install with uv
 
-## Option B: Local install with uv
-
-Use this option if you prefer to work directly on your machine or want to install your own packages alongside TVBO.
+Use this if you prefer to work directly on your machine without Docker, or want
+to install your own packages alongside TVBO.
 
 ### 1. Install uv
 
@@ -120,22 +193,10 @@ Paste this directly into your activated shell (PowerShell, bash, or zsh):
 ```bash
 python -c "from tvbo import Dynamics, SimulationExperiment; print('Ready!')"
 ```
+::::
 
----
-
-## Troubleshooting
-
-| Problem | Fix |
-|---|---|
-| `uv: command not found` | Restart your terminal; on macOS/Linux check that `~/.local/bin` is on your `PATH` |
-| `No module named tvbo` | Activate the virtual environment first — you should see `(.venv)` in your prompt |
-| Python version error | Run `uv python install 3.12`, then `uv venv --python 3.12` |
-| Windows execution policy error | Open PowerShell as Administrator and run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |
-| Docker: port already in use | Change the host port: `docker run -p 8889:8888 ...` and open `localhost:8889` |
-
----
-
-## Option C: Run in Google Colab
+:::: {.callout-note collapse="true"}
+## Google Colab — run in the browser, no install
 
 Run the notebooks in your browser. No install required.
 
@@ -149,10 +210,10 @@ Run the notebooks in your browser. No install required.
 ```python
 !pip install "tvbo[all]"   # or whichever package is missing
 ```
+::::
 
----
-
-## Option D: Run on EBRAINS
+:::: {.callout-note collapse="true"}
+## EBRAINS Collaboratory
 
 EBRAINS provides JupyterLab through the [Collaboratory](https://wiki.ebrains.eu/bin/view/Collabs/). It works, but RAM is limited.
 
@@ -165,3 +226,18 @@ pip install --user "tvbo[all]"
 ```
 
 **Step 3.** Upload the notebook you want to run and execute it. If you hit memory errors or import conflicts, switch to one of the other options.
+::::
+
+---
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| **Reopen in Container** prompt never appears | Open the Command Palette (`Ctrl/Cmd + Shift + P`) and run **Dev Containers: Reopen in Container**. Make sure the Dev Containers extension is installed and Docker Desktop is running. |
+| Container build fails or hangs | Confirm Docker Desktop is running, then retry. The first pull downloads a large image — give it a few minutes on a slow connection. |
+| Docker: port already in use | Change the host port: `docker run -p 8889:8888 ...` and open `localhost:8889` |
+| `uv: command not found` | Restart your terminal; on macOS/Linux check that `~/.local/bin` is on your `PATH` |
+| `No module named tvbo` | Activate the virtual environment first — you should see `(.venv)` in your prompt |
+| Python version error | Run `uv python install 3.12`, then `uv venv --python 3.12` |
+| Windows execution policy error | Open PowerShell as Administrator and run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |

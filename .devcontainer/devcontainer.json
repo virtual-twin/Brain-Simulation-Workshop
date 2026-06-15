@@ -1,0 +1,20 @@
+{
+  // VS Code Dev Container for the workshop.
+  // Open the repo in VS Code and choose "Reopen in Container" — this pulls the
+  // pre-built TVBO image (everything is already installed) and attaches VS Code
+  // to it. No local Python setup needed; customize freely from here.
+  "name": "TVB Workshop",
+  "image": "ghcr.io/virtual-twin/tvbo:latest",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-renderers"
+      ]
+    }
+  },
+  // Jupyter Lab from inside the container is reachable at http://localhost:8888
+  // if you prefer the browser UI (run: MODE=jupyter or `jupyter lab`).
+  "forwardPorts": [8888]
+}
