@@ -1,0 +1,74 @@
+---
+title: t
+format: html
+bibliography: bibliography.bib
+---
+## The bottom line {.smaller}
+
+<style>
+.bl-stats { text-align:center; font-size:1.7em; font-weight:700; color:#385a86;
+            letter-spacing:0.01em; margin:0.1em 0 0.35em; }
+.bl-claim { text-align:center; margin:0 0 0.4em; }
+.bl-proven { text-align:center; margin:0 0 0.55em; }
+.bl-bets { display:flex; gap:0.7rem; margin:0; align-items:stretch; }
+.bl-bets .bet { flex:1 1 0; border:1px solid #d4dde4; border-top:3px solid #6880af;
+                border-radius:9px; background:#fff; padding:0.4em 0.6em 0.5em;
+                box-shadow:0 1px 5px rgba(40,60,90,.12); font-size:0.8em; line-height:1.28; }
+.bl-bets .bet img { display:block; width:100%; height:116px; object-fit:contain;
+                    background:#f4f7f9; border-radius:6px; margin:0 0 0.3em; }
+.bl-bets .bet figure { margin:0 0 0.3em; }
+.bl-bets .bet > :first-child { margin-top:0; }
+.bl-bets .bet p { margin:0.18em 0 0; }
+.bl-bets .bet strong { color:#23364a; }
+.bl-bets .bet .cite, .bl-bets .bet .citation { font-size:0.92em; color:#5a7d80; }
+.bl-payoff { text-align:center; font-size:1.3em; margin-top:0.55em; color:#23364a; }
+.bl-payoff b { color:#385a86; }
+</style>
+
+::: {.bl-stats}
+1 recipe · 11 diseases · 40 model applications
+:::
+
+::: {.bl-claim}
+Brain disorders are disorders of **dynamics** — a personalized virtual brain makes them **measurable** and **treatable**.
+:::
+
+:::: {.fragment}
+::: {.bl-proven}
+**✓ Proven:** the **Virtual Epileptic Patient** is in **clinical trials** — no longer *whether* mechanistic models reach patients, but **where next**.
+:::
+::::
+
+::::: {.fragment}
+:::: {.bl-bets}
+::: {.bet}
+![](img/figures/clinical/Meier2026_DBS.png)
+
+**Deep brain stimulation**
+
+Target & settings *in silico* before surgery — Parkinson's · depression · OCD [@Meier2026]
+:::
+::: {.bet}
+![](img/figures/clinical/Stefanovski2019.jpg)
+
+**Alzheimer's**
+
+amyloid / tau → network failure → *digital twin* for early diagnosis
+:::
+::: {.bet}
+![](img/figures/clinical/Hofsaehs2026.jpg)
+
+**Mental disorders**
+
+model the *mechanism* — E/I balance, synaptic gain — not a label
+:::
+::::
+:::::
+
+:::: {.fragment}
+::: {.bl-payoff}
+One model that **explains** the symptom · **predicts** the course · **rehearses** the treatment
+:::
+::::
+
+::: {.notes}

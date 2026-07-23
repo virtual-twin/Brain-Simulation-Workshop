@@ -1,0 +1,12 @@
+# 3. Setup & First Examples {background-color="#6880af"}
+
+## Setup
+
+Follow the setup guide to get a ready-to-run environment:
+
+[**→ Open the setup guide**](setup.qmd){.btn .btn-primary}
+
+::: {.smaller}
+Recommended: **VS Code + Dev Container** — everything pre-installed, nothing to
+compile, easy to customize later.
+:::

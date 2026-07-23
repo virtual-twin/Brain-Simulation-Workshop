@@ -1,0 +1,308 @@
+{
+ "Epilepsy — the Virtual Epileptic Patient": {
+  "title": "Epilepsy — the Virtual Epileptic Patient",
+  "icd": "ICD-11 8A6Z · MeSH Epilepsy · 12 dynamical-model applications",
+  "studies": [
+   {
+    "name": "Dollomaja 2025",
+    "model": "Epileptor",
+    "blurb": "Generates and evaluates a virtual epilepsy patient cohort using personalized whole-brain modeling",
+    "citekey": "Dollomaja2025"
+   },
+   {
+    "name": "Azilinon 2024",
+    "model": "Epileptor",
+    "blurb": "Brain sodium MRI-derived priors improve personalized model-based estimation of epileptogenic zones in epilepsy patients",
+    "citekey": "Azilinon2024"
+   },
+   {
+    "name": "Cai 2024",
+    "model": "Wendling NMM",
+    "blurb": "A functional coupled neural mass model predicts radiofrequency thermocoagulation surgical outcomes in refractory focal epilepsy",
+    "citekey": "Cai2024"
+   },
+   {
+    "name": "Dollomaja 2023",
+    "model": "Epileptor",
+    "blurb": "Personalized whole-brain models investigate the dynamics and mechanisms of status epilepticus in patients",
+    "citekey": "Dollomaja2023"
+   },
+   {
+    "name": "Wang 2023",
+    "model": "Epileptor",
+    "blurb": "Personalized brain modeling with imaging data delineates epileptogenic networks in drug-resistant epilepsy",
+    "citekey": "Wang2023"
+   },
+   {
+    "name": "Makhalova 2022",
+    "model": "Epileptor",
+    "blurb": "VEP brain modeling relates model parameters to seizure onset zones and surgical outcome",
+    "citekey": "Makhalova2022"
+   },
+   {
+    "name": "Vattikonda 2021",
+    "model": "Epileptor",
+    "blurb": "Bayesian inference on a personalized brain network model identifies spatio-temporal seizure-propagation patterns",
+    "citekey": "Vattikonda2021"
+   },
+   {
+    "name": "Courtiol 2020",
+    "model": "Epileptor",
+    "blurb": "Whole-brain modeling reveals dynamical mechanisms of altered interictal resting-state connectivity in patients",
+    "citekey": "Courtiol2020"
+   },
+   {
+    "name": "An 2019",
+    "model": "Epileptor",
+    "blurb": "Patient-specific VEP models identify alternative resections *outside* the epileptogenic zone that spare eloquent cortex",
+    "citekey": "An2019"
+   },
+   {
+    "name": "Proix 2018",
+    "model": "Epileptor",
+    "blurb": "A neural-field model of wave propagation + coupled oscillators explains seizure spread/termination, validated on patients",
+    "citekey": "Proix2018"
+   },
+   {
+    "name": "Jirsa 2017",
+    "model": "Epileptor",
+    "blurb": "Builds the individualized Virtual Epileptic Patient from patient SEEG to inform therapy",
+    "citekey": "Jirsa2017"
+   },
+   {
+    "name": "Proix 2017",
+    "model": "Epileptor",
+    "blurb": "Patient-specific virtual brain models from diffusion MRI predict individual seizure propagation and post-surgical variability",
+    "citekey": "Proix2017"
+   }
+  ]
+ },
+ "Alzheimer's disease & dementia": {
+  "title": "Alzheimer's disease & dementia",
+  "icd": "ICD-11 8A20 · MeSH Alzheimer Disease · 11 dynamical-model applications",
+  "studies": [
+   {
+    "name": "Amato 2025",
+    "model": "Jansen-Rit",
+    "blurb": "Brain digital twins + non-invasive recordings enable early diagnosis of Alzheimer's disease",
+    "citekey": "Amato2025"
+   },
+   {
+    "name": "Amato 2024",
+    "model": "Jansen-Rit",
+    "blurb": "Personalized brain modeling of AD progression estimates neurodegeneration severity from individual EEG",
+    "citekey": "Amato2024"
+   },
+   {
+    "name": "Martinez-Cañada 2023",
+    "model": "Spiking E/I network (LIF)",
+    "blurb": "Aperiodic 1/f EEG/MEG slopes + brain simulation derive an excitation/inhibition imbalance marker in AD",
+    "citekey": "MartinezCanada2023"
+   },
+   {
+    "name": "Monteverdi 2023",
+    "model": "Reduced Wong-Wang",
+    "blurb": "Virtual brain simulations reveal network-specific parameters distinguishing neurodegenerative dementias",
+    "citekey": "Monteverdi2023"
+   },
+   {
+    "name": "Patow 2023",
+    "model": "dynamic mean-field",
+    "blurb": "A whole-brain dynamic model shows amyloid-β dominates early (MCI), tau dominates late, via altered E/I balance",
+    "citekey": "Patow2023"
+   },
+   {
+    "name": "Monteverdi 2022",
+    "model": "Reduced Wong-Wang",
+    "blurb": "Virtual brain modeling identifies subject-specific excitation/inhibition profiles in neurodegeneration",
+    "citekey": "Monteverdi2022"
+   },
+   {
+    "name": "Triebkorn 2022",
+    "model": "Jansen-Rit",
+    "blurb": "The Virtual Brain simulation features augment machine-learning classification of dementia patients",
+    "citekey": "Triebkorn2022"
+   },
+   {
+    "name": "Arbabyazd 2021",
+    "model": "Reduced Wong-Wang",
+    "blurb": "Generates virtual connectomic datasets in AD and aging via whole-brain network dynamics",
+    "citekey": "Arbabyazd2021"
+   },
+   {
+    "name": "Stefanovski 2019",
+    "model": "Jansen-Rit",
+    "blurb": "TVB links β-amyloid burden to EEG slowing and simulates memantine pharmacodynamics in virtual AD brains",
+    "citekey": "Stefanovski2019"
+   },
+   {
+    "name": "Penny 2018",
+    "model": "DCM (Jansen-Rit)",
+    "blurb": "DCM characterizes effective-connectivity changes in preclinical autosomal-dominant AD",
+    "citekey": "Penny2018"
+   },
+   {
+    "name": "Zimmermann 2018",
+    "model": "Reduced Wong-Wang",
+    "blurb": "Personalized Virtual Brain models of 124 individuals across the aging–MCI–AD spectrum predict cognition beyond the empirical connectome",
+    "citekey": "Zimmermann2018a"
+   }
+  ]
+ },
+ "Schizophrenia": {
+  "title": "Schizophrenia",
+  "icd": "ICD-11 6A20 · MeSH Schizophrenia · 3 dynamical-model applications",
+  "studies": [
+   {
+    "name": "Mana 2023",
+    "model": "Hopf (Stuart-Landau)",
+    "blurb": "An *in silico* whole-brain perturbational approach identifies critical brain areas in schizophrenia",
+    "citekey": "Mana2023"
+   },
+   {
+    "name": "Adams 2022",
+    "model": "DCM canonical microcircuit",
+    "blurb": "DCM of EEG+fMRI shows a consistent loss of pyramidal-cell synaptic gain in schizophrenia",
+    "citekey": "Adams2022"
+   },
+   {
+    "name": "Yang 2015",
+    "model": "Reduced Wong-Wang",
+    "blurb": "A cortical-hierarchy model (E/I gradient) explains preferential connectivity disturbances along the hierarchy in schizophrenia",
+    "citekey": "Yang2015"
+   }
+  ]
+ },
+ "Parkinson's disease": {
+  "title": "Parkinson's disease",
+  "icd": "ICD-11 8A00.0 · MeSH Parkinson Disease · 4 dynamical-model applications",
+  "studies": [
+   {
+    "name": "Angiolelli 2025",
+    "model": "Dody next-gen NMM",
+    "blurb": "A dopamine-dependent whole-brain neural-mass model infers patient-specific dopaminergic tone from EEG/deep-electrode data, distinguishing ON vs OFF L-Dopa",
+    "citekey": "Angiolelli2025"
+   },
+   {
+    "name": "Jung 2022",
+    "model": "Jansen-Rit",
+    "blurb": "Whole-brain dynamical modeling of individual connectomes classifies Parkinson's patients",
+    "citekey": "Jung2022"
+   },
+   {
+    "name": "Meier 2022",
+    "model": "mean-field + spiking BG",
+    "citekey": "Meier2022",
+    "blurb": "Virtual deep brain stimulation: multiscale co-simulation of a spiking basal-ganglia network with a whole-brain mean-field model in The Virtual Brain"
+   },
+   {
+    "name": "Maith 2020",
+    "model": "basal-ganglia model",
+    "citekey": "Maith2020",
+    "blurb": "A computational basal-ganglia model fit to Parkinson's patients dissociates the dopamine-dependent pathway changes underlying altered reinforcement learning"
+   }
+  ]
+ },
+ "Stroke": {
+  "title": "Stroke",
+  "icd": "ICD-11 8B20 · MeSH Stroke · 2 dynamical-model applications",
+  "studies": [
+   {
+    "name": "Falcon 2016",
+    "model": "Stefánescu-Jirsa 3D",
+    "blurb": "TVB modeling of 20 stroke patients links reduced conduction velocity and altered local dynamics/inhibition to motor recovery",
+    "citekey": "Falcon2016a"
+   },
+   {
+    "name": "Falcon 2015",
+    "model": "Stefánescu-Jirsa 3D",
+    "blurb": "The Virtual Brain models individual biological correlates of recovery after chronic stroke",
+    "citekey": "Falcon2015"
+   }
+  ]
+ },
+ "Brain tumor / glioma": {
+  "title": "Brain tumor / glioma",
+  "icd": "ICD-11 2A00.0 · MeSH Glioma · 2 dynamical-model applications",
+  "studies": [
+   {
+    "name": "Aerts 2020",
+    "model": "Reduced Wong-Wang",
+    "blurb": "TVB *virtual neurosurgery*: model parameters are stable across resection and predict post-operative dynamics",
+    "citekey": "Aerts2020"
+   },
+   {
+    "name": "Aerts 2018",
+    "model": "Reduced Wong-Wang",
+    "blurb": "Individually-optimized RWW parameters improve FC prediction and differentiate tumor-affected from healthy regions in 25 patients",
+    "citekey": "Aerts2018"
+   }
+  ]
+ },
+ "Multiple sclerosis": {
+  "title": "Multiple sclerosis",
+  "icd": "ICD-11 8A40 · MeSH Multiple Sclerosis · 1 dynamical-model application",
+  "studies": [
+   {
+    "name": "Martí-Juan 2023",
+    "model": "Reduced Wong-Wang",
+    "blurb": "The Virtual Brain studies structure–function connectivity relationships in multiple-sclerosis patients across multiple centers",
+    "citekey": "MartiJuan2023"
+   }
+  ]
+ },
+ "Traumatic brain injury": {
+  "title": "Traumatic brain injury",
+  "icd": "ICD-11 NA07 · MeSH Brain Injuries, Traumatic · 1 dynamical-model application",
+  "studies": [
+   {
+    "name": "Good 2022",
+    "model": "dynamic mean-field",
+    "blurb": "Personalized connectome-based (TVB) modeling in semi-acute traumatic-brain-injury patients relates model parameters to acute imaging and 6-month outcomes",
+    "citekey": "Good2022"
+   }
+  ]
+ },
+ "Disorders of consciousness": {
+  "title": "Disorders of consciousness",
+  "icd": "ICD-11 8E2Z · MeSH Consciousness Disorders · 1 dynamical-model application",
+  "studies": [
+   {
+    "name": "Luppi 2022",
+    "model": "dynamic mean-field",
+    "blurb": "Whole-brain modeling reveals distinct but convergent mechanistic paths to unconsciousness in anesthesia and disorders of consciousness",
+    "citekey": "Luppi2022a"
+   }
+  ]
+ },
+ "Depression": {
+  "title": "Depression",
+  "icd": "ICD-11 6A70 · MeSH Depressive Disorder, Major · 2 dynamical-model applications",
+  "studies": [
+   {
+    "name": "An 2022",
+    "model": "Jansen-Rit",
+    "blurb": "High-resolution virtual brain modeling personalizes **deep brain stimulation** for treatment-resistant depression via fiber-pathway stimulation responses",
+    "citekey": "An2022"
+   },
+   {
+    "name": "Hofsähs 2026",
+    "model": "Jansen-Rit",
+    "blurb": "The Virtual Brain links TMS-evoked potentials to inhibitory-neurotransmitter changes in major depressive disorder",
+    "citekey": "Hofsaehs2026"
+   }
+  ]
+ },
+ "Obsessive-compulsive disorder": {
+  "title": "Obsessive-compulsive disorder",
+  "icd": "ICD-11 6B20 · MeSH Obsessive-Compulsive Disorder · 1 dynamical-model application",
+  "studies": [
+   {
+    "name": "Naze 2025",
+    "model": "Reduced Wong-Wang",
+    "blurb": "Computational modeling of OCD patient data identifies frontostriatal-coupling interventions that improve function and predict symptom change",
+    "citekey": "Naze2025"
+   }
+  ]
+ }
+}

@@ -1,0 +1,555 @@
+id: 1
+model: ReducedWongWang
+dynamics:
+  name: ReducedWongWang
+  iri: tvbo:ReducedWongWang
+  parameters:
+    I_o:
+      name: I_o
+      definition: 'External input current to the neurons population (Deco et al.,
+        2013).
+
+
+        Note:
+
+        ------
+
+        In TVB, the default value is set to 0.33 (instead of 0.30 as in Deco et al.
+        (2013)) for setting the system is bistability (see Hansen et al., 2015).'
+      value: 0.33
+      domain:
+        lo: 0.0
+        hi: 1.0
+        step: 0.01
+        log_scale: false
+      description: External input current to the neurons population (Deco et al
+      unit: nA
+    J_N:
+      name: J_N
+      definition: Excitatory recurrence
+      value: 0.2609
+      domain:
+        lo: 0.2609
+        hi: 0.5
+        step: 0.001
+        log_scale: false
+      description: Excitatory recurrence
+      unit: nA
+      grounding:
+      - GO:0098815
+    a:
+      name: a
+      definition: 'Slope (or gain) parameter of the sigmoid input-output function
+        H_RWW (Deco et al., 2013).
+
+
+        Note:
+
+        -----
+
+        In the original publication, the parameter ''a'' is set in (nC)^-1 (i.e.,
+        equivalent to  (nA.s)^-1).  In TVB, the parameter has been converted in (pC)^-1
+        for setting the system in millisecond.'
+      value: 0.27
+      domain:
+        lo: 0.0
+        hi: 0.27
+        step: 0.01
+        log_scale: false
+      description: Slope (or gain) parameter of the sigmoid input-output function
+        H_RWW (Deco et al
+      unit: per_pC
+    b:
+      name: b
+      definition: "Shift parameter of the sigmoid input-output function H_RWW (Deco\
+        \ et al., 2013). \n\nNote:\n------\nIn the original publication, the parameter\
+        \ 'b' is set in Hz. In TVB, the parameter has been converted in kHz for setting\
+        \ the system in millisecond."
+      value: 0.108
+      domain:
+        lo: 0.0
+        hi: 1.0
+        step: 0.01
+        log_scale: false
+      description: Shift parameter of the sigmoid input-output function H_RWW (Deco
+        et al
+      unit: kHz
+    d:
+      name: d
+      definition: "Scaling parameter of the sigmoid input-output function H_RWW (Deco\
+        \ et al., 2013). \n\nNote:\n------\nIn the original publication, the parameter\
+        \ 'd' is set in second. In TVB, the parameter has been converted in millisecond\
+        \ for setting the system in millisecond."
+      value: 154.0
+      domain:
+        lo: 0.0
+        hi: 200.0
+        step: 0.01
+        log_scale: false
+      description: Scaling parameter of the sigmoid input-output function H_RWW (Deco
+        et al
+      unit: ms
+    gamma:
+      name: gamma
+      definition: Kinetic parameter
+      value: 0.641
+      domain:
+        lo: 0.0
+        hi: 1.0
+        step: 0.01
+        log_scale: false
+      description: Kinetic parameter
+    tau_s:
+      name: tau_s
+      definition: Kinetic parameter. Decay time constant for the NMDA synapses of
+        the neurons population (Deco et al., 2013).
+      value: 100.0
+      domain:
+        lo: 50.0
+        hi: 150.0
+        step: 1.0
+        log_scale: false
+      description: Kinetic parameter
+      unit: ms
+    w:
+      name: w
+      definition: Excitatory recurrence
+      value: 0.6
+      domain:
+        lo: 0.0
+        hi: 1.0
+        step: 0.01
+        log_scale: false
+      description: Excitatory recurrence
+      unit: dimensionless
+  description: 'Reduced WongWang (RWW) is a biologically-inspired one-dimensional
+    (i.e., only one state-variable ''S'') neural mass model that approximates the
+    realistic temporal dynamics of a detailed spiking and conductance-based synaptic
+    large-scale network (Deco et al., 2013).
+
+
+    RWW is the dynamical mean-field (DMF) reduction of the Reduced WongWang Exc-Inh
+    model, that consists in disentangling the contribution of the two neuronal populations
+    (excitatory and inhibitory) in order to study the time evolution of just one pool
+    of neurons for each network node (Wong & Wang, 2006). It results that the dynamics
+    of each network node described the temporal evolution of the opening probability
+    of the NMDA channels.'
+  references:
+  - Wong2006
+  - Deco2013
+  derived_variables:
+    x:
+      name: x
+      description: (NMDAR)-mediated synaptic input current to the neurons population
+        (Deco et al., 2013).
+      equation:
+        lhs: x
+        rhs: I_o + J_N*S*local_coupling + J_N*S*w + J_N*c_pop0
+        latex: false
+      record: false
+      conditional: false
+    H:
+      name: H
+      description: Sigmoid input-output function of the synaptic input current, x_RWW,
+        that computes the averaged firing rate of the neurons population (Deco et
+        al., 2013).
+      equation:
+        lhs: H
+        rhs: (a*x - b)/(1 - exp(-d*(a*x - b)))
+        latex: false
+      record: false
+      grounding:
+      - GO:0099605
+      conditional: false
+  coupling_terms:
+    c_pop0:
+      name: c_pop0
+    local_coupling:
+      name: local_coupling
+  coupling_inputs:
+    c_pop0:
+      name: c_pop0
+      dimension: 1
+    local_coupling:
+      name: local_coupling
+      dimension: 1
+  state_variables:
+    S:
+      name: S
+      domain:
+        lo: 0.0
+        hi: 1.0
+        log_scale: false
+      description: State-variable of the Reduced WongWang model, denoting the average,
+        (NMDAR)-mediated synaptic gating, i
+      equation:
+        lhs: Derivative(S, t)
+        rhs: H*gamma*(1 - S) - S/tau_s
+        latex: false
+      record: true
+      variable_of_interest: true
+      coupling_variable: true
+      equation_type: differential
+      equation_order: 1
+      boundaries:
+        lo: 0.0
+        hi: 1.0
+        log_scale: false
+      initial_value: 0.1
+  number_of_modes: 1
+  model_type: mean_field
+  autonomous: true
+integration:
+  method: Heun
+  abs_tol: 1.0e-10
+  rel_tol: 1.0e-10
+  time_scale: ms
+  duration: 1000.0
+  step_size: 0.01220703125
+  transient_time: 0.0
+  scipy_ode_base: false
+  number_of_stages: 2
+  intermediate_expressions:
+    X1:
+      name: X1
+      equation:
+        lhs: X1
+        rhs: X + dX0 * dt + noise + stimulus * dt
+        latex: false
+      record: false
+      conditional: false
+  update_expression:
+    name: dX
+    equation:
+      lhs: X_{t+1}
+      rhs: (dX0 + dX1) * (dt / 2)
+      latex: false
+    record: false
+    conditional: false
+  delayed: true
+network:
+  parameters:
+    conduction_speed:
+      name: conduction_speed
+      label: v
+      value: 3.0
+      unit: mm_per_ms
+  nodes:
+  - id: 0
+    label: region_0
+    record: true
+  - id: 1
+    label: region_1
+    record: true
+  - id: 2
+    label: region_2
+    record: true
+  - id: 3
+    label: region_3
+    record: true
+  - id: 4
+    label: region_4
+    record: true
+  - id: 5
+    label: region_5
+    record: true
+  - id: 6
+    label: region_6
+    record: true
+  - id: 7
+    label: region_7
+    record: true
+  - id: 8
+    label: region_8
+    record: true
+  - id: 9
+    label: region_9
+    record: true
+  - id: 10
+    label: region_10
+    record: true
+  - id: 11
+    label: region_11
+    record: true
+  - id: 12
+    label: region_12
+    record: true
+  - id: 13
+    label: region_13
+    record: true
+  - id: 14
+    label: region_14
+    record: true
+  - id: 15
+    label: region_15
+    record: true
+  - id: 16
+    label: region_16
+    record: true
+  - id: 17
+    label: region_17
+    record: true
+  - id: 18
+    label: region_18
+    record: true
+  - id: 19
+    label: region_19
+    record: true
+  - id: 20
+    label: region_20
+    record: true
+  - id: 21
+    label: region_21
+    record: true
+  - id: 22
+    label: region_22
+    record: true
+  - id: 23
+    label: region_23
+    record: true
+  - id: 24
+    label: region_24
+    record: true
+  - id: 25
+    label: region_25
+    record: true
+  - id: 26
+    label: region_26
+    record: true
+  - id: 27
+    label: region_27
+    record: true
+  - id: 28
+    label: region_28
+    record: true
+  - id: 29
+    label: region_29
+    record: true
+  - id: 30
+    label: region_30
+    record: true
+  - id: 31
+    label: region_31
+    record: true
+  - id: 32
+    label: region_32
+    record: true
+  - id: 33
+    label: region_33
+    record: true
+  - id: 34
+    label: region_34
+    record: true
+  - id: 35
+    label: region_35
+    record: true
+  - id: 36
+    label: region_36
+    record: true
+  - id: 37
+    label: region_37
+    record: true
+  - id: 38
+    label: region_38
+    record: true
+  - id: 39
+    label: region_39
+    record: true
+  - id: 40
+    label: region_40
+    record: true
+  - id: 41
+    label: region_41
+    record: true
+  - id: 42
+    label: region_42
+    record: true
+  - id: 43
+    label: region_43
+    record: true
+  - id: 44
+    label: region_44
+    record: true
+  - id: 45
+    label: region_45
+    record: true
+  - id: 46
+    label: region_46
+    record: true
+  - id: 47
+    label: region_47
+    record: true
+  - id: 48
+    label: region_48
+    record: true
+  - id: 49
+    label: region_49
+    record: true
+  - id: 50
+    label: region_50
+    record: true
+  - id: 51
+    label: region_51
+    record: true
+  - id: 52
+    label: region_52
+    record: true
+  - id: 53
+    label: region_53
+    record: true
+  - id: 54
+    label: region_54
+    record: true
+  - id: 55
+    label: region_55
+    record: true
+  - id: 56
+    label: region_56
+    record: true
+  - id: 57
+    label: region_57
+    record: true
+  - id: 58
+    label: region_58
+    record: true
+  - id: 59
+    label: region_59
+    record: true
+  - id: 60
+    label: region_60
+    record: true
+  - id: 61
+    label: region_61
+    record: true
+  - id: 62
+    label: region_62
+    record: true
+  - id: 63
+    label: region_63
+    record: true
+  - id: 64
+    label: region_64
+    record: true
+  - id: 65
+    label: region_65
+    record: true
+  - id: 66
+    label: region_66
+    record: true
+  - id: 67
+    label: region_67
+    record: true
+  - id: 68
+    label: region_68
+    record: true
+  - id: 69
+    label: region_69
+    record: true
+  - id: 70
+    label: region_70
+    record: true
+  - id: 71
+    label: region_71
+    record: true
+  - id: 72
+    label: region_72
+    record: true
+  - id: 73
+    label: region_73
+    record: true
+  - id: 74
+    label: region_74
+    record: true
+  - id: 75
+    label: region_75
+    record: true
+  - id: 76
+    label: region_76
+    record: true
+  - id: 77
+    label: region_77
+    record: true
+  - id: 78
+    label: region_78
+    record: true
+  - id: 79
+    label: region_79
+    record: true
+  - id: 80
+    label: region_80
+    record: true
+  - id: 81
+    label: region_81
+    record: true
+  - id: 82
+    label: region_82
+    record: true
+  - id: 83
+    label: region_83
+    record: true
+  - id: 84
+    label: region_84
+    record: true
+  - id: 85
+    label: region_85
+    record: true
+  - id: 86
+    label: region_86
+    record: true
+  coupling:
+    Linear:
+      name: Linear
+      iri: tvbo:Linear
+      parameters:
+        b:
+          name: b
+          value: 0.0
+          description: Shifts the base of the connection strength while maintaining
+            the absolute difference between different values.
+        a:
+          name: a
+          value: 0.00390625
+          description: Linear scaling factor of the coupled (delayed) input.
+      sparse: false
+      pre_expression:
+        rhs: x_j
+        latex: false
+      post_expression:
+        rhs: a*gx + b
+        latex: false
+      incoming_states:
+      - S
+      delayed: true
+      symmetry: directed
+  number_of_nodes: 87
+  parcellation:
+    atlas:
+      name: DesikanKilliany
+  tractogram:
+    name: dTOR
+  distance_unit: mm
+  time_unit: ms
+coupling:
+  name: Linear
+  iri: tvbo:Linear
+  parameters:
+    b:
+      name: b
+      value: 0.0
+      description: Shifts the base of the connection strength while maintaining the
+        absolute difference between different values.
+    a:
+      name: a
+      value: 0.00390625
+      description: Linear scaling factor of the coupled (delayed) input.
+  sparse: false
+  pre_expression:
+    rhs: x_j
+    latex: false
+  post_expression:
+    rhs: a*gx + b
+    latex: false
+  incoming_states:
+  - S
+  delayed: true
+  symmetry: directed

@@ -114,4 +114,13 @@ for title, yml, key, dur, seed in CASES:
     if legend is not None:
         legend.remove()
 
-save(fig, OUT)
+# Match the animation exactly. The shared save() helper uses dpi=500 +
+# bbox_inches="tight" (crops to content); and a plain savefig lets layout="compressed"
+# shrink the saved bbox. Force the FULL 17×7.5 figure bbox so the output is exactly
+# figsize×dpi = 2448×1080, identical to the GIF — so the two overlay cleanly as
+# fragments in slides/_05-bifurcation.qmd.
+import matplotlib.transforms as _mt
+DPI = 250  # sharp for online (Zoom) presentation; must match the animation dpi
+_full = _mt.Bbox([[0, 0], list(fig.get_size_inches())])
+fig.savefig(OUT, dpi=DPI, bbox_inches=_full)
+print("wrote", OUT, "size", fig.get_size_inches() * DPI)

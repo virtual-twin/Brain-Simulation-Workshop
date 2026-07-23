@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Brain network recap</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: transparent;
+      }
+
+      brain-network-visual,
+      brain-network-visual canvas {
+        position: fixed;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Recap backdrop: jump straight to the final "network inside the brain" (stage 6 =
+         brain surface + region nodes + connectome edges); skips the head + tractogram steps.
+         No center-x → defaults to the right side, leaving the left for the recap text. -->
+    <brain-network-visual
+      id="viz"
+      mesh-src="data/brain_mesh_fine.json"
+      tracts-src="data/tracts_preview.json"
+      stage="6"
+      keep-mesh
+      alpha="1"
+      mesh-alpha="1"
+      node-alpha="0.95"
+      graph-alpha="0.95"
+    ></brain-network-visual>
+    <script type="module" src="js/home-visual.js"></script>
+  </body>
+</html>

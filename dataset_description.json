@@ -1,0 +1,11 @@
+{
+  "Name": "TVBO Simulation Experiment",
+  "BIDSVersion": "1.9.0",
+  "DatasetType": "derivative",
+  "GeneratedBy": [
+    {
+      "Name": "tvbo",
+      "Description": "The Virtual Brain Ontology"
+    }
+  ]
+}

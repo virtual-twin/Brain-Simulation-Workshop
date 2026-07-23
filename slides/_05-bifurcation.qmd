@@ -1,0 +1,230 @@
+# 5. Bifurcation Analysis {#ch-bifurcation background-color="#6880af"}
+
+## How to analyse a brain system
+
+![](img/figures/bifurcation/fig-bifurcation-overview.png){fig-align="center" width="96%"}
+
+::: {.columns}
+::: {.column width="33%" .smaller}
+**Time series**
+$x(t)$ at fixed $(a, x_0)$
+:::
+::: {.column width="33%" .smaller}
+**Phase plane**
+flow geometry at fixed $a$
+:::
+::: {.column width="34%" .smaller}
+**Bifurcation diagram**
+regimes as $a$ varies
+:::
+:::
+
+::: {.notes}
+Three complementary lenses on the same system. The **time series** is what you'd
+actually record — but it only shows one parameter setting. The **phase plane** shows
+the *geometry* of the flow at a fixed parameter: where trajectories go, what's stable.
+The **bifurcation diagram** is the summary — it tracks how the equilibria and their
+stability change as we turn one knob ($a$). Goal for this chapter: learn to read that
+third panel. It's a *map of regimes*, and it tells you what behaviours a model can
+produce before you run a single long simulation.
+:::
+
+## Linear Systems
+
+
+:::: {.columns}
+
+::: {.column width="50%" .r-fit-text}
+$$
+\dot x = a\,x \quad\Rightarrow\quad x(t) = x_0\,e^{a t}
+$$
+
+- $x(t)$: State variable
+- $x_0$: Initial condition
+- $a$: Parameter
+
+Solution:
+$$
+x(t) = x_0\,e^{a t}
+$$
+
+Equilibrium:
+$$
+\dot{x}(t) = ax(t) = 0?
+$$
+$$
+\quad\Rightarrow\quad x_{eq} = 0
+$$
+
+:::
+
+::: {.column width="50%"}
+
+::: {.r-stack }
+
+![](img/figures/bifurcation/fig-stability.png)
+
+![](img/figures/bifurcation/fig-stability-perturbation.png){.fragment}
+
+
+:::
+:::
+
+::::
+
+::: {.notes}
+Start with the simplest possible system — 1D and linear. Everything about stability is
+in the sign of $a$. The solution is an exponential: if $a<0$ any perturbation decays
+back to zero, so the equilibrium is stable; if $a>0$ it grows, so it's unstable; $a=0$
+is the knife-edge. The equilibrium is always $x=0$, but its *stability* flips as $a$
+passes through zero. The second figure makes this concrete: nudge the system off the
+equilibrium and, when it's stable, it returns. Neural masses work the same way — we
+linearise around a fixed point, and the sign of the eigenvalues tells us whether
+activity settles back or runs away.
+:::
+
+## 2D portraits
+
+::: {.r-stack}
+
+![](img/figures/bifurcation/fig-bifurcation-phase-portraits-animation.gif){.fragment}
+
+![](img/figures/bifurcation/fig-bifurcation-phase-portraits-static.png){.fragment}
+
+:::
+
+::: {.notes}
+Two ways to read the same phase portraits. First the animation: watch the flow
+reorganise as the parameter sweeps — fixed points appear, move, change stability, and a
+closed loop (a limit cycle) emerges. Then the static snapshots: the same regimes frozen
+side by side, left-to-right from a single stable resting state, through the bifurcation,
+to a sustained oscillation. Takeaway: small smooth parameter changes cause *qualitative*
+changes in behaviour — that's a bifurcation.
+:::
+
+## Regime-change building blocks
+
+:::: {.columns}
+
+::: {.column .smaller width=20%}
+
+- Top: equilibria as $a$ varies.
+- Bottom: local flow $\dot x=f(x)$ at the dotted parameter slice.
+
+:::
+
+::: {.column width=80%}
+![](img/normal_forms.png){fig-align="center" width="100%"}
+:::
+
+::::
+
+::: {.notes}
+There's only a small zoo of *local* bifurcations — the normal forms. Top panel:
+equilibria and their stability (solid = stable, dashed = unstable) as the parameter
+varies. Bottom: the 1D flow at the dotted slice. The classics are saddle-node (two fixed
+points collide and vanish), transcritical (they swap stability), pitchfork (one splits
+into three), and Hopf (next slide). You don't have to memorise them — just know that
+almost every regime change in a neural model is one of these in disguise.
+:::
+
+
+## Hopf: birth of an oscillation
+
+$$
+\dot z = (a + i\omega)z - |z|^2z,
+\qquad r_{\mathrm{cycle}} = \sqrt a
+$$
+
+![](img/figures/bifurcation/fig-bifurcation-hopf-birth.gif){fig-align="center" width="100%"}
+
+::: {.smaller}
+fixed point loses stability $\Rightarrow$ stable oscillation appears
+:::
+
+::: {.notes}
+This is the important one for brain dynamics, because it's how rhythms are born. As $a$
+crosses zero, a stable fixed point loses stability and a stable limit cycle appears
+around it, with radius growing like $\sqrt a$ — so the oscillation starts small and
+grows. Mechanistically: the system stops settling to a constant rate and starts
+oscillating (think alpha or gamma rhythms emerging). One-sentence version:
+**a Hopf bifurcation is where a quiet equilibrium turns into a spontaneous oscillation.**
+:::
+
+
+## Dynamical Regimes
+
+<!-- ![](img/g2d_bifurcation.png){fig-align="center" width="82%"} -->
+
+![](img/figures/bifurcation/fig-bifurcation_timeseries.png)
+
+::: {.notes}
+Tie it back to the time series — the thing experimentalists actually see. Each parameter
+regime produces a characteristically different trace: a flat/noisy fixed point, a damped
+transient, or a sustained oscillation. The bifurcation diagram predicts *which* of these
+you'll get, so instead of guessing parameters by trial and error you read them off the map.
+:::
+
+## Numerical continuation {.r-fit-text}
+
+::: {.columns}
+::: {.column width="62%"}
+![](img/continuation_pseudo_arclength_white.png){height=600px}
+:::
+::: {.column width="38%" .smaller}
+$$
+F(x, a)=0,
+\qquad (x,a)=(x(s),a(s))
+$$
+
+- follow branches through folds
+- detect folds and Hopf points
+- switch to periodic orbits
+
+:::
+:::
+
+::: {.notes}
+How do we compute these diagrams without brute-force simulating millions of settings?
+**Continuation.** We solve $F(x,a)=0$ and *follow* the solution branch as $a$ changes —
+like walking along a ridge. Pseudo-arclength parametrises by arc length $s$ so we can
+turn around "folds" where the curve bends back on itself (a plain parameter sweep would
+just fail there). Along the way we automatically detect folds and Hopf points and can
+switch onto the periodic-orbit branch. This is what tools like BifurcationKit.jl do.
+:::
+
+
+## TVB simulation infused with bifurcation analysis
+
+![](img/g2d_network_bifurcation.gif){fig-align="center" width="100%"}
+
+::: {.smaller}
+TVBO + tvboptim simulation of Generic2dOscillator on the Desikan-Killiany network. Nodes are colored by their instantaneous $V(t)$ and projected onto axial (top) and sagittal views; the regime map places each node at its current $(I_{\mathrm{eff}}, V)$ on the bifurcation diagram.
+:::
+
+::: {.notes}
+Now scale it up to a whole brain: a Generic-2D-Oscillator on the Desikan-Killiany
+connectome. Each node is coloured by its instantaneous state and placed on the shared
+bifurcation diagram — so you can literally watch which regime each region is in, and how
+coupling pushes nodes across bifurcations. The point: bifurcation analysis isn't just a
+single-node toy, it organises the dynamics of the full network model.
+:::
+
+
+## Bifurcation analysis: hands-on
+
+- Notebook: [`notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd`](notebooks/4_BifurcationAnalysis/BifurcationAnalysis.qmd)
+- Sweep input $I$ in a TVB neural mass model
+- Continue fixed points and periodic orbits
+- Read the diagram as a **map of regimes**
+
+```python
+result = exp.run("bifurcationkit.jl")
+```
+
+::: {.notes}
+What you'll do in the notebook: take a TVB neural-mass model, sweep the input current
+$I$, and continue both the fixed points and the periodic orbits. The mindset to keep:
+read the resulting diagram as a *map of regimes* — for any parameter value it tells you
+what the model will do. The continuation itself runs through the Julia backend in one line.
+:::

@@ -1,10 +1,17 @@
 project:
   type: website
   output-dir: _site
+  # Sync the tvbo-platform demo videos into img/videos/ before rendering.
+  pre-render: code/sync-tvbo-videos.sh
   resources:
     - brain-network-background.html
+    - brain-build.html
+    - brain-recap.html
     - data/brain_mesh.json
+    - data/brain_mesh_fine.json
+    - data/head_mesh.json
     - data/tracts_preview.json
+    - data/tracts_fine.json
     - js/home-visual.js
 
 execute:
@@ -145,17 +152,6 @@ format:
     toc-depth: 3
 
 
-
-authors:
-  - name: "Marius Pille"
-    affiliation:
-       - ref: bih
-  - name: "Leon Martin"
-    affiliation:
-       - ref: bih
-  - name: "Leon Stefanovski"
-    affiliation:
-       - ref: charite
 
 affiliations:
   - id: charite

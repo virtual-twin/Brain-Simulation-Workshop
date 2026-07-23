@@ -146,6 +146,10 @@ def _update(frame):
 
 
 anim = FuncAnimation(fig, _update, frames=total_frames, interval=80, blit=True)
-anim.save(OUT, writer=PillowWriter(fps=12), dpi=300)
-print("wrote", OUT)
+# Match the static figure exactly: same figsize (17×7.5) + same dpi, no tight bbox.
+# dpi=250 for a sharp online (Zoom) presentation; the deck is loaded only on the
+# presenter's machine, so GIF weight is not a concern.
+DPI = 250
+anim.save(OUT, writer=PillowWriter(fps=12), dpi=DPI)
+print("wrote", OUT, "size", fig.get_size_inches() * DPI)
 plt.close(fig)

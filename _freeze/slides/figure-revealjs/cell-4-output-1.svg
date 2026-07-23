@@ -1,0 +1,403 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="451pt" height="389pt" viewBox="0.00 0.00 451.00 389.00">
+<g id="graph0" class="graph" transform="scale(0.657706 0.657706) rotate(0) translate(3.6 587.85)">
+<title>clinical</title>
+<text xml:space="preserve" text-anchor="middle" x="339.12" y="-6.22" font-family="Helvetica,sans-Serif" font-size="9.50" fill="#6a6a6a">Generated from tvb-o-clinical.ttl · 41 studies · 11 clinical domains · 10 node dynamical models   (edge width ∝ studies; arrow = uses node dynamical model)</text>
+<!-- c08 -->
+<g id="node1" class="node">
+<title>c08</title>
+<path fill="#bee0f4" stroke="#7ec0e0" stroke-width="1.3" d="M151.68,-388.25C151.68,-388.25 75.78,-388.25 75.78,-388.25 69.78,-388.25 63.78,-382.25 63.78,-376.25 63.78,-376.25 63.78,-364.25 63.78,-364.25 63.78,-358.25 69.78,-352.25 75.78,-352.25 75.78,-352.25 151.68,-352.25 151.68,-352.25 157.68,-352.25 163.68,-358.25 163.68,-364.25 163.68,-364.25 163.68,-376.25 163.68,-376.25 163.68,-382.25 157.68,-388.25 151.68,-388.25"/>
+<text xml:space="preserve" text-anchor="start" x="106.98" y="-371.85" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">08</text>
+<text xml:space="preserve" text-anchor="start" x="70.98" y="-359.85" font-family="Helvetica,sans-Serif" font-size="12.00">Nervous system</text>
+</g>
+<!-- d0 -->
+<g id="node5" class="node">
+<title>d0</title>
+<path fill="#e2f2fb" stroke="#7ec0e0" stroke-width="1.3" d="M367.45,-498.25C367.45,-498.25 293.05,-498.25 293.05,-498.25 287.05,-498.25 281.05,-492.25 281.05,-486.25 281.05,-486.25 281.05,-474.25 281.05,-474.25 281.05,-468.25 287.05,-462.25 293.05,-462.25 293.05,-462.25 367.45,-462.25 367.45,-462.25 373.45,-462.25 379.45,-468.25 379.45,-474.25 379.45,-474.25 379.45,-486.25 379.45,-486.25 379.45,-492.25 373.45,-498.25 367.45,-498.25"/>
+<text xml:space="preserve" text-anchor="start" x="307.75" y="-484.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Epilepsy</text>
+<text xml:space="preserve" text-anchor="start" x="288.25" y="-476.15" font-family="Helvetica,sans-Serif" font-size="8.00">8A6Z · MeSH D004827</text>
+<text xml:space="preserve" text-anchor="start" x="312.25" y="-468.15" font-family="Helvetica,sans-Serif" font-size="8.00">12 studies</text>
+</g>
+<!-- c08&#45;&gt;d0 -->
+<g id="edge1" class="edge">
+<title>c08-&gt;d0</title>
+<path fill="none" stroke="#9ab5b8" d="M150.63,-388.66C188.22,-407.94 247.21,-438.18 287.01,-458.59"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="286.11,-460.29 291.88,-461.09 287.86,-456.87 286.11,-460.29"/>
+</g>
+<!-- d1 -->
+<g id="node6" class="node">
+<title>d1</title>
+<path fill="#e2f2fb" stroke="#7ec0e0" stroke-width="1.3" d="M404.2,-367.25C404.2,-367.25 256.3,-367.25 256.3,-367.25 250.3,-367.25 244.3,-361.25 244.3,-355.25 244.3,-355.25 244.3,-343.25 244.3,-343.25 244.3,-337.25 250.3,-331.25 256.3,-331.25 256.3,-331.25 404.2,-331.25 404.2,-331.25 410.2,-331.25 416.2,-337.25 416.2,-343.25 416.2,-343.25 416.2,-355.25 416.2,-355.25 416.2,-361.25 410.2,-367.25 404.2,-367.25"/>
+<text xml:space="preserve" text-anchor="start" x="251.5" y="-353.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Alzheimer disease &amp; dementia</text>
+<text xml:space="preserve" text-anchor="start" x="288.62" y="-345.15" font-family="Helvetica,sans-Serif" font-size="8.00">8A20 · MeSH D000544</text>
+<text xml:space="preserve" text-anchor="start" x="312.25" y="-337.15" font-family="Helvetica,sans-Serif" font-size="8.00">12 studies</text>
+</g>
+<!-- c08&#45;&gt;d1 -->
+<g id="edge2" class="edge">
+<title>c08-&gt;d1</title>
+<path fill="none" stroke="#9ab5b8" d="M164.21,-365.41C185.91,-363.28 212.1,-360.72 237.16,-358.26"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="237.05,-360.21 242.34,-357.76 236.68,-356.38 237.05,-360.21"/>
+</g>
+<!-- d2 -->
+<g id="node7" class="node">
+<title>d2</title>
+<path fill="#e2f2fb" stroke="#7ec0e0" stroke-width="1.3" d="M373.45,-410.25C373.45,-410.25 287.05,-410.25 287.05,-410.25 281.05,-410.25 275.05,-404.25 275.05,-398.25 275.05,-398.25 275.05,-386.25 275.05,-386.25 275.05,-380.25 281.05,-374.25 287.05,-374.25 287.05,-374.25 373.45,-374.25 373.45,-374.25 379.45,-374.25 385.45,-380.25 385.45,-386.25 385.45,-386.25 385.45,-398.25 385.45,-398.25 385.45,-404.25 379.45,-410.25 373.45,-410.25"/>
+<text xml:space="preserve" text-anchor="start" x="282.25" y="-396.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Parkinson disease</text>
+<text xml:space="preserve" text-anchor="start" x="285.25" y="-388.15" font-family="Helvetica,sans-Serif" font-size="8.00">8A00.0 · MeSH D010300</text>
+<text xml:space="preserve" text-anchor="start" x="314.5" y="-380.15" font-family="Helvetica,sans-Serif" font-size="8.00">4 studies</text>
+</g>
+<!-- c08&#45;&gt;d2 -->
+<g id="edge4" class="edge">
+<title>c08-&gt;d2</title>
+<path fill="none" stroke="#9ab5b8" d="M164.21,-375.32C195.06,-378.49 234.98,-382.58 267.84,-385.95"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="267.57,-387.86 273.24,-386.51 267.96,-384.03 267.57,-387.86"/>
+</g>
+<!-- d3 -->
+<g id="node8" class="node">
+<title>d3</title>
+<path fill="#e2f2fb" stroke="#7ec0e0" stroke-width="1.3" d="M367.07,-563.25C367.07,-563.25 293.43,-563.25 293.43,-563.25 287.43,-563.25 281.43,-557.25 281.43,-551.25 281.43,-551.25 281.43,-539.25 281.43,-539.25 281.43,-533.25 287.43,-527.25 293.43,-527.25 293.43,-527.25 367.07,-527.25 367.07,-527.25 373.07,-527.25 379.07,-533.25 379.07,-539.25 379.07,-539.25 379.07,-551.25 379.07,-551.25 379.07,-557.25 373.07,-563.25 367.07,-563.25"/>
+<text xml:space="preserve" text-anchor="start" x="313" y="-549.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Stroke</text>
+<text xml:space="preserve" text-anchor="start" x="288.62" y="-541.15" font-family="Helvetica,sans-Serif" font-size="8.00">8B20 · MeSH D020521</text>
+<text xml:space="preserve" text-anchor="start" x="314.5" y="-533.15" font-family="Helvetica,sans-Serif" font-size="8.00">2 studies</text>
+</g>
+<!-- c08&#45;&gt;d3 -->
+<g id="edge5" class="edge">
+<title>c08-&gt;d3</title>
+<path fill="none" stroke="#9ab5b8" d="M128.52,-388.45C150.04,-415.9 194,-468.29 240.55,-502.25 251.72,-510.4 264.67,-517.69 277.17,-523.85"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="276.1,-525.47 281.89,-526.12 277.77,-522 276.1,-525.47"/>
+</g>
+<!-- d4 -->
+<g id="node9" class="node">
+<title>d4</title>
+<path fill="#e2f2fb" stroke="#7ec0e0" stroke-width="1.3" d="M371.2,-324.25C371.2,-324.25 289.3,-324.25 289.3,-324.25 283.3,-324.25 277.3,-318.25 277.3,-312.25 277.3,-312.25 277.3,-300.25 277.3,-300.25 277.3,-294.25 283.3,-288.25 289.3,-288.25 289.3,-288.25 371.2,-288.25 371.2,-288.25 377.2,-288.25 383.2,-294.25 383.2,-300.25 383.2,-300.25 383.2,-312.25 383.2,-312.25 383.2,-318.25 377.2,-324.25 371.2,-324.25"/>
+<text xml:space="preserve" text-anchor="start" x="284.5" y="-310.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Multiple sclerosis</text>
+<text xml:space="preserve" text-anchor="start" x="288.62" y="-302.15" font-family="Helvetica,sans-Serif" font-size="8.00">8A40 · MeSH D009103</text>
+<text xml:space="preserve" text-anchor="start" x="314.5" y="-294.15" font-family="Helvetica,sans-Serif" font-size="8.00">1 studies</text>
+</g>
+<!-- c08&#45;&gt;d4 -->
+<g id="edge7" class="edge">
+<title>c08-&gt;d4</title>
+<path fill="none" stroke="#9ab5b8" d="M164.04,-352.78C187.14,-344.86 215.12,-335.64 240.55,-328.25 250.17,-325.46 260.45,-322.7 270.47,-320.14"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="270.68,-322.07 275.54,-318.85 269.73,-318.34 270.68,-322.07"/>
+</g>
+<!-- d5 -->
+<g id="node10" class="node">
+<title>d5</title>
+<path fill="#e2f2fb" stroke="#7ec0e0" stroke-width="1.3" d="M398.95,-238.25C398.95,-238.25 261.55,-238.25 261.55,-238.25 255.55,-238.25 249.55,-232.25 249.55,-226.25 249.55,-226.25 249.55,-214.25 249.55,-214.25 249.55,-208.25 255.55,-202.25 261.55,-202.25 261.55,-202.25 398.95,-202.25 398.95,-202.25 404.95,-202.25 410.95,-208.25 410.95,-214.25 410.95,-214.25 410.95,-226.25 410.95,-226.25 410.95,-232.25 404.95,-238.25 398.95,-238.25"/>
+<text xml:space="preserve" text-anchor="start" x="256.75" y="-224.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Disorders of consciousness</text>
+<text xml:space="preserve" text-anchor="start" x="288.25" y="-216.15" font-family="Helvetica,sans-Serif" font-size="8.00">8E2Z · MeSH D003244</text>
+<text xml:space="preserve" text-anchor="start" x="314.5" y="-208.15" font-family="Helvetica,sans-Serif" font-size="8.00">1 studies</text>
+</g>
+<!-- c08&#45;&gt;d5 -->
+<g id="edge9" class="edge">
+<title>c08-&gt;d5</title>
+<path fill="none" stroke="#9ab5b8" d="M127.5,-351.86C148.01,-323.78 191.02,-270.51 240.55,-242.25 241.33,-241.81 242.11,-241.37 242.9,-240.95"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="243.69,-242.71 247.76,-238.53 241.98,-239.26 243.69,-242.71"/>
+</g>
+<!-- c02 -->
+<g id="node2" class="node">
+<title>c02</title>
+<path fill="#e8d4b0" stroke="#c8a870" stroke-width="1.3" d="M139.3,-195.25C139.3,-195.25 88.15,-195.25 88.15,-195.25 82.15,-195.25 76.15,-189.25 76.15,-183.25 76.15,-183.25 76.15,-171.25 76.15,-171.25 76.15,-165.25 82.15,-159.25 88.15,-159.25 88.15,-159.25 139.3,-159.25 139.3,-159.25 145.3,-159.25 151.3,-165.25 151.3,-171.25 151.3,-171.25 151.3,-183.25 151.3,-183.25 151.3,-189.25 145.3,-195.25 139.3,-195.25"/>
+<text xml:space="preserve" text-anchor="start" x="106.98" y="-178.85" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">02</text>
+<text xml:space="preserve" text-anchor="start" x="83.35" y="-166.85" font-family="Helvetica,sans-Serif" font-size="12.00">Neoplasms</text>
+</g>
+<!-- d6 -->
+<g id="node11" class="node">
+<title>d6</title>
+<path fill="#f5ecd8" stroke="#c8a870" stroke-width="1.3" d="M379.07,-195.25C379.07,-195.25 281.43,-195.25 281.43,-195.25 275.43,-195.25 269.43,-189.25 269.43,-183.25 269.43,-183.25 269.43,-171.25 269.43,-171.25 269.43,-165.25 275.43,-159.25 281.43,-159.25 281.43,-159.25 379.07,-159.25 379.07,-159.25 385.07,-159.25 391.07,-165.25 391.07,-171.25 391.07,-171.25 391.07,-183.25 391.07,-183.25 391.07,-189.25 385.07,-195.25 379.07,-195.25"/>
+<text xml:space="preserve" text-anchor="start" x="276.62" y="-181.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Brain tumor / glioma</text>
+<text xml:space="preserve" text-anchor="start" x="285.25" y="-173.15" font-family="Helvetica,sans-Serif" font-size="8.00">2A00.0 · MeSH D005910</text>
+<text xml:space="preserve" text-anchor="start" x="314.5" y="-165.15" font-family="Helvetica,sans-Serif" font-size="8.00">2 studies</text>
+</g>
+<!-- c02&#45;&gt;d6 -->
+<g id="edge6" class="edge">
+<title>c02-&gt;d6</title>
+<path fill="none" stroke="#9ab5b8" d="M151.6,-177.25C181.94,-177.25 225.73,-177.25 262.24,-177.25"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="261.95,-179.18 267.45,-177.25 261.95,-175.33 261.95,-179.18"/>
+</g>
+<!-- c06 -->
+<g id="node3" class="node">
+<title>c06</title>
+<path fill="#b0c0d8" stroke="#7898b8" stroke-width="1.3" d="M159.55,-109.25C159.55,-109.25 67.9,-109.25 67.9,-109.25 61.9,-109.25 55.9,-103.25 55.9,-97.25 55.9,-97.25 55.9,-85.25 55.9,-85.25 55.9,-79.25 61.9,-73.25 67.9,-73.25 67.9,-73.25 159.55,-73.25 159.55,-73.25 165.55,-73.25 171.55,-79.25 171.55,-85.25 171.55,-85.25 171.55,-97.25 171.55,-97.25 171.55,-103.25 165.55,-109.25 159.55,-109.25"/>
+<text xml:space="preserve" text-anchor="start" x="106.98" y="-92.85" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">06</text>
+<text xml:space="preserve" text-anchor="start" x="63.1" y="-80.85" font-family="Helvetica,sans-Serif" font-size="12.00">Mental / behavioral</text>
+</g>
+<!-- d7 -->
+<g id="node12" class="node">
+<title>d7</title>
+<path fill="#dde6f0" stroke="#7898b8" stroke-width="1.3" d="M367.07,-66.25C367.07,-66.25 293.43,-66.25 293.43,-66.25 287.43,-66.25 281.43,-60.25 281.43,-54.25 281.43,-54.25 281.43,-42.25 281.43,-42.25 281.43,-36.25 287.43,-30.25 293.43,-30.25 293.43,-30.25 367.07,-30.25 367.07,-30.25 373.07,-30.25 379.07,-36.25 379.07,-42.25 379.07,-42.25 379.07,-54.25 379.07,-54.25 379.07,-60.25 373.07,-66.25 367.07,-66.25"/>
+<text xml:space="preserve" text-anchor="start" x="292.75" y="-52.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Schizophrenia</text>
+<text xml:space="preserve" text-anchor="start" x="288.62" y="-44.15" font-family="Helvetica,sans-Serif" font-size="8.00">6A20 · MeSH D012559</text>
+<text xml:space="preserve" text-anchor="start" x="314.5" y="-36.15" font-family="Helvetica,sans-Serif" font-size="8.00">3 studies</text>
+</g>
+<!-- c06&#45;&gt;d7 -->
+<g id="edge3" class="edge">
+<title>c06-&gt;d7</title>
+<path fill="none" stroke="#9ab5b8" d="M171.93,-79.78C203.68,-73.42 242.98,-65.54 274.35,-59.25"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="274.42,-61.2 279.44,-58.23 273.66,-57.43 274.42,-61.2"/>
+</g>
+<!-- d8 -->
+<g id="node13" class="node">
+<title>d8</title>
+<path fill="#dde6f0" stroke="#7898b8" stroke-width="1.3" d="M393.7,-281.25C393.7,-281.25 266.8,-281.25 266.8,-281.25 260.8,-281.25 254.8,-275.25 254.8,-269.25 254.8,-269.25 254.8,-257.25 254.8,-257.25 254.8,-251.25 260.8,-245.25 266.8,-245.25 266.8,-245.25 393.7,-245.25 393.7,-245.25 399.7,-245.25 405.7,-251.25 405.7,-257.25 405.7,-257.25 405.7,-269.25 405.7,-269.25 405.7,-275.25 399.7,-281.25 393.7,-281.25"/>
+<text xml:space="preserve" text-anchor="start" x="262" y="-267.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Major depressive disorder</text>
+<text xml:space="preserve" text-anchor="start" x="288.62" y="-259.15" font-family="Helvetica,sans-Serif" font-size="8.00">6A70 · MeSH D003865</text>
+<text xml:space="preserve" text-anchor="start" x="314.5" y="-251.15" font-family="Helvetica,sans-Serif" font-size="8.00">2 studies</text>
+</g>
+<!-- c06&#45;&gt;d8 -->
+<g id="edge10" class="edge">
+<title>c06-&gt;d8</title>
+<path fill="none" stroke="#9ab5b8" d="M167.31,-109.86C168.78,-110.93 170.2,-112.06 171.55,-113.25 220.01,-156 189.48,-201.64 240.55,-241.25 243.08,-243.21 245.76,-245 248.56,-246.64"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="247.35,-248.17 253.11,-249.06 249.16,-244.77 247.35,-248.17"/>
+</g>
+<!-- d9 -->
+<g id="node14" class="node">
+<title>d9</title>
+<path fill="#dde6f0" stroke="#7898b8" stroke-width="1.3" d="M407.95,-109.25C407.95,-109.25 252.55,-109.25 252.55,-109.25 246.55,-109.25 240.55,-103.25 240.55,-97.25 240.55,-97.25 240.55,-85.25 240.55,-85.25 240.55,-79.25 246.55,-73.25 252.55,-73.25 252.55,-73.25 407.95,-73.25 407.95,-73.25 413.95,-73.25 419.95,-79.25 419.95,-85.25 419.95,-85.25 419.95,-97.25 419.95,-97.25 419.95,-103.25 413.95,-109.25 407.95,-109.25"/>
+<text xml:space="preserve" text-anchor="start" x="247.75" y="-95.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Obsessive-compulsive disorder</text>
+<text xml:space="preserve" text-anchor="start" x="288.62" y="-87.15" font-family="Helvetica,sans-Serif" font-size="8.00">6B20 · MeSH D009771</text>
+<text xml:space="preserve" text-anchor="start" x="314.5" y="-79.15" font-family="Helvetica,sans-Serif" font-size="8.00">1 studies</text>
+</g>
+<!-- c06&#45;&gt;d9 -->
+<g id="edge11" class="edge">
+<title>c06-&gt;d9</title>
+<path fill="none" stroke="#9ab5b8" d="M171.93,-91.25C190.86,-91.25 212.47,-91.25 233.48,-91.25"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="233.27,-93.18 238.77,-91.25 233.27,-89.33 233.27,-93.18"/>
+</g>
+<!-- c22 -->
+<g id="node4" class="node">
+<title>c22</title>
+<path fill="#d8c0c0" stroke="#b08a8a" stroke-width="1.3" d="M128.73,-152.25C128.73,-152.25 98.73,-152.25 98.73,-152.25 92.73,-152.25 86.73,-146.25 86.73,-140.25 86.73,-140.25 86.73,-128.25 86.73,-128.25 86.73,-122.25 92.73,-116.25 98.73,-116.25 98.73,-116.25 128.73,-116.25 128.73,-116.25 134.73,-116.25 140.73,-122.25 140.73,-128.25 140.73,-128.25 140.73,-140.25 140.73,-140.25 140.73,-146.25 134.73,-152.25 128.73,-152.25"/>
+<text xml:space="preserve" text-anchor="start" x="106.98" y="-135.85" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">22</text>
+<text xml:space="preserve" text-anchor="start" x="99.1" y="-123.85" font-family="Helvetica,sans-Serif" font-size="12.00">Injury</text>
+</g>
+<!-- d10 -->
+<g id="node15" class="node">
+<title>d10</title>
+<path fill="#efe0e0" stroke="#b08a8a" stroke-width="1.3" d="M382.82,-152.25C382.82,-152.25 277.68,-152.25 277.68,-152.25 271.68,-152.25 265.68,-146.25 265.68,-140.25 265.68,-140.25 265.68,-128.25 265.68,-128.25 265.68,-122.25 271.68,-116.25 277.68,-116.25 277.68,-116.25 382.82,-116.25 382.82,-116.25 388.82,-116.25 394.82,-122.25 394.82,-128.25 394.82,-128.25 394.82,-140.25 394.82,-140.25 394.82,-146.25 388.82,-152.25 382.82,-152.25"/>
+<text xml:space="preserve" text-anchor="start" x="272.88" y="-138.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Traumatic brain injury</text>
+<text xml:space="preserve" text-anchor="start" x="281.12" y="-130.15" font-family="Helvetica,sans-Serif" font-size="8.00">NA07 · MeSH D000070642</text>
+<text xml:space="preserve" text-anchor="start" x="314.5" y="-122.15" font-family="Helvetica,sans-Serif" font-size="8.00">1 studies</text>
+</g>
+<!-- c22&#45;&gt;d10 -->
+<g id="edge8" class="edge">
+<title>c22-&gt;d10</title>
+<path fill="none" stroke="#9ab5b8" d="M141.03,-134.25C170.12,-134.25 218.19,-134.25 258.47,-134.25"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" points="258.36,-136.18 263.86,-134.25 258.36,-132.33 258.36,-136.18"/>
+</g>
+<!-- m1 -->
+<g id="node17" class="node">
+<title>m1</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="581.85,-541.25 531.45,-541.25 531.45,-505.25 587.85,-505.25 587.85,-535.25 581.85,-541.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="581.85,-541.25 581.85,-535.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="587.85,-535.25 581.85,-535.25"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-518.9" font-family="Helvetica,sans-Serif" font-size="10.50">Epileptor</text>
+</g>
+<!-- d0&#45;&gt;m1 -->
+<g id="edge20" class="edge">
+<title>d0-&gt;m1</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="5.75" d="M380.03,-489.47C421.69,-497.35 480.84,-508.54 519.47,-515.84"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="5.75" points="518.8,-518.53 524.71,-516.83 519.82,-513.09 518.8,-518.53"/>
+<text xml:space="preserve" text-anchor="middle" x="458.45" y="-505.52" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#5a7d80">11</text>
+</g>
+<!-- m8 -->
+<g id="node24" class="node">
+<title>m8</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="613.73,-498.25 499.57,-498.25 499.57,-462.25 619.73,-462.25 619.73,-492.25 613.73,-498.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="613.73,-498.25 613.73,-492.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="619.73,-492.25 613.73,-492.25"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-481.52" font-family="Helvetica,sans-Serif" font-size="10.50">Wendling (Jansen-Rit-</text>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-470.27" font-family="Helvetica,sans-Serif" font-size="10.50">derived)</text>
+</g>
+<!-- d0&#45;&gt;m8 -->
+<g id="edge21" class="edge">
+<title>d0-&gt;m8</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M380.03,-480.25C412.7,-480.25 456.12,-480.25 491.97,-480.25"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="491.64,-482.18 497.14,-480.25 491.64,-478.33 491.64,-482.18"/>
+</g>
+<!-- m0 -->
+<g id="node16" class="node">
+<title>m0</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="616.35,-197.37 496.95,-197.37 496.95,-157.13 622.35,-157.13 622.35,-191.37 616.35,-197.37"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="616.35,-197.37 616.35,-191.37"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="622.35,-191.37 616.35,-191.37"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-184.15" font-family="Helvetica,sans-Serif" font-size="10.50">Reduced Wong-Wang /</text>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-172.9" font-family="Helvetica,sans-Serif" font-size="10.50">dynamic mean-field</text>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-161.65" font-family="Helvetica,sans-Serif" font-size="10.50">(Deco)</text>
+</g>
+<!-- d1&#45;&gt;m0 -->
+<g id="edge17" class="edge">
+<title>d1-&gt;m0</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="3.05" d="M414.74,-330.64C416.53,-329.57 418.27,-328.44 419.95,-327.25 442.41,-311.34 437.93,-297.88 453.95,-275.5 472.06,-250.2 474.38,-241.67 496.95,-220.25 503.08,-214.44 510.05,-208.82 517.04,-203.66"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="3.05" points="518.09,-205.28 521.46,-200.52 515.86,-202.14 518.09,-205.28"/>
+<text xml:space="preserve" text-anchor="middle" x="458.45" y="-276.7" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#5a7d80">5</text>
+</g>
+<!-- m2 -->
+<g id="node18" class="node">
+<title>m2</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="586.35,-322.25 526.95,-322.25 526.95,-286.25 592.35,-286.25 592.35,-316.25 586.35,-322.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="586.35,-322.25 586.35,-316.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="592.35,-316.25 586.35,-316.25"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-299.9" font-family="Helvetica,sans-Serif" font-size="10.50">Jansen-Rit</text>
+</g>
+<!-- d1&#45;&gt;m2 -->
+<g id="edge16" class="edge">
+<title>d1-&gt;m2</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="3.05" d="M416.57,-332.37C450.69,-325.61 488.46,-318.14 516.47,-312.6"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="3.05" points="516.78,-314.5 521.8,-311.54 516.03,-310.72 516.78,-314.5"/>
+<text xml:space="preserve" text-anchor="middle" x="458.45" y="-325.26" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#5a7d80">5</text>
+</g>
+<!-- m3 -->
+<g id="node19" class="node">
+<title>m3</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="596.85,-260.25 516.45,-260.25 516.45,-224.25 602.85,-224.25 602.85,-254.25 596.85,-260.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="596.85,-260.25 596.85,-254.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="602.85,-254.25 596.85,-254.25"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-243.53" font-family="Helvetica,sans-Serif" font-size="10.50">DCM canonical</text>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-232.28" font-family="Helvetica,sans-Serif" font-size="10.50">microcircuit</text>
+</g>
+<!-- d1&#45;&gt;m3 -->
+<g id="edge19" class="edge">
+<title>d1-&gt;m3</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M410.95,-330.76C414.01,-329.64 417.02,-328.48 419.95,-327.25 440.98,-318.45 490.65,-286.94 524.47,-264.87"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="525.46,-266.52 529.01,-261.9 523.35,-263.3 525.46,-266.52"/>
+</g>
+<!-- m4 -->
+<g id="node20" class="node">
+<title>m4</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="606.23,-365.25 507.07,-365.25 507.07,-329.25 612.23,-329.25 612.23,-359.25 606.23,-365.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="606.23,-365.25 606.23,-359.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="612.23,-359.25 606.23,-359.25"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-348.52" font-family="Helvetica,sans-Serif" font-size="10.50">Spiking E/I network</text>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-337.27" font-family="Helvetica,sans-Serif" font-size="10.50">(LIF)</text>
+</g>
+<!-- d1&#45;&gt;m4 -->
+<g id="edge18" class="edge">
+<title>d1-&gt;m4</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M416.57,-348.5C444.1,-348.26 474,-347.99 499.24,-347.77"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="499.19,-349.7 504.68,-347.72 499.16,-345.85 499.19,-349.7"/>
+</g>
+<!-- d2&#45;&gt;m2 -->
+<g id="edge24" class="edge">
+<title>d2-&gt;m2</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M385.94,-381.2C397.37,-378.2 409.2,-374.56 419.95,-370.25 456.54,-355.59 461.14,-342.71 496.95,-326.25 504.15,-322.94 512,-319.8 519.61,-316.99"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="520.21,-318.82 524.74,-315.14 518.91,-315.2 520.21,-318.82"/>
+</g>
+<!-- d2&#45;&gt;m4 -->
+<g id="edge26" class="edge">
+<title>d2-&gt;m4</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M385.8,-382.76C409.54,-378.51 437.66,-373.33 462.95,-368.25 474.8,-365.87 487.44,-363.19 499.53,-360.57"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="499.76,-362.49 504.72,-359.44 498.94,-358.73 499.76,-362.49"/>
+</g>
+<!-- m6 -->
+<g id="node22" class="node">
+<title>m6</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="608.48,-455.25 504.82,-455.25 504.82,-419.25 614.48,-419.25 614.48,-449.25 608.48,-455.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="608.48,-455.25 608.48,-449.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="614.48,-449.25 608.48,-449.25"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-438.52" font-family="Helvetica,sans-Serif" font-size="10.50">Basal-ganglia circuit</text>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-427.27" font-family="Helvetica,sans-Serif" font-size="10.50">model</text>
+</g>
+<!-- d2&#45;&gt;m6 -->
+<g id="edge25" class="edge">
+<title>d2-&gt;m6</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M386.01,-403.09C419.64,-409.74 462.79,-418.28 497.54,-425.16"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="496.74,-426.96 502.51,-426.14 497.49,-423.18 496.74,-426.96"/>
+</g>
+<!-- m9 -->
+<g id="node25" class="node">
+<title>m9</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="613.73,-412.37 499.57,-412.37 499.57,-372.13 619.73,-372.13 619.73,-406.37 613.73,-412.37"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="613.73,-412.37 613.73,-406.37"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="619.73,-406.37 613.73,-406.37"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-399.15" font-family="Helvetica,sans-Serif" font-size="10.50">next-generation NMM</text>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-387.9" font-family="Helvetica,sans-Serif" font-size="10.50">(Montbrió/Dody, aQIF-</text>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-376.65" font-family="Helvetica,sans-Serif" font-size="10.50">derived)</text>
+</g>
+<!-- d2&#45;&gt;m9 -->
+<g id="edge23" class="edge">
+<title>d2-&gt;m9</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M386.01,-392.25C417.91,-392.25 458.36,-392.25 492.09,-392.25"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="491.79,-394.18 497.29,-392.25 491.79,-390.33 491.79,-394.18"/>
+</g>
+<!-- m5 -->
+<g id="node21" class="node">
+<title>m5</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="608.85,-584.25 504.45,-584.25 504.45,-548.25 614.85,-548.25 614.85,-578.25 608.85,-584.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="608.85,-584.25 608.85,-578.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="614.85,-578.25 608.85,-578.25"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-561.9" font-family="Helvetica,sans-Serif" font-size="10.50">Stefánescu-Jirsa 3D</text>
+</g>
+<!-- d3&#45;&gt;m5 -->
+<g id="edge27" class="edge">
+<title>d3-&gt;m5</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.7" d="M379.48,-549.7C413.56,-552.85 459.54,-557.1 496.39,-560.5"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.7" points="495.89,-562.39 501.55,-560.98 496.25,-558.55 495.89,-562.39"/>
+<text xml:space="preserve" text-anchor="middle" x="458.45" y="-558.21" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#5a7d80">2</text>
+</g>
+<!-- d4&#45;&gt;m0 -->
+<g id="edge30" class="edge">
+<title>d4-&gt;m0</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M383.84,-298.43C396.22,-295.2 408.99,-290.65 419.95,-284.25 438.95,-273.15 437.19,-262.51 453.95,-248.25 473.96,-231.23 498.13,-214.61 518.21,-201.74"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="519.09,-203.45 522.7,-198.88 517.02,-200.21 519.09,-203.45"/>
+</g>
+<!-- d5&#45;&gt;m0 -->
+<g id="edge29" class="edge">
+<title>d5-&gt;m0</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M411.42,-205.09C436.79,-200.29 464.61,-195.03 489.17,-190.39"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="489.43,-192.3 494.48,-189.38 488.72,-188.51 489.43,-192.3"/>
+</g>
+<!-- d6&#45;&gt;m0 -->
+<g id="edge15" class="edge">
+<title>d6-&gt;m0</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.7" d="M391.59,-177.25C421.43,-177.25 457.61,-177.25 488.66,-177.25"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.7" points="488.37,-179.18 493.87,-177.25 488.37,-175.33 488.37,-179.18"/>
+<text xml:space="preserve" text-anchor="middle" x="458.45" y="-178.45" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#5a7d80">2</text>
+</g>
+<!-- d7&#45;&gt;m0 -->
+<g id="edge14" class="edge">
+<title>d7-&gt;m0</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M379.47,-56.39C392.97,-59.68 407.38,-64.18 419.95,-70.25 463.41,-91.25 506.29,-127.34 532.61,-151.73"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="531.26,-153.1 536.59,-155.46 533.89,-150.29 531.26,-153.1"/>
+</g>
+<!-- d7&#45;&gt;m3 -->
+<g id="edge12" class="edge">
+<title>d7-&gt;m3</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M379.49,-51C394.08,-54.07 409.09,-59.79 419.95,-70.25 459.26,-108.11 419.31,-146.07 453.95,-188.25 468.24,-205.65 489.59,-218.06 509.29,-226.57"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="508.33,-228.26 514.15,-228.58 509.81,-224.7 508.33,-228.26"/>
+</g>
+<!-- m7 -->
+<g id="node23" class="node">
+<title>m7</title>
+<polygon fill="#a8d8b4" stroke="#70b480" stroke-width="1.3" points="610.73,-66.25 502.57,-66.25 502.57,-30.25 616.73,-30.25 616.73,-60.25 610.73,-66.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="610.73,-66.25 610.73,-60.25"/>
+<polyline fill="none" stroke="#70b480" stroke-width="1.3" points="616.73,-60.25 610.73,-60.25"/>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-49.52" font-family="Helvetica,sans-Serif" font-size="10.50">Hopf / Stuart-Landau</text>
+<text xml:space="preserve" text-anchor="middle" x="559.65" y="-38.27" font-family="Helvetica,sans-Serif" font-size="10.50">oscillator</text>
+</g>
+<!-- d7&#45;&gt;m7 -->
+<g id="edge13" class="edge">
+<title>d7-&gt;m7</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M379.48,-48.25C413.09,-48.25 458.28,-48.25 494.87,-48.25"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="494.67,-50.18 500.17,-48.25 494.67,-46.33 494.67,-50.18"/>
+</g>
+<!-- d8&#45;&gt;m2 -->
+<g id="edge22" class="edge">
+<title>d8-&gt;m2</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.7" d="M406.34,-276.79C443.91,-283.56 487.86,-291.49 518.86,-297.08"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.7" points="518.17,-298.91 523.92,-297.99 518.85,-295.12 518.17,-298.91"/>
+<text xml:space="preserve" text-anchor="middle" x="458.45" y="-287.4" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#5a7d80">2</text>
+</g>
+<!-- d9&#45;&gt;m0 -->
+<g id="edge31" class="edge">
+<title>d9-&gt;m0</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M409.84,-109.89C413.27,-110.97 416.66,-112.09 419.95,-113.25 451.67,-124.39 485.98,-140.19 512.54,-153.3"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="511.65,-155 517.43,-155.73 513.36,-151.56 511.65,-155"/>
+</g>
+<!-- d10&#45;&gt;m0 -->
+<g id="edge28" class="edge">
+<title>d10-&gt;m0</title>
+<path fill="none" stroke="#9ab5b8" stroke-width="1.25" d="M395.2,-146.34C424.51,-151.88 459.31,-158.47 489.26,-164.13"/>
+<polygon fill="#9ab5b8" stroke="#9ab5b8" stroke-width="1.25" points="488.74,-165.99 494.5,-165.12 489.45,-162.21 488.74,-165.99"/>
+</g>
+</g>
+</svg>

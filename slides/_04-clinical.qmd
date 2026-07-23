@@ -1,0 +1,816 @@
+# 4. Clinical Applications {background-color="#6880af"}
+
+<style>
+/* The disease slide is a flex column: heading + subline take their natural height,
+   the .cards grid takes ALL the rest. Dense slides (.fill) split that leftover space
+   into equal rows (grid-auto-rows:1fr) so they fill top-to-bottom with no whitespace
+   and no overflow; sparse slides (.center) use a capped row height and sit centred.
+   --cols fills the width; --cardw caps card width on sparse slides; object-fit:contain
+   resizes each figure to fit without cropping; overflow:hidden is a hard stop. */
+.reveal section.cards-slide { overflow:hidden; }
+.cards { width:100%; margin:0.3rem auto 0; overflow:hidden; gap:0.5rem; }
+/* dense: grid with a FIXED row height in logical px of the 1244x750 slide, so the
+   layout is identical at every window size (Reveal scales the whole slide uniformly) */
+.cards.fill { display:grid; justify-content:center; grid-auto-rows:var(--rowh,175px);
+              grid-template-columns:repeat(var(--cols,4), minmax(0, 1fr)); }
+/* sparse: a few capped-width cards of fixed height, centred horizontally */
+.cards.center { display:flex; flex-wrap:wrap; justify-content:center; align-content:flex-start; }
+.cards.center .card { flex:1 1 var(--cardw,340px); max-width:var(--cardmax,560px); height:var(--rowh,340px); }
+.cards .card { display:flex; flex-direction:column; min-height:0; overflow:hidden;
+         border:1px solid #d4dde4; border-radius:9px; background:#fff; box-shadow:0 1px 5px rgba(40,60,90,.14); }
+.cards .card > p:has(img), .cards .card .cardimg { margin:0; flex:1 1 auto; min-height:0; display:flex; }
+.cards .card img { width:100%; height:100%; object-fit:contain;
+         background:#f4f7f9; border-bottom:1px solid #e6edf2; padding:0.15rem; }
+.cards .card .noimg { flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center;
+         text-align:center; padding:0.3rem; background:#dbe8df; color:#36684b; font-style:italic; font-size:0.62rem; }
+.cards .card .cardbody { flex:0 0 auto; padding:0.3rem 0.5rem 0.4rem; font-size:0.5rem; line-height:1.2; }
+.cards .card .cardbody p { margin:0.08rem 0 0; }
+.cards .card .cardbody p:last-child { display:-webkit-box; -webkit-line-clamp:3;
+         -webkit-box-orient:vertical; overflow:hidden; }   /* clamp blurb so cards stay uniform */
+.cards .card .cardbody strong { color:#23364a; }
+.cards .card .cardbody .mdl { color:#5a7d80; font-style:italic; }
+</style>
+
+## From mechanism to the clinic
+
+Brain disorders are disorders of brain **dynamics**. A *personalized virtual brain* turns a patient's scans into a working model — to expose a mechanism we cannot measure, and to rehearse a treatment before it reaches the patient.
+
+```{dot}
+//| fig-align: center
+//| fig-height: 3.0
+digraph recipe {
+    rankdir=LR; bgcolor="transparent"; nodesep=0.30; ranksep=0.80;
+    node [shape=box, style="filled,rounded", fontname="Helvetica", fontsize=13,
+          penwidth=1.4, margin="0.20,0.15", color="#5ea8d4", fontcolor="#1c2b3a"];
+    edge [color="#6880af", penwidth=1.7, arrowsize=0.85, fontname="Helvetica",
+          fontsize=11, fontcolor="#6880af"];
+
+    data   [label="Patient data\nMRI · dMRI · EEG / MEG", fillcolor="#e2f2fb"];
+    model  [label="Personalized\nvirtual brain", fillcolor="#bee0f4"];
+    mech   [label="Hidden mechanism\nexcitability · E/I · connectivity", fillcolor="#cfe8d6"];
+    clinic [label="Clinical use\ndiagnose · predict · plan therapy", fillcolor="#f0e0c4"];
+
+    data -> model  [label=" build "];
+    model -> mech  [label=" simulate & fit "];
+    mech -> clinic [label=" infer "];
+    clinic -> data [label=" personalize ", constraint=false, style=dashed,
+                    color="#9ab5b8", fontcolor="#9ab5b8"];
+}
+```
+
+::: {.notes}
+**One idea for the whole chapter:** brain disorders are disorders of *dynamics* — so rebuild each patient's brain as a network model and let it run.
+
+- **Build** — patient scans (MRI · dMRI · EEG/MEG) → a personalized virtual brain
+- **Simulate & fit** — match the model to that patient's data
+- **Infer** — read off a mechanism you *can't* measure directly: excitability · E/I balance · effective connectivity
+- **Use** — predict an outcome, or rehearse a stimulation/therapy *in silico* before touching the patient
+
+The dashed arrow = the personalized-medicine loop: the clinical question shapes the next measurement.
+Next slides: where this recipe has actually reached patients, disease by disease.
+:::
+
+## The clinical landscape — ICD-11 areas → node dynamical models
+
+```{python}
+#| echo: false
+#| fig-align: center
+# Figure generated live from the clinical ontology addon (tvb-o-clinical.ttl):
+# ICD-11 chapter --skos:broader-- clinical domain (ICD-11 + MeSH)
+#   --tvbc:usesNodeDynamics--> node dynamical model.  Nothing is hard-coded:
+# every node/edge/count is read from the Turtle with SPARQL, so the picture
+# always matches the ontology.
+from pathlib import Path
+import textwrap, graphviz, rdflib
+from IPython.display import SVG, display
+
+def _esc(s):
+    return str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+TTL = next(p for p in [Path("_dev/tvb-o-clinical.ttl"),
+                       Path("../_dev/tvb-o-clinical.ttl")] if p.exists())
+g = rdflib.Graph(); g.parse(TTL, format="turtle")
+Q = ("PREFIX tvbc:<https://w3id.org/tvbo/clinical/> "
+     "PREFIX skos:<http://www.w3.org/2004/02/skos/core#>")
+
+chapters = {str(c): (str(n), str(l)) for c, n, l in g.query(Q +
+    " SELECT ?c ?n ?l WHERE { ?c a skos:Concept ; skos:notation ?n ; skos:prefLabel ?l }")}
+domains = {}
+for d, lab, code, chap in g.query(Q + " SELECT ?d ?lab ?code ?chap WHERE { ?d a tvbc:ClinicalDomain ;"
+        " skos:prefLabel ?lab ; tvbc:icd11Code ?code ; skos:broader ?chap }"):
+    mesh = list(g.query(Q + " SELECT ?m WHERE { <%s> skos:exactMatch ?m }" % d))
+    mesh = str(mesh[0][0]).rsplit("/", 1)[-1] if mesh else ""
+    n = len(list(g.query(Q + " SELECT ?s WHERE { ?s tvbc:appliesToClinicalDomain <%s> }" % d)))
+    domains[str(d)] = dict(label=str(lab), code=str(code), mesh=mesh, chap=str(chap), n=n)
+models = {str(m): str(l) for m, l in g.query(Q +
+    " SELECT ?m ?l WHERE { ?m a tvbc:NodeDynamicsModel ; skos:prefLabel ?l }")}
+dm = {(str(d), str(m)): int(n) for d, m, n in g.query(Q + " SELECT ?d ?m (COUNT(?s) AS ?n) WHERE {"
+        " ?s tvbc:appliesToClinicalDomain ?d ; tvbc:usesNodeDynamics ?m } GROUP BY ?d ?m")}
+
+CFILL = {"08": "#bee0f4", "02": "#e8d4b0", "06": "#b0c0d8", "22": "#d8c0c0"}
+CLINE = {"08": "#7ec0e0", "02": "#c8a870", "06": "#7898b8", "22": "#b08a8a"}
+DFILL = {"08": "#e2f2fb", "02": "#f5ecd8", "06": "#dde6f0", "22": "#efe0e0"}
+SHORT = {"08": "Nervous system", "02": "Neoplasms", "06": "Mental / behavioral", "22": "Injury"}
+ORDER = ["08", "02", "06", "22"]; co = lambda nt: ORDER.index(nt) if nt in ORDER else 9
+mtot = {}
+for (d, m), n in dm.items():
+    mtot[m] = mtot.get(m, 0) + n
+
+dot = graphviz.Digraph("clinical")
+dot.attr(rankdir="LR", bgcolor="transparent", nodesep="0.10", ranksep="0.95",
+         fontname="Helvetica", splines="spline", pad="0.05", size="11.5,5.4")
+dot.attr("node", fontname="Helvetica", penwidth="1.3", margin="0.10,0.045")
+dot.attr("edge", color="#9ab5b8", penwidth="1.0", arrowsize="0.55",
+         fontname="Helvetica", fontsize="9", fontcolor="#5a7d80")
+with dot.subgraph() as s:                                   # column 1 — ICD-11 chapters
+    s.attr(rank="same")
+    for nt, _l in sorted(chapters.values(), key=lambda v: co(v[0])):
+        s.node("c" + nt, f"<<b>{nt}</b><br/>{_esc(SHORT.get(nt, ''))}>", shape="box",
+               style="filled,rounded", fillcolor=CFILL.get(nt, "#ccc"),
+               color=CLINE.get(nt, "#999"), fontsize="12")
+nid = {}
+with dot.subgraph() as s:                                   # column 2 — clinical domains
+    s.attr(rank="same")
+    for i, (d, v) in enumerate(sorted(domains.items(),
+            key=lambda kv: (co(chapters[kv[1]["chap"]][0]), -kv[1]["n"]))):
+        nid[d] = f"d{i}"; nt = chapters[v["chap"]][0]
+        meta = v["code"] + (f" · MeSH {v['mesh']}" if v["mesh"] else "")
+        s.node(nid[d], f"<<b>{_esc(v['label'])}</b>"
+               f"<br/><font point-size=\"8.5\">{_esc(meta)}</font>"
+               f"<br/><font point-size=\"8.5\">{v['n']} studies</font>>", shape="box",
+               style="filled,rounded", fillcolor=DFILL.get(nt, "#eee"),
+               color=CLINE.get(nt, "#999"), fontsize="11")
+mid = {}
+with dot.subgraph() as s:                                   # column 3 — node dynamical models
+    s.attr(rank="same")
+    for j, (m, lab) in enumerate(sorted(models.items(), key=lambda kv: (-mtot.get(kv[0], 0), kv[1]))):
+        mid[m] = f"m{j}"
+        s.node(mid[m], "\\n".join(textwrap.wrap(lab, 22)), shape="note",
+               style="filled", fillcolor="#a8d8b4", color="#70b480", fontsize="10.5")
+for d, v in domains.items():                                # skos:broader
+    dot.edge("c" + chapters[v["chap"]][0], nid[d])
+for (d, m), n in dm.items():                                # tvbc:usesNodeDynamics
+    dot.edge(nid[d], mid[m], label=(str(n) if n > 1 else ""), penwidth=f"{0.8 + 0.45 * n:.2f}")
+dot.attr(label=f"\\nGenerated from tvb-o-clinical.ttl · "
+         f"{sum(v['n'] for v in domains.values())} studies · {len(domains)} clinical domains · "
+         f"{len(models)} node dynamical models   (edge width ∝ studies; arrow = uses node dynamical model)",
+         labelloc="b", fontsize="9.5", fontcolor="#6a6a6a")
+display(SVG(dot.pipe(format="svg").decode("utf-8")))
+```
+
+::: {.notes}
+**The map:** where whole-brain *dynamical* modeling has reached patients — ICD-11 chapter → clinical domain → the node model each area uses.
+
+- Counts = distinct, PubMed-verified applications; model leaves read from each study's full text
+- **Most areas = neural-mass / mean-field:** Epileptor (epilepsy) · Jansen-Rit + Reduced Wong-Wang / dynamic mean-field (Alzheimer's) · Stefánescu-Jirsa 3D (stroke) · Dody next-gen mass (Parkinson's) · DCM canonical microcircuit (schizophrenia)
+- **Two step outside that family:** Hopf / Stuart-Landau oscillator (schizophrenia perturbation) · spiking E/I network (Alzheimer's 1/f marker)
+- **Note:** Alzheimer's (12) is now level with epilepsy (12)
+:::
+
+## Epilepsy — the Virtual Epileptic Patient {.smaller .cards-slide}
+
+**ICD-11 8A6Z · MeSH Epilepsy · 12 dynamical-model applications**
+
+::::: {.cards .fill style="--cols:4; --cardw:1fr; --rowh:175px"}
+:::: {.card}
+![](img/figures/clinical/Jirsa2017.jpg){.cardimg}
+
+::: {.cardbody}
+**Jirsa 2017** · [Epileptor]{.mdl}
+
+Builds the individualized Virtual Epileptic Patient from patient SEEG to inform therapy [@Jirsa2017]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Proix2017.jpg){.cardimg}
+
+::: {.cardbody}
+**Proix 2017** · [Epileptor]{.mdl}
+
+Patient-specific virtual brain models from diffusion MRI predict individual seizure propagation and post-surgical variability [@Proix2017]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Proix2018.jpg){.cardimg}
+
+::: {.cardbody}
+**Proix 2018** · [Epileptor]{.mdl}
+
+A neural-field model of wave propagation + coupled oscillators explains seizure spread/termination, validated on patients [@Proix2018]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/An2019.jpg){.cardimg}
+
+::: {.cardbody}
+**An 2019** · [Epileptor]{.mdl}
+
+Patient-specific VEP models identify alternative resections *outside* the epileptogenic zone that spare eloquent cortex [@An2019]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Courtiol2020.jpg){.cardimg}
+
+::: {.cardbody}
+**Courtiol 2020** · [Epileptor]{.mdl}
+
+Whole-brain modeling reveals dynamical mechanisms of altered interictal resting-state connectivity in patients [@Courtiol2020]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Vattikonda2021.jpg){.cardimg}
+
+::: {.cardbody}
+**Vattikonda 2021** · [Epileptor]{.mdl}
+
+Bayesian inference on a personalized brain network model identifies spatio-temporal seizure-propagation patterns [@Vattikonda2021]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Makhalova2022.jpg){.cardimg}
+
+::: {.cardbody}
+**Makhalova 2022** · [Epileptor]{.mdl}
+
+VEP brain modeling relates model parameters to seizure onset zones and surgical outcome [@Makhalova2022]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Dollomaja2023.jpg){.cardimg}
+
+::: {.cardbody}
+**Dollomaja 2023** · [Epileptor]{.mdl}
+
+Personalized whole-brain models investigate the dynamics and mechanisms of status epilepticus in patients [@Dollomaja2023]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Wang2023.jpg){.cardimg}
+
+::: {.cardbody}
+**Wang 2023** · [Epileptor]{.mdl}
+
+Personalized brain modeling with imaging data delineates epileptogenic networks in drug-resistant epilepsy [@Wang2023]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Azilinon2024.jpg){.cardimg}
+
+::: {.cardbody}
+**Azilinon 2024** · [Epileptor]{.mdl}
+
+Brain sodium MRI-derived priors improve personalized model-based estimation of epileptogenic zones in epilepsy patients [@Azilinon2024]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Cai2024.jpg){.cardimg}
+
+::: {.cardbody}
+**Cai 2024** · [Wendling NMM]{.mdl}
+
+A functional coupled neural mass model predicts radiofrequency thermocoagulation surgical outcomes in refractory focal epilepsy [@Cai2024]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Dollomaja2025.jpg){.cardimg}
+
+::: {.cardbody}
+**Dollomaja 2025** · [Epileptor]{.mdl}
+
+Generates and evaluates a virtual epilepsy patient cohort using personalized whole-brain modeling [@Dollomaja2025]
+:::
+::::
+:::::
+
+::: {.notes}
+**The deepest area — 12 applications, almost all Epileptor; the Virtual Epileptic Patient (VEP).**
+
+- **Jirsa 2017** — first personalized VEP in one bitemporal patient (SC + epileptogenic zone + lesions), fit & validated vs SEEG
+- **Proix 2017** — dMRI patient-specific models simulate seizure propagation across 15 drug-resistant patients; links to surgical success
+- **Proix 2018** — neural-field model: excitable-media waves + coupled oscillators explain seizure spread & termination
+- **An 2019** — finds safe surgical targets *outside* the epileptogenic zone, sparing eloquent cortex
+- **Courtiol 2020** — interictal: lower *global* excitability, but locally hyperexcitable epileptogenic regions
+- **Vattikonda 2021** — Bayesian inference → patient-specific propagation; validated on 25 patients
+- **Makhalova 2022** — VEP across 53 patients; params ↔ seizure-onset zones & surgical outcome
+- **Wang 2023** — VEP + Bayesian inference on 53 drug-resistant focal patients → epileptogenic-zone networks
+- **Dollomaja 2023** — extends to status epilepticus; propagation depends on connectome + network state
+- **Azilinon 2024** — adds sodium-²³ MRI priors → better epileptogenic-zone estimation
+- **Cai 2024** — *Wendling* NMM (not Epileptor); virtual thermocoagulation on 12 patients predicts outcomes
+- **Dollomaja 2025** — openly releases a 30-patient virtual cohort with ground-truth zones, validated vs intracranial
+
+**Arc:** single patient → cohorts → Bayesian inference → new modalities & open virtual cohorts.
+:::
+
+## Alzheimer's disease & dementia {.smaller .cards-slide}
+
+**ICD-11 8A20 · MeSH Alzheimer Disease · 12 dynamical-model applications**
+
+::::: {.cards .fill style="--cols:4; --cardw:1fr; --rowh:175px"}
+:::: {.card}
+![](img/figures/clinical/Penny2018.jpg){.cardimg}
+
+::: {.cardbody}
+**Penny 2018** · [DCM (Jansen-Rit)]{.mdl}
+
+DCM characterizes effective-connectivity changes in preclinical autosomal-dominant AD [@Penny2018]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Zimmermann2018a.jpg){.cardimg}
+
+::: {.cardbody}
+**Zimmermann 2018** · [Reduced Wong-Wang]{.mdl}
+
+Personalized Virtual Brain models of 124 individuals across the aging–MCI–AD spectrum predict cognition beyond the empirical connectome [@Zimmermann2018a]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Stefanovski2019.jpg){.cardimg}
+
+::: {.cardbody}
+**Stefanovski 2019** · [Jansen-Rit]{.mdl}
+
+TVB links β-amyloid burden to EEG slowing and simulates memantine pharmacodynamics in virtual AD brains [@Stefanovski2019]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Arbabyazd2021.jpg){.cardimg}
+
+::: {.cardbody}
+**Arbabyazd 2021** · [Reduced Wong-Wang]{.mdl}
+
+Generates virtual connectomic datasets in AD and aging via whole-brain network dynamics [@Arbabyazd2021]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Monteverdi2022.jpg){.cardimg}
+
+::: {.cardbody}
+**Monteverdi 2022** · [Reduced Wong-Wang]{.mdl}
+
+Virtual brain modeling identifies subject-specific excitation/inhibition profiles in neurodegeneration [@Monteverdi2022]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Triebkorn2022.jpg){.cardimg}
+
+::: {.cardbody}
+**Triebkorn 2022** · [Jansen-Rit]{.mdl}
+
+The Virtual Brain simulation features augment machine-learning classification of dementia patients [@Triebkorn2022]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/MartinezCanada2023.jpg){.cardimg}
+
+::: {.cardbody}
+**Martinez-Cañada 2023** · [Spiking E/I network (LIF)]{.mdl}
+
+Aperiodic 1/f EEG/MEG slopes + brain simulation derive an excitation/inhibition imbalance marker in AD [@MartinezCanada2023]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Monteverdi2023.jpg){.cardimg}
+
+::: {.cardbody}
+**Monteverdi 2023** · [Reduced Wong-Wang]{.mdl}
+
+Virtual brain simulations reveal network-specific parameters distinguishing neurodegenerative dementias [@Monteverdi2023]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Patow2023.jpg){.cardimg}
+
+::: {.cardbody}
+**Patow 2023** · [dynamic mean-field]{.mdl}
+
+A whole-brain dynamic model shows amyloid-β dominates early (MCI), tau dominates late, via altered E/I balance [@Patow2023]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/CabreraAlvarez2024.png){.cardimg}
+
+::: {.cardbody}
+**Cabrera-Álvarez 2024** · [Jansen-Rit]{.mdl}
+
+Closed-loop heterodimer model couples Aβ/tau spread to a Jansen-Rit network; inhibition changes (mainly Aβ) drive AD functional-connectivity alterations [@CabreraAlvarez2024]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Amato2024.jpg){.cardimg}
+
+::: {.cardbody}
+**Amato 2024** · [Jansen-Rit]{.mdl}
+
+Personalized brain modeling of AD progression estimates neurodegeneration severity from individual EEG [@Amato2024]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Amato2025.jpg){.cardimg}
+
+::: {.cardbody}
+**Amato 2025** · [Jansen-Rit]{.mdl}
+
+Brain digital twins + non-invasive recordings enable early diagnosis of Alzheimer's disease [@Amato2025]
+:::
+::::
+:::::
+
+::: {.notes}
+**Now level with epilepsy — 12 applications; branches by mechanism & modality.**
+
+- **Penny 2018** · DCM/Jansen-Rit — EEG in presymptomatic PSEN1 carriers; connectivity predicts later MMSE
+- **Zimmermann 2018** · Reduced Wong-Wang — TVB across 124 (aging→MCI→AD); params beat the empirical connectome at predicting cognition
+- **Stefanovski 2019** · Jansen-Rit — PET amyloid-β modulates E/I → reproduces EEG slowing + memantine reversal
+- **Arbabyazd 2021** · RWW — virtual FC ↔ SC; classifiers on virtual connectomes match empirical
+- **Monteverdi 2022** · RWW — subject-specific E/I separates neurodegenerative phenotypes
+- **Monteverdi 2023** · RWW — AD vs frontotemporal dementia: disease-specific connectivity & synaptic differences
+- **Triebkorn 2022** — PET/MRI + TVB-simulated LFPs lift ML classification ~10%
+- **Martínez-Cañada 2023** · spiking LIF — 1/f EEG/MEG slopes infer regional E/I abnormalities
+- **Patow 2023** · dynamic mean-field — disentangles amyloid (early MCI) vs tau (later AD)
+- **Cabrera-Álvarez 2024** · Jansen-Rit — closed-loop heterodimer Aβ/tau spread ↔ network; inhibition (mainly Aβ) drives FC changes; decouples cellular hyperactivity from interregional hypersynchrony
+- **Amato 2024** · Jansen-Rit — EEG digital twin separates MCI from healthy, flags CSF hallmarks
+- **Amato 2025** · DADD twin — scales to 124: 88% accuracy for CSF-positive, 87% predicting conversion
+
+**Arc:** connectivity & E/I → molecule-to-network (amyloid/tau) → EEG digital twins for early diagnosis.
+:::
+
+## Schizophrenia {.smaller .cards-slide}
+
+**ICD-11 6A20 · MeSH Schizophrenia · 3 dynamical-model applications**
+
+::::: {.cards .center style="--cardw:340px; --cardmax:390px; --rowh:500px"}
+:::: {.card}
+![](img/figures/clinical/Yang2015.jpg){.cardimg}
+
+::: {.cardbody}
+**Yang 2015** · [Reduced Wong-Wang]{.mdl}
+
+A cortical-hierarchy model (E/I gradient) explains preferential connectivity disturbances along the hierarchy in schizophrenia [@Yang2015]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Adams2022.jpg){.cardimg}
+
+::: {.cardbody}
+**Adams 2022** · [DCM canonical microcircuit]{.mdl}
+
+DCM of EEG+fMRI shows a consistent loss of pyramidal-cell synaptic gain in schizophrenia [@Adams2022]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Mana2023.jpg){.cardimg}
+
+::: {.cardbody}
+**Mana 2023** · [Hopf (Stuart-Landau)]{.mdl}
+
+An *in silico* whole-brain perturbational approach identifies critical brain areas in schizophrenia [@Mana2023]
+:::
+::::
+:::::
+
+::: {.notes}
+**Same disease, three models, a moving question.**
+
+- **Yang 2015** · RWW — 161 patients; elevated E/I balance predicts hyperconnectivity in association cortices, tracks symptoms
+- **Adams 2022** · DCM canonical microcircuit — EEG+fMRI; greater pyramidal-cell self-inhibition; disinhibition predicts psychotic symptoms
+- **Mana 2023** · Hopf/Stuart-Landau — 47 patients vs 118 controls; perturbation reveals temporo-parietal & medial fronto-temporal drivers
+
+**Arc:** circuit E/I → cell-level self-inhibition → spatial drivers of whole-brain dynamics.
+:::
+
+## Parkinson's disease {.smaller .cards-slide}
+
+**ICD-11 8A00.0 · MeSH Parkinson Disease · 4 dynamical-model applications**
+
+::::: {.cards .fill style="--cols:4; --cardw:1fr; --rowh:430px"}
+:::: {.card}
+![](img/figures/clinical/Maith2020.jpg){.cardimg}
+
+::: {.cardbody}
+**Maith 2020** · [basal-ganglia model]{.mdl}
+
+A computational basal-ganglia model fit to Parkinson's patients dissociates the dopamine-dependent pathway changes underlying altered reinforcement learning [@Maith2020]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Jung2022.jpg){.cardimg}
+
+::: {.cardbody}
+**Jung 2022** · [Jansen-Rit]{.mdl}
+
+Whole-brain dynamical modeling of individual connectomes classifies Parkinson's patients [@Jung2022]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Meier2022.jpg){.cardimg}
+
+::: {.cardbody}
+**Meier 2022** · [mean-field + spiking BG]{.mdl}
+
+Virtual deep brain stimulation: multiscale co-simulation of a spiking basal-ganglia network with a whole-brain mean-field model in The Virtual Brain [@Meier2022]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Angiolelli2025.jpg){.cardimg}
+
+::: {.cardbody}
+**Angiolelli 2025** · [Dody next-gen NMM]{.mdl}
+
+A dopamine-dependent whole-brain neural-mass model infers patient-specific dopaminergic tone from EEG/deep-electrode data, distinguishing ON vs OFF L-Dopa [@Angiolelli2025]
+:::
+::::
+:::::
+
+::: {.notes}
+**Four very different attacks on the same pathology.**
+
+- **Maith 2020** · spiking basal-ganglia — fit to BOLD between BG nuclei; recovers PD firing-rate & connectivity changes
+- **Jung 2022** · Jansen-Rit — whole-brain simulation + behavioural fitting → ML classification of patients vs controls
+- **Meier 2022** · mean-field + spiking BG — co-simulated *virtual DBS* shifts thalamus–BG firing toward healthy, alters cortex
+- **Angiolelli 2025** · Dody next-gen NMM — EEG + STN electrodes, 10 patients; infers higher ON / lower OFF dopaminergic tone (ON vs OFF L-Dopa)
+
+**Arc:** BG nuclei → whole-brain classification → virtual DBS → dopamine-aware model on intracranial data.
+:::
+
+## Stroke {.smaller .cards-slide}
+
+**ICD-11 8B20 · MeSH Stroke · 2 dynamical-model applications**
+
+::::: {.cards .center style="--cardw:340px; --cardmax:580px; --rowh:500px"}
+:::: {.card}
+![](img/figures/clinical/Falcon2015.jpg){.cardimg}
+
+::: {.cardbody}
+**Falcon 2015** · [Stefánescu-Jirsa 3D]{.mdl}
+
+The Virtual Brain models individual biological correlates of recovery after chronic stroke [@Falcon2015]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Falcon2016a.jpg){.cardimg}
+
+::: {.cardbody}
+**Falcon 2016** · [Stefánescu-Jirsa 3D]{.mdl}
+
+TVB modeling of 20 stroke patients links reduced conduction velocity and altered local dynamics/inhibition to motor recovery [@Falcon2016a]
+:::
+::::
+:::::
+
+::: {.notes}
+**Same group, same model — from network topology to recovery mechanism.**
+
+- **Falcon 2015** · Stefánescu-Jirsa 3D — 20 patients/10 controls; long-range coupling ↔ global efficiency (not centrality)
+- **Falcon 2016** · Stefánescu-Jirsa 3D — 20 patients/11 controls; reduced conduction velocity + reduced local inhibition, tied to **motor recovery**
+
+**Arc:** 2015 = coupling vs efficiency; 2016 = richer params linked to a clinical outcome.
+:::
+
+## Brain tumor / glioma {.smaller .cards-slide}
+
+**ICD-11 2A00.0 · MeSH Glioma · 2 dynamical-model applications**
+
+::::: {.cards .center style="--cardw:340px; --cardmax:580px; --rowh:500px"}
+:::: {.card}
+![](img/figures/clinical/Aerts2018.jpg){.cardimg}
+
+::: {.cardbody}
+**Aerts 2018** · [Reduced Wong-Wang]{.mdl}
+
+Individually-optimized RWW parameters improve FC prediction and differentiate tumor-affected from healthy regions in 25 patients [@Aerts2018]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Aerts2020.jpg){.cardimg}
+
+::: {.cardbody}
+**Aerts 2020** · [Reduced Wong-Wang]{.mdl}
+
+TVB *virtual neurosurgery*: model parameters are stable across resection and predict post-operative dynamics [@Aerts2020]
+:::
+::::
+:::::
+
+::: {.notes}
+**Same framework, from diagnosis to the surgical trajectory.**
+
+- **Aerts 2018** · RWW — 25 patients/11 controls; individualized params improve FC prediction, flag tumor-affected regions
+- **Aerts 2020** · RWW — params stable across resection; *virtual neurosurgery* improves post-op FC in only some patients (a nuanced, patient-specific result)
+
+**Arc:** individualized fitting for differentiation → longitudinal, treatment-oriented use around surgery.
+:::
+
+## Multiple sclerosis {.smaller .cards-slide}
+
+**ICD-11 8A40 · MeSH Multiple Sclerosis · 1 dynamical-model application**
+
+::::: {.cards .center style="--cardw:340px; --cardmax:660px; --rowh:500px"}
+:::: {.card}
+![](img/figures/clinical/MartiJuan2023.jpg){.cardimg}
+
+::: {.cardbody}
+**Martí-Juan 2023** · [Reduced Wong-Wang]{.mdl}
+
+The Virtual Brain studies structure–function connectivity relationships in multiple-sclerosis patients across multiple centers [@MartiJuan2023]
+:::
+::::
+:::::
+
+::: {.notes}
+**Single study — large, multi-site, cognition-focused.**
+
+- **Martí-Juan 2023** · Reduced Wong-Wang — 513 MS patients + 208 controls across 7 centers
+- **Finding:** higher structure–function coupling ↔ cognitive impairment (low Symbol Digit Modalities Test)
+- **Takeaway:** structure–function coupling from a virtual brain links directly to a clinical cognitive outcome
+:::
+
+## Traumatic brain injury {.smaller .cards-slide}
+
+**ICD-11 NA07 · MeSH Brain Injuries, Traumatic · 1 dynamical-model application**
+
+::::: {.cards .center style="--cardw:340px; --cardmax:660px; --rowh:500px"}
+:::: {.card}
+![](img/figures/clinical/Good2022.jpg){.cardimg}
+
+::: {.cardbody}
+**Good 2022** · [dynamic mean-field]{.mdl}
+
+Personalized connectome-based (TVB) modeling in semi-acute traumatic-brain-injury patients relates model parameters to acute imaging and 6-month outcomes [@Good2022]
+:::
+::::
+:::::
+
+::: {.notes}
+**Single study — model recovers hidden parameters with prognostic value.**
+
+- **Good 2022** · dynamic mean-field — 44 TBI patients, resting-state fMRI
+- **Finding:** lower regional *inhibitory* connection strength ↔ more symptoms
+- **Prognostic:** the same inhibitory params predict worse cognitive outcome at 6 months
+:::
+
+## Disorders of consciousness {.smaller .cards-slide}
+
+**ICD-11 8E2Z · MeSH Consciousness Disorders · 1 dynamical-model application**
+
+::::: {.cards .center style="--cardw:340px; --cardmax:660px; --rowh:500px"}
+:::: {.card}
+![](img/figures/clinical/Luppi2022a.jpg){.cardimg}
+
+::: {.cardbody}
+**Luppi 2022** · [dynamic mean-field]{.mdl}
+
+Whole-brain modeling reveals distinct but convergent mechanistic paths to unconsciousness in anesthesia and disorders of consciousness [@Luppi2022a]
+:::
+::::
+:::::
+
+::: {.notes}
+**Single study — one model separates look-alike states by mechanism.**
+
+- **Luppi 2022** · dynamic mean-field — perturbed whole-brain model grounded in PET GABA + diffusion-MRI connectivity
+- **Finding:** two distinct routes to unconsciousness — increased local inhibition (anaesthesia) vs randomised connectivity (disorders of consciousness)
+- **Takeaway:** the right modalities let one mechanistic model split superficially similar clinical states
+:::
+
+## Depression {.smaller .cards-slide}
+
+**ICD-11 6A70 · MeSH Depressive Disorder, Major · 2 dynamical-model applications**
+
+::::: {.cards .center style="--cardw:340px; --cardmax:580px; --rowh:500px"}
+:::: {.card}
+![](img/figures/clinical/An2022.jpg){.cardimg}
+
+::: {.cardbody}
+**An 2022** · [Jansen-Rit]{.mdl}
+
+High-resolution virtual brain modeling personalizes **deep brain stimulation** for treatment-resistant depression via fiber-pathway stimulation responses [@An2022]
+:::
+::::
+:::: {.card}
+![](img/figures/clinical/Hofsaehs2026.jpg){.cardimg}
+
+::: {.cardbody}
+**Hofsähs 2026** · [Jansen-Rit]{.mdl}
+
+The Virtual Brain links TMS-evoked potentials to inhibitory-neurotransmitter changes in major depressive disorder [@Hofsaehs2026]
+:::
+::::
+:::::
+
+::: {.notes}
+**Both Jansen-Rit, different angles on the pathology.**
+
+- **An 2022** · Jansen-Rit — high-res personalized model (>100k stimulable fiber tracts); simulates **DBS** for treatment-resistant depression; ERPs depend on *where* you stimulate
+- **Hofsähs 2026** · Jansen-Rit — simulates **TMS**-evoked potentials; GABAergic deficits raise TEP toward MDD-like levels → points to inhibitory targets
+
+**Arc:** from "where to stimulate" (structural model) → "which inhibitory mechanism drives it".
+:::
+
+## Obsessive-compulsive disorder {.smaller .cards-slide}
+
+**ICD-11 6B20 · MeSH Obsessive-Compulsive Disorder · 1 dynamical-model application**
+
+::::: {.cards .center style="--cardw:340px; --cardmax:660px; --rowh:500px"}
+:::: {.card}
+![](img/figures/clinical/Naze2025.jpg){.cardimg}
+
+::: {.cardbody}
+**Naze 2025** · [Reduced Wong-Wang]{.mdl}
+
+Computational modeling of OCD patient data identifies frontostriatal-coupling interventions that improve function and predict symptom change [@Naze2025]
+:::
+::::
+:::::
+
+::: {.notes}
+**Single study — a directional, circuit-specific intervention.**
+
+- **Naze 2025** · Reduced Wong-Wang — combines neuroimaging + behaviour + modelling
+- **Finding:** ↓ ventromedial frontostriatal coupling **and** ↑ dorsolateral cortico-striatal coupling gives the biggest functional improvement
+- **Takeaway:** turn one pathway down and another up — a targeted, model-derived treatment hypothesis
+:::
+
+<!-- TAKEAWAYS -->
+## The bottom line {.smaller}
+
+<style>
+.bl-stats { text-align:center; font-size:1.7em; font-weight:700; color:#385a86;
+            letter-spacing:0.01em; margin:0.1em 0 0.35em; }
+.bl-claim { text-align:center; margin:0 0 0.4em; }
+.bl-proven { text-align:center; margin:0 0 0.55em; }
+.bl-bets { display:flex; gap:0.7rem; margin:0; align-items:stretch; }
+.bl-bets .bet { flex:1 1 0; border:1px solid #d4dde4; border-top:3px solid #6880af;
+                border-radius:9px; background:#fff; padding:0.4em 0.6em 0.5em;
+                box-shadow:0 1px 5px rgba(40,60,90,.12); font-size:0.8em; line-height:1.28; }
+.bl-bets .bet img { display:block; width:100%; height:116px; object-fit:contain;
+                    background:#f4f7f9; border-radius:6px; margin:0 0 0.3em; }
+.bl-bets .bet figure { margin:0 0 0.3em; }
+.bl-bets .bet > :first-child { margin-top:0; }
+.bl-bets .bet p { margin:0.18em 0 0; }
+.bl-bets .bet strong { color:#23364a; }
+.bl-bets .bet .cite, .bl-bets .bet .citation { font-size:0.92em; color:#5a7d80; }
+.bl-payoff { text-align:center; font-size:1.3em; margin-top:0.55em; color:#23364a; }
+.bl-payoff b { color:#385a86; }
+</style>
+
+::: {.bl-stats}
+1 recipe · 11 diseases · 41 model applications
+:::
+
+::: {.bl-claim}
+Brain disorders are disorders of **dynamics** — a personalized virtual brain makes them **measurable** and **treatable**.
+:::
+
+:::: {.fragment}
+::: {.bl-proven}
+The approach has **already reached the clinic** — the **Virtual Epileptic Patient** is in **clinical trials**. So the question is no longer *whether* personalized brain models reach patients, but **where next**.
+:::
+::::
+
+::::: {.fragment}
+:::: {.bl-bets}
+::: {.bet}
+![](img/figures/clinical/Meier2026_DBS.png)
+
+**Deep brain stimulation**
+
+Target & settings *in silico* before surgery — Parkinson's · depression · OCD [@Meier2026]
+:::
+::: {.bet}
+![](img/figures/clinical/Stefanovski2019.jpg)
+
+**Alzheimer's**
+
+amyloid / tau → network failure → *digital twin* for early diagnosis
+:::
+::: {.bet}
+![](img/figures/clinical/Hofsaehs2026.jpg)
+
+**Mental disorders**
+
+model the *mechanism* — E/I balance, synaptic gain — not a label
+:::
+::::
+:::::
+
+:::: {.fragment}
+::: {.bl-payoff}
+One model that **explains** the symptom · **predicts** the course · **rehearses** the treatment
+:::
+::::
+
+::: {.notes}
+**Land it on reach and our priorities.**
+
+- **Already clinical:** the Virtual Epileptic Patient is in clinical trials — *a separate, field-leading effort, not our own work*
+- **The point is reach:** the same personalized-virtual-brain recipe now spans 11 ICD-11 areas; our focus is the next ones
+
+**Our three bets:**
+
+- **DBS** — clearest translational win: test *where & how* to stimulate before operating (Parkinson's · treatment-resistant depression · OCD)
+- **Alzheimer's** — molecule-to-network; now level with epilepsy in real applications; digital twins → early diagnosis
+- **Mental disorders** — newest frontier: model the circuit *mechanism*, not the label
+
+**Close:** explain · predict · rehearse.
+:::

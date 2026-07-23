@@ -1,0 +1,685 @@
+# 7. Stimulating the Brain {background-color="#6880af"}
+
+## Why stimulate a brain model?
+
+:::: {.columns}
+
+::: {.column width="55%"}
+::: {.incremental}
+- At rest the brain is a **dynamical system poised near a regime boundary** ([Intro](#ch-intro), [Bifurcation](#ch-bifurcation))
+- Tasks, **sensory flashes**, **TMS**, and **DBS** are all *perturbations* of that ongoing state
+- A stimulus lets us **probe the regime** — does a nudge decay, or tip the system into a new behaviour?
+- ... **reproduce evoked responses** we record (EEG/MEG/SEEG)
+- ... and **test interventions** *in silico* before touching a patient
+:::
+:::
+
+::: {.column width="45%"}
+::: {.fragment}
+![A small perturbation off a stable equilibrium: does it relax back, or grow? Stimulation asks exactly this question — now driven by an external signal.](img/figures/bifurcation/fig-stability-perturbation.png){fig-align="center" width="92%"}
+:::
+:::
+
+::::
+
+::: {.notes}
+Tie this straight back to chapters 1 and 5. In chapter 1 we said the brain is never idle —
+resting activity is structured, and tasks are perturbations of that ongoing dynamical state.
+In chapter 5 we learned to read a model as a *map of regimes*. Stimulation is where those two
+ideas meet: we inject an external signal and watch how the system responds. The same machinery
+covers a visual flash, a TMS pulse, or a DBS train — they differ only in *where*, *when*, and
+*how strong*. The figure is the chapter-5 "nudge the equilibrium" picture; stimulation just makes
+that nudge an explicit, time-dependent input we control.
+:::
+
+## Stimulation is a time-dependent `Event`
+
+In TVB-O a stimulus is an **`Event`**: a *symbolic, time-dependent perturbation* injected into the dynamics.
+
+::: {.fragment}
+| field | meaning |
+|---|---|
+| `name` | identifier — **and the model port it drives** |
+| `event_type` | `"stimulus"` for external input |
+| `parameters` | named knobs (`onset`, `width`, `amplitude`, …) |
+| `equation.rhs` | any expression in `t` **and** the parameters |
+| `nodes` / `weights` | *where* it lands — which nodes, how strongly |
+:::
+
+::: {.fragment}
+Because the signal is **symbolic**, the same object serializes to YAML, renders to every backend, and is fully **FAIR** — just like the model itself.
+:::
+
+::: {.notes}
+The key idea: a stimulus is not a hardcoded array of numbers, it's a symbolic equation in time.
+That's what makes it portable and reproducible — it round-trips through the ontology like every
+other part of the experiment. The fields map onto the three questions any stimulus has to answer:
+what shape (equation + parameters), where (nodes/weights), and into what (the model port its
+name binds to). Don't dwell on the table — we'll see the main fields appear in the next slides.
+:::
+
+## The recipe: **define → inject → run**
+
+::: {.incremental}
+1. **Define** the signal as an `Event` — a shape in time
+2. **Inject** it: register the event and add its variable to a state equation's right-hand side
+3. **Run** and compare the resting vs. stimulated time series
+:::
+
+::: {.fragment}
+We start with a **single Generic-2d-Oscillator** node — the same model whose bifurcation diagram we read in [Bifurcation Analysis](#ch-bifurcation) — then place it in a small network.
+:::
+
+## Step 0 — A baseline run
+
+:::: {.columns}
+
+::: {.column width="48%" .smaller}
+```{.python}
+from tvbo import Dynamics, SimulationExperiment
+from tvbo.datamodel.schema import Event
+
+g2d = Dynamics.from_db("Generic2dOscillator")
+exp = SimulationExperiment(dynamics=g2d)
+
+res = exp.run()
+res.integration.sel(variable="V").plot()
+```
+
+With its database defaults ($I = 0$) the node relaxes onto a **stable focus** — far from any oscillation. This is our *resting state*.
+:::
+
+::: {.column width="52%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import contextlib, io
+import matplotlib.pyplot as plt
+from tvbo import Dynamics, SimulationExperiment
+from tvbo.datamodel.schema import Event
+
+g2d = Dynamics.from_db("Generic2dOscillator")
+exp = SimulationExperiment(dynamics=g2d)
+
+with contextlib.redirect_stdout(io.StringIO()):
+    res = exp.run()
+
+fig, ax = plt.subplots(figsize=(6.4, 5.0))
+res.integration.sel(variable="V").plot(ax=ax)
+ax.set_title("")
+plt.tight_layout()
+```
+:::
+
+::::
+
+::: {.notes}
+Before stimulating, establish the baseline. Loaded straight from the database, the Generic-2d
+oscillator sits on a stable fixed point: whatever the initial transient, it settles to a constant —
+the "quiet equilibrium" from the Hopf slide in chapter 5. Everything interesting on the next slides
+is the *departure* from this flat line.
+:::
+
+## Step 1 — Define the stimulus
+
+:::: {.columns}
+
+::: {.column width="48%" .smaller}
+A rectangular pulse, written as a `Piecewise` in `t`:
+
+```{.python}
+event = Event(
+    name="stim",
+    event_type="stimulus",
+    parameters={
+        "onset":     {"value": 200.0},
+        "width":     {"value": 200.0},
+        "amplitude": {"value": 5.0},
+    },
+    equation={"rhs":
+        "Piecewise((amplitude,"
+        " (t >= onset) & (t < onset + width)),"
+        " (0.0, True))"},
+)
+event.plot()
+```
+
+Any expression in `t` and the event's parameters is valid — a Gaussian, a ramp, or a sinusoid works the same way.
+:::
+
+::: {.column width="52%"}
+```{python}
+#| echo: false
+#| fig-align: center
+event = Event(
+    name="stim",
+    event_type="stimulus",
+    parameters={
+        "onset": {"value": 200.0},
+        "width": {"value": 200.0},
+        "amplitude": {"value": 5.0},
+    },
+    equation={"rhs": "Piecewise((amplitude, (t >= onset) & (t < onset + width)), (0.0, True))"},
+)
+fig, ax = plt.subplots(figsize=(6.4, 4.6))
+event.plot(ax=ax)
+plt.tight_layout()
+```
+:::
+
+::::
+
+::: {.notes}
+The equation is the whole stimulus: a box at `amplitude` while onset ≤ t < onset+width, zero
+otherwise. The parameters are named knobs, so onset/width/amplitude become things you can sweep or
+even *infer* later (the bridge to chapter 6). Because it's symbolic, a Gaussian bump or an
+oscillating drive is a one-line change to the rhs — nothing else in the recipe moves.
+:::
+
+## Step 2 — Expose a port, bind the event
+
+The model author places a **stimulation port** `stim` (default `0`) where input physically enters; the event binds to it **by name**.
+
+```{.python}
+from tvbo.datamodel.schema import Parameter
+
+# the model exposes a stimulation port `stim`, defaulting to 0
+g2d.parameters["stim"] = Parameter(name="stim", value=0.0)
+g2d.state_variables["V"].equation.rhs = (
+    "d*tau*((I + stim)*gamma - V**3*f + V**2*e + V*g "
+    "+ V*local_coupling + W*alpha + c_glob*gamma)"
+)
+
+exp.events["stim"] = event   # event.name == port symbol → bound
+```
+
+The port is authored **once**, at the right spot in the equation. With no event `stim = 0` → the resting model; attaching the event drives it. The equations are never rewritten per experiment, and nothing is injected implicitly. *(Jansen-Rit ships exactly such a port — `P` — see the use-case.)*
+
+::: {.notes}
+This is the conceptual heart of the chapter, and the clean design. Rather than mutating the model's
+equation per experiment, the model *exposes a port* — a named input symbol (`stim`) placed where
+external drive physically enters, defaulting to zero. The event binds to that port by name. Two
+payoffs: the model stays invariant (no event → stim=0 → rest, attach event → driven, no equation
+surgery), and placement is explicit, so there is no hidden additive assumption — the author decides
+where and how the input enters. This is exactly the `P` input port the Jansen-Rit model ships with.
+:::
+
+## Step 3 — Run: rest → stimulus → rest
+
+:::: {.columns}
+
+::: {.column width="54%"}
+```{python}
+#| echo: false
+#| fig-align: center
+from tvbo.datamodel.schema import Parameter
+exp.dynamics.parameters["stim"] = Parameter(name="stim", value=0.0)
+exp.dynamics.state_variables["V"].equation.rhs = (
+    "d*tau*((I + stim)*gamma - V**3*f + V**2*e + V*g "
+    "+ V*local_coupling + W*alpha + c_glob*gamma)"
+)
+exp.events["stim"] = event
+# widen W: installed G2D still clamps to [-6, 6]; the updated G2D will not
+exp.dynamics.state_variables["W"].domain.lo = -20.0
+exp.dynamics.state_variables["W"].domain.hi = 20.0
+
+with contextlib.redirect_stdout(io.StringIO()):
+    res_stim = exp.run()
+
+fig, ax = plt.subplots(figsize=(7.0, 5.2))
+res_stim.integration.sel(variable="V").plot(ax=ax)
+ax.set_title("")
+ax2 = ax.twinx()
+event.plot(ax=ax2, alpha=0.45, linestyle=":", color="grey")
+ax2.set_ylabel("stimulus")
+plt.tight_layout()
+```
+:::
+
+::: {.column width="46%"}
+![](img/figures/stimulation/fig-g2d-bifurcation-hopf.png){fig-align="center" width="100%"}
+:::
+
+::::
+
+::: {.callout-note appearance="simple"}
+While the pulse is on, it lifts the **effective input** $I + \text{stim} = 5$ **above the node's Hopf bifurcation** ($\approx 3.5$), into the **limit-cycle envelope** (right). A limit cycle is born for the pulse's duration, then activity relaxes back to rest — the Hopf mechanism from [Bifurcation Analysis](#ch-bifurcation), triggered on demand.
+:::
+
+::: {.notes}
+Payoff slide. Left: the trace is flat, oscillates during the grey pulse window, then flattens again.
+Right: *why* — the bifurcation diagram of this exact G2D. Rest sits at I=0 on the stable branch
+(green); the pulse adds 5, landing at I=5 inside the limit-cycle envelope (red), past the Hopf at
+~3.5. So stimulation and bifurcation analysis are the same story from two sides: the diagram
+*predicts* that a strong-enough pulse triggers oscillation, and the time series shows it happen.
+:::
+
+## From one node to a network
+
+:::: {.columns}
+
+::: {.column width="44%" .smaller}
+Localize the stimulus to **one node** with `nodes` / `weights`:
+
+```{.python}
+event = Event(
+    name="stim", event_type="stimulus",
+    parameters={"onset": {"value": 80.0},
+                "duration": {"value": 5.0},
+                "amplitude": {"value": 5.0}},
+    equation={"rhs": "Piecewise((amplitude,"
+        " (t>=onset)&(t<onset+duration)),"
+        " (0.0, True))"},
+    nodes=[0],      # stim at R0
+    weights=[1.0],  # full strength
+)
+net = Network.from_string(motif_yaml)
+```
+
+R0 → **R1** (short **30 mm**), R0 → **R2** (long **200 mm**) — delay = `length / conduction_speed`.
+:::
+
+::: {.column width="56%"}
+```{python}
+#| echo: false
+#| fig-align: center
+import numpy as np
+from tvbo import Network, Coupling
+
+motif_yaml = """
+label: StimPropagationMotif
+number_of_nodes: 3
+nodes:
+    - {id: 0, label: R0}
+    - {id: 1, label: R1}
+    - {id: 2, label: R2}
+edges:
+    - {source: 0, target: 1, directed: true, parameters: {weight: {value: 1.0}, length: {value: 30.0,  unit: mm}}}
+    - {source: 0, target: 2, directed: true, parameters: {weight: {value: 1.0}, length: {value: 200.0, unit: mm}}}
+"""
+
+event = Event(
+    name="stim",
+    event_type="stimulus",
+    parameters={"onset": {"value": 80.0}, "duration": {"value": 5.0}, "amplitude": {"value": 5.0}},
+    equation={"rhs": "Piecewise((amplitude, (t >= onset) & (t < onset + duration)), (0.0, True))"},
+    nodes=[0],
+    weights=[1.0],
+)
+
+net = Network.from_string(motif_yaml)
+from IPython.display import display
+from matplotlib.font_manager import FontProperties
+fig = net.plot_overview(plot_brain=False)   # plot_overview closes the fig, so display() it explicitly
+fig.set_size_inches(8.5, 6.0)
+fig.tight_layout(pad=0.4)
+
+# mark each stimulated node (event.nodes) with a lightning glyph striking down into it.
+# The slide font (Helvetica) lacks U+26A1 (⚡); DejaVu Sans ships it.
+_bolt_font = FontProperties(family="DejaVu Sans")
+def _node_offsets(ax, n):
+    for c in ax.collections:
+        o = np.asarray(c.get_offsets())
+        if o.shape[0] == n:
+            return o
+    return None
+for _ax in [a for a in fig.axes if not a.axison]:            # the two graph panels
+    _offs = _node_offsets(_ax, net.graph.number_of_nodes())
+    if _offs is None:
+        continue
+    _s = min(np.ptp(_ax.get_xlim()), np.ptp(_ax.get_ylim()))
+    for _n in (event.nodes or []):
+        _x, _y = _offs[_n]
+        _ax.text(_x + 0.05 * _s, _y + 0.07 * _s, "⚡", fontproperties=_bolt_font,
+                 fontsize=30, color="black", ha="center", va="bottom", zorder=12)
+display(fig)
+```
+:::
+
+::::
+
+::: {.notes}
+Two Event fields do all the spatial work: `nodes` picks which nodes the stimulus lands on,
+`weights` how strongly. Everything else is identical to the single-node case. The motif is
+deliberately tiny — one stimulated source R0 feeding a near node (30 mm) and a far node (200 mm).
+Because the transmission delay is length over conduction speed, the far branch should lag the near
+one. The overview's length matrix shows the 30-vs-200 mm asymmetry; the next slide turns that into
+a timing difference.
+:::
+
+## Conduction speed shapes propagation
+
+```{.python}
+res_fast = stimulate(speed=10)   # fast conduction (10 mm/ms) → near-synchronous
+res_slow = stimulate(speed=1)    # slow conduction  (1 mm/ms) → staggered arrival
+```
+
+```{python}
+#| echo: false
+#| fig-align: center
+from tvbo.datamodel.schema import Parameter
+PORT_RHS = ("d*tau*((I + stim)*gamma - V**3*f + V**2*e + V*g "
+            "+ V*local_coupling + W*alpha + c_glob*gamma)")
+
+def stimulate(speed):
+    net = Network.from_string(motif_yaml)
+    net.parameters["conduction_speed"].value = speed
+    dyn = Dynamics.from_db("Generic2dOscillator")
+    dyn.parameters["stim"] = Parameter(name="stim", value=0.0)   # stimulation port, default 0
+    dyn.state_variables["V"].equation.rhs = PORT_RHS
+    # start at the resting fixed point so the evoked response is clean (no startup transient)
+    dyn.state_variables["V"].initial_value = -0.1887
+    dyn.state_variables["W"].initial_value = -0.1135
+    dyn.state_variables["W"].domain.lo = -50.0
+    dyn.state_variables["W"].domain.hi = 50.0
+    exp = SimulationExperiment(
+        dynamics=dyn, network=net,
+        coupling=Coupling(name="Linear", parameters={"a": {"value": 3.0}, "b": {"value": 0.0}}),
+    )
+    exp.events["stim"] = event
+    exp.integration.duration = 500.0
+    exp.integration.step_size = 0.5
+    with contextlib.redirect_stdout(io.StringIO()):
+        return exp.run()
+
+DT, CUT = 0.5, 60.0
+i0 = int(CUT / DT)
+fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.2), sharey=True)
+for ax, (speed, ttl) in zip(axes, [(10.0, "Fast — 10 mm/ms"), (1.0, "Slow — 1 mm/ms")]):
+    V = np.asarray(stimulate(speed).integration.sel(variable="V").data.values).squeeze()
+    t = np.arange(V.shape[0]) * DT
+    for n, lab, c in [(0, "R0 (stim)", "k"),
+                      (1, "R1 — near (30 mm)", "tab:blue"),
+                      (2, "R2 — far (200 mm)", "tab:red")]:
+        ax.plot(t[i0:], V[i0:, n], label=lab, color=c, lw=2.0)
+    ax.axvline(80.0, color="grey", ls=":", lw=1.0)
+    ax.set_title(ttl, fontsize=15)
+    ax.set_xlabel("t [ms]")
+axes[0].legend(fontsize=11, loc="upper right")
+axes[0].set_ylabel("V")
+plt.tight_layout()
+```
+
+::: {.smaller}
+Same localized pulse, same tracts — only `conduction_speed` changes. **Fast:** R1 and R2 respond almost together. **Slow:** the far node **R2 (200 mm) lags the near node R1 (30 mm) by ≈ 170 ms** — the network's geometry written directly into the timing.
+:::
+
+::: {.notes}
+The payoff for the network. Identical experiment, one parameter changed. At fast conduction the
+30 mm and 200 mm delays are both tiny, so R1 and R2 fire almost together. Drop the speed to 1 mm/ms
+and the delays become 30 ms and 200 ms — now the far node R2 visibly lags the near node R1 by about
+170 ms. Same stimulus, same wiring; the conduction speed alone reshapes the spatiotemporal response.
+This is the delayed propagation the Jansen-Rit visual-evoked-potential model on the next slide relies on.
+:::
+
+## Secondary propagation: a 1 → 2 → 3 chain
+
+```{python}
+#| echo: false
+#| fig-align: center
+from matplotlib.font_manager import FontProperties
+from tvbo.datamodel.schema import Parameter
+
+CHAIN_YAML = """
+label: chain123
+number_of_nodes: 3
+nodes:
+    - {id: 0, label: '1'}
+    - {id: 1, label: '2'}
+    - {id: 2, label: '3'}
+edges:
+    - {source: 0, target: 1, directed: true, parameters: {weight: {value: 1.0}, length: {value: 80.0, unit: mm}}}
+    - {source: 1, target: 2, directed: true, parameters: {weight: {value: 1.0}, length: {value: 80.0, unit: mm}}}
+"""
+chain_event = Event(
+    name="stim", event_type="stimulus",
+    parameters={"onset": {"value": 80.0}, "duration": {"value": 5.0}, "amplitude": {"value": 5.0}},
+    equation={"rhs": "Piecewise((amplitude, (t >= onset) & (t < onset + duration)), (0.0, True))"},
+    nodes=[0], weights=[1.0],
+)
+chain_net = Network.from_string(CHAIN_YAML)
+chain_dyn = Dynamics.from_db("Generic2dOscillator")
+chain_dyn.parameters["stim"] = Parameter(name="stim", value=0.0)
+chain_dyn.state_variables["V"].equation.rhs = (
+    "d*tau*((I + stim)*gamma - V**3*f + V**2*e + V*g "
+    "+ V*local_coupling + W*alpha + c_glob*gamma)"
+)
+chain_dyn.state_variables["V"].initial_value = -0.1887
+chain_dyn.state_variables["W"].initial_value = -0.1135
+chain_dyn.state_variables["W"].domain.lo = -50.0
+chain_dyn.state_variables["W"].domain.hi = 50.0
+chain_exp = SimulationExperiment(             # same dynamics / coupling / event as the conduction-speed demo
+    dynamics=chain_dyn, network=chain_net,
+    coupling=Coupling(name="Linear", parameters={"a": {"value": 3.0}, "b": {"value": 0.0}}),
+)
+chain_exp.events["stim"] = chain_event
+chain_exp.integration.duration = 500.0
+chain_exp.integration.step_size = 0.5
+with contextlib.redirect_stdout(io.StringIO()):
+    chain_res = chain_exp.run()
+Vc = np.asarray(chain_res.integration.sel(variable="V").data.values).squeeze()
+DTc = 0.5
+tc = np.arange(Vc.shape[0]) * DTc
+i0 = int(60 / DTc)
+
+fig, (axL, axR) = plt.subplots(1, 2, figsize=(12.5, 4.8), gridspec_kw={"width_ratios": [1, 1.5]})
+
+# LEFT — single network: chain 1 → 2 → 3, node colours match the traces, ⚡ on node 1
+_pos = [(0, 0), (1, 0), (2, 0)]
+_cols = ["black", "tab:blue", "tab:red"]
+for (nx_, ny_), col in zip(_pos, _cols):
+    axL.add_patch(plt.Circle((nx_, ny_), 0.16, facecolor=col, edgecolor="black", lw=1.5, zorder=3))
+for (nx_, ny_), lab in zip(_pos, ["1", "2", "3"]):
+    axL.text(nx_, ny_, lab, color="white", ha="center", va="center", fontsize=15, fontweight="bold", zorder=4)
+for i in range(2):
+    axL.annotate("", xy=(_pos[i + 1][0] - 0.18, 0), xytext=(_pos[i][0] + 0.18, 0),
+                 arrowprops=dict(arrowstyle="-|>", lw=2.2, color="0.3"))
+axL.text(0, 0.34, "⚡", fontproperties=FontProperties(family="DejaVu Sans"),
+         fontsize=34, color="black", ha="center", va="bottom", zorder=5)
+axL.set_xlim(-0.5, 2.5); axL.set_ylim(-0.7, 1.0); axL.set_aspect("equal"); axL.axis("off")
+
+# RIGHT — response: each node responds later (1 → 2 → 3); node 3 only via node 2
+for _n, _c, _lab in [(0, "black", "node 1"), (1, "tab:blue", "node 2"), (2, "tab:red", "node 3")]:
+    axR.plot(tc[i0:], Vc[i0:, _n], color=_c, lw=2.0, label=_lab)
+_ax2 = axR.twinx()
+_stim = np.where((tc >= 80) & (tc < 85), 5.0, 0.0)
+_ax2.plot(tc[i0:], _stim[i0:], color="tab:green", ls=":", lw=1.8)
+_ax2.set_ylabel("stimulus (node 1)", color="tab:green")
+_ax2.tick_params(axis="y", colors="tab:green")
+axR.set_xlabel("t [ms]"); axR.set_ylabel("V")
+axR.legend(loc="upper right", fontsize=10)
+plt.tight_layout()
+```
+
+::: {.smaller}
+- **1 → 2 → 3** · node 3 reached **only via node 2** → *secondary (poly-synaptic) propagation*
+- per hop: **later** $t_k \approx t_0 + k\,\tau$ · **weaker** $A_k \sim g^{\,k}\ (g<1)$
+- same weights & coupling as the conduction-speed demo
+- → indirect routes in a full connectome
+:::
+
+::: {.notes}
+The concept slide for multi-hop propagation. Left: a minimal 1 → 2 → 3 chain, stimulus on node 1.
+Right: node 1 fires first, then node 2, then node 3 — a travelling wave down the chain. The key point
+is *secondary* propagation: node 3 has no direct edge from node 1, so its response is entirely
+inherited through node 2. In a real connectome this is how a focal stimulus (or a lesion's effect)
+reaches regions it isn't directly wired to — along indirect, multi-synaptic paths.
+
+Params match the conduction-speed demo exactly (linear coupling a=3, unit weights), so the response
+*attenuates* per hop. (An earlier version used a=3→6 and the response *grew*; that growth is just
+coupling gain exceeding damping, not phase-matching — verified by sweeping the delay, the amplitude
+is delay-independent.)
+:::
+
+## Use-case: Visual evoked potentials [@Jansen1995]
+
+::::: {.columns}
+
+:::: {.column width="30%"}
+**Original**
+
+![](img/figures/jansen1995/original/fig_11.png)
+::::
+
+:::: {.column width="40%"}
+**Specification**
+
+```yaml
+- id: 6
+  label: "VEP: different columns, with delay
+          (Fig. 11)"
+  dynamics:
+    name: JansenRit1995_Delayed_VEP
+    parameters:
+      A: {value: 3.25, unit: mV}
+      B: {value: 22, unit: mV}
+      C: {value: 135}
+      a: {value: 100, unit: s^-1}
+      b: {value: 50, unit: s^-1}
+      v0: {value: 6, unit: mV}
+      e0: {value: 2.5, unit: s^-1}
+      r: {value: 0.56, unit: mV^-1}
+      p:
+        value: 220
+        unit: s^-1
+        shape: "(n_nodes,)"
+        distribution: *dist_p_uniform
+      a_d: {value: 30, unit: s^-1}
+      K: {value: 0, shape: "(n_nodes,)"}
+    derived_parameters: *jr_derived
+    functions: *jr_functions
+    coupling_terms: *jr_coupling
+    state_variables:
+      y0: {equation: {rhs: y3}}
+      y3:
+        equation:
+          rhs: >-
+            A*a*Sigm(y1 - y2)
+            - 2*a*y3 - a**2*y0
+      y1: {equation: {rhs: y4}}
+      y4:
+        equation:
+          rhs: >-
+            A*a*(p + P
+            + C2*Sigm(C1*y0) + z0)
+            - 2*a*y4 - a**2*y1
+      y2: {equation: {rhs: y5}}
+      y5:
+        equation:
+          rhs: >-
+            B*b*(C4*Sigm(C3*y0))
+            - 2*b*y5 - b**2*y2
+      z0: {equation: {rhs: z1}}
+      z1:
+        equation:
+          rhs: >-
+            A*a_d*K*c_intercolumn
+            - 2*a_d*z1 - a_d**2*z0
+    derived_variables:
+      v_pyr: {equation: {rhs: y1 - y2}}
+    output: [v_pyr]
+  network:
+    number_of_regions: 2
+    number_of_nodes: 2
+    conduction_speed: {value: 0}
+    nodes:
+      - {id: 0}
+      - id: 1
+        parameters:
+          B: {value: 17.6}
+          C: {value: 108}
+    edges:
+      - source: 0
+        target: 1
+        directed: true
+      - source: 1
+        target: 0
+        directed: true
+    coupling: *sigmoidal_coupling
+  events: *flash_events
+  integration: *integration_vep
+  execution:
+    random_seed: 42
+  explorations:
+    VEP_delayed_fig11:
+      mode: zip
+      n_trials: 40
+      average: trials
+      parameters:
+        K:
+          element_domains:
+            - element: 0
+              explored_values: [300, 100]
+            - element: 1
+              explored_values: [1000, 4000]
+```
+::::
+
+:::: {.column width="30%"}
+**Reproduced**
+
+![](img/figures/jansen1995/reproduced/Jansen1995_Fig11.png)
+::::
+
+:::::
+
+::: {.notes}
+The real-world payoff, using exactly the recipe we just built. A sensory flash is a stimulus `Event`
+(here `*flash_events`) injected into a two-column Jansen-Rit model. The middle column is the *full
+FAIR specification* — model, network, events, and the trial exploration — that reproduces Jansen &
+Rit's 1995 Figure 11 (right) from the original paper (left). Same pattern, scaled: symbolic event,
+injected into named state equations, run across trials.
+:::
+
+## Use-case: real music reshapes whole-brain FC
+
+:::: {.columns}
+
+::: {.column width="40%" .smaller}
+A real recording (`.wav` → loudness envelope) is passed as a **data file** and injected at **primary auditory cortex** (DK transverse-temporal) of a Reduced-Wong-Wang + BOLD whole-brain model.
+
+```{.python}
+event = Event(
+    name="acoustic",            # input port
+    event_type="stimulus",
+    dataLocation="music.npy",   # real waveform
+    sampling_rate=0.1,          # per ms
+    parameters={"onset": {"value": 15000}},
+    nodes=[32, 81],             # L/R auditory ctx
+    weights=[1.0, 1.0],
+)
+exp.events["acoustic"] = event
+res = exp.run("tvboptim")       # BOLD + FC
+```
+
+Pure native-tvbo spec → tvboptim codegen.
+:::
+
+::: {.column width="60%"}
+![](img/figures/stimulation/fig-acoustic-stimulation.png){fig-align="center" width="100%"}
+:::
+
+::::
+
+::: {.smaller}
+Auditory BOLD tracks the music; resting FC matches empirical (**r = 0.31**); the FC change is **content-specific** — music vs an energy-matched control.
+:::
+
+::: {.notes}
+The capstone: stimuli are not limited to closed-form equations — they can be *real recordings*. We
+take an actual `.wav`, reduce it to a loudness envelope, and pass it as a data-file `Event`
+(`dataLocation` + `sampling_rate` + `onset`). The tvboptim backend interpolates it at each step and
+injects it into the primary auditory cortex (transverse-temporal gyrus) of a Reduced-Wong-Wang
+whole-brain model on the Desikan-Killiany connectome, observed through a Balloon-Windkessel BOLD
+model. Walk the figure: (1) the auditory-cortex BOLD *tracks the music's loudness* (the model is
+listening); (2) the resting model FC matches the empirical FC shipped with the connectome — global
+coupling G line-searched to r≈0.31 (single global scalar; reverse-mode-AD gradients are for the
+regional case); (3) the connectivity change is *content-specific* — we contrast music against an
+energy-matched **constant** control, so the effect is the sound's temporal structure, not the drive
+level. Left-right primary auditory coupling rises from ~0.18 (control) to ~1.0 (music), spreading
+into superior-temporal / insular / supramarginal cortex; the full ΔFC is shown with L/R primary
+auditory marked on the axes. (`onset` shifts the waveform past the burn-in transient so it plays in
+the recorded window.)
+Same hook takes speech, an empirical EEG/LFP trace, or a measured TMS/DBS pulse train.
+:::
+
